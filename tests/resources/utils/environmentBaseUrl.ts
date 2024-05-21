@@ -1,0 +1,24 @@
+export default{
+    ci:{
+        prefix:'',
+        suffix:''
+    },
+    dev:{
+        admin_api:'https://ojaryxuxdh.execute-api.us-east-1.amazonaws.com',
+        bots_api:'https://dev-core.onepublicgrid.dev',
+        connect_api:'https://dev.onepublicgrid.dev',
+        home:'https://dev.onepublicgrid.com',
+    },
+    staging:{
+        admin_api:'',
+        bots_api:'https://staging-core.onepublicgrid.dev',
+        connect_api:'https://staging.onepublicgrid.dev',
+        home:'https://staging.onepublicgrid.com',
+    },
+    production:{
+        admin_api:'https://perzebrgr8.execute-api.us-east-1.amazonaws.com',
+        bots_api:'https://core.onepublicgrid.dev',
+        connect_api:'https://onepublicgrid.dev',
+        home:'https://publicgrid.energy',
+    },
+};
