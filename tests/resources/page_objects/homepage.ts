@@ -21,7 +21,6 @@ export class HomePage{
 
     //constructor // locators
     constructor(page: Page) {
-        this.page = page;
         this.HowItWorks_Link = page.getByRole('navigation').getByRole('link', { name: 'How it Works' });
         this.HowItWorks_Title = page.getByRole('heading', { name: 'How it works' });
         this.About_Link = page.getByRole('navigation').getByRole('link', { name: 'About' });
@@ -40,12 +39,14 @@ export class HomePage{
 
 
     //methods
+
     async click_HowItWorks() {
         await this.HowItWorks_Link.click();
         await expect (this.HowItWorks_Title).toBeVisible();
     }
 
-    async click_About() {
+
+    async  click_About() {
         await this.About_Link.click();
         await expect (this.About_Content).toBeVisible();
     }

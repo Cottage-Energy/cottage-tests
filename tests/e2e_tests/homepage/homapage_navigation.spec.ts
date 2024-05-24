@@ -10,12 +10,12 @@ let homePage: HomePage;
 });*/
 
 test.beforeEach(async ({ page },testInfo) => {
-  //await page.goto('https://dev.publicgrid.energy/');
+  await page.goto('https://dev.publicgrid.energy/',{ waitUntil: 'domcontentloaded' });
   homePage = new HomePage(page);
 });
 
 test.afterEach(async ({ page },testInfo) => {
-
+  await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
@@ -25,24 +25,24 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Homepage Navigation', () => {
   
-  test('Go to How it Works', async (page) => {
-    await homePage.click_HowItWorks;
+  test('Go to How it Works', async () => {
+    await homePage.click_HowItWorks();
   });
   
-  test('Go to About', async (page) => {
-  await homePage.click_About;
+  test('Go to About', async () => {
+  await homePage.click_About();
   });
   
-  test('Go to Resources', async (page) => {
-  await homePage.click_Resources;
+  test('Go to Resources', async () => {
+  await homePage.click_Resources();
   });
   
-  test('Go to Developers', async (page) => {
-  await homePage.click_Developers;
+  test('Go to Developers', async () => {
+  await homePage.click_Developers();
   });
   
-  test('Go to Sign In', async (page) => {
-  await homePage.click_SignIn;
+  test('Go to Sign In', async () => {
+  await homePage.click_SignIn();
   });
 
 });
