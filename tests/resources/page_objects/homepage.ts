@@ -21,6 +21,7 @@ export class HomePage{
 
     //constructor // locators
     constructor(page: Page) {
+        this.page = page;
         this.HowItWorks_Link = page.getByRole('navigation').getByRole('link', { name: 'How it Works' });
         this.HowItWorks_Title = page.getByRole('heading', { name: 'How it works' });
         this.About_Link = page.getByRole('navigation').getByRole('link', { name: 'About' });
