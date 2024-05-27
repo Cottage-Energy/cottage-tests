@@ -1,4 +1,5 @@
 import { type Page, type Locator , expect } from '@playwright/test';
+import { lcov } from 'node:test/reporters';
 
 export class MoveInPage{
     //variables
@@ -28,6 +29,19 @@ export class MoveInPage{
     readonly Move_In_Date_Selector: (day: string) => Locator;
     readonly Move_In_Identity_Info_Title: Locator;
     readonly Move_In_Birthdate_Field: Locator;
+    readonly Move_In_Birthdate_Lessthan100_Message: Locator;
+    readonly Move_In_Birthdate_Mustbe18_Message: Locator;
+    readonly Move_In_Birthdate_Required_Message: Locator;
+    readonly Move_In_ID_Dropdown: Locator;
+    readonly Move_In_State_Dropdown: Locator;
+    readonly Move_In_ID_Number_Field: Locator;
+    readonly Move_In_Identify_Info_Message: Locator;
+    readonly Move_In_Submit_Button: Locator;
+    readonly Move_In_Success_Message: Locator;
+    readonly Move_In_Survey_Star: Locator;
+    readonly Move_In_Survey_Submit_Button: Locator;
+    readonly Move_In_Feedback_Thanks_Message: Locator;
+    readonly Move_In_Dashboard_Link:Locator;
   
     
 
@@ -60,8 +74,20 @@ export class MoveInPage{
         this.Move_In_Date_Selector = (day: string) => page.getByText('${day}', { exact: true });
         this.Move_In_Identity_Info_Title = page.getByRole('heading', { name: 'Identity Information' });
         this.Move_In_Birthdate_Field = page.getByLabel('Date of Birth');
-
-
+        this.Move_In_Birthdate_Required_Message = page.getByText('Date of Birth Required');
+        this.Move_In_Birthdate_Mustbe18_Message = page.getByText('Must be 18 years or older');
+        this.Move_In_Birthdate_Lessthan100_Message = page.getByText('Must be less than 100 years');
+        this.Move_In_ID_Dropdown = page.getByText('Must be 18 years or older');
+        this.Move_In_State_Dropdown = page.getByText('Select State');
+        this.Move_In_ID_Number_Field = page.locator('[id="\\:rf\\:-form-item"]');
+        this.Move_In_Identify_Info_Message = page.getByText('This information is never');
+        this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit' });
+        this.Move_In_Success_Message = page.getByText('Success🥳Your account is set');
+        this.Move_In_Survey_Star = page.locator('path').nth(2);
+        this.Move_In_Survey_Submit_Button = page.getByText('Tell us how your experience was so far!Submit');
+        this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback 💚');
+        this.Move_In_Dashboard_Link = page.getByRole('link', { name: 'Dashboard' });
+        
     }
 
 
