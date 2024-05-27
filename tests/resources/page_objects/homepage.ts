@@ -29,7 +29,7 @@ export class HomePage{
         this.Resources_Link = page.getByRole('navigation').getByRole('link', { name: 'Resources' });
         this.Resources_Title =  page.getByRole('heading', { name: 'Resources' });
         this.Developers_Link = page.getByRole('navigation').getByRole('link', { name: 'Developers' });
-        this.Developers_Title = page.getByRole('heading', { name: 'BUILD WITH YOURELECTRIC DATA' });
+        this.Developers_Title = page.getByText('BETABUILD WITH YOURELECTRIC');
         
         this.Sign_In_Button = page.getByText('Sign In');
         this.Sign_In_Title = page.getByRole('heading', { name: 'Welcome Back 👋' });
