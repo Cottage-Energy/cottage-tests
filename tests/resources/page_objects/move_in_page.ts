@@ -166,9 +166,13 @@ export class MoveInPage{
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(500);
         await this.Move_In_Birthdate_Field.click({timeout:10000});
-        await this.Move_In_Birthdate_Field.fill(birthdate);
-        await this.Move_In_ID_Number_Field.click();
+        await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
+        await this.page.waitForTimeout(500);
+        await this.Move_In_ID_Number_Field.isEnabled({timeout:10000});
+        await this.Move_In_ID_Number_Field.isEditable({timeout:10000});
+        await this.Move_In_ID_Number_Field.click({timeout:10000});
         await this.Move_In_ID_Number_Field.fill(IDnumber);
     }
 
