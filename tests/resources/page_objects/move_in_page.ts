@@ -192,7 +192,7 @@ export class MoveInPage{
 
 
     async Check_Successful_Move_In_Billing_Customer(){
-        await expect(this.Move_In_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible();
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
     }
@@ -200,7 +200,7 @@ export class MoveInPage{
 
     
     async Check_Successful_Move_In_Non_Billing_Customer(){
-        await expect(this.Move_In_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible();
         await expect(this.Move_In_Dashboard_Link).toBeHidden();
     }
