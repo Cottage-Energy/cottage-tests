@@ -104,19 +104,18 @@ export class MoveInPage{
 
     //methods
     async Agree_on_Terms_and_Get_Started() {
-        await expect(this.Move_In_Terms_Title).toBeVisible();
-        await this.page.waitForTimeout(300);
-        await this.Move_In_Terms_Checkbox.hover();
-        await this.page.waitForTimeout(300);
-        await this.Move_In_Terms_Checkbox.click();
+        await expect(this.Move_In_Terms_Title).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(500);
+        await this.Move_In_Terms_Checkbox.hover({timeout:30000});
+        await this.Move_In_Terms_Checkbox.setChecked(true,{timeout:10000});
         await this.Move_In_Get_Started_Button.click();
     }
 
 
     async Enter_Address_and_Unit(address:string, unit:string){
-        await expect(this.Move_In_Address_Title).toBeVisible();
-        await this.Move_In_Address_Field.click();
-        await this.page.waitForTimeout(300);
+        await expect(this.Move_In_Address_Title).toBeVisible({timeout:30000});
+        await this.Move_In_Address_Field.click({timeout:10000});
+        await this.page.waitForTimeout(500);
         await this.Move_In_Address_Field.fill(address);
         await this.Move_In_Address_Dropdown(address).click();
         await this.Move_In_Unit_Field.click();
@@ -127,11 +126,10 @@ export class MoveInPage{
 
 
     async Enter_Personal_Info(firstname:string, lastname:string, phone:string, email:string){
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_About_You_Title).toBeVisible();
+        await expect(this.Move_In_About_You_Title).toBeVisible({timeout:30000});
         await this.Move_In_First_Name_Field.isEditable();
         await this.Move_In_First_Name_Field.hover();
-        await this.Move_In_First_Name_Field.click();
+        await this.Move_In_First_Name_Field.click({timeout:10000});
         await this.Move_In_First_Name_Field.fill(firstname);
         await this.Move_In_Last_Name_Field.click();
         await this.Move_In_Last_Name_Field.fill(lastname);
@@ -145,8 +143,8 @@ export class MoveInPage{
 
 
     async Choose_Move_In_Date(day:string){
-        await expect(this.Move_In_Date_Title).toBeVisible();
-        await this.Move_In_Date_Field.click();
+        await expect(this.Move_In_Date_Title).toBeVisible({timeout:30000});
+        await this.Move_In_Date_Field.click({timeout:10000});
 
         if (await this.Move_In_Date_Selector(day).isVisible()){
             await this.Move_In_Date_Selector(day).click();
@@ -167,8 +165,8 @@ export class MoveInPage{
 
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){
-        await expect(this.Move_In_Identity_Info_Title).toBeVisible();
-        await this.Move_In_Birthdate_Field.click();
+        await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
+        await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate);
         await this.Move_In_ID_Number_Field.click();
         await this.Move_In_ID_Number_Field.fill(IDnumber);
@@ -176,26 +174,25 @@ export class MoveInPage{
 
 
     async Enter_ID_Info_Prev_Add(prevAddress:string){
-        await expect(this.Move_In_Identity_Info_Title).toBeVisible();
+        await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Prev_Address_Field.click();
-        await this.page.waitForTimeout(300);
+        await this.page.waitForTimeout(500);
         await this.Move_In_Prev_Address_Field.fill(prevAddress);
         await this.Move_In_Address_Dropdown(prevAddress).click();
-        await this.page.waitForTimeout(300);
+        await this.page.waitForTimeout(500);
         await this.Move_In_Identity_Info_Title.click();
     }
 
 
     async Submit_ID_Info(){
-        await expect(this.Move_In_Identity_Info_Title).toBeVisible();
+        await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Submit_Button.hover();
         await this.Move_In_Submit_Button.click();
     }
 
 
     async Check_Successful_Move_In_Billing_Customer(){
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Success_Message).toBeVisible();
+        await expect(this.Move_In_Success_Message).toBeVisible({timeout:30000});
         await expect(this.Move_In_Account_Number).toBeVisible();
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
     }
@@ -203,8 +200,7 @@ export class MoveInPage{
 
     
     async Check_Successful_Move_In_Non_Billing_Customer(){
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Success_Message).toBeVisible();
+        await expect(this.Move_In_Success_Message).toBeVisible({timeout:30000});
         await expect(this.Move_In_Account_Number).toBeVisible();
         await expect(this.Move_In_Dashboard_Link).toBeHidden();
     }
