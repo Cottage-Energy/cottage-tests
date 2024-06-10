@@ -122,8 +122,13 @@ export class MoveInPage{
         await this.Move_In_Address_Dropdown(address).click();
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);
-        await expect(this.Move_In_Next_Button).toBeEnabled();
-        await this.Move_In_Next_Button.click();
+    }
+
+
+    async Next_Move_In_Button(){
+        await expect(this.Move_In_Next_Button).toBeEnabled({timeout:10000});
+        await this.Move_In_Next_Button.hover({timeout:10000});
+        await this.Move_In_Next_Button.click({timeout:10000});
     }
 
 
@@ -139,8 +144,6 @@ export class MoveInPage{
         await this.Move_In_Phone_Field.fill(phone);
         await this.Move_In_Email_Field.click();
         await this.Move_In_Email_Field.fill(email);
-        await expect(this.Move_In_Next_Button).toBeEnabled();
-        await this.Move_In_Next_Button.click();
     }
 
 
@@ -152,45 +155,33 @@ export class MoveInPage{
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);
             await this.Move_In_Date_Title.click();
-            await this.Move_In_Next_Button.hover();
-            await this.Move_In_Next_Button.click({timeout:10000});
         }
         else{
             await this.Move_In_Next_Month_Button.click();
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);
             await this.Move_In_Date_Title.click();
-            await this.Move_In_Next_Button.hover();
-            await this.Move_In_Next_Button.click({timeout:10000});
         }
     }
 
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(500);
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
-        await this.page.waitForTimeout(500);
         await this.Move_In_ID_Number_Field.isEnabled({timeout:10000});
         await this.Move_In_ID_Number_Field.isEditable({timeout:10000});
-        await this.Move_In_ID_Number_Field.click({timeout:10000});
         await this.Move_In_ID_Number_Field.fill(IDnumber);
     }
 
 
-    async CON_ED_Enter_ID_Info(birthdate:string){
-        const ssn_number = Math.floor(100000000 + Math.random() * 900000000).toString();
-
+    async CON_ED_Enter_ID_Info(birthdate:string, IDnumber:string){
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(500);
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
-        await this.page.waitForTimeout(500);
-        await this.Move_In_ID_Number_Field.isEnabled({timeout:10000});
-        await this.Move_In_ID_Number_Field.isEditable({timeout:10000});
-        await this.Move_In_ID_Number_Field.click({timeout:10000});
-        await this.Move_In_CON_ED_ID_Number_Field.fill(ssn_number)
+        await this.Move_In_CON_ED_ID_Number_Field.isEnabled({timeout:10000});
+        await this.Move_In_CON_ED_ID_Number_Field.isEditable({timeout:10000});
+        await this.Move_In_CON_ED_ID_Number_Field.fill(IDnumber)
     }
 
 

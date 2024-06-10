@@ -65,16 +65,19 @@ test.describe('Move In New User', () => {
 async function Enter_COMED_Address_and_Unit() {
   const unitNo = faker.location.buildingNumber();
   await moveinPage.Enter_Address_and_Unit('808 Chicago AveDixon, IL',unitNo);
+  await moveinPage.Next_Move_In_Button();
 };
 
 async function Enter_CON_ED_Address_and_Unit() {
   const unitNo = faker.location.buildingNumber();
   await moveinPage.Enter_Address_and_Unit('S 1st StBrooklyn, NY 11249, USA',unitNo);
+  await moveinPage.Next_Move_In_Button();
 };
 
 async function Enter_EVERSOURCE_Address_and_Unit() {
   const unitNo = faker.location.buildingNumber();
   await moveinPage.Enter_Address_and_Unit('Plymouth StCambridge, MA 02141, USA',unitNo);
+  await moveinPage.Next_Move_In_Button();
 };
 
 async function Enter_Personal_Info() {
@@ -84,6 +87,7 @@ async function Enter_Personal_Info() {
   const EmailAdd = faker.internet.email({ firstName: FirstName, lastName: LastName, provider: 'autotest.pg'});
 
   await moveinPage.Enter_Personal_Info(FirstName + 'AutoTest',LastName,phoneNo,EmailAdd);
+  await moveinPage.Next_Move_In_Button();
 };
 
 async function Choose_Current_Move_In_Date() {
@@ -91,6 +95,7 @@ async function Choose_Current_Move_In_Date() {
   const today = date.getDate().toString();
 
   await moveinPage.Choose_Move_In_Date(today);
+  await moveinPage.Next_Move_In_Button();
 };
 
 async function Choose_Future_Move_In_Date() {
@@ -99,6 +104,7 @@ async function Choose_Future_Move_In_Date() {
   const tomorrow = addDay.toString();
 
   await moveinPage.Choose_Move_In_Date(tomorrow);
+  await moveinPage.Next_Move_In_Button();
 };
 
 
@@ -140,6 +146,8 @@ async function CON_ED_Enter_ID_Info() {
   const day = formatData(date.getDate()).toString();
   const complete_date = valid_yrs + '-' + month + '-' + day;
 
-  await moveinPage.CON_ED_Enter_ID_Info(complete_date);
+  const ssn_number = Math.floor(100000000 + Math.random() * 900000000).toString();
+
+  await moveinPage.CON_ED_Enter_ID_Info(complete_date,ssn_number);
 };
 
