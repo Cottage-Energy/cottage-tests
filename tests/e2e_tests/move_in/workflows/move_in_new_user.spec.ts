@@ -1,7 +1,6 @@
 import { test,expect,type Page } from '@playwright/test';
 import { MoveInPage }  from '../../../resources/page_objects/move_in_page';
 import { faker } from '@faker-js/faker';
-import { format } from 'node:path';
 
 
 let moveinPage: MoveInPage;
@@ -12,7 +11,7 @@ let moveinPage: MoveInPage;
 });*/
 
 test.beforeEach(async ({ page },testInfo) => {
-  await page.goto('/')
+  await page.goto('/',{ waitUntil: 'domcontentloaded' })
   await page.goto('https://dev.publicgrid.energy/move-in',{ waitUntil: 'domcontentloaded' });
   moveinPage = new MoveInPage(page);
 });
@@ -44,7 +43,7 @@ test.describe('Move In New User', () => {
     await Enter_CON_ED_Address_and_Unit();
     await Enter_Personal_Info();
     await Choose_Current_Move_In_Date()
-    await Enter_ID_Info();
+    await CON_ED_Enter_ID_Info();
     await moveinPage.Submit_ID_Info();
     await moveinPage.Check_Successful_Move_In_Billing_Customer();
   });
@@ -119,8 +118,28 @@ async function Enter_ID_Info() {
   const day = formatData(date.getDate()).toString();
   const complete_date = valid_yrs + '-' + month + '-' + day;
 
-  const ssn_number = faker.number.int({ max: 999999999 }).toString();
+  const ssn_number = Math.floor(100000000 + Math.random() * 900000000).toString();
 
   await moveinPage.Enter_ID_Info(complete_date,ssn_number);
+};
+
+
+async function CON_ED_Enter_ID_Info() {
+  const formatData =
+    (input) => {
+        if (input > 9) {
+            return input;
+        } else return `0${input}`;
+    }
+
+  const date = new Date();
+  const eigthteen_yrs_ago = date.getFullYear() - 18;
+  const valid_yrs = eigthteen_yrs_ago.toString();
+  const correction_month = date.getMonth() + 1;
+  const month = formatData(correction_month).toString();
+  const day = formatData(date.getDate()).toString();
+  const complete_date = valid_yrs + '-' + month + '-' + day;
+
+  await moveinPage.CON_ED_Enter_ID_Info(complete_date);
 };
 

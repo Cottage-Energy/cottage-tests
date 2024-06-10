@@ -1,5 +1,4 @@
 import { type Page, type Locator , expect } from '@playwright/test';
-import { lcov } from 'node:test/reporters';
 
 export class MoveInPage{
     //variables
@@ -37,6 +36,7 @@ export class MoveInPage{
     readonly Move_In_ID_Dropdown: Locator;
     readonly Move_In_State_Dropdown: Locator;
     readonly Move_In_ID_Number_Field: Locator;
+    readonly Move_In_CON_ED_ID_Number_Field: Locator;
     readonly Move_In_Identify_Info_Message: Locator;
     readonly Move_In_Prev_Address_Field: Locator;
     readonly Move_In_Submit_Button: Locator;
@@ -87,6 +87,7 @@ export class MoveInPage{
         this.Move_In_ID_Dropdown = page.getByText('Must be 18 years or older');
         this.Move_In_State_Dropdown = page.getByText('Select State');
         this.Move_In_ID_Number_Field = page.locator('[id="\\:rf\\:-form-item"]');
+        this.Move_In_CON_ED_ID_Number_Field = page.locator('[id="\\:rj\\:-form-item"]');
         this.Move_In_Identify_Info_Message = page.getByText('This information is never');
         this.Move_In_Prev_Address_Field = page.locator('#onboardingAddress')
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit' });
@@ -107,6 +108,7 @@ export class MoveInPage{
         await expect(this.Move_In_Terms_Title).toBeVisible({timeout:30000});
         await this.page.waitForTimeout(500);
         await this.Move_In_Terms_Checkbox.hover({timeout:30000});
+        await this.Move_In_Terms_Checkbox.isEnabled({timeout:10000});
         await this.Move_In_Terms_Checkbox.setChecked(true,{timeout:10000});
         await this.Move_In_Get_Started_Button.click();
     }
@@ -151,7 +153,7 @@ export class MoveInPage{
             await this.page.waitForTimeout(500);
             await this.Move_In_Date_Title.click();
             await this.Move_In_Next_Button.hover();
-            await this.Move_In_Next_Button.click();
+            await this.Move_In_Next_Button.click({timeout:10000});
         }
         else{
             await this.Move_In_Next_Month_Button.click();
@@ -159,7 +161,7 @@ export class MoveInPage{
             await this.page.waitForTimeout(500);
             await this.Move_In_Date_Title.click();
             await this.Move_In_Next_Button.hover();
-            await this.Move_In_Next_Button.click();
+            await this.Move_In_Next_Button.click({timeout:10000});
         }
     }
 
@@ -174,6 +176,21 @@ export class MoveInPage{
         await this.Move_In_ID_Number_Field.isEditable({timeout:10000});
         await this.Move_In_ID_Number_Field.click({timeout:10000});
         await this.Move_In_ID_Number_Field.fill(IDnumber);
+    }
+
+
+    async CON_ED_Enter_ID_Info(birthdate:string){
+        const ssn_number = Math.floor(100000000 + Math.random() * 900000000).toString();
+
+        await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(500);
+        await this.Move_In_Birthdate_Field.click({timeout:10000});
+        await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
+        await this.page.waitForTimeout(500);
+        await this.Move_In_ID_Number_Field.isEnabled({timeout:10000});
+        await this.Move_In_ID_Number_Field.isEditable({timeout:10000});
+        await this.Move_In_ID_Number_Field.click({timeout:10000});
+        await this.Move_In_CON_ED_ID_Number_Field.fill(ssn_number)
     }
 
 
