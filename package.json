@@ -13,6 +13,7 @@
     "@types/node": "^20.12.7"
   },
   "dependencies": {
+    "@linear/sdk": "^22.0.0",
     "@supabase/supabase-js": "^2.43.1",
     "inngest": "^3.19.1"
   }

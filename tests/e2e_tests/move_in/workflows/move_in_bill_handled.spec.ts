@@ -12,7 +12,7 @@ let moveinPage: MoveInPage;
 
 test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
-  await page.goto('https://dev.publicgrid.energy/move-in',{ waitUntil: 'domcontentloaded' });
+  await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
   moveinPage = new MoveInPage(page);
 });
 
