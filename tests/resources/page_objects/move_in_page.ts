@@ -1,4 +1,5 @@
 import { type Page, type Locator , expect } from '@playwright/test';
+import {supabase} from '../utils/db';
 
 export class MoveInPage{
     //variables
@@ -106,10 +107,12 @@ export class MoveInPage{
     //methods
     async Agree_on_Terms_and_Get_Started() {
         await expect(this.Move_In_Terms_Title).toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
         await this.Move_In_Terms_Checkbox.hover({timeout:30000});
         await this.Move_In_Terms_Checkbox.isEnabled({timeout:10000});
         await this.Move_In_Terms_Checkbox.setChecked(true,{timeout:10000});
+        await this.Move_In_Get_Started_Button.hover({timeout:30000});
+        await this.Move_In_Get_Started_Button.isEnabled({timeout:10000});
         await this.Move_In_Get_Started_Button.click();
     }
 
@@ -204,6 +207,14 @@ export class MoveInPage{
 
 
     async Check_Successful_Move_In_Billing_Customer(){
+        /*const { data } = await supabase
+            .from('CottageUsers')
+            .select('id')
+            .eq('email', email)
+            .single()
+            .throwOnError();
+        const cottageUserId = data?.id ?? '';*/
+
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible();
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
