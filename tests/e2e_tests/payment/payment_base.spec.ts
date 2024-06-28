@@ -20,10 +20,10 @@ test('test', async ({ page }) => {
   await page.locator('input[name="phone"]').click();
   await page.locator('input[name="phone"]').fill('432-425-35435');
   await page.locator('input[name="email"]').click();
-  await page.locator('input[name="email"]').fill('christian+pay3.9@onicgrid.com');
+  await page.locator('input[name="email"]').fill('christian+pay5.5@onepublicgrid.com');
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Select a move-in date' }).click();
-  await page.getByRole('gridcell', { name: '27' }).nth(1).click();
+  await page.getByRole('gridcell', { name: '28' }).nth(1).click();
   await page.waitForTimeout(500);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByLabel('Select your date of birth').fill('1991-01-01');
@@ -56,6 +56,7 @@ test('test', async ({ page }) => {
   await CardZipCode?.fill('43534');
  
   await page.getByRole('button', { name: 'Save Payment Method' }).click();
+
 
   await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
   await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
