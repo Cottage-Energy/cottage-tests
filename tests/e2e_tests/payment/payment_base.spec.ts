@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import {CreatedTestUser} from '../../resources/fixtures/test_user';
 
-test('test', async ({ page }) => {
+CreatedTestUser('test', async ({ page,FirstName }) => {
   await page.goto('https://dev.publicgrid.energy/move-in');
   await page.getByLabel('I agree to the Terms of').click();
   await page.getByRole('button', { name: 'Get Started' }).click();
@@ -14,13 +15,13 @@ test('test', async ({ page }) => {
   await page.locator('input[name="unitNumber"]').fill('Test');
   await page.getByRole('button', { name: 'Next' }).click();
   await page.locator('input[name="firstName"]').click();
-  await page.locator('input[name="firstName"]').fill('Pay');
+  await page.locator('input[name="firstName"]').fill(FirstName);
   await page.locator('input[name="lastName"]').click();
   await page.locator('input[name="lastName"]').fill('Five');
   await page.locator('input[name="phone"]').click();
   await page.locator('input[name="phone"]').fill('432-425-35435');
   await page.locator('input[name="email"]').click();
-  await page.locator('input[name="email"]').fill('christian+pay5.5@onepublicgrid.com');
+  await page.locator('input[name="email"]').fill('christian+pay5.8@onepublicgrid.com');
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Select a move-in date' }).click();
   await page.getByRole('gridcell', { name: '28' }).nth(1).click();
@@ -32,7 +33,7 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('link', { name: 'Dashboard' }).click();
   await expect(page.getByRole('heading', { name: 'Finish Account Setup' })).toBeVisible();
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(5000);
 
   const stripeIframe = await page.waitForSelector('[title ="Secure payment input frame"]')
   const stripeFrame = await stripeIframe.contentFrame()
