@@ -52,23 +52,24 @@ test ('test', async ({ page }) => {
   await CardExpiration?.click();
   await CardExpiration?.fill(userData.CardExpiry);
   await CardCVC?.fill(userData.CVC);
-  await CardCountry?.selectOption(userData.Country);
+  await CardCountry?.selectOption('US');
+  //await CardCountry?.selectOption(userData.Country);
 
-  // Attempt to find the CardZipCode element
-  //const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]', { state: 'attached', timeout: 5000 });
 
-  //if (CardZipCode) {
-    //await CardZipCode.click();
-    //await CardZipCode.fill(userData.Zip);
-  //} 
+  if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
+    const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+    await CardZipCode?.click();
+    await CardZipCode?.fill(userData.Zip);
+    await page.getByRole('button', { name: 'Save Payment Method' }).click();
+  }
+  else{
+    await page.getByRole('button', { name: 'Save Payment Method' }).click();
+  }
 
-// Click the 'Save Payment Method' button regardless of CardZipCode's visibility
+  //const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+  //await CardZipCode?.click();
+  //await CardZipCode?.fill(userData.Zip);
   //await page.getByRole('button', { name: 'Save Payment Method' }).click();
-
-  const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
-  await CardZipCode?.click();
-  await CardZipCode?.fill(userData.Zip);
-  await page.getByRole('button', { name: 'Save Payment Method' }).click();
 
   await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
   await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
