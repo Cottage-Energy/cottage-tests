@@ -1,10 +1,10 @@
 import { test,expect,type Page } from '@playwright/test';
 import { MoveInPage }  from '../../../resources/page_objects/move_in_page';
+import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { faker } from '@faker-js/faker';
 
 
 let moveinPage: MoveInPage;
-
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -91,10 +91,9 @@ async function Enter_Personal_Info() {
 };
 
 async function Choose_Current_Move_In_Date() {
-  const date = new Date();
-  const today = date.getDate().toString();
+  const userdata = await generateTestUserData();
 
-  await moveinPage.Choose_Move_In_Date(today);
+  await moveinPage.Choose_Move_In_Date(userdata.Today);
   await moveinPage.Next_Move_In_Button();
 };
 

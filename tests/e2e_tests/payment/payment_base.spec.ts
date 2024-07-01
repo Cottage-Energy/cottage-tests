@@ -1,7 +1,10 @@
-import { expect } from '@playwright/test';
-import {CreatedTestUser} from '../../resources/fixtures/test_user';
+import { test, expect } from '@playwright/test';
+import { generateTestUserData } from '../../resources/fixtures/test_user';
 
-CreatedTestUser('test', async ({ page,FirstName }) => {
+test ('test', async ({ page }) => {
+
+  const userData = await generateTestUserData();
+
   await page.goto('https://dev.publicgrid.energy/move-in');
   await page.getByLabel('I agree to the Terms of').click();
   await page.getByRole('button', { name: 'Get Started' }).click();
@@ -12,24 +15,24 @@ CreatedTestUser('test', async ({ page,FirstName }) => {
   await page.waitForTimeout(500);
   await page.getByText('Plymouth StreetCambridge, MA, USA').click();
   await page.locator('input[name="unitNumber"]').click();
-  await page.locator('input[name="unitNumber"]').fill('Test');
+  await page.locator('input[name="unitNumber"]').fill(userData.UnitNumber);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.locator('input[name="firstName"]').click();
-  await page.locator('input[name="firstName"]').fill(FirstName);
+  await page.locator('input[name="firstName"]').fill(userData.FirstName);
   await page.locator('input[name="lastName"]').click();
-  await page.locator('input[name="lastName"]').fill('Five');
+  await page.locator('input[name="lastName"]').fill(userData.LastName);
   await page.locator('input[name="phone"]').click();
-  await page.locator('input[name="phone"]').fill('432-425-35435');
+  await page.locator('input[name="phone"]').fill(userData.PhoneNumber);
   await page.locator('input[name="email"]').click();
-  await page.locator('input[name="email"]').fill('christian+pay5.8@onepublicgrid.com');
+  await page.locator('input[name="email"]').fill(userData.Email);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Select a move-in date' }).click();
-  await page.getByRole('gridcell', { name: '28' }).nth(1).click();
+  await page.getByRole('gridcell', { name: userData.Today }).nth(1).click();
   await page.waitForTimeout(500);
   await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByLabel('Select your date of birth').fill('1991-01-01');
+  await page.getByLabel('Select your date of birth').fill(userData.BirthDate);
   await page.locator('[id="\\:rf\\:-form-item"]').click();
-  await page.locator('[id="\\:rf\\:-form-item"]').fill('423-42-34233');
+  await page.locator('[id="\\:rf\\:-form-item"]').fill(userData.SSN);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('link', { name: 'Dashboard' }).click();
   await expect(page.getByRole('heading', { name: 'Finish Account Setup' })).toBeVisible();
@@ -38,7 +41,7 @@ CreatedTestUser('test', async ({ page,FirstName }) => {
   const stripeIframe = await page.waitForSelector('[title ="Secure payment input frame"]')
   const stripeFrame = await stripeIframe.contentFrame()
 
-  const CardNUmberInput = await stripeFrame?.waitForSelector('[autocomplete ="billing cc-number"]');
+  const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
   const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
   const CardCVC = await stripeFrame?.waitForSelector('[id ="Field-cvcInput"]');
   const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
@@ -47,17 +50,25 @@ CreatedTestUser('test', async ({ page,FirstName }) => {
   await CardNUmberInput?.click();
   await CardNUmberInput?.fill('4242 4242 4242 4242');
   await CardExpiration?.click();
-  await CardExpiration?.fill('03/30');
-  await CardCVC?.fill('432');
-  await CardCountry?.selectOption('US');
+  await CardExpiration?.fill(userData.CardExpiry);
+  await CardCVC?.fill(userData.CVC);
+  await CardCountry?.selectOption(userData.Country);
+
+  // Attempt to find the CardZipCode element
+  //const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]', { state: 'attached', timeout: 5000 });
+
+  //if (CardZipCode) {
+    //await CardZipCode.click();
+    //await CardZipCode.fill(userData.Zip);
+  //} 
+
+// Click the 'Save Payment Method' button regardless of CardZipCode's visibility
+  //await page.getByRole('button', { name: 'Save Payment Method' }).click();
 
   const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
-
   await CardZipCode?.click();
-  await CardZipCode?.fill('43534');
- 
+  await CardZipCode?.fill(userData.Zip);
   await page.getByRole('button', { name: 'Save Payment Method' }).click();
-
 
   await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
   await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
