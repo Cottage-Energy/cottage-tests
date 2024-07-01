@@ -52,8 +52,8 @@ test ('test', async ({ page }) => {
   await CardExpiration?.click();
   await CardExpiration?.fill(userData.CardExpiry);
   await CardCVC?.fill(userData.CVC);
-  await CardCountry?.selectOption('US');
-  //await CardCountry?.selectOption(userData.Country);
+  //await CardCountry?.selectOption('US');
+  await CardCountry?.selectOption(userData.Country);
 
 
   if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
@@ -66,10 +66,6 @@ test ('test', async ({ page }) => {
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
   }
 
-  //const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
-  //await CardZipCode?.click();
-  //await CardZipCode?.fill(userData.Zip);
-  //await page.getByRole('button', { name: 'Save Payment Method' }).click();
 
   await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
   await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});

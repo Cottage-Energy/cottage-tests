@@ -1,10 +1,7 @@
-import { test,expect,type Page } from '@playwright/test';
-import { MoveInPage }  from '../../../resources/page_objects/move_in_page';
+import { test,expect } from '../../../resources/fixtures/move_in-fixture';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
-import { faker } from '@faker-js/faker';
+import * as MoveIndata from '../../../resources/data/move_in-data.json';
 
-
-let moveinPage: MoveInPage;
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -13,7 +10,6 @@ let moveinPage: MoveInPage;
 test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
   await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-  moveinPage = new MoveInPage(page);
 });
 
 test.afterEach(async ({ page },testInfo) => {
@@ -27,126 +23,58 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Move In New User', () => {
   
-  test('COMED New User', async () => {
-    await moveinPage.Agree_on_Terms_and_Get_Started();
-    await Enter_COMED_Address_and_Unit();
-    await Enter_Personal_Info();
-    await Choose_Current_Move_In_Date()
-    await Enter_ID_Info();
-    await moveinPage.Enter_ID_Info_Prev_Add('808 Chicago AveDixon, IL');
-    await moveinPage.Submit_ID_Info();
-    await moveinPage.Check_Successful_Move_In_Non_Billing_Customer();
+  test('COMED New User', async ({moveInpage}) => {
+
+    const PGuser = await generateTestUserData();
+    const Email = PGuser.Email;
+
+    await moveInpage.Agree_on_Terms_and_Get_Started();
+    await moveInpage.Enter_Address_and_Unit(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info(PGuser.FirstName + 'AutoTest',PGuser.LastName,PGuser.PhoneNumber,Email);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Choose_Move_In_Date(PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
+    await moveInpage.Submit_ID_Info();
+    await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
   });
 
-  test('CON-EDISON New User', async () => {
-    await moveinPage.Agree_on_Terms_and_Get_Started();
-    await Enter_CON_ED_Address_and_Unit();
-    await Enter_Personal_Info();
-    await Choose_Current_Move_In_Date()
-    await CON_ED_Enter_ID_Info();
-    await moveinPage.Submit_ID_Info();
-    await moveinPage.Check_Successful_Move_In_Billing_Customer();
+  test('CON-EDISON New User', async ({moveInpage}) => {
+
+    const PGuser = await generateTestUserData();
+    const Email = PGuser.Email;
+
+    await moveInpage.Agree_on_Terms_and_Get_Started();
+    await moveInpage.Enter_Address_and_Unit(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info(PGuser.FirstName + 'AutoTest',PGuser.LastName,PGuser.PhoneNumber,Email);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Choose_Move_In_Date(PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Submit_ID_Info();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
   });
 
-  test('EVERSOURCE New User', async () => {
-    await moveinPage.Agree_on_Terms_and_Get_Started();
-    await Enter_EVERSOURCE_Address_and_Unit();
-    await Enter_Personal_Info();
-    await Choose_Current_Move_In_Date()
-    await Enter_ID_Info();
-    await moveinPage.Submit_ID_Info();
-    await moveinPage.Check_Successful_Move_In_Billing_Customer();
+  test('EVERSOURCE New User', async ({moveInpage}) => {
+
+    const PGuser = await generateTestUserData();
+    const Email = PGuser.Email;
+
+    await moveInpage.Agree_on_Terms_and_Get_Started();
+    await moveInpage.Enter_Address_and_Unit(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info(PGuser.FirstName + 'AutoTest',PGuser.LastName,PGuser.PhoneNumber,Email);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Choose_Move_In_Date(PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Submit_ID_Info();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
   });
 
 
 });
-
-
-async function Enter_COMED_Address_and_Unit() {
-  const unitNo = faker.location.buildingNumber();
-  await moveinPage.Enter_Address_and_Unit('808 Chicago AveDixon, IL',unitNo);
-  await moveinPage.Next_Move_In_Button();
-};
-
-async function Enter_CON_ED_Address_and_Unit() {
-  const unitNo = faker.location.buildingNumber();
-  await moveinPage.Enter_Address_and_Unit('S 1st StBrooklyn, NY 11249, USA',unitNo);
-  await moveinPage.Next_Move_In_Button();
-};
-
-async function Enter_EVERSOURCE_Address_and_Unit() {
-  const unitNo = faker.location.buildingNumber();
-  await moveinPage.Enter_Address_and_Unit('Plymouth StCambridge, MA 02141, USA',unitNo);
-  await moveinPage.Next_Move_In_Button();
-};
-
-async function Enter_Personal_Info() {
-  const FirstName = faker.person.firstName();
-  const LastName = faker.person.lastName();
-  const phoneNo = faker.phone.number();
-  const EmailAdd = faker.internet.email({ firstName: FirstName, lastName: LastName, provider: 'autotest.pg'});
-
-  await moveinPage.Enter_Personal_Info(FirstName + 'AutoTest',LastName,phoneNo,EmailAdd);
-  await moveinPage.Next_Move_In_Button();
-};
-
-async function Choose_Current_Move_In_Date() {
-  const userdata = await generateTestUserData();
-
-  await moveinPage.Choose_Move_In_Date(userdata.Today);
-  await moveinPage.Next_Move_In_Button();
-};
-
-async function Choose_Future_Move_In_Date() {
-  const date = new Date();
-  const addDay = date.getDate() + 1;
-  const tomorrow = addDay.toString();
-
-  await moveinPage.Choose_Move_In_Date(tomorrow);
-  await moveinPage.Next_Move_In_Button();
-};
-
-
-async function Enter_ID_Info() {
-  const formatData =
-    (input) => {
-        if (input > 9) {
-            return input;
-        } else return `0${input}`;
-    }
-
-  const date = new Date();
-  const eigthteen_yrs_ago = date.getFullYear() - 18;
-  const valid_yrs = eigthteen_yrs_ago.toString();
-  const correction_month = date.getMonth() + 1;
-  const month = formatData(correction_month).toString();
-  const day = formatData(date.getDate()).toString();
-  const complete_date = valid_yrs + '-' + month + '-' + day;
-
-  const ssn_number = Math.floor(100000000 + Math.random() * 900000000).toString();
-
-  await moveinPage.Enter_ID_Info(complete_date,ssn_number);
-};
-
-
-async function CON_ED_Enter_ID_Info() {
-  const formatData =
-    (input) => {
-        if (input > 9) {
-            return input;
-        } else return `0${input}`;
-    }
-
-  const date = new Date();
-  const eigthteen_yrs_ago = date.getFullYear() - 18;
-  const valid_yrs = eigthteen_yrs_ago.toString();
-  const correction_month = date.getMonth() + 1;
-  const month = formatData(correction_month).toString();
-  const day = formatData(date.getDate()).toString();
-  const complete_date = valid_yrs + '-' + month + '-' + day;
-
-  const ssn_number = Math.floor(100000000 + Math.random() * 900000000).toString();
-
-  await moveinPage.CON_ED_Enter_ID_Info(complete_date,ssn_number);
-};
 
