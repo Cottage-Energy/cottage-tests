@@ -74,13 +74,13 @@ test ('test', async ({ page }) => {
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
   }
 
-  const { data } = await supabase
+  const { data:cottageUser } = await supabase
     .from('CottageUsers')
     .select('id')
     .eq('email', Email)
     .single()
     .throwOnError();
-  const cottageUserId = data?.id ?? '';
+  const cottageUserId = cottageUser?.id ?? '';
   console.log(cottageUserId);
 
   const { data: EAccount } = await supabase
