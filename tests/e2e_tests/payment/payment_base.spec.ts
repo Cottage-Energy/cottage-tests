@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { generateTestUserData } from '../../resources/fixtures/test_user';
+import {supabase} from '../../resources/utils/db';
 
 test ('test', async ({ page }) => {
 
   const userData = await generateTestUserData();
+  const Email = userData.Email;
 
   await page.goto('https://dev.publicgrid.energy/move-in');
   await page.getByLabel('I agree to the Terms of').click();
@@ -24,7 +26,7 @@ test ('test', async ({ page }) => {
   await page.locator('input[name="phone"]').click();
   await page.locator('input[name="phone"]').fill(userData.PhoneNumber);
   await page.locator('input[name="email"]').click();
-  await page.locator('input[name="email"]').fill(userData.Email);
+  await page.locator('input[name="email"]').fill(Email);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Select a move-in date' }).click();
   await page.getByRole('gridcell', { name: userData.Today }).nth(1).click();
@@ -33,32 +35,38 @@ test ('test', async ({ page }) => {
   await page.getByLabel('Select your date of birth').fill(userData.BirthDate);
   await page.locator('[id="\\:rf\\:-form-item"]').click();
   await page.locator('[id="\\:rf\\:-form-item"]').fill(userData.SSN);
-  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+
+  await page.getByRole('button', { name: 'Skip for now' }).click();
+  //move payment add here for frame instance
+  //await page.getByRole('button', { name: 'Confirm' }).click();
+
   await page.getByRole('link', { name: 'Dashboard' }).click();
+  //await page.waitForTimeout(1000);
   await expect(page.getByRole('heading', { name: 'Finish Account Setup' })).toBeVisible();
   await page.waitForTimeout(5000);
 
-  const stripeIframe = await page.waitForSelector('[title ="Secure payment input frame"]')
+  const stripeIframe = await page.locator('[title ="Secure payment input frame"]')
   const stripeFrame = await stripeIframe.contentFrame()
 
-  const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
-  const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
-  const CardCVC = await stripeFrame?.waitForSelector('[id ="Field-cvcInput"]');
-  const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
+  const CardNUmberInput = await stripeFrame.locator('[id ="Field-numberInput"]');
+  const CardExpiration = await stripeFrame.locator('[id ="Field-expiryInput"]');
+  const CardCVC = await stripeFrame.locator('[id ="Field-cvcInput"]');
+  const CardCountry = await stripeFrame.locator('[id ="Field-countryInput"]');
+  const CardZipCode = await stripeFrame.locator('[id ="Field-postalCodeInput"]');
   
 
-  await CardNUmberInput?.click();
+  //await CardNUmberInput?.click();
   await CardNUmberInput?.fill('4242 4242 4242 4242');
-  await CardExpiration?.click();
+  //await CardExpiration?.click();
   await CardExpiration?.fill(userData.CardExpiry);
   await CardCVC?.fill(userData.CVC);
-  //await CardCountry?.selectOption('US');
   await CardCountry?.selectOption(userData.Country);
 
 
-  if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
-    const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
-    await CardZipCode?.click();
+  if(await CardZipCode?.isVisible()){
+    //await CardZipCode?.click();
+    await page.waitForTimeout(500);
     await CardZipCode?.fill(userData.Zip);
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
   }
@@ -66,8 +74,29 @@ test ('test', async ({ page }) => {
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
   }
 
+  const { data } = await supabase
+    .from('CottageUsers')
+    .select('id')
+    .eq('email', Email)
+    .single()
+    .throwOnError();
+  const cottageUserId = data?.id ?? '';
+  console.log(cottageUserId);
+
+  const { data: EAccount } = await supabase
+    .from('ElectricAccount')
+    .select('id')
+    .eq('cottageUserID', cottageUserId)
+    .single()
+    .throwOnError();
+  const ElectricAccountId = EAccount?.id ?? '';
+  console.log(ElectricAccountId);
+
 
   await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
   await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
   await expect(page).toHaveURL('https://dev.publicgrid.energy/app/overview?accountSetupComplete=true',{timeout:30000});
+
+
+
 });

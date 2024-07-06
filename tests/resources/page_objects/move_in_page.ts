@@ -1,4 +1,4 @@
-import { type Page, type Locator , expect } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import {supabase} from '../utils/db';
 
 export class MoveInPage{
@@ -40,7 +40,12 @@ export class MoveInPage{
     readonly Move_In_CON_ED_ID_Number_Field: Locator;
     readonly Move_In_Identify_Info_Message: Locator;
     readonly Move_In_Prev_Address_Field: Locator;
-    readonly Move_In_Submit_Button: Locator;
+    readonly Move_In_Payment_Details_Title: Locator;
+    readonly Move_In_Service_Fee_Message: Locator;
+    
+    
+    readonly Move_In_Confirm_Button: Locator;
+    readonly Move_In_Skip_Button: Locator;
     readonly Move_In_Success_Message: Locator;
     readonly Move_In_Account_Number: Locator;
     readonly Move_In_Account_Number_Value: Locator;
@@ -48,6 +53,7 @@ export class MoveInPage{
     readonly Move_In_Survey_Submit_Button: Locator;
     readonly Move_In_Feedback_Thanks_Message: Locator;
     readonly Move_In_Dashboard_Link:Locator;
+
   
     
 
@@ -91,7 +97,10 @@ export class MoveInPage{
         this.Move_In_CON_ED_ID_Number_Field = page.locator('[id="\\:rj\\:-form-item"]');
         this.Move_In_Identify_Info_Message = page.getByText('This information is never');
         this.Move_In_Prev_Address_Field = page.locator('#onboardingAddress')
-        this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit' });
+        this.Move_In_Confirm_Button = page.getByRole('button', { name: 'Confirm' });
+        this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now' });
+        this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Last Step: Add Bill Payment' });
+        this.Move_In_Service_Fee_Message = page.getByText('Card payments will be charged');
         this.Move_In_Success_Message = page.getByText('Success🥳Your account is set');
         this.Move_In_Account_Number = page.getByText('Account Number:');
         this.Move_In_Account_Number_Value = page.locator("//div[contains(@class,'callout-text')]//child::b");
@@ -99,7 +108,6 @@ export class MoveInPage{
         this.Move_In_Survey_Submit_Button = page.getByText('Tell us how your experience was so far!Submit');
         this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback 💚');
         this.Move_In_Dashboard_Link = page.getByRole('link', { name: 'Dashboard' });
-        
     }
 
 
@@ -199,10 +207,44 @@ export class MoveInPage{
     }
 
 
-    async Submit_ID_Info(){
-        await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
-        await this.Move_In_Submit_Button.hover();
-        await this.Move_In_Submit_Button.click();
+    async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
+
+        const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
+        const stripeFrame = await stripeIframe.contentFrame()
+        await this.page.waitForTimeout(3000);
+    
+        const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
+        const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
+        const CardCVC = await stripeFrame?.waitForSelector('[id ="Field-cvcInput"]');
+        const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
+    
+    
+        await CardNUmberInput?.fill(CCnumber,{timeout:10000});
+        await CardExpiration?.fill(CCexpiry,{timeout:10000});
+        await CardCVC?.fill(CCcvc,{timeout:10000});
+        await CardCountry?.selectOption(CCcountry,{timeout:10000});
+    
+    
+        if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
+            const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+            await CardZipCode?.fill(CCzip,{timeout:10000});
+        }
+        await this.page?.waitForTimeout(500);
+    }
+
+    
+    async Confirm_Payment_Details(){
+        await expect(this.Move_In_Confirm_Button).toBeEnabled({timeout:10000});
+        await this.Move_In_Confirm_Button.hover();
+        await this.Move_In_Confirm_Button.click();
+    }
+
+    async Skip_Payment_Details(){
+        await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:10000});
+        await this.Move_In_Skip_Button.hover();
+        await this.Move_In_Skip_Button.click();
     }
 
 
@@ -216,7 +258,7 @@ export class MoveInPage{
         const cottageUserId = data?.id ?? '';*/
 
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
-        await expect(this.Move_In_Account_Number).toBeVisible();
+        await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
     }
 
@@ -224,8 +266,8 @@ export class MoveInPage{
     
     async Check_Successful_Move_In_Non_Billing_Customer(){
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
-        await expect(this.Move_In_Account_Number).toBeVisible();
-        await expect(this.Move_In_Dashboard_Link).toBeHidden();
+        await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
+        await expect(this.Move_In_Dashboard_Link).toBeHidden({timeout:60000});
     }
 
 

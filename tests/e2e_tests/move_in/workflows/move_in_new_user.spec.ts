@@ -1,6 +1,7 @@
 import { test,expect } from '../../../resources/fixtures/move_in-fixture';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
+import * as PaymentData from '../../../resources/data/payment-data.json';
 
 
 /*test.beforeAll(async ({playwright,page}) => {
@@ -37,7 +38,7 @@ test.describe('Move In New User', () => {
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Submit_ID_Info();
+    await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
   });
 
@@ -54,7 +55,10 @@ test.describe('Move In New User', () => {
     await moveInpage.Choose_Move_In_Date(PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Submit_ID_Info();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
+
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
   });
 
@@ -71,7 +75,10 @@ test.describe('Move In New User', () => {
     await moveInpage.Choose_Move_In_Date(PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Submit_ID_Info();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,'US',PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
+
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
   });
 
