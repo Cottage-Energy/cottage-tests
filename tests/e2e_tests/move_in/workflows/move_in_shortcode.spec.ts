@@ -22,7 +22,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Move In New User', () => {
+test.describe('Move In New User Electric & Gas', () => {
   
 
   test('New User for ShortCode Electric Only', async ({moveInpage}) => {

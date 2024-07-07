@@ -76,7 +76,7 @@ test.describe('Move In New User', () => {
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,'US',PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
 
     await moveInpage.Check_Successful_Move_In_Billing_Customer();

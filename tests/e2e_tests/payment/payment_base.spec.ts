@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { generateTestUserData } from '../../resources/fixtures/test_user';
 import {supabase} from '../../resources/utils/db';
 
-test ('test', async ({ page }) => {
+test ('test', async ({ page,request }) => {
 
   const userData = await generateTestUserData();
   const Email = userData.Email;
@@ -46,14 +46,14 @@ test ('test', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Finish Account Setup' })).toBeVisible();
   await page.waitForTimeout(5000);
 
-  const stripeIframe = await page.locator('[title ="Secure payment input frame"]')
+  const stripeIframe = await page?.waitForSelector('[title ="Secure payment input frame"]')
   const stripeFrame = await stripeIframe.contentFrame()
 
-  const CardNUmberInput = await stripeFrame.locator('[id ="Field-numberInput"]');
-  const CardExpiration = await stripeFrame.locator('[id ="Field-expiryInput"]');
-  const CardCVC = await stripeFrame.locator('[id ="Field-cvcInput"]');
-  const CardCountry = await stripeFrame.locator('[id ="Field-countryInput"]');
-  const CardZipCode = await stripeFrame.locator('[id ="Field-postalCodeInput"]');
+  const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
+  const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
+  const CardCVC = await stripeFrame?.waitForSelector('[id ="Field-cvcInput"]');
+  const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
+  
   
 
   //await CardNUmberInput?.click();
@@ -62,10 +62,12 @@ test ('test', async ({ page }) => {
   await CardExpiration?.fill(userData.CardExpiry);
   await CardCVC?.fill(userData.CVC);
   await CardCountry?.selectOption(userData.Country);
+  //await CardCountry?.selectOption('US');
 
 
-  if(await CardZipCode?.isVisible()){
-    //await CardZipCode?.click();
+  if(await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]')){
+    const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+    await CardZipCode?.click();
     await page.waitForTimeout(500);
     await CardZipCode?.fill(userData.Zip);
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
@@ -90,7 +92,30 @@ test ('test', async ({ page }) => {
     .single()
     .throwOnError();
   const ElectricAccountId = EAccount?.id ?? '';
-  console.log(ElectricAccountId);
+  console.log(ElectricAccountId.toString());
+
+
+  // Simulate payment
+  const response = await request.post('https://ojaryxuxdh.execute-api.us-east-1.amazonaws.com/payments/simulate', {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer thisisasecretkeyforadminactions',
+      },
+      data: {
+        accountId: ElectricAccountId.toString(), // Use the fetched ElectricAccountId
+        accountType: "Electric",
+        totalAmountDue: 10111,
+        totalUsage: 14,
+      },
+  });
+    
+    // Check the response status and optionally the response body
+  console.log(await response.status()); // Log the status for debugging
+  const responseBody = await response.json();
+  console.log(responseBody); // Log the response body for debugging
+    
+    // Example assertion: Ensure the API call was successful
+  expect(response.status()).toBe(200);
 
 
   await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
