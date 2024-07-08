@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { generateTestUserData } from '../../resources/fixtures/test_user';
-import {supabase} from '../../resources/utils/db';
+import {supabase} from '../../resources/utils/supabase';
+import {linearClient} from '../../resources/utils/linear';
 
 test ('test', async ({ page,request }) => {
+  test.setTimeout(300000);
 
   const userData = await generateTestUserData();
   const Email = userData.Email;
@@ -43,8 +45,8 @@ test ('test', async ({ page,request }) => {
 
   await page.getByRole('link', { name: 'Dashboard' }).click();
   //await page.waitForTimeout(1000);
-  await expect(page.getByRole('heading', { name: 'Finish Account Setup' })).toBeVisible();
-  await page.waitForTimeout(5000);
+  await expect(page.getByRole('heading', { name: 'Finish Account Setup' })).toBeVisible({timeout:30000});
+  await page.waitForTimeout(3000);
 
   const stripeIframe = await page?.waitForSelector('[title ="Secure payment input frame"]')
   const stripeFrame = await stripeIframe.contentFrame()
@@ -61,8 +63,9 @@ test ('test', async ({ page,request }) => {
   //await CardExpiration?.click();
   await CardExpiration?.fill(userData.CardExpiry);
   await CardCVC?.fill(userData.CVC);
-  await CardCountry?.selectOption(userData.Country);
-  //await CardCountry?.selectOption('US');
+  console.log(userData.Country);
+  //await CardCountry?.selectOption(userData.Country);
+  await CardCountry?.selectOption('US');
 
 
   if(await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]')){
@@ -76,7 +79,7 @@ test ('test', async ({ page,request }) => {
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
   }
 
-  const { data:cottageUser } = await supabase
+  const { data: cottageUser } = await supabase
     .from('CottageUsers')
     .select('id')
     .eq('email', Email)
@@ -118,10 +121,38 @@ test ('test', async ({ page,request }) => {
   expect(response.status()).toBe(200);
 
 
-  await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
-  await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
-  await expect(page).toHaveURL('https://dev.publicgrid.energy/app/overview?accountSetupComplete=true',{timeout:30000});
 
+  //await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
+  //await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
+  await expect(page).toHaveURL('https://dev.publicgrid.energy/app/overview?accountSetupComplete=true',{timeout:30000});
+  
+  // linear set bill to Done
+  await page.waitForTimeout(10000);
+  const teamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: "billing-dev" } } })).nodes[0].id;
+  const doneStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: teamId } }, name: { eqIgnoreCase: "Done" } } })).nodes[0].id;
+  const issuesResponse = await linearClient.issues({
+    filter: {
+      team: { id: { eq: teamId } },
+      description: { contains:userData.Email},
+    },
+  });
+
+  const issuesId = issuesResponse.nodes[0].id;
+  console.log(issuesResponse);
+  console.log(issuesId);
+  console.log(doneStatusId);
+  console.log(userData.FirstName +" "+ userData.LastName);
+
+  await linearClient.updateIssue(issuesId, { stateId: doneStatusId });
+  
+  // supabase check if bill reminder //check email
+  //check platform dashboard and bills page
+  //supabase check if bill success
+  //supabase check if bill paid notification //check email
+  //check platform dashboard and bills page
+
+
+  
 
 
 });

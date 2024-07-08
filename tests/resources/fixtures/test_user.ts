@@ -33,7 +33,7 @@ export async function generateTestUserData(): Promise<TestUser> {
       FirstName: firstname,
       LastName: lastname,
       PhoneNumber: faker.phone.number(),
-      Email: faker.internet.email({ firstName: firstname, lastName: lastname, provider: 'autotest.pg'}),
+      Email: faker.internet.email({ firstName: 'pgtest+' + firstname, lastName: lastname, provider: 'autotest.pg'}),
       UnitNumber: faker.location.buildingNumber(),
       Today: today.getDate().toString(),
       Tomorrow: tomorrow.toString(),

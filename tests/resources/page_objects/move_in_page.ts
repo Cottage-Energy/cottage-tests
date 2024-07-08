@@ -1,5 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import {supabase} from '../utils/db';
+import {supabase} from '../utils/supabase';
 
 export class MoveInPage{
     //variables
@@ -249,14 +249,6 @@ export class MoveInPage{
 
 
     async Check_Successful_Move_In_Billing_Customer(){
-        /*const { data } = await supabase
-            .from('CottageUsers')
-            .select('id')
-            .eq('email', email)
-            .single()
-            .throwOnError();
-        const cottageUserId = data?.id ?? '';*/
-
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
