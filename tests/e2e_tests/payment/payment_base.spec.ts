@@ -71,8 +71,8 @@ test ('test', async ({ page,request }) => {
   if(await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]')){
     const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
     await CardZipCode?.click();
-    await page.waitForTimeout(500);
     await CardZipCode?.fill(userData.Zip);
+    await page.waitForTimeout(500);
     await page.getByRole('button', { name: 'Save Payment Method' }).click();
   }
   else{
@@ -127,7 +127,7 @@ test ('test', async ({ page,request }) => {
   await expect(page).toHaveURL('https://dev.publicgrid.energy/app/overview?accountSetupComplete=true',{timeout:30000});
   
   // linear set bill to Done
-  await page.waitForTimeout(10000);
+  await page.waitForTimeout(15000);
   const teamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: "billing-dev" } } })).nodes[0].id;
   const doneStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: teamId } }, name: { eqIgnoreCase: "Done" } } })).nodes[0].id;
   const issuesResponse = await linearClient.issues({
