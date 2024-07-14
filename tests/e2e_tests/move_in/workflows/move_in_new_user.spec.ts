@@ -1,4 +1,4 @@
-import { test,expect } from '../../../resources/fixtures/move_in-fixture';
+import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
 import * as PaymentData from '../../../resources/data/payment-data.json';

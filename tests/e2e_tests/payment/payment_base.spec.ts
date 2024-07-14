@@ -31,7 +31,7 @@ test ('test', async ({ page,request }) => {
   await page.locator('input[name="email"]').fill(Email);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Select a move-in date' }).click();
-  await page.getByRole('gridcell', { name: userData.Today }).nth(1).click();
+  await page.getByRole('gridcell', { name: userData.Today }).click();
   await page.waitForTimeout(500);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByLabel('Select your date of birth').fill(userData.BirthDate);

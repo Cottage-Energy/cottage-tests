@@ -247,7 +247,14 @@ export class MoveInPage{
         await this.Move_In_Skip_Button.click();
     }
 
+    async Click_Dashboard_Link(){
+        await expect(this.Move_In_Dashboard_Link).toBeEnabled({timeout:10000});
+        await this.Move_In_Dashboard_Link.hover();
+        await this.Move_In_Dashboard_Link.click();
+    }
 
+
+    //page assertions
     async Check_Successful_Move_In_Billing_Customer(){
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
