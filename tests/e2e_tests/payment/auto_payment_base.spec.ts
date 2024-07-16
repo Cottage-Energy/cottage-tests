@@ -125,9 +125,24 @@ test ('test', async ({ page,request }) => {
   //await expect(page.getByText('🥳 Success', { exact: true })).toBeVisible({timeout:30000});
   //await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
   await expect(page).toHaveURL('https://dev.publicgrid.energy/app/overview?accountSetupComplete=true',{timeout:30000});
+
+  //supabase check bill visibility - false
+  //supabase check bill isSendReminder - true
+  const { data: ElectricBillReminder } = await supabase
+    .from('ElectricBill')
+    .select('isSendReminder')
+    .eq('electricAccountID', ElectricAccountId)
+    .single()
+    .throwOnError();
+  const ElectricBillreminder = ElectricBillReminder?.isSendReminder ?? '';
+  console.log(ElectricBillreminder);
+  expect(ElectricBillreminder).toBe(true);
+
+  //platform check and bills page
+  //supabase check if bill paid notification - false
   
   // linear set bill to Done
-  await page.waitForTimeout(15000);
+  await page.waitForTimeout(10000);
   const teamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: "billing-dev" } } })).nodes[0].id;
   const doneStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: teamId } }, name: { eqIgnoreCase: "Done" } } })).nodes[0].id;
   const issuesResponse = await linearClient.issues({
@@ -144,11 +159,57 @@ test ('test', async ({ page,request }) => {
   console.log(userData.FirstName +" "+ userData.LastName);
 
   await linearClient.updateIssue(issuesId, { stateId: doneStatusId });
+
+  //supabase check if bill scheduled
+  await page.waitForTimeout(15000);
+  const { data: ElectricBillStatus2 } = await supabase
+    .from('ElectricBill')
+    .select('paymentStatus')
+    .eq('electricAccountID', ElectricAccountId)
+    .single()
+    .throwOnError();
+  const ElectricBillstatus2 = ElectricBillStatus2?.paymentStatus ?? '';
+  console.log(ElectricBillstatus2);
+  await expect(ElectricBillstatus2).toBe("scheduled_for_payment"); // should be scheduled_for_payment
+
   
-  // supabase check if bill reminder //check email
+  // supabase check bill visibility - true
+  await page.waitForTimeout(90000);
+  const { data: ElectricBillVis } = await supabase
+    .from('ElectricBill')
+    .select('visible')
+    .eq('electricAccountID', ElectricAccountId)
+    .single()
+    .throwOnError();
+  const ElectricBillvisib = ElectricBillVis?.visible ?? '';
+  console.log(ElectricBillvisib);
+  expect(ElectricBillvisib).toBe(true); // should be true
+
+  //check bill ready email - received
   //check platform dashboard and bills page
+  
+  //supabase check if bill paid notification //check email - true
+  const { data: ElectricBillPaidNotif } = await supabase
+    .from('ElectricBill')
+    .select('paidNotificationSent')
+    .eq('electricAccountID', ElectricAccountId)
+    .single()
+    .throwOnError();
+  const ElectricBillpaidNotif = ElectricBillPaidNotif?.paidNotificationSent ?? '';
+  console.log(ElectricBillpaidNotif);
+  expect(ElectricBillpaidNotif).toBe(true); // should be true
+  
   //supabase check if bill success
-  //supabase check if bill paid notification //check email
+  const { data: ElectricBillStatus } = await supabase
+    .from('ElectricBill')
+    .select('paymentStatus')
+    .eq('electricAccountID', ElectricAccountId)
+    .single()
+    .throwOnError();
+  const ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
+  console.log(ElectricBillstatus);
+  expect(ElectricBillstatus).toBe("succeeded"); // should be succeeded
+  
   //check platform dashboard and bills page
 
 
