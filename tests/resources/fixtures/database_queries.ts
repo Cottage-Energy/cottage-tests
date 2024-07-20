@@ -149,6 +149,15 @@ export class SupabaseQueries{
     }
 
 
+    async Upsert_Companies_to_Building(ShortCode: string, ElectricCompany: string, GasCompany: string) {
+        const { data,error} = await supabase
+        .from('Building')
+        .update({ electricCompanyID: ElectricCompany, gasCompanyID: GasCompany })
+        .eq('shortCode', ShortCode )
+        .throwOnError();
+        console.log(data);
+    }
+
 }
 
 

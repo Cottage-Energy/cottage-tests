@@ -4,6 +4,8 @@ import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
+const supabaseQueries = new SupabaseQueries();
+
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -31,6 +33,7 @@ test.describe('Move In New User Electric & Gas', () => {
     const PGuser = await generateTestUserData();
 
     //Supabase query to change bldg to Electric Only
+    supabaseQueries.Upsert_Companies_to_Building("autotest","EVERSOURCE","");
   });
 
 

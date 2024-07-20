@@ -28,9 +28,51 @@ test.describe('Move In New User', () => {
   
   test('COMED New User', async ({moveInpage}) => {
 
+    const cottageUserId = await COMED_New_User_Move_In(moveInpage);
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
+    //add query to check if the user is added to the UtilityCredentials table
+  });
+
+
+  test('CON-EDISON New User Add Payment', async ({moveInpage}) => {
+
+    const cottageUserId = await CON_ED_New_User_Move_In_Payment_Added(moveInpage);
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
+    //add query to check if the user is added to the UtilityCredentials table
+  });
+
+
+  test('EVERSOURCE New User Add Payment', async ({moveInpage}) => {
+
+    const cottageUserId = await EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage);
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
+    //add query to check if the user is added to the UtilityCredentials table
+  });
+
+
+  test('CON-EDISON New User Skip Payment', async ({moveInpage}) => {
+
+    const cottageUserId = await CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
+    //add query to check if the user is added to the UtilityCredentials table
+  });
+
+
+  test('EVERSOURCE New User Skip Payment', async ({moveInpage}) => {
+
+    const cottageUserId = await EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
+    //add query to check if the user is added to the UtilityCredentials table
+  });
+
+
+});
+
+
+export async function COMED_New_User_Move_In(moveInpage) {
+    
     const PGuser = await generateTestUserData();
     
-
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -40,14 +82,13 @@ test.describe('Move In New User', () => {
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
-    //add query to check if the user is added to the UtilityCredentials table
-  });
+    return cottageUserId;
+}
 
 
-  test('CON-EDISON New User Add Payment', async ({moveInpage}) => {
-
-    const PGuser = await generateTestUserData();
+export async function CON_ED_New_User_Move_In_Payment_Added(moveInpage) {
+    
+  const PGuser = await generateTestUserData();
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -63,13 +104,12 @@ test.describe('Move In New User', () => {
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
-    //add query to check if the user is added to the UtilityCredentials table
-  });
+    return cottageUserId;
+}
 
 
-  test('EVERSOURCE New User Add Payment', async ({moveInpage}) => {
-
+export async function EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage) {
+    
     const PGuser = await generateTestUserData();
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
@@ -84,13 +124,12 @@ test.describe('Move In New User', () => {
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
-    //add query to check if the user is added to the UtilityCredentials table
-  });
+    return cottageUserId;
+}
 
 
-  test('CON-EDISON New User Skip Payment', async ({moveInpage}) => {
-
+export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage) {
+    
     const PGuser = await generateTestUserData();
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
@@ -106,13 +145,12 @@ test.describe('Move In New User', () => {
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
-    //add query to check if the user is added to the UtilityCredentials table
-  });
+    return cottageUserId;
+}
 
 
-  test('EVERSOURCE New User Skip Payment', async ({moveInpage}) => {
-
+export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage) {
+    
     const PGuser = await generateTestUserData();
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
@@ -126,10 +164,6 @@ test.describe('Move In New User', () => {
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
-    //add query to check if the user is added to the UtilityCredentials table
-  });
-
-
-});
+    return cottageUserId;
+}
 

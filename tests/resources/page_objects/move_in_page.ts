@@ -66,7 +66,7 @@ export class MoveInPage{
     //constructor // locators
     constructor(page: Page) {
         this.page = page;
-        this.Move_In_Terms_and_Address_Fields = page.getByText('Hi 👋Time to setup your');
+        this.Move_In_Terms_and_Address_Fields = page.getByRole('heading', { name: 'Hi 👋' });
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
         this.Move_In_Get_Started_Button = page.getByRole('button', { name: 'Get Started' });
         this.Move_In_Back_Link = page.getByText('Back');
@@ -286,6 +286,7 @@ export class MoveInPage{
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
         await expect(this.Move_In_Dashboard_Link).toBeHidden({timeout:60000});
     }
+
 
 
         
