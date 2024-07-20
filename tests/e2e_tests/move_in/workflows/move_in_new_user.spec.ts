@@ -13,9 +13,9 @@ test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 });
 
-test.afterEach(async ({ page },testInfo) => {
-  await page.close();
-});
+//test.afterEach(async ({ page },testInfo) => {
+  //await page.close();
+//});
 
 /*test.afterAll(async ({ page }) => {
 
@@ -27,14 +27,9 @@ test.describe('Move In New User', () => {
   test('COMED New User', async ({moveInpage}) => {
 
     const PGuser = await generateTestUserData();
-    const Email = PGuser.Email;
 
-    await moveInpage.Agree_on_Terms_and_Get_Started();
-    await moveInpage.Enter_Address_and_Unit(MoveIndata.COMEDaddress,PGuser.UnitNumber);
-    await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info(PGuser.FirstName + 'AutoTest',PGuser.LastName,PGuser.PhoneNumber,Email);
-    await moveInpage.Next_Move_In_Button();
-    await moveInpage.Choose_Move_In_Date(PGuser.Today);
+    await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
@@ -45,14 +40,11 @@ test.describe('Move In New User', () => {
   test('CON-EDISON New User', async ({moveInpage}) => {
 
     const PGuser = await generateTestUserData();
-    const Email = PGuser.Email;
 
-    await moveInpage.Agree_on_Terms_and_Get_Started();
-    await moveInpage.Enter_Address_and_Unit(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info(PGuser.FirstName + 'AutoTest',PGuser.LastName,PGuser.PhoneNumber,Email);
-    await moveInpage.Next_Move_In_Button();
-    await moveInpage.Choose_Move_In_Date(PGuser.Today);
+    await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
@@ -60,19 +52,16 @@ test.describe('Move In New User', () => {
     await moveInpage.Confirm_Payment_Details();
 
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    await moveInpage.Click_Dashboard_Link();
+    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
   });
 
   test('EVERSOURCE New User', async ({moveInpage}) => {
 
     const PGuser = await generateTestUserData();
-    const Email = PGuser.Email;
 
-    await moveInpage.Agree_on_Terms_and_Get_Started();
-    await moveInpage.Enter_Address_and_Unit(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
-    await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info(PGuser.FirstName + 'AutoTest',PGuser.LastName,PGuser.PhoneNumber,Email);
-    await moveInpage.Next_Move_In_Button();
-    await moveInpage.Choose_Move_In_Date(PGuser.Today);
+    await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
@@ -80,6 +69,8 @@ test.describe('Move In New User', () => {
     await moveInpage.Confirm_Payment_Details();
 
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    await moveInpage.Click_Dashboard_Link();
+    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
   });
 
 
