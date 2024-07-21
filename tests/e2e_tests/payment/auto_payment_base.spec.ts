@@ -126,6 +126,9 @@ test ('test', async ({ page,request }) => {
   //await expect(page.getByText('Notification 🥳 SuccessYour')).toBeVisible({timeout:30000});
   await expect(page).toHaveURL('https://dev.publicgrid.energy/app/overview?accountSetupComplete=true',{timeout:30000});
 
+
+
+  
   //supabase check bill visibility - false
   //supabase check bill isSendReminder - true
   const { data: ElectricBillReminder } = await supabase

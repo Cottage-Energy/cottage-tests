@@ -1,15 +1,27 @@
-import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { APIRequestContext } from '@playwright/test';
+import { test, expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
-//import { MoveInUtilities } from '../../../resources/fixtures/moveInUtilities';
-//import * as MoveIndata from '../../../resources/data/move_in-data.json';
-//import * as PaymentData from '../../../resources/data/payment-data.json';
+import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
+import { AdminApi } from '../../../resources/api/admin_api';
+import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 
+let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
 
-/*test.beforeAll(async ({playwright,page}) => {
 
-});*/
+test.beforeAll(async ({playwright,page}) => {
+    const env = process.env.ENV || 'dev';
+    const baseUrl = environmentBaseUrl[env].admin_api;
+
+    AdminApiContext = await playwright.request.newContext({
+        baseURL: baseUrl,
+        extraHTTPHeaders: {
+            Authorization: 'Bearer thisisasecretkeyforadminactions',
+            Accept: 'application/json',
+        },
+    });
+});
 
 test.beforeEach(async ({ page },testInfo) => {
     await page.goto('/',{ waitUntil: 'domcontentloaded' })
@@ -26,9 +38,18 @@ test.beforeEach(async ({ page },testInfo) => {
 
   test.describe('Valid Auto Payment', () => {
 
-    test('CON-EDISON Valid Payment Move In Added', async ({moveInpage}) => {
+    test('CON-EDISON Valid Payment Move In Added', async ({moveInpage, request}) => {
+        test.setTimeout(300000);
 
         const PGuserUsage = await generateTestUserData();
+
+        const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Payment_Added(moveInpage);
+        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+        
+
+
+
 
       });
 

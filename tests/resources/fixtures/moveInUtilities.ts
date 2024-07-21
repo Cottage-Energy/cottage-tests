@@ -1,4 +1,3 @@
-//import { test,expect } from '../../resources/fixtures/pg_pages_fixture';
 import { generateTestUserData } from '../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import * as MoveIndata from '../../resources/data/move_in-data.json';
@@ -7,9 +6,10 @@ import * as PaymentData from '../../resources/data/payment-data.json';
 const supabaseQueries = new SupabaseQueries();
 
 
-export async function COMED_New_User_Move_In(moveInpage) {
+export async function COMED_New_User_Move_In(moveInpage:any) {
     
     const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
     
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -20,13 +20,18 @@ export async function COMED_New_User_Move_In(moveInpage) {
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    return cottageUserId;
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
 }
 
 
-export async function CON_ED_New_User_Move_In_Payment_Added(moveInpage) {
+export async function CON_ED_New_User_Move_In_Payment_Added(moveInpage:any) {
     
-  const PGuser = await generateTestUserData();
+    const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
+
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -42,13 +47,17 @@ export async function CON_ED_New_User_Move_In_Payment_Added(moveInpage) {
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    return cottageUserId;
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage) {
+export async function EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage:any) {
     
     const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -62,13 +71,17 @@ export async function EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage) {
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    return cottageUserId;
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
 }
 
 
-export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage) {
+export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage:any) {
     
     const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -83,13 +96,17 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage) {
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    return cottageUserId;
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage) {
+export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage:any) {
     
     const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest: " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -102,7 +119,10 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage) {
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    return cottageUserId;
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
 }
 
 

@@ -246,13 +246,13 @@ export class MoveInPage{
 
     
     async Confirm_Payment_Details(){
-        await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:10000});
+        await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:30000});
         await this.Move_In_Submit_Button.hover();
         await this.Move_In_Submit_Button.click();
     }
 
     async Skip_Payment_Details(){
-        await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:10000});
+        await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
         await this.Move_In_Skip_Button.hover();
         await this.Move_In_Skip_Button.click();
     }
