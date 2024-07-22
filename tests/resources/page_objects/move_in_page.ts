@@ -1,4 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
+import { RetryAfterError } from 'inngest';
 
 export class MoveInPage{
     //variables
@@ -127,10 +128,9 @@ export class MoveInPage{
 
     //methods
     async Enter_Address_Agree_on_Terms_and_Get_Started(address:string, unit:string) {
+        await this.page.waitForLoadState('networkidle');
         await expect(this.Move_In_Terms_and_Address_Fields).toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(1000);
-        await this.Move_In_Address_Field.click({timeout:10000});
-        await this.page.waitForTimeout(500);
+        await this.Move_In_Address_Field.click({timeout:10000},);
         await this.Move_In_Address_Field.fill(address);
         await this.Move_In_Address_Dropdown(address).click();
         await this.Move_In_Unit_Field.click();
@@ -151,6 +151,7 @@ export class MoveInPage{
 
 
     async Enter_Personal_Info(firstname:string, lastname:string, phone:string, email:string, day:string){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_About_You_Fields).toBeVisible({timeout:30000});
         await this.Move_In_First_Name_Field.isEditable();
         await this.Move_In_First_Name_Field.hover();
@@ -179,6 +180,7 @@ export class MoveInPage{
 
 
     async CON_ED_Questions(){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_CON_ED_Questions_Fields).toBeVisible({timeout:30000});
         await expect(this.Move_In_CON_ED_Questions_Title).toBeVisible({timeout:30000});
         //Answering the questions randomly
@@ -187,6 +189,7 @@ export class MoveInPage{
 
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
@@ -197,6 +200,7 @@ export class MoveInPage{
 
 
     async CON_ED_Enter_ID_Info(birthdate:string, IDnumber:string){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
@@ -266,22 +270,26 @@ export class MoveInPage{
 
     //page assertions
     async Check_Successful_Move_In_Billing_Customer(){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
     }
 
     async Check_Billing_Customer_Added_Payment_Overview_Redirect(){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.page).toHaveURL("https://dev.publicgrid.energy/app/overview",{timeout:60000});
     }
 
     async Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect(){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.page).toHaveURL("https://dev.publicgrid.energy/app/finish-account-setup",{timeout:60000});
     }
 
 
     
     async Check_Successful_Move_In_Non_Billing_Customer(){
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
         await expect(this.Move_In_Dashboard_Link).toBeHidden({timeout:60000});

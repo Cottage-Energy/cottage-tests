@@ -38,7 +38,7 @@ test.beforeEach(async ({ page },testInfo) => {
 
   test.describe('Valid Auto Payment', () => {
 
-    test('CON-EDISON Valid Payment Move In Added', async ({moveInpage, request}) => {
+    test('CON-EDISON Valid Payment Move In Added', async ({moveInpage, page}) => {
         test.setTimeout(300000);
 
         const PGuserUsage = await generateTestUserData();
