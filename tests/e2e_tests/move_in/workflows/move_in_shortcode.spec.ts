@@ -13,7 +13,6 @@ const supabaseQueries = new SupabaseQueries();
 
 test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
-  await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 });
 
 test.afterEach(async ({ page },testInfo) => {
@@ -28,12 +27,13 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe('Move In New User Electric & Gas', () => {
   
 
-  test('New User for ShortCode Electric Only', async ({moveInpage}) => {
+  test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
 
     const PGuser = await generateTestUserData();
 
     //Supabase query to change bldg to Electric Only
-    await supabaseQueries.Update_Companies_to_Building("autotest","null","EVERSOURCE");
+    await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON",null);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
   });
 
 
