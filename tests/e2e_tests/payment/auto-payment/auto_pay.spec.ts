@@ -5,6 +5,7 @@ import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { AdminApi } from '../../../resources/api/admin_api';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
+import tokenConfig from '../../../resources/utils/tokenConfig';
 
 let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
@@ -13,11 +14,12 @@ const supabaseQueries = new SupabaseQueries();
 test.beforeAll(async ({playwright,page}) => {
     const env = process.env.ENV || 'dev';
     const baseUrl = environmentBaseUrl[env].admin_api;
+    const adminToken = tokenConfig[env].admin;
 
     AdminApiContext = await playwright.request.newContext({
         baseURL: baseUrl,
         extraHTTPHeaders: {
-            Authorization: 'Bearer thisisasecretkeyforadminactions',
+            Authorization: `Bearer ${adminToken}`,
             Accept: 'application/json',
         },
     });
