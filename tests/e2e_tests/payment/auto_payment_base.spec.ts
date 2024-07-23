@@ -3,6 +3,7 @@ import { MoveInTestUtilities } from '../../resources/fixtures/moveInUtilities';
 import { generateTestUserData } from '../../resources/fixtures/test_user';
 import {supabase} from '../../resources/utils/supabase';
 import {linearClient} from '../../resources/utils/linear';
+import { TIMEOUT } from 'dns';
 
 test ('test', async ({ moveInpage,request,page }) => {
   test.setTimeout(300000);

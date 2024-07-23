@@ -33,7 +33,7 @@ test.describe('Move In New User Electric & Gas', () => {
     const PGuser = await generateTestUserData();
 
     //Supabase query to change bldg to Electric Only
-    supabaseQueries.Upsert_Companies_to_Building("autotest","EVERSOURCE","");
+    await supabaseQueries.Update_Companies_to_Building("autotest","null","EVERSOURCE");
   });
 
 
