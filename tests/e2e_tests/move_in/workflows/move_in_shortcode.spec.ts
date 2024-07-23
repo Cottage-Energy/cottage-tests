@@ -61,5 +61,29 @@ test.describe('Move In New User Electric & Gas', () => {
   });
 
 
+  test('New User for ShortCode Electric and Gas Both Non Billing', async ({moveInpage}) => {
+
+    const PGuser = await generateTestUserData();
+
+    //Supabase query to change bldg to Electric and Gas Same Company
+  });
+
+
+  test('New User for ShortCode Electric is Billing and Gas is Non Billing', async ({moveInpage}) => {
+
+    const PGuser = await generateTestUserData();
+
+    //Supabase query to change bldg to Electric and Gas Same Company
+  });
+
+
+  test('New User for ShortCode Electric is Non Billing and Gas is Billing', async ({moveInpage}) => {
+
+    const PGuser = await generateTestUserData();
+
+    //Supabase query to change bldg to Electric and Gas Same Company
+  });
+
+
 });
 
