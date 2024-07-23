@@ -4,11 +4,13 @@ import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { AdminApi } from '../../../resources/api/admin_api';
+import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 
 let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
+const linearActions = new LinearActions();
 
 
 test.beforeAll(async ({playwright,page}) => {
@@ -48,6 +50,8 @@ test.beforeEach(async ({ page },testInfo) => {
         const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Payment_Added(moveInpage);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+        await page.waitForTimeout(10000);
+        await linearActions.SetBillToApprove( MoveIn.PGUserEmail);
         
 
 

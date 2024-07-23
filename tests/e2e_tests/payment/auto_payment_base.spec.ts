@@ -89,8 +89,8 @@ test ('test', async ({ moveInpage,request,page }) => {
   const issuesCount = issuesResponse.nodes.length;
   console.log(`Number of issues: ${issuesCount}`);
   console.log(issuesResponse);
-  console.log(issuesId);
-  console.log(doneStatusId);
+  //console.log(issuesId);
+  //console.log(doneStatusId);
   //console.log(userData.FirstName +" "+ userData.LastName);
 
   await linearClient.updateIssue(issuesId, { stateId: doneStatusId });
