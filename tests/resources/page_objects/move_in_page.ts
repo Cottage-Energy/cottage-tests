@@ -1,5 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import { RetryAfterError } from 'inngest';
+
 
 export class MoveInPage{
     //variables
@@ -49,7 +49,7 @@ export class MoveInPage{
     readonly Move_In_Payment_Details_Title: Locator;
     readonly Move_In_Service_Fee_Message: Locator;
     
-    
+    readonly Move_In_Auto_Payment_Checbox: Locator;
     readonly Move_In_Submit_Button: Locator;
     readonly Move_In_Skip_Button: Locator;
     readonly Move_In_Success_Message: Locator;
@@ -111,6 +111,7 @@ export class MoveInPage{
         this.Move_In_Identify_Info_Message = page.getByText('This information is never');
         this.Move_In_Prev_Address_Field = page.locator('#onboardingAddress')
 
+        this.Move_In_Auto_Payment_Checbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit', exact: true });
         this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now (and Submit)' });
         this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add Bill Payment Method' });
@@ -248,7 +249,18 @@ export class MoveInPage{
         await this.page?.waitForTimeout(500);
     }
 
-    
+    async Enable_Auto_Payment(){
+        await expect(this.Move_In_Auto_Payment_Checbox).toBeEnabled({timeout:30000});
+        await this.Move_In_Auto_Payment_Checbox.hover();
+        await this.Move_In_Auto_Payment_Checbox.setChecked(true,{timeout:10000});
+    }
+
+    async Disable_Auto_Payment(){
+        await expect(this.Move_In_Auto_Payment_Checbox).toBeEnabled({timeout:30000});
+        await this.Move_In_Auto_Payment_Checbox.hover();
+        await this.Move_In_Auto_Payment_Checbox.setChecked(false,{timeout:10000});
+    } 
+
     async Confirm_Payment_Details(){
         await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:30000});
         await this.Move_In_Submit_Button.hover();

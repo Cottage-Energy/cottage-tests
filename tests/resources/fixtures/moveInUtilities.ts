@@ -27,7 +27,7 @@ export async function COMED_New_User_Move_In(moveInpage:any) {
 }
 
 
-export async function CON_ED_New_User_Move_In_Payment_Added(moveInpage:any) {
+export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:any) {
     
     const PGuser = await generateTestUserData();
     const PGUserEmail = PGuser.Email;
@@ -54,7 +54,7 @@ export async function CON_ED_New_User_Move_In_Payment_Added(moveInpage:any) {
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage:any) {
+export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:any) {
     
     const PGuser = await generateTestUserData();
     const PGUserEmail = PGuser.Email;
@@ -65,6 +65,59 @@ export async function EVERSOURCE_New_User_Move_In_Payment_Added(moveInpage:any) 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    await moveInpage.Click_Dashboard_Link();
+    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
+
+    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
+}
+
+
+export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage:any) {
+    
+    const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
+
+
+    await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.CON_ED_Questions();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Disable_Auto_Payment();
+    await moveInpage.Confirm_Payment_Details();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    await moveInpage.Click_Dashboard_Link();
+    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
+
+    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    return {
+        cottageUserId,
+        PGUserEmail
+    };
+}
+
+
+export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage:any) {
+    
+    const PGuser = await generateTestUserData();
+    const PGUserEmail = PGuser.Email;
+
+    await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
@@ -128,8 +181,10 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage:any) {
 
 export const MoveInTestUtilities = {
     COMED_New_User_Move_In,
-    CON_ED_New_User_Move_In_Payment_Added,
-    EVERSOURCE_New_User_Move_In_Payment_Added,
+    CON_ED_New_User_Move_In_Auto_Payment_Added,
+    EVERSOURCE_New_User_Move_In_Auto_Payment_Added,
+    CON_ED_New_User_Move_In_Manual_Payment_Added,
+    EVERSOURCE_New_User_Move_In_Manual_Payment_Added,
     CON_ED_New_User_Move_In_Skip_Payment,
     EVERSOURCE_New_User_Move_In_Skip_Payment
 };

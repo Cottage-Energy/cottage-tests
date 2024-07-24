@@ -8,6 +8,7 @@ import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 
+
 let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
@@ -47,16 +48,27 @@ test.beforeEach(async ({ page },testInfo) => {
 
         const PGuserUsage = await generateTestUserData();
 
-        const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Payment_Added(moveInpage);
+        const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+        //supabase check bill visibility - false
+        //supabase check bill isSendReminder - true
+        //platform check and bills page
+        //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
         await linearActions.SetBillToApprove( MoveIn.PGUserEmail);
+        await page.waitForTimeout(15000);
+        //supabase check if bill scheduled
+        //check bill ready email - received
+        //check platform dashboard and bills page
+        await page.waitForTimeout(90000);
+        // supabase check bill visibility - true
+        //check platform dashboard and bills page
+        //supabase check if bill paid notification - true
+        //check email - payment successful
+        //supabase check if bill success
+        //check platform dashboard and bills page
         
-
-
-
-
       });
 
   });
