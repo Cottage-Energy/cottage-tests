@@ -20,6 +20,11 @@ export class SidebarChat {
     readonly Chat_Window: Locator;
     readonly Close_Chat_Icon: Locator;
 
+    readonly Overview_Page_Usage_Chart_Title: Locator;
+    readonly Billing_Page_Title: Locator;
+    readonly Services_Page_Title: Locator;
+    readonly Support_Page_Title: Locator;
+
 
 
 
@@ -41,10 +46,49 @@ export class SidebarChat {
         this.Chat_Icon = page.getByLabel('Open chat');
         this.Chat_Window = page.locator('div').filter({ hasText: /^Public GridHow can we help with Public Grid\?$/ }).nth(1);
         this.Close_Chat_Icon = page.getByRole('button', { name: 'Close chat' });
+
+        this.Overview_Page_Usage_Chart_Title = page.getByRole('heading', { name: 'Energy Usage Details' });
+        this.Billing_Page_Title = page.getByRole('heading', { name: 'Billing', exact: true });
+        this.Services_Page_Title = page.getByRole('heading', { name: 'Services', exact: true });
+        this.Support_Page_Title = page.getByRole('heading', { name: 'We are here to help' });
     }
 
 
     //methods
+    async Expand_Sidebar(){
+        await expect(this.Public_Grid_Icon).toBeEnabled({timeout:30000});
+        await this.Public_Grid_Icon.hover();
+        await this.Public_Grid_Icon.click();
+        await expect(this.Public_Grid_Logo).toBeVisible({timeout:30000});
+    }
+
+    async Goto_Overview_Page_Via_Icon(){
+        await expect(this.Overview_Icon).toBeEnabled({timeout:30000});
+        await this.Overview_Icon.hover();
+        await this.Overview_Icon.click();
+        await expect(this.Overview_Page_Usage_Chart_Title).toBeVisible({timeout:30000});
+    }
+
+    async Goto_Billing_Page_Via_Icon(){
+        await expect(this.Billing_Icon).toBeEnabled({timeout:30000});
+        await this.Billing_Icon.hover();
+        await this.Billing_Icon.click();
+        await expect(this.Billing_Page_Title).toBeVisible({timeout:30000});
+    }
+
+    async Goto_Service_Page_Via_Icon(){
+        await expect(this.Services_Icon).toBeEnabled({timeout:30000});
+        await this.Services_Icon.hover();
+        await this.Services_Icon.click();
+        await expect(this.Services_Page_Title).toBeVisible({timeout:30000});
+    }
+
+    async Goto_Support_Page_Via_Icon(){
+        await expect(this.Support_Icon).toBeEnabled({timeout:30000});
+        await this.Support_Icon.hover();
+        await this.Support_Icon.click();
+        await expect(this.Support_Page_Title).toBeVisible({timeout:30000});
+    }
 
 }
 

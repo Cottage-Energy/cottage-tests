@@ -1,11 +1,13 @@
 import { test as base } from '@playwright/test';
 import { MoveInPage }  from '../page_objects/move_in_page';
 import { HomePage } from '../page_objects/homepage';
+import { SidebarChat } from '../page_objects/sidebar_chat';
 
 
 type pages = {
-    moveInpage: MoveInPage
     homepage: HomePage
+    sidebarChat: SidebarChat
+    moveInpage: MoveInPage
 }
 
 
@@ -13,6 +15,10 @@ const testPages = base.extend<pages>({
     
     homepage: async ({page},use) => {
         await use(new HomePage(page));
+    },
+
+    sidebarChat: async ({page},use) => {
+        await use(new SidebarChat(page));
     },
 
     moveInpage: async ({page},use) => {
