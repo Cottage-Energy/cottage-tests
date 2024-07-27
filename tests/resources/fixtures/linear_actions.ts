@@ -8,20 +8,27 @@ export class LinearActions{
     
     async SetBillToApprove(Email: string) {
         const BillingteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `billing-${env}` } } })).nodes[0].id;
+        const NullStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "null" } } })).nodes[0].id;
         const ApprovedStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "approved" } } })).nodes[0].id;
         const issuesResponse = await linearClient.issues({
             filter: {
                 team: { id: { eq: BillingteamId } },
-                description: { contains:Email },
+                description: { contains: Email},
+                state: { id: { eq: NullStatusId } }
             },
         });
     
-        const issuesId = issuesResponse.nodes[0].id;
         const issuesCount = issuesResponse.nodes.length;
         console.log(`Number of issues: ${issuesCount}`);
         console.log(issuesResponse);
 
-        await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
+        for (let i = 0; i < issuesCount; i++) {
+            const issuesId = issuesResponse.nodes[i].id;
+            await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
+        }
+
+        //const issuesId = issuesResponse.nodes[0].id;
+        //await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
     }
 
 

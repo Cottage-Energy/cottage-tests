@@ -32,7 +32,6 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:any)
     const PGuser = await generateTestUserData();
     const PGUserEmail = PGuser.Email;
 
-
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -82,7 +81,6 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage:an
     
     const PGuser = await generateTestUserData();
     const PGUserEmail = PGuser.Email;
-
 
     await moveInpage.Enter_Address_Agree_on_Terms_and_Get_Started(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);

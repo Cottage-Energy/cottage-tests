@@ -42,9 +42,9 @@ test.beforeEach(async ({ page },testInfo) => {
   
   });*/
 
-  test.describe('Valid Auto Payment', () => {
+  test.describe('Valid Card Auto Payment', () => {
 
-    test('CON-EDISON Valid Payment Move In Added', async ({moveInpage, page}) => {
+    test('CON-EDISON Valid Auto Payment Move In Added', async ({moveInpage, page}) => {
         test.setTimeout(300000);
 
         const PGuserUsage = await generateTestUserData();
@@ -57,7 +57,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove( MoveIn.PGUserEmail);
+        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check if bill scheduled
         //check bill ready email - received
@@ -73,7 +73,7 @@ test.beforeEach(async ({ page },testInfo) => {
       });
 
 
-      test('CON-EDISON Valid Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page}) => {
+      test('CON-EDISON Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page}) => {
         test.setTimeout(300000);
 
         const PGuserUsage = await generateTestUserData();
@@ -87,7 +87,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove( MoveIn.PGUserEmail);
+        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check if bill scheduled
         //check bill ready email - received

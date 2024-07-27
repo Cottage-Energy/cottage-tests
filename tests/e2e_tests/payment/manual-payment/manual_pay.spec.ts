@@ -42,7 +42,7 @@ test.beforeEach(async ({ page },testInfo) => {
   
   });*/
 
-  test.describe('Valid Manual Payment', () => {
+  test.describe('Valid Card Manual Payment', () => {
 
     test('CON-EDISON Valid Manual Payment Move In Added', async ({moveInpage, page}) => {
         test.setTimeout(300000);
@@ -57,7 +57,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove( MoveIn.PGUserEmail);
+        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check bill visibility - true
         //supabase check if bill wait for user payment
@@ -66,7 +66,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //Set Pay bill
         ////supabase check if bill processing
         //check platform dashboard and bills page
-        await page.waitForTimeout(90000);
+        //await page.waitForTimeout(90000);
         //supabase check if bill paid notification - true
         //check email - payment successful
         //supabase check if bill success
@@ -84,12 +84,13 @@ test.beforeEach(async ({ page },testInfo) => {
         finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+        await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         //supabase check bill visibility - false
         //supabase check bill isSendReminder - true
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove( MoveIn.PGUserEmail);
+        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check bill visibility - true
         //supabase check if bill wait for user payment
@@ -98,7 +99,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //Set Pay bill
         ////supabase check if bill processing
         //check platform dashboard and bills page
-        await page.waitForTimeout(90000);
+        //await page.waitForTimeout(90000);
         //check platform dashboard and bills page
         //supabase check if bill paid notification - true
         //check email - payment successful

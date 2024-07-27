@@ -18,8 +18,8 @@ export class FinishAccountSetupPage {
         this.Finish_Account_Service_Fee_Message = page.getByText('Credit Card payments will be');
         this.Finish_Account_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Finish_Account_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
-        this.Finish_Account_Success_Message = page.getByText('🥳 Success');
-        this.Finish_Account_Auto_Payment_Disabled_Message = page.getByText('🛑 Auto-pay disabled');
+        this.Finish_Account_Success_Message = page.getByText('🥳 Success', { exact: true });
+        this.Finish_Account_Auto_Payment_Disabled_Message = page.getByText('🛑 Auto-pay disabled', { exact: true });
     }
 
     //methods
@@ -53,6 +53,7 @@ export class FinishAccountSetupPage {
         await this.Finish_Account_Save_Payment_Button.hover();
         await this.Finish_Account_Save_Payment_Button.click();
 
+        await this.Finish_Account_Success_Message.hover({timeout:10000});
         await expect(this.Finish_Account_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*overview\?accountSetupComplete=true.*/);
     }
@@ -87,14 +88,16 @@ export class FinishAccountSetupPage {
         await expect(this.Finish_Account_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
         await this.Finish_Account_Auto_Payment_Checkbox.hover();
         await this.Finish_Account_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
+        await this.Finish_Account_Auto_Payment_Disabled_Message.hover({timeout:10000});
         await expect(this.Finish_Account_Auto_Payment_Disabled_Message).toBeVisible({timeout:30000});
         
         await this.page?.waitForTimeout(500);
 
         await expect(this.Finish_Account_Save_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Finish_Account_Save_Payment_Button.hover();
+        await this.Finish_Account_Save_Payment_Button.hover({timeout:10000});
         await this.Finish_Account_Save_Payment_Button.click();
 
+        await this.Finish_Account_Success_Message.hover({timeout:10000});
         await expect(this.Finish_Account_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*overview\?accountSetupComplete=true.*/);
     }
