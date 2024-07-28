@@ -31,7 +31,7 @@ test.beforeAll(async ({playwright,page}) => {
 
 test.beforeEach(async ({ page },testInfo) => {
     await page.goto('/',{ waitUntil: 'domcontentloaded' })
-    await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
   });
   
   test.afterEach(async ({ page },testInfo) => {
@@ -51,13 +51,15 @@ test.beforeEach(async ({ page },testInfo) => {
 
         const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+        await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         //supabase check bill visibility - false
         //supabase check bill isSendReminder - true
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
+        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check bill visibility - true
         //supabase check if bill wait for user payment
@@ -84,13 +86,12 @@ test.beforeEach(async ({ page },testInfo) => {
         finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         //supabase check bill visibility - false
         //supabase check bill isSendReminder - true
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
+        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check bill visibility - true
         //supabase check if bill wait for user payment

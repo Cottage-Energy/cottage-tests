@@ -57,7 +57,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
+        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check if bill scheduled
         //check bill ready email - received
@@ -87,7 +87,7 @@ test.beforeEach(async ({ page },testInfo) => {
         //platform check and bills page
         //supabase check if bill paid notification - false
         await page.waitForTimeout(10000);
-        await linearActions.SetBillToApprove(MoveIn.PGUserEmail);
+        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(15000);
         //supabase check if bill scheduled
         //check bill ready email - received
