@@ -33,7 +33,7 @@ export async function generateTestUserData(): Promise<TestUser> {
     const yearMonth = futureDate.slice(0, 7).split('-'); // ["YYYY", "MM"]
     const cardExpiry = `${yearMonth[1]}/${yearMonth[0].slice(2)}`; // "MM/YY"
 
-    const AmountElectric = faker.finance.amount({ min: 1000, max: 50000 });
+    const AmountElectric = faker.finance.amount({ min: 1000, max: 20000 });
     const UsageElectric = faker.finance.amount({ min: 10, max: 500 });
     const AmountGas = faker.finance.amount({ min: 5, max: 9999 });
     const UsageGas = faker.finance.amount({ min: 1, max: 99 });
@@ -42,7 +42,7 @@ export async function generateTestUserData(): Promise<TestUser> {
       FirstName: firstname,
       LastName: lastname,
       PhoneNumber: faker.phone.number(),
-      Email: faker.internet.email({ firstName: 'pgtest+' + firstname, lastName: lastname, provider: 'joinpublicgrid.com'}),
+      Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname, provider: 'joinpublicgrid.com'}),
       UnitNumber: faker.location.buildingNumber(),
       Today: today.getDate().toString(),
       Tomorrow: tomorrow.toString(),
