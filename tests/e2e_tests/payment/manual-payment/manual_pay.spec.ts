@@ -104,7 +104,7 @@ test.describe('Valid Card Manual Payment', () => {
         //supabase check if bill paid notification - false
     await page.waitForTimeout(10000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
-    await page.waitForTimeout(15000);
+    await page.waitForTimeout(30000);
         //supabase check bill visibility - true
         //supabase check if bill wait for user payment
         //check bill ready email - received
