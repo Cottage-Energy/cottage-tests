@@ -12,6 +12,10 @@ export class MoveInPage{
     readonly Move_In_Address_Field: Locator;
     readonly Move_In_Address_Dropdown: (address: string) => Locator;
     readonly Move_In_Unit_Field: Locator;
+
+    readonly Move_In_Email_Registered_Message: Locator;
+    readonly Move_In_OTP_Field: Locator;
+
     readonly Move_In_Next_Button: Locator;
     readonly Move_In_Cannot_Find_Address_Link: Locator;
     readonly Move_In_Address_Not_Listed_Message: Locator;
@@ -75,6 +79,10 @@ export class MoveInPage{
         this.Move_In_Address_Field = page.locator('#address');
         this.Move_In_Address_Dropdown = (address: string) => page.getByText(address);
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
+
+        this.Move_In_Email_Registered_Message = page.getByText('That email is already');
+        this.Move_In_OTP_Field = page.locator('input[name="otpCode"]');
+
         this.Move_In_Next_Button = page.getByRole('button', { name: 'Next', exact: true });
         this.Move_In_Cannot_Find_Address_Link = page.getByRole('button', { name: 'I cannot find my address' });
         this.Move_In_Address_Not_Listed_Message = page.getByRole('heading', { name: 'Address not listed in the' });
@@ -180,6 +188,12 @@ export class MoveInPage{
     }
 
 
+    async Enter_OTP(OTP:string){
+        await this.Move_In_OTP_Field.click({timeout:10000});
+        await this.Move_In_OTP_Field.fill(OTP);
+    }
+
+
     async CON_ED_Questions(){
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_CON_ED_Questions_Fields).toBeVisible({timeout:30000});
@@ -281,6 +295,13 @@ export class MoveInPage{
 
 
     //page assertions
+    async Check_Email_Registered_Message(){
+        await this.page.waitForTimeout(5000);
+        await expect(this.Move_In_Email_Registered_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_OTP_Field).toBeVisible({timeout:30000});
+        await expect(this.Move_In_OTP_Field).toBeEnabled({timeout:30000});
+    }
+
     async Check_Successful_Move_In_Billing_Customer(){
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});

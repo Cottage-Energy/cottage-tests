@@ -1,6 +1,5 @@
 import axios from "axios";
-import { Config } from "sst/node/config";
-import { FastmailError } from "utils/errors";
+//import { Config } from "sst/node/config";
 import { SessionData, MailboxQueryArgs, EmailQueryResponse, FetchEmailArgs, Email } from "../fastmail/types";
 
 export class FastmailClient {
@@ -13,7 +12,8 @@ export class FastmailClient {
     this.authUrl = `https://${this.hostname}/.well-known/jmap`;
     this.headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${Config.FASTMAIL_API_KEY}`,
+      //Authorization: `Bearer ${Config.FASTMAIL_API_KEY}`,
+      Authorization: `Bearer fmu1-3f64404e-6ceb8566aa55e6e3ed2dc0625463e0f5-0-92c1bc478137cd5f771f184efc3c5753`,
     };
   }
 
@@ -51,7 +51,7 @@ export class FastmailClient {
     const inboxId = data["methodResponses"][0][1]["ids"][0];
 
     if (!inboxId) {
-      throw new FastmailError("Could not get an inbox.");
+      throw new console.log("Could not get an inbox.");
     }
 
     return inboxId;
