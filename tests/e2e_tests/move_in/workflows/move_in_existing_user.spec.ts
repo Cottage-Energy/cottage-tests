@@ -49,8 +49,6 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
         }
         
         await moveInpage.Next_Move_In_Button();
-        //add query to check if the user is added to the UtilityCredentials table
-        //add linear check to move-in dev if a ticket is created and how many
       });
 
 
