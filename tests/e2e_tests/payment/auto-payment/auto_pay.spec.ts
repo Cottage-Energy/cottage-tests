@@ -21,16 +21,16 @@ const linearActions = new LinearActions();
 
 test.beforeEach(async ({ playwright, page },testInfo) => {
   const env = process.env.ENV || 'dev';
-    const baseUrl = environmentBaseUrl[env].admin_api;
-    const adminToken = tokenConfig[env].admin;
+  const baseUrl = environmentBaseUrl[env].admin_api;
+  const adminToken = tokenConfig[env].admin;
 
-    AdminApiContext = await playwright.request.newContext({
-        baseURL: baseUrl,
-        extraHTTPHeaders: {
-            Authorization: `Bearer ${adminToken}`,
-            Accept: 'application/json',
-        },
-    });
+  AdminApiContext = await playwright.request.newContext({
+    baseURL: baseUrl,
+    extraHTTPHeaders: {
+      Authorization: `Bearer ${adminToken}`,
+      Accept: 'application/json',
+    },
+  });
 
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
   await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
