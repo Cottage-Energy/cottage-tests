@@ -15,6 +15,8 @@ export class MoveInPage{
 
     readonly Move_In_Email_Registered_Message: Locator;
     readonly Move_In_OTP_Field: Locator;
+    readonly Move_In_OTP_Confirmed_Message: Locator;
+    readonly Move_In_Signing_In_Message: Locator;
 
     readonly Move_In_Next_Button: Locator;
     readonly Move_In_Cannot_Find_Address_Link: Locator;
@@ -82,6 +84,8 @@ export class MoveInPage{
 
         this.Move_In_Email_Registered_Message = page.getByText('That email is already');
         this.Move_In_OTP_Field = page.locator('input[name="otpCode"]');
+        this.Move_In_OTP_Confirmed_Message = page.getByText('OTP Confirmed ✅', { exact: true });
+        this.Move_In_Signing_In_Message = page.getByText('Signing in...', { exact: true });
 
         this.Move_In_Next_Button = page.getByRole('button', { name: 'Next', exact: true });
         this.Move_In_Cannot_Find_Address_Link = page.getByRole('button', { name: 'I cannot find my address' });
@@ -294,12 +298,18 @@ export class MoveInPage{
     }
 
 
-    //page assertions
+    //assertions
     async Check_Email_Registered_Message(){
         await this.page.waitForTimeout(5000);
         await expect(this.Move_In_Email_Registered_Message).toBeVisible({timeout:30000});
         await expect(this.Move_In_OTP_Field).toBeVisible({timeout:30000});
         await expect(this.Move_In_OTP_Field).toBeEnabled({timeout:30000});
+    }
+
+    async Check_OTP_Confirmed_Message(){
+        await this.Move_In_OTP_Confirmed_Message.hover();
+        await expect(this.Move_In_OTP_Confirmed_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Signing_In_Message).toBeVisible({timeout:30000});
     }
 
     async Check_Successful_Move_In_Billing_Customer(){
@@ -311,12 +321,12 @@ export class MoveInPage{
 
     async Check_Billing_Customer_Added_Payment_Overview_Redirect(){
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.page).toHaveURL("https://dev.publicgrid.energy/app/overview",{timeout:60000});
+        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
     }
 
     async Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect(){
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.page).toHaveURL("https://dev.publicgrid.energy/app/finish-account-setup",{timeout:60000});
+        await expect(this.page).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
     }
 
 

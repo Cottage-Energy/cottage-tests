@@ -10,7 +10,7 @@ let homePage: HomePage;
 });*/
 
 test.beforeEach(async ({ page },testInfo) => {
-  await page.goto('https://dev.publicgrid.energy/',{ waitUntil: 'domcontentloaded' });
+  await page.goto('/',{ waitUntil: 'domcontentloaded' && 'load' });
   homePage = new HomePage(page);
 });
 
@@ -30,19 +30,19 @@ test.describe('Homepage Navigation', () => {
   });
   
   test('Go to About', async () => {
-  await homePage.click_About();
+    await homePage.click_About();
   });
   
   test('Go to Resources', async () => {
-  await homePage.click_Resources();
+    await homePage.click_Resources();
   });
   
   test('Go to Developers', async () => {
-  await homePage.click_Developers();
+    await homePage.click_Developers();
   });
   
   test('Go to Sign In', async () => {
-  await homePage.click_SignIn();
+    await homePage.click_SignIn();
   });
 
 });

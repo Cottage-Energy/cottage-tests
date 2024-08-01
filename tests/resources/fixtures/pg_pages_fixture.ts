@@ -4,6 +4,7 @@ import { HomePage } from '../page_objects/homepage';
 import { SidebarChat } from '../page_objects/sidebar_chat';
 import { FinishAccountSetupPage } from '../page_objects/finish_account_setup_page';
 import { BillingPage } from '../page_objects/billing_page';
+import { ServicesPage } from '../page_objects/services_page';
 
 
 type pages = {
@@ -12,6 +13,7 @@ type pages = {
     moveInpage: MoveInPage,
     finishAccountSetupPage: FinishAccountSetupPage,
     billingPage: BillingPage
+    servicesPage: ServicesPage
 }
 
 
@@ -35,7 +37,12 @@ const testPages = base.extend<pages>({
 
     billingPage: async ({page},use) => {
         await use(new BillingPage(page));
-    }
+    },
+
+    servicesPage: async ({page},use) => {
+        await use(new ServicesPage(page));
+    },
+
 
 })
 
