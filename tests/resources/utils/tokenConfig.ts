@@ -1,3 +1,5 @@
+//import { Config } from "sst/node/config";
+
 interface TokenConfig {
     admin: string;
     bot: string;
