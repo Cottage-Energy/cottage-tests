@@ -37,11 +37,13 @@ test.describe('Move In New User Electric & Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', async ({moveInpage}) => {
+  test('New User for ShortCode Gas Only', async ({moveInpage, page}) => {
 
     const PGuser = await generateTestUserData();
 
     //Supabase query to change bldg to Gas Only
+    await supabaseQueries.Update_Companies_to_Building("autotest",null, "EVERSOURCE");
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
   });
 
 

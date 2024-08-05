@@ -161,6 +161,18 @@ export class SupabaseQueries{
     }
 
 
+    async Update_Building_Billing(ShortCode: string, IsHandledBilling: boolean) {
+        const { data,error} = await supabase
+        .from('Building')
+        .update({ isHandleBilling: IsHandledBilling })
+        .eq('shortCode', ShortCode )
+        .select()
+        .throwOnError();
+        console.log(data);
+        console.log(error);
+    }
+
+
 }
 
 
