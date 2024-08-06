@@ -10,7 +10,7 @@ test ('test', async ({ moveInpage,request,page }) => {
 
   await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-  const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage);
+  const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
 
 
   const { data: cottageUser } = await supabase

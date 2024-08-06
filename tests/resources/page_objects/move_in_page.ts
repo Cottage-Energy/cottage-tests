@@ -1,17 +1,29 @@
+import { th } from '@faker-js/faker';
 import { type Page, type Locator, expect } from '@playwright/test';
 
 
 export class MoveInPage{
     //variables
     readonly page: Page;
-    readonly Move_In_Terms_and_Address_Fields: Locator;
+    readonly Move_In_Terms_Logo: Locator;
+    readonly Move_In_Terms_PG_Description: Locator;
+    readonly Move_In_Terms_Service_Description: Locator;
+    readonly Move_In_Terms_Payment_Description: Locator;
+    readonly Move_In_Terms_Automation_Description: Locator;
     readonly Move_In_Terms_Checkbox: Locator;
     readonly Move_In_Get_Started_Button: Locator;
  
+    readonly Move_In_Address_Page_Fields: Locator;
     readonly Move_In_Back_Link: Locator;
     readonly Move_In_Address_Field: Locator;
     readonly Move_In_Address_Dropdown: (address: string) => Locator;
     readonly Move_In_Unit_Field: Locator;
+
+    readonly Move_In_Account_Setup_Fields: Locator;
+    readonly Move_In_Electric_New_Button: Locator;
+    readonly Move_In_Electric_Existing_Button: Locator;
+    readonly Move_In_Gas_New_Button: Locator;
+    readonly Move_In_Gas_Existing_Button: Locator;
 
     readonly Move_In_Email_Registered_Message: Locator;
     readonly Move_In_OTP_Field: Locator;
@@ -73,14 +85,26 @@ export class MoveInPage{
     //constructor // locators
     constructor(page: Page) {
         this.page = page;
-        this.Move_In_Terms_and_Address_Fields = page.getByRole('heading', { name: 'Hi 👋' });
+        this.Move_In_Terms_Logo = page.locator('circle');
+        this.Move_In_Terms_PG_Description = page.getByText('Public Grid is a free');
+        this.Move_In_Terms_Service_Description = page.getByText('Service is started with your');
+        this.Move_In_Terms_Payment_Description = page.getByText('You‘ll never pay more than if');
+        this.Move_In_Terms_Automation_Description = page.getByText('You‘ll never pay more than if');
+        
+        
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
         this.Move_In_Get_Started_Button = page.getByRole('button', { name: 'Get Started' });
         this.Move_In_Back_Link = page.getByText('Back');
-        
+        this.Move_In_Address_Page_Fields = page.getByText('Where are you looking to start service?AddressUnitNext');
         this.Move_In_Address_Field = page.locator('#address');
         this.Move_In_Address_Dropdown = (address: string) => page.getByText(address);
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
+
+        this.Move_In_Account_Setup_Fields = page.getByText('What can we set up for you today?Public Grid starts service and manages your');
+        this.Move_In_Electric_New_Button = page.locator('//label[@id = "Electric-new"]');
+        this.Move_In_Electric_Existing_Button = page.locator('//label[@id = "Electric-existing"]');
+        this.Move_In_Gas_New_Button = page.locator('//label[@id = "Gas-new"]');
+        this.Move_In_Gas_Existing_Button = page.locator('//label[@id = "Gas-existing"]');
 
         this.Move_In_Email_Registered_Message = page.getByText('That email is already');
         this.Move_In_OTP_Field = page.locator('input[name="otpCode"]');
@@ -118,8 +142,8 @@ export class MoveInPage{
         this.Move_In_Birthdate_Lessthan100_Message = page.getByText('Must be less than 100 years');
         this.Move_In_ID_Dropdown = page.getByText('Must be 18 years or older');
         this.Move_In_State_Dropdown = page.getByText('Select State');
-        this.Move_In_ID_Number_Field = page.locator('[id="\\:ra\\:-form-item"]');
-        this.Move_In_CON_ED_ID_Number_Field = page.locator('[id="\\:re\\:-form-item"]');
+        this.Move_In_ID_Number_Field = page.locator('//input[@name = "identityNumber"]');
+        this.Move_In_CON_ED_ID_Number_Field = page.locator('//input[@name = "identityNumber"]');
         this.Move_In_Identify_Info_Message = page.getByText('This information is never');
         this.Move_In_Prev_Address_Field = page.locator('#onboardingAddress')
 
@@ -128,7 +152,7 @@ export class MoveInPage{
         this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now (and Submit)' });
         this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add Bill Payment Method' });
         this.Move_In_Service_Fee_Message = page.getByText('Card payments will be charged');
-        this.Move_In_Success_Message = page.getByText('Success🥳Your account is set');
+        this.Move_In_Success_Message = page.getByText('Success🥳Your account is');
         this.Move_In_Account_Number = page.getByText('Account Number:');
         this.Move_In_Account_Number_Value = page.locator("//div[contains(@class,'callout-text')]//child::b");
         this.Move_In_Survey_Star = page.locator('path').nth(2);
@@ -140,20 +164,58 @@ export class MoveInPage{
 
 
     //methods
-    async Enter_Address_Agree_on_Terms_and_Get_Started(address:string, unit:string) {
+    async Agree_on_Terms_and_Get_Started() {
         await this.page.waitForLoadState('networkidle');
-        await expect(this.Move_In_Terms_and_Address_Fields).toBeVisible({timeout:30000});
-        await this.Move_In_Address_Field.click({timeout:10000},);
-        await this.Move_In_Address_Field.fill(address);
-        await this.Move_In_Address_Dropdown(address).click();
-        await this.Move_In_Unit_Field.click();
-        await this.Move_In_Unit_Field.fill(unit);
+        await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Terms_PG_Description).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Terms_Payment_Description).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Terms_Automation_Description).toBeVisible({timeout:30000});
         await this.Move_In_Terms_Checkbox.hover({timeout:30000});
         await this.Move_In_Terms_Checkbox.isEnabled({timeout:10000});
         await this.Move_In_Terms_Checkbox.setChecked(true,{timeout:10000});
         await this.Move_In_Get_Started_Button.hover({timeout:30000});
         await this.Move_In_Get_Started_Button.isEnabled({timeout:10000});
         await this.Move_In_Get_Started_Button.click();
+    }
+
+    async Enter_Address(address:string, unit:string) {
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(1000);
+        await this.Move_In_Address_Field.click({timeout:10000});
+        await this.Move_In_Address_Field.fill(address);
+        await this.Move_In_Address_Dropdown(address).click({timeout:10000});
+        await this.Move_In_Unit_Field.click();
+        await this.Move_In_Unit_Field.fill(unit);
+    }
+
+    async Setup_Account(Electric_New: boolean, Gas_New: boolean){ 
+        await expect(this.Move_In_Account_Setup_Fields).toBeVisible({timeout:30000});
+        if(await this.Move_In_Electric_New_Button.isVisible()){
+            if(Electric_New == true){
+                await this.Move_In_Electric_New_Button.hover();
+                await this.Move_In_Electric_New_Button.click();
+            }
+            else{
+                await this.Move_In_Electric_Existing_Button.hover();
+                await this.Move_In_Electric_Existing_Button.click();
+            }
+        }
+
+        
+
+        if(await this.Move_In_Gas_New_Button.isVisible()){
+            if(Gas_New == true){
+                await this.Move_In_Gas_New_Button.hover();
+                await this.Move_In_Gas_New_Button.click();
+            }
+            else{
+                await this.Move_In_Gas_Existing_Button.hover();
+                await this.Move_In_Gas_Existing_Button.click();
+            }
+        }
+
     }
 
     async Next_Move_In_Button(){

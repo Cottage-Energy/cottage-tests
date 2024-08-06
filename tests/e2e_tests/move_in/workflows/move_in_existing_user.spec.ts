@@ -109,7 +109,6 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 });
 
 
-//cottageuser & electricAccount & gasAccount Exist
 test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
     
   test('COMED Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {

@@ -1,8 +1,10 @@
 import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
+import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 
 const supabaseQueries = new SupabaseQueries();
+const linearActions = new LinearActions();
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -24,66 +26,83 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Move In New User', () => {
   
-  test('COMED New User', async ({moveInpage}) => {
+  test('COMED New User', async ({moveInpage, page}) => {
     test.slow();
-    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage);
+    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
+    //check confirnation email
   });
 
 
-  test('CON-EDISON New User Add Auto Payment', async ({moveInpage}) => {
+  test('CON-EDISON New User Add Auto Payment', async ({moveInpage, page}) => {
     test.slow();
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage);
+    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
     //add check in DB fro question answers
+    //check confirnation email
   });
 
 
-  test('EVERSOURCE New User Add Auto Payment', async ({moveInpage}) => {
+  test('EVERSOURCE New User Add Auto Payment', async ({moveInpage, page}) => {
     test.slow();
-    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage);
+    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
+    //check confirnation email
   });
 
 
-  test('CON-EDISON New User Add Manual Payment', async ({moveInpage}) => {
+  test('CON-EDISON New User Add Manual Payment', async ({moveInpage, page}) => {
     test.slow();
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage);
+    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
     //add check in DB fro question answers
+    //check confirnation email
   });
 
 
-  test('EVERSOURCE New User Add Manual Payment', async ({moveInpage}) => {
+  test('EVERSOURCE New User Add Manual Payment', async ({moveInpage, page}) => {
     test.slow();
-    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage);
+    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
+    //check confirnation email
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', async ({moveInpage}) => {
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
+  test('CON-EDISON New User Skip Add Payment', async ({moveInpage, page}) => {
+    test.slow();
+    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
+    //add check in DB fro question answers
+    //check confirnation email
   });
 
 
-  test('EVERSOURCE New User Skip Add Payment', async ({moveInpage}) => {
-    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
+  test('EVERSOURCE New User Skip Add Payment', async ({moveInpage, page}) => {
+    test.slow();
+    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //add linear check to move-in dev if a ticket is created and how many
+    //check confirnation email
   });
 
 

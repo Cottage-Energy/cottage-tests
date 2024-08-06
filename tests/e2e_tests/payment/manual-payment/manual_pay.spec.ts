@@ -32,6 +32,8 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
     },
   });
 
+  await supabaseQueries.Update_Companies_to_Building('autotest','CON-EDISON', 'CON-EDISON');
+  await supabaseQueries.Update_Building_Billing('autotest',true);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
   await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 });
@@ -54,7 +56,7 @@ test.describe('Valid Card Manual Payment', () => {
     const ElectricUsage = PGuserUsage.ElectricUsage.toString();
     const GasUsage = PGuserUsage.GasUsage.toString();
 
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage);
+    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, true);
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
@@ -94,7 +96,7 @@ test.describe('Valid Card Manual Payment', () => {
     const ElectricUsage = PGuserUsage.ElectricUsage.toString();
     const GasUsage = PGuserUsage.GasUsage.toString();
 
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
+    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
     finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
