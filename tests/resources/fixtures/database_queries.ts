@@ -29,6 +29,18 @@ export class SupabaseQueries{
         await expect(ElectricAccountId).not.toBe("");
         return ElectricAccountId.toString();
     }
+
+
+    async Check_Electric_Account_Id_Not_Present(cottageUserId: string) {
+        const { data: EAccount,error } = await supabase
+            .from('ElectricAccount')
+            .select('id')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+
+        console.log(error);
+        await expect(EAccount).toBeNull();
+    }
     
 
     async Get_Gas_Account_Id(cottageUserId: string) {
@@ -42,6 +54,18 @@ export class SupabaseQueries{
         console.log(GasAccountId.toString());
         await expect(GasAccountId).not.toBe("");
         return GasAccountId.toString();
+    }
+
+
+    async Check_Gas_Account_Id_Not_Present(cottageUserId: string) {
+        const { data: GAccount,error } = await supabase
+            .from('GasAccount')
+            .select('id')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+
+        console.log(error);
+        await expect(GAccount).toBeNull();
     }
 
 
