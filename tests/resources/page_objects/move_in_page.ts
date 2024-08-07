@@ -319,6 +319,7 @@ export class MoveInPage{
         await CardNUmberInput?.fill(CCnumber,{timeout:10000});
         await CardExpiration?.fill(CCexpiry,{timeout:10000});
         await CardCVC?.fill(CCcvc,{timeout:10000});
+        await this.page.waitForTimeout(500);
         await CardCountry?.selectOption(CCcountry,{timeout:10000});
     
     
