@@ -5,6 +5,7 @@ import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
+import * as PaymentData from '../../../resources/data/payment-data.json';
 import exp from 'constants';
 
 const supabaseQueries = new SupabaseQueries();
@@ -40,7 +41,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
-      await page.waitForTimeout(10000);
+      await page.waitForTimeout(15000);
       await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -75,7 +76,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
-      await page.waitForTimeout(10000);
+      await page.waitForTimeout(15000);
       await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -110,7 +111,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
-      await page.waitForTimeout(10000);
+      await page.waitForTimeout(15000);
       await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -150,7 +151,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -185,7 +186,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -220,7 +221,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -254,13 +255,13 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest",null,"COMED");
+    await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
+    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, false, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -289,13 +290,13 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest",null,"EVERSOURCE");
+    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
+    const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, false, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -324,13 +325,13 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest",null,"CON-EDISON");
+    await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, true);
+    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, false, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -358,3 +359,215 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
 
 //only cottageuser Exist
+test.describe('Move In Existing User: Cottageuser Exist Only', () => {
+    
+  test('COMED Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+    test.setTimeout(300000);
+
+    const PGuser = await generateTestUserData();
+
+    await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(PGuser.Email,0);
+    await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Check_Email_Registered_Message();
+    const OTP = await FastmailActions.Get_OTP(PGuser.Email);
+      
+    if (typeof OTP === 'string') {
+      await moveInpage.Enter_OTP(OTP);
+      await moveInpage.Next_Move_In_Button();
+    } else {
+        throw new Error('Invalid OTP');
+    }
+
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
+    await page.waitForTimeout(15000);
+    await linearActions.CountMoveInTicket(PGuser.Email,1);
+  });
+
+
+  test('COMED EVERSOURCE Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+    test.setTimeout(300000);
+
+    const PGuser = await generateTestUserData();
+
+    await supabaseQueries.Update_Companies_to_Building("autotest","COMED","EVERSOURCE");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(true, false);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(PGuser.Email,0);
+    await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(true, false);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Check_Email_Registered_Message();
+    const OTP = await FastmailActions.Get_OTP(PGuser.Email);
+      
+    if (typeof OTP === 'string') {
+      await moveInpage.Enter_OTP(OTP);
+      await moveInpage.Next_Move_In_Button();
+    } else {
+        throw new Error('Invalid OTP');
+    }
+
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
+    await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
+    await page.waitForTimeout(15000);
+    await linearActions.CountMoveInTicket(PGuser.Email,1);
+  });
+
+
+  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+    test.setTimeout(300000);
+
+    const PGuser = await generateTestUserData();
+
+    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(false, true);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(PGuser.Email,0);
+    await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(false, true);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Check_Email_Registered_Message();
+    const OTP = await FastmailActions.Get_OTP(PGuser.Email);
+      
+    if (typeof OTP === 'string') {
+      await moveInpage.Enter_OTP(OTP);
+      await moveInpage.Next_Move_In_Button();
+    } else {
+        throw new Error('Invalid OTP');
+    }
+
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+
+    await supabaseQueries.Get_Gas_Account_Id(cottageUserID);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await page.waitForTimeout(15000);
+    await linearActions.CountMoveInTicket(PGuser.Email,1);
+  });
+
+
+  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+    test.setTimeout(300000);
+
+    const PGuser = await generateTestUserData();
+
+    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDISON");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.CON_ED_Questions();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await page.waitForTimeout(5000);
+    await linearActions.CountMoveInTicket(PGuser.Email,0);
+    await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Check_Email_Registered_Message();
+    const OTP = await FastmailActions.Get_OTP(PGuser.Email);
+      
+    if (typeof OTP === 'string') {
+      await moveInpage.Enter_OTP(OTP);
+      await moveInpage.Next_Move_In_Button();
+    } else {
+        throw new Error('Invalid OTP');
+    }
+
+    await moveInpage.CON_ED_Questions();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
+    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+
+    await supabaseQueries.Get_Gas_Account_Id(cottageUserID);
+    await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
+    await page.waitForTimeout(15000);
+    await linearActions.CountMoveInTicket(PGuser.Email,2);
+  });
+
+
+});
