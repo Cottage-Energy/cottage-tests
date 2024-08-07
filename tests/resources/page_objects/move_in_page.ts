@@ -261,7 +261,7 @@ export class MoveInPage{
 
 
     async CON_ED_Questions(){
-        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('domcontentloaded' && 'networkidle' && 'load');
         await expect(this.Move_In_CON_ED_Questions_Fields).toBeVisible({timeout:30000});
         await expect(this.Move_In_CON_ED_Questions_Title).toBeVisible({timeout:30000});
         //Answering the questions randomly
@@ -270,7 +270,7 @@ export class MoveInPage{
 
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){
-        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('domcontentloaded' && 'networkidle' && 'load');
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
@@ -281,7 +281,7 @@ export class MoveInPage{
 
 
     async CON_ED_Enter_ID_Info(birthdate:string, IDnumber:string){
-        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('domcontentloaded' && 'networkidle' && 'load');
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
@@ -303,6 +303,7 @@ export class MoveInPage{
 
 
     async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+        await this.page.waitForLoadState('domcontentloaded' && 'networkidle' && 'load');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
@@ -320,7 +321,7 @@ export class MoveInPage{
         await CardExpiration?.fill(CCexpiry,{timeout:10000});
         await CardCVC?.fill(CCcvc,{timeout:10000});
         await this.page.waitForTimeout(500);
-        await CardCountry?.selectOption(CCcountry,{timeout:10000});
+        await CardCountry?.selectOption(CCcountry,{timeout:30000});
     
     
         if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
