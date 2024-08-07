@@ -64,6 +64,7 @@ export class HomePage{
 
     async click_SignIn() {
         await this.Sign_In_Button.click();
+        await this.page.waitForLoadState('networkidle');
         await expect (this.Sign_In_Title).toBeVisible();
         await expect (this.Sign_In_Email_Field).toBeVisible();
         await expect (this.Sign_In_OTP_Button).toBeVisible();

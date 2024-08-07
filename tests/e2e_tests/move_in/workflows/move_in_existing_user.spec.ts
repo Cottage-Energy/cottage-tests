@@ -31,7 +31,7 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
     
     test('COMED Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
-      test.slow();
+      test.setTimeout(300000);
 
       const PGuser = await generateTestUserData();
 
@@ -66,7 +66,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 
 
     test('Eversource Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
-      test.slow();
+      test.setTimeout(300000);
 
       const PGuser = await generateTestUserData();
 
@@ -101,7 +101,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 
 
     test('CON EDISON Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
-      test.slow();
+      test.setTimeout(300000);
 
       const PGuser = await generateTestUserData();
 
@@ -141,7 +141,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
     
   test('COMED Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
-    test.slow();
+    test.setTimeout(300000);
 
     const PGuser = await generateTestUserData();
 
@@ -176,7 +176,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 
 
   test('Eversource Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
-    test.slow();
+    test.setTimeout(300000);
 
     const PGuser = await generateTestUserData();
 
@@ -211,7 +211,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 
 
   test('CON EDISON Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
-    test.slow();
+    test.setTimeout(300000);
 
     const PGuser = await generateTestUserData();
 
@@ -251,7 +251,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     
   test('COMED Cottageuser & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
-    test.slow();
+    test.setTimeout(300000);
 
     const PGuser = await generateTestUserData();
 
@@ -286,7 +286,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
 
   test('Eversource Cottageuser & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
-    test.slow();
+    test.setTimeout(300000);
 
     const PGuser = await generateTestUserData();
 
@@ -321,7 +321,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
 
   test('CON EDISON Cottageuser & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
-    test.slow();
+    test.setTimeout(300000);
 
     const PGuser = await generateTestUserData();
 
@@ -358,7 +358,6 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 });
 
 
-//only cottageuser Exist
 test.describe('Move In Existing User: Cottageuser Exist Only', () => {
     
   test('COMED Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
