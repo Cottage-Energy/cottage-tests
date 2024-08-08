@@ -23,8 +23,8 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-
-test.describe.only('Move In Existing Utility Accout', () => {
+test.describe.configure({mode: "serial"});
+test.describe('Move In Existing Utility Accout', () => {
   
   test('COMED New User', async ({moveInpage, page}) => {
     test.slow();
