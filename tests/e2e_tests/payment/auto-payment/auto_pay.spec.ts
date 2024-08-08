@@ -59,7 +59,7 @@ test.describe('Valid Card Auto Payment', () => {
         //supabase check bill isSendReminder - true
         //platform check and bills page
         //supabase check if bill paid notification - false
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
         //supabase check if bill scheduled
@@ -90,7 +90,7 @@ test.describe('Valid Card Auto Payment', () => {
         //supabase check bill isSendReminder - true
         //platform check and bills page
         //supabase check if bill paid notification - false
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
         //supabase check if bill scheduled
