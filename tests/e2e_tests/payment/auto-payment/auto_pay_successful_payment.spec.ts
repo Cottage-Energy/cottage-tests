@@ -69,15 +69,13 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         //check bill ready email - received
         //check platform dashboard and bills page - outstanding balance not 0
-        //supabase check if bill processing?? create differe query
+    await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId); //could be flaky
         //await page.waitForTimeout(90000);
  
-        //check platform dashboard and bills page
-        //supabase check if bill paid notification - true
+    await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
         //check email - payment successful
-        //supabase check if bill success
+    await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         //check platform dashboard and bills page
-        
   });
 
 
@@ -92,24 +90,26 @@ test.describe('Valid Card Auto Payment', () => {
     finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        //supabase check bill visibility - false
-        //supabase check bill isSendReminder - true
+    await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
+    await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
+    await page.reload({ waitUntil: 'domcontentloaded' });
         //platform check and bills page
-        //supabase check if bill paid notification - false
-    await page.waitForTimeout(30000);
+    await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
+    await page.waitForTimeout(15000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
-        //supabase check if bill scheduled
+
+    await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");
+    await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         //check bill ready email - received
-        //check platform dashboard and bills page
+        //check platform dashboard and bills page - outstanding balance not 0
+    await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId); //could be flaky
         //await page.waitForTimeout(90000);
-        // supabase check bill visibility - true
-        //check platform dashboard and bills page
-        //supabase check if bill paid notification - true
+ 
+    await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
         //check email - payment successful
-        //supabase check if bill success
-        //check platform dashboard and bills page
-        
+    await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
+        //check platform dashboard and bills page  
   });
 
 });
