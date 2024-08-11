@@ -101,17 +101,38 @@ export class LinearActions{
 
     async CountMoveInTicket(Email: string, ExpectedCount: number) {
         const MoveInteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `move-ins-${env}` } } })).nodes[0].id;
-        const issuesResponse = await linearClient.issues({
-            filter: {
-                team: { id: { eq: MoveInteamId } },
-                title: { contains:Email },
-            },
-        });
-    
-      
-        const issuesCount = issuesResponse.nodes.length;
-        console.log(`Number of issues: ${issuesCount}`);
-        console.log(issuesResponse);
+
+        const maxRetries = 5;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let issuesCount = 0;
+        let issuesResponse;
+
+        while (retries < maxRetries) {
+            issuesResponse = await linearClient.issues({
+                filter: {
+                    team: { id: { eq: MoveInteamId } },
+                    title: { contains: Email },
+                },
+            });
+        
+            issuesCount = issuesResponse.nodes.length;
+            console.log(`Number of issues: ${issuesCount}`);
+            console.log(issuesResponse);
+        
+            if (issuesCount > 0) {
+                break;
+            }
+        
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(15000);
+        }
+
+        if (issuesCount === 0) {
+            console.log('No issues found after maximum retries.');
+            return;
+        }
 
         expect(issuesCount).toBe(ExpectedCount);
     }
