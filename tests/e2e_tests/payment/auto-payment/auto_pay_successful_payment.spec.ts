@@ -68,13 +68,15 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         //check bill ready email - received
+    await page.reload({ waitUntil: 'domcontentloaded' });
         //check platform dashboard and bills page - outstanding balance not 0
     await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId); //could be flaky
         //await page.waitForTimeout(90000);
  
+    await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
         //check email - payment successful
-    await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
+    await page.reload({ waitUntil: 'domcontentloaded' });
         //check platform dashboard and bills page
   });
 
