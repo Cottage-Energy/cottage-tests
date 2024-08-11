@@ -64,11 +64,14 @@ test.describe('Valid Card Auto Payment', () => {
     await page.waitForTimeout(15000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
-        //supabase check if bill scheduled
+
+    await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");
+    await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         //check bill ready email - received
-        //check platform dashboard and bills page
+        //check platform dashboard and bills page - outstanding balance not 0
+        //supabase check if bill processing?? create differe query
         //await page.waitForTimeout(90000);
-        // supabase check bill visibility - true
+ 
         //check platform dashboard and bills page
         //supabase check if bill paid notification - true
         //check email - payment successful

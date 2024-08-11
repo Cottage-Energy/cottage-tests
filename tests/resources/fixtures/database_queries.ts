@@ -147,7 +147,7 @@ export class SupabaseQueries{
     }
 
 
-    async Check_Electric_Bill_Status(ElectricAccountId: string, status:string) {
+    /*async Check_Electric_Bill_Status(ElectricAccountId: string, status:string) {
         const { data: ElectricBillStatus } = await supabase
             .from('ElectricBill')
             .select('paymentStatus')
@@ -157,6 +157,37 @@ export class SupabaseQueries{
         const ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
         console.log(ElectricBillstatus);
         await expect(ElectricBillstatus).toBe(status);
+    }*/
+    async Check_Electric_Bill_Status(ElectricAccountId: string, status: string) {
+        const maxRetries: number = 5;
+        const delay: number = 15000
+        let retries = 0;
+        let ElectricBillstatus = '';
+        
+        while (retries < maxRetries) {
+            const { data: ElectricBillStatus } = await supabase
+                .from('ElectricBill')
+                .select('paymentStatus')
+                .eq('electricAccountID', ElectricAccountId)
+                .single()
+                .throwOnError();
+                
+            ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
+            console.log(ElectricBillstatus);
+        
+            if (ElectricBillstatus === status) {
+                await expect(ElectricBillstatus).toBe(status);
+                return;
+            }
+        
+            retries++;
+            if (retries < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+        
+            // If the loop exits without matching the status, throw an error
+            throw new Error(`Expected status '${status}' not met after ${maxRetries} retries.`);
     }
 
 
