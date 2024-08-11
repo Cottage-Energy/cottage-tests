@@ -44,6 +44,9 @@ export class BillingPage {
         await this.Billing_Pay_Bill_Final_Button.click();
     }
 
+
+    //assertions
+
 }
 
 
