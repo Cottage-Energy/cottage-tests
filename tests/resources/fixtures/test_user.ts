@@ -28,7 +28,7 @@ interface TestUser {
 }
 
 
-export async function generateTestUserData(): Promise<TestUser> {
+export async function generateTestUserData(serviceFeePercentage?: number): Promise<TestUser> {
     const firstname = faker.person.firstName();
     const lastname = faker.person.lastName();
     
@@ -44,11 +44,13 @@ export async function generateTestUserData(): Promise<TestUser> {
     const AmountGas = faker.finance.amount({ min: 100, max: 9999 });
     const UsageGas = faker.finance.amount({ min: 1, max: 99 });
 
+    const feePercentage = serviceFeePercentage || 0.03;
+
     const electricAmountActual = (parseInt(AmountElectric) / 100).toFixed(2);
-    const electricServiceFee = (parseInt(AmountElectric) * (0.03 / 100)).toFixed(2);
+    const electricServiceFee = (parseInt(AmountElectric) * (feePercentage / 100)).toFixed(2);
     const electricAmountTotal = (parseFloat(electricAmountActual) + parseFloat(electricServiceFee)).toFixed(2);
     const gasAmountActual = (parseInt(AmountGas) / 100).toFixed(2);
-    const gasServiceFee = (parseInt(AmountGas) * (0.03 / 100)).toFixed(2);
+    const gasServiceFee = (parseInt(AmountGas) * (feePercentage / 100)).toFixed(2);
     const gasAmountTotal = (parseFloat(gasAmountActual) + parseFloat(gasServiceFee)).toFixed(2);
   
     const userData: TestUser = {
