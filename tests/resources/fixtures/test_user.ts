@@ -16,8 +16,14 @@ interface TestUser {
     Country: string;
     Zip: string;
     ElectricAmount: number;
+    ElectricAmountActual: string;
+    ElectricServiceFee: string;
+    ElectricAmountTotal: string;
     ElectricUsage: number;
     GasAmount: number;
+    GasAmountActual: string;
+    GasServiceFee: string;
+    GasAmountTotal: string;
     GasUsage: number;
 }
 
@@ -33,10 +39,17 @@ export async function generateTestUserData(): Promise<TestUser> {
     const yearMonth = futureDate.slice(0, 7).split('-'); // ["YYYY", "MM"]
     const cardExpiry = `${yearMonth[1]}/${yearMonth[0].slice(2)}`; // "MM/YY"
 
-    const AmountElectric = faker.finance.amount({ min: 1000, max: 20000 });
-    const UsageElectric = faker.finance.amount({ min: 10, max: 500 });
-    const AmountGas = faker.finance.amount({ min: 5, max: 9999 });
+    const AmountElectric = faker.finance.amount({ min: 100, max: 9999 });
+    const UsageElectric = faker.finance.amount({ min: 10, max: 999 });
+    const AmountGas = faker.finance.amount({ min: 100, max: 9999 });
     const UsageGas = faker.finance.amount({ min: 1, max: 99 });
+
+    const electricAmountActual = (parseInt(AmountElectric) / 100).toFixed(2);
+    const electricServiceFee = (parseInt(AmountElectric) * (0.03 / 100)).toFixed(2);
+    const electricAmountTotal = (parseFloat(electricAmountActual) + parseFloat(electricServiceFee)).toFixed(2);
+    const gasAmountActual = (parseInt(AmountGas) / 100).toFixed(2);
+    const gasServiceFee = (parseInt(AmountGas) * (0.03 / 100)).toFixed(2);
+    const gasAmountTotal = (parseFloat(gasAmountActual) + parseFloat(gasServiceFee)).toFixed(2);
   
     const userData: TestUser = {
       FirstName: firstname,
@@ -53,8 +66,15 @@ export async function generateTestUserData(): Promise<TestUser> {
       Country: faker.location.countryCode(),
       Zip: faker.location.zipCode(),
       ElectricAmount: parseInt(AmountElectric),
+      ElectricAmountActual: electricAmountActual,
+      ElectricServiceFee: electricServiceFee,
+      ElectricAmountTotal: electricAmountTotal,
       ElectricUsage: parseInt(UsageElectric),
+      
       GasAmount: parseInt(AmountGas),
+      GasAmountActual: gasAmountActual,
+      GasServiceFee: gasServiceFee,
+      GasAmountTotal: gasAmountTotal,
       GasUsage: parseInt(UsageGas),
     };
   

@@ -51,6 +51,8 @@ test.describe('Valid Card Auto Payment', () => {
     test.setTimeout(300000);
 
     const PGuserUsage = await generateTestUserData();
+
+    console.log(PGuserUsage.GasAmountTotal, PGuserUsage.ElectricAmountTotal);
     
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
@@ -78,6 +80,7 @@ test.describe('Valid Card Auto Payment', () => {
         //check email - payment successful
     await page.reload({ waitUntil: 'domcontentloaded' });
         //check platform dashboard and bills page
+        //add service fee checking
   });
 
 
@@ -188,5 +191,10 @@ test.describe('Valid Card Auto Payment', () => {
     await page.reload({ waitUntil: 'domcontentloaded' });
         //check platform dashboard and bills page
   });
+
+});
+
+
+test.describe('Valid Bank Auto Payment', () => {
 
 });
