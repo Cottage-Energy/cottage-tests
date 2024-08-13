@@ -11,7 +11,7 @@ export class LinearActions{
         const NullStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "null" } } })).nodes[0].id;
         const ApprovedStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "approved" } } })).nodes[0].id;
         
-        const maxRetries = 5;
+        const maxRetries = 2;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let issuesCount = 0;
@@ -37,7 +37,7 @@ export class LinearActions{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(15000);
+            await delay(30000);
         }
         
         if (issuesCount === 0) {
@@ -57,7 +57,7 @@ export class LinearActions{
         const NullStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "null" } } })).nodes[0].id;
         const ApprovedStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "approved" } } })).nodes[0].id;
         
-        const maxRetries = 5;
+        const maxRetries = 2;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let issuesCount = 0;
@@ -83,7 +83,7 @@ export class LinearActions{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(15000); // Wait for 2 seconds before retrying
+            await delay(30000); // Wait for 2 seconds before retrying
         }
         
         if (issuesCount === 0) {
@@ -102,7 +102,7 @@ export class LinearActions{
     async CountMoveInTicket(Email: string, ExpectedCount: number) {
         const MoveInteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `move-ins-${env}` } } })).nodes[0].id;
 
-        const maxRetries = 5;
+        const maxRetries = 2;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let issuesCount = 0;
@@ -126,7 +126,7 @@ export class LinearActions{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(15000);
+            await delay(30000);
         }
 
         if (issuesCount === 0) {
