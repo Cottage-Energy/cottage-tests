@@ -384,13 +384,23 @@ export class MoveInPage{
     }
 
     async Check_Billing_Customer_Added_Payment_Overview_Redirect(){
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
+
+        const [newPage] = await Promise.all([
+            this.page.waitForEvent('popup'),
+        ]);
+
+        await newPage.waitForLoadState('domcontentloaded');
+        await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
     }
 
     async Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect(){
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.page).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
+        
+        const [newPage] = await Promise.all([
+            this.page.waitForEvent('popup'),
+        ]);
+
+        await newPage.waitForLoadState('domcontentloaded');
+        await expect(newPage).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
     }
 
 

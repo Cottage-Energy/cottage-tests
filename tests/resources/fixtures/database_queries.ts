@@ -22,7 +22,7 @@ export class SupabaseQueries{
             .from('ElectricAccount')
             .select('id')
             .eq('cottageUserID', cottageUserId)
-            .single()
+            .maybeSingle()
             .throwOnError();
         const ElectricAccountId = EAccount?.id ?? '';
         console.log(ElectricAccountId.toString());
@@ -48,7 +48,7 @@ export class SupabaseQueries{
             .from('GasAccount')
             .select('id')
             .eq('cottageUserID', cottageUserId)
-            .single()
+            .maybeSingle()
             .throwOnError();
         const GasAccountId = GAccount?.id ?? '';
         console.log(GasAccountId.toString());

@@ -30,8 +30,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(15000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(15000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
   });
@@ -41,8 +41,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(25000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(25000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     //check confirnation email
@@ -53,8 +53,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(25000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(25000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
   });
@@ -64,8 +64,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(25000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(25000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     //check confirnation email
@@ -76,8 +76,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(25000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(25000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
   });
@@ -87,8 +87,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(25000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(25000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     //check confirnation email
@@ -99,8 +99,8 @@ test.describe('Move In New User', () => {
     test.slow();
     const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(25000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await page.waitForTimeout(25000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
   });

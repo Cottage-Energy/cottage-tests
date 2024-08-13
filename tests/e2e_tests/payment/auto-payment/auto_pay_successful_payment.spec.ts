@@ -50,7 +50,7 @@ test.describe('Valid Card Auto Payment', () => {
     
     test.setTimeout(300000);
 
-    const PGuserUsage = await generateTestUserData(0.5);
+    const PGuserUsage = await generateTestUserData();
 
     console.log(PGuserUsage);
     
@@ -161,7 +161,7 @@ test.describe('Valid Card Auto Payment', () => {
 
     const PGuserUsage = await generateTestUserData();
     
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDSISON");
+    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
