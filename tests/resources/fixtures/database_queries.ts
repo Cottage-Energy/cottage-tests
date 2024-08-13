@@ -122,28 +122,70 @@ export class SupabaseQueries{
 
 
     async Check_Electric_Bill_Paid_Notif(ElectricAccountId: string, state:boolean) {
-        const { data: ElectricBillPaidNotif } = await supabase
-            .from('ElectricBill')
-            .select('paidNotificationSent')
-            .eq('electricAccountID', ElectricAccountId)
-            .single()
-            .throwOnError();
-        const ElectricBillpaidNotif = ElectricBillPaidNotif?.paidNotificationSent ?? '';
-        console.log(ElectricBillpaidNotif);
-        await expect(ElectricBillpaidNotif).toBe(state);
+        
+        const maxRetries = 5;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let ElectricBillpaidNotif = false;
+
+        while (retries < maxRetries) {
+            const { data: ElectricBillPaidNotif } = await supabase
+                .from('ElectricBill')
+                .select('paidNotificationSent')
+                .eq('electricAccountID', ElectricAccountId)
+                .single()
+                .throwOnError();
+            
+            ElectricBillpaidNotif = Boolean(ElectricBillPaidNotif?.paidNotificationSent);
+            console.log(ElectricBillpaidNotif);
+
+            if (ElectricBillpaidNotif === state) {
+                await expect(ElectricBillpaidNotif).toBe(state);
+                break;
+            }
+
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(10000);
+        }
+
+        if (ElectricBillpaidNotif !== state) {
+            throw new Error(`Expected status '${state}' not met after ${maxRetries} retries.`);
+        }
     }
 
 
     async Check_Gas_Bill_Paid_Notif(GasAccountId: string, state:boolean) {
-        const { data: GasBillPaidNotif } = await supabase
-            .from('GasBill')
-            .select('paidNotificationSent')
-            .eq('gasAccountID', GasAccountId)
-            .single()
-            .throwOnError();
-        const GasBillpaidNotif = GasBillPaidNotif?.paidNotificationSent ?? '';
-        console.log(GasBillpaidNotif);
-        await expect(GasBillpaidNotif).toBe(state);
+
+        const maxRetries = 5;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let GasBillpaidNotif = false;
+
+        while (retries < maxRetries) {
+            const { data: GasBillPaidNotif } = await supabase
+                .from('GasBill')
+                .select('paidNotificationSent')
+                .eq('gasAccountID', GasAccountId)
+                .single()
+                .throwOnError();
+            
+            GasBillpaidNotif = Boolean(GasBillPaidNotif?.paidNotificationSent);
+            console.log(GasBillpaidNotif);
+            
+            if (GasBillpaidNotif === state) {
+                await expect(GasBillpaidNotif).toBe(state);
+                break;
+            }
+
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(10000);
+        }
+
+        if (GasBillpaidNotif !== state) {
+            throw new Error(`Expected status '${state}' not met after ${maxRetries} retries.`);
+        }
     }
 
 
