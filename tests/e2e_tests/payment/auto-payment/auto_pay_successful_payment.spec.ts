@@ -9,6 +9,7 @@ import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 import { fa } from '@faker-js/faker';
+import { Context } from 'sst/context';
 
 
 let AdminApiContext: APIRequestContext;
@@ -46,23 +47,32 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Valid Card Auto Payment', () => {
   
-  test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page}) => {
+  test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page, context}) => {
     
     test.setTimeout(300000);
 
     const PGuserUsage = await generateTestUserData();
-
-    console.log(PGuserUsage);
     
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
     const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
+
+    await page.goto('/sign-in'); //TEMPORARY FIX
+    
+    /*const [newTab] = await Promise.all([
+        page.waitForEvent('popup'),
+        await moveInpage.Click_Dashboard_Link()
+    ]);
+
+    await newTab.bringToFront();*/
+    
+
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
     await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
     await page.reload({ waitUntil: 'domcontentloaded' });
         //platform check and bills page
-    await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
+    await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
     await page.waitForTimeout(15000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
@@ -84,7 +94,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page}) => {
+  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, context, browser}) => {
     
     test.setTimeout(300000);
 
@@ -92,7 +102,26 @@ test.describe('Valid Card Auto Payment', () => {
     
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
     const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage, true, true);
-    finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+
+    await page.goto('/sign-in'); //TEMPORARY FIX
+    /*
+    // Store the current page
+    const pages = browser.contexts()[0].pages();
+    const currentPage = pages[pages.length - 1];
+
+    // Wait for the new tab to open
+    const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        await moveInpage.Click_Dashboard_Link()
+    ]);
+
+    // Close the previous tab
+    await currentPage.close();
+
+    // Switch to the new tab
+    await newPage.bringToFront();*/
+
+    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);

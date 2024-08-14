@@ -391,6 +391,7 @@ export class MoveInPage{
 
         await newPage.waitForLoadState('domcontentloaded');
         await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
+        await newPage.close();
     }
 
     async Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect(){
@@ -401,6 +402,7 @@ export class MoveInPage{
 
         await newPage.waitForLoadState('domcontentloaded');
         await expect(newPage).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
+        await newPage.close();
     }
 
 

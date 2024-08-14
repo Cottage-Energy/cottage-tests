@@ -24,6 +24,7 @@ export class FinishAccountSetupPage {
 
     //methods
     async Enter_Auto_Payment_Details_After_Skip(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+        
         await expect(this.Finish_Account_Title).toBeVisible({timeout:30000});
         await expect(this.Finish_Account_Service_Fee_Message).toBeVisible({timeout:30000});
         
