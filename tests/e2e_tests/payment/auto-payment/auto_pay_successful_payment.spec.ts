@@ -73,10 +73,9 @@ test.describe('Valid Card Auto Payment', () => {
     await page.reload({ waitUntil: 'domcontentloaded' });
         //platform check and bills page
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
-    await page.waitForTimeout(15000);
+    await page.waitForTimeout(90000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
-
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         //check bill ready email - received

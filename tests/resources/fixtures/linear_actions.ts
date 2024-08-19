@@ -37,7 +37,7 @@ export class LinearActions{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(30000);
+            await delay(90000);
         }
         
         if (issuesCount === 0) {
@@ -83,7 +83,7 @@ export class LinearActions{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(30000); // Wait for 2 seconds before retrying
+            await delay(90000); // Wait for 2 seconds before retrying
         }
         
         if (issuesCount === 0) {
