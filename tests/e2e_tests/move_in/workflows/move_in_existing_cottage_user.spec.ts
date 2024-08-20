@@ -564,7 +564,7 @@ test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
 
     await supabaseQueries.Get_Gas_Account_Id(cottageUserID);
     await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     await linearActions.CountMoveInTicket(PGuser.Email,2);
   });
 
