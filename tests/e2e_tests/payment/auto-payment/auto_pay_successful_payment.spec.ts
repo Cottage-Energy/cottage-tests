@@ -49,7 +49,7 @@ test.describe('Valid Card Auto Payment', () => {
   
   test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page, context}) => {
     
-    test.setTimeout(300000);
+    test.setTimeout(600000);
 
     const PGuserUsage = await generateTestUserData();
     

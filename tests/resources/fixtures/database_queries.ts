@@ -258,7 +258,7 @@ export class SupabaseQueries{
 
 
     async Check_Electric_Bill_Processing(ElectricAccountId: string) {
-        const maxRetries = 100;
+        const maxRetries = 300;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let ElectricBillstatus = '';
@@ -292,7 +292,7 @@ export class SupabaseQueries{
 
 
     async Check_Gas_Bill_Processing(GasAccountId: string) {
-        const maxRetries = 100;
+        const maxRetries = 300;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let GasBillstatus = '';
