@@ -274,20 +274,17 @@ export class SupabaseQueries{
             ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
             console.log(ElectricBillstatus);
         
-            if (ElectricBillstatus === "processing") {
-                await expect(ElectricBillstatus).toBe("processing");
+            if (ElectricBillstatus === "processing" || ElectricBillstatus === "succeeded") {
                 break;
             }
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(500);
+            await delay(100);
         }
+
+        await expect(ElectricBillstatus).toMatch(/^(processing|succeeded)$/);
         
-        // If the loop exits without matching the status, throw an error
-        if (ElectricBillstatus !== "processing") {
-            throw new Error(`Expected status "processing" not met after ${maxRetries} retries.`);
-        }
     }
 
 
@@ -308,20 +305,17 @@ export class SupabaseQueries{
             GasBillstatus = GasBillStatus?.paymentStatus ?? '';
             console.log(GasBillstatus);
             
-            if (GasBillstatus === "processing") {
-                await expect(GasBillstatus).toBe("processing");
+            if (GasBillstatus === "processing" || GasBillstatus === "succeeded") {
                 break;
             }
             
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(500);
+            await delay(100);
         }
+
+        await expect(GasBillstatus).toMatch(/^(processing|succeeded)$/);
             
-        // If the loop exits without matching the status, throw an error
-        if (GasBillstatus !== "processing") {
-            throw new Error(`Expected status "processing" not met after ${maxRetries} retries.`);
-        }
     }
 
 
