@@ -213,7 +213,7 @@ export class SupabaseQueries{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(10000);
+            await delay(15000);
         }
         
         // If the loop exits without matching the status, throw an error
@@ -247,7 +247,7 @@ export class SupabaseQueries{
             
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(10000);
+            await delay(15000);
         }
             
         // If the loop exits without matching the status, throw an error
@@ -340,6 +340,64 @@ export class SupabaseQueries{
         .throwOnError();
         console.log(data);
         console.log(error);
+    }
+
+
+    async Check_Registration_Job_Completion(JobId: string) {
+        const maxRetries = 10;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let JobStatus = '';
+
+        while (retries < maxRetries) {
+            const { data: Job } = await supabase
+                .from('RegistrationJob')
+                .select('status')
+                .eq('id', JobId)
+                .maybeSingle()
+                .throwOnError();
+            JobStatus = Job?.status ?? '';
+            console.log(JobStatus);
+
+            if (JobStatus === 'COMPLETE' || JobStatus === 'FAILED') {
+                break;
+            }
+
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(30000);
+        }
+        
+        await expect(JobStatus).toBe('COMPLETE');
+    }
+
+
+    async Get_Running_Registration_Job (cottageUserId: string) {
+        const maxRetries = 60;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let RegJobId = '';
+
+        while (retries < maxRetries) {
+            const { data: RegJob } = await supabase
+                .from('RegistrationJob')
+                .select('id')
+                .eq('forCottageUserID', cottageUserId)
+                .eq('status', 'RUNNING')
+                .maybeSingle()
+                .throwOnError();
+            RegJobId = RegJob?.id ?? '';
+            console.log(RegJobId);
+
+            if (RegJobId !== '') {
+                break;
+            }
+
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(500);
+        }
+        return RegJobId;
     }
 
 
