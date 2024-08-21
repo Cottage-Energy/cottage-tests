@@ -283,6 +283,27 @@ export type Database = {
           },
         ];
       };
+      Charges: {
+        Row: {
+          id: string;
+          isBillCreated: boolean;
+          issueID: string | null;
+          total: number;
+        };
+        Insert: {
+          id?: string;
+          isBillCreated?: boolean;
+          issueID?: string | null;
+          total?: number;
+        };
+        Update: {
+          id?: string;
+          isBillCreated?: boolean;
+          issueID?: string | null;
+          total?: number;
+        };
+        Relationships: [];
+      };
       CommunitySolarProvider: {
         Row: {
           capacity: number | null;
@@ -701,6 +722,7 @@ export type Database = {
           totalAmountDue: number;
           totalUsage: number;
           transactionFee: number | null;
+          utilityCompanyPaidAt: string | null;
           visible: boolean;
         };
         Insert: {
@@ -728,6 +750,7 @@ export type Database = {
           totalAmountDue: number;
           totalUsage: number;
           transactionFee?: number | null;
+          utilityCompanyPaidAt?: string | null;
           visible?: boolean;
         };
         Update: {
@@ -755,6 +778,7 @@ export type Database = {
           totalAmountDue?: number;
           totalUsage?: number;
           transactionFee?: number | null;
+          utilityCompanyPaidAt?: string | null;
           visible?: boolean;
         };
         Relationships: [
@@ -1196,6 +1220,8 @@ export type Database = {
           feeStructure: number | null;
           gasAccountID: number;
           id: number;
+          isPaidUtilityCompany: boolean | null;
+          isSendReminder: boolean | null;
           lastPaymentAttemptDate: string | null;
           manual: boolean | null;
           otherCharges: Json | null;
@@ -1211,6 +1237,7 @@ export type Database = {
           totalAmountDue: number;
           totalUsage: number;
           transactionFee: number | null;
+          utilityCompanyPaidAt: string | null;
           visible: boolean;
         };
         Insert: {
@@ -1221,6 +1248,8 @@ export type Database = {
           feeStructure?: number | null;
           gasAccountID: number;
           id?: number;
+          isPaidUtilityCompany?: boolean | null;
+          isSendReminder?: boolean | null;
           lastPaymentAttemptDate?: string | null;
           manual?: boolean | null;
           otherCharges?: Json | null;
@@ -1236,6 +1265,7 @@ export type Database = {
           totalAmountDue: number;
           totalUsage: number;
           transactionFee?: number | null;
+          utilityCompanyPaidAt?: string | null;
           visible?: boolean;
         };
         Update: {
@@ -1246,6 +1276,8 @@ export type Database = {
           feeStructure?: number | null;
           gasAccountID?: number;
           id?: number;
+          isPaidUtilityCompany?: boolean | null;
+          isSendReminder?: boolean | null;
           lastPaymentAttemptDate?: string | null;
           manual?: boolean | null;
           otherCharges?: Json | null;
@@ -1261,6 +1293,7 @@ export type Database = {
           totalAmountDue?: number;
           totalUsage?: number;
           transactionFee?: number | null;
+          utilityCompanyPaidAt?: string | null;
           visible?: boolean;
         };
         Relationships: [
@@ -1581,6 +1614,75 @@ export type Database = {
             foreignKeyName: "MoveInPartner_id_fkey";
             columns: ["id"];
             isOneToOne: true;
+            referencedRelation: "ViewResidentDetails";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      Payments: {
+        Row: {
+          chargeId: string;
+          feeStructure: number | null;
+          id: string;
+          paidBy: string;
+          paidNotificationSent: boolean;
+          paymentStatus: Database["public"]["Enums"]["paymentstatus"] | null;
+          stripePaymentID: string | null;
+          transactionFee: number;
+        };
+        Insert: {
+          chargeId: string;
+          feeStructure?: number | null;
+          id?: string;
+          paidBy: string;
+          paidNotificationSent?: boolean;
+          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null;
+          stripePaymentID?: string | null;
+          transactionFee?: number;
+        };
+        Update: {
+          chargeId?: string;
+          feeStructure?: number | null;
+          id?: string;
+          paidBy?: string;
+          paidNotificationSent?: boolean;
+          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null;
+          stripePaymentID?: string | null;
+          transactionFee?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Payments_chargeId_fkey";
+            columns: ["chargeId"];
+            isOneToOne: false;
+            referencedRelation: "Charges";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Payments_feeStructure_fkey";
+            columns: ["feeStructure"];
+            isOneToOne: false;
+            referencedRelation: "FeeStructure";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Payments_paidBy_fkey";
+            columns: ["paidBy"];
+            isOneToOne: false;
+            referencedRelation: "CottageUsers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Payments_paidBy_fkey";
+            columns: ["paidBy"];
+            isOneToOne: false;
+            referencedRelation: "ViewCottageUserWithUtilityAccount";
+            referencedColumns: ["cottageUserID"];
+          },
+          {
+            foreignKeyName: "Payments_paidBy_fkey";
+            columns: ["paidBy"];
+            isOneToOne: false;
             referencedRelation: "ViewResidentDetails";
             referencedColumns: ["id"];
           },
@@ -3295,7 +3397,18 @@ export type Database = {
       enum_LinkAccountJob_status: "PENDING" | "SUCCESS" | "ERROR" | "MFA_CODE_PENDING" | "MFA_CODE_VALID";
       enum_RegistrationJob_status: "FAILED" | "COMPLETE" | "RUNNING";
       enum_Unit_residenceType: "APARTMENT" | "HOME";
-      enum_UtilityAccount_status: "NEW" | "PENDING_CREATE" | "ACTIVE" | "INACTIVE" | "PENDING_SYNC";
+      enum_UtilityAccount_status:
+        | "NEW"
+        | "PENDING_CREATE"
+        | "ACTIVE"
+        | "INACTIVE"
+        | "PENDING_SYNC"
+        | "PENDING_ONLINE_ACCOUNT_CREATION"
+        | "PENDING_START_SERVICE"
+        | "PENDING_ISSUE"
+        | "PENDING_ACCOUNT_NUMBER"
+        | "PENDING_FIRST_BILL"
+        | "RESYNC_REQUIRED";
       ExternalCompanyStatusEnum: "PENDING" | "APPROVED";
       identityVerificationType: "ssn" | "driversLicense" | "passport" | "publicAssistanceID" | "alienID";
       paymentmethodstatus: "VALID" | "INVALID";

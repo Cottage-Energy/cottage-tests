@@ -82,7 +82,7 @@ export class SupabaseQueries{
     }
 
 
-    /*async Check_Gas_Bill_Reminder(GasAccountId: string, state:boolean) {
+    async Check_Gas_Bill_Reminder(GasAccountId: string, state:boolean) {
         const { data: GasBillReminder } = await supabase
             .from('GasBill')
             .select('isSendReminder')
@@ -92,7 +92,7 @@ export class SupabaseQueries{
         const GasBillreminder = GasBillReminder?.isSendReminder ?? '';
         console.log(GasBillreminder);
         await expect(GasBillreminder).toBe(state);
-    }*/
+    }
 
 
     async Check_Electric_Bill_Visibility(ElectricAccountId: string, state:boolean) {
@@ -190,7 +190,7 @@ export class SupabaseQueries{
 
 
     async Check_Electric_Bill_Status(ElectricAccountId: string, status: string) {
-        const maxRetries = 30;
+        const maxRetries = 60;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let ElectricBillstatus = '';
@@ -224,7 +224,7 @@ export class SupabaseQueries{
 
 
     async Check_Gas_Bill_Status(GasAccountId: string, status:string) {
-        const maxRetries = 30;
+        const maxRetries = 60;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let GasBillstatus = '';

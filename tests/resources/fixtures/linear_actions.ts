@@ -48,6 +48,7 @@ export class LinearActions{
         for (let i = 0; i < issuesCount; i++) {
             const issuesId = issuesResponse.nodes[i].id;
             await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
+            await linearClient.updateIssue(issuesId, { priority: 1 });
         }
     }
 
@@ -94,6 +95,7 @@ export class LinearActions{
         for (let i = 0; i < issuesCount; i++) {
             const issuesId = issuesResponse.nodes[i].id;
             await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
+            await linearClient.updateIssue(issuesId, { priority: 1 });
         }
     }
 

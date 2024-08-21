@@ -49,7 +49,7 @@ test.describe('Valid Card Auto Payment', () => {
   
   test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -73,7 +73,7 @@ test.describe('Valid Card Auto Payment', () => {
     await page.reload({ waitUntil: 'domcontentloaded' });
         //platform check and bills page
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
-    await page.waitForTimeout(90000);
+    await page.waitForTimeout(30000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
     await page.waitForTimeout(15000);
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");

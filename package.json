@@ -14,7 +14,7 @@
     "@types/node": "^20.12.7"
   },
   "dependencies": {
-    "@linear/sdk": "^22.0.0",
+    "@linear/sdk": "^27.0.0",
     "@supabase/supabase-js": "^2.43.1",
     "axios": "^1.7.2",
     "inngest": "^3.19.1",
