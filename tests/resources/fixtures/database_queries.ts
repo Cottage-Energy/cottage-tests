@@ -213,7 +213,7 @@ export class SupabaseQueries{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(15000);
+            await delay(10000);
         }
         
         // If the loop exits without matching the status, throw an error
@@ -247,7 +247,7 @@ export class SupabaseQueries{
             
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(15000);
+            await delay(10000);
         }
             
         // If the loop exits without matching the status, throw an error

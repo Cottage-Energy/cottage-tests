@@ -81,7 +81,7 @@ test.describe('Valid Card Auto Payment', () => {
         //check bill ready email - received
     await page.reload({ waitUntil: 'domcontentloaded' });
         //check platform dashboard and bills page - outstanding balance not 0
-    await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId); //could be flaky
+    await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
         //await page.waitForTimeout(90000);
  
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
