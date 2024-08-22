@@ -29,7 +29,6 @@ export class LinearActions{
         
             issuesCount = issuesResponse.nodes.length;
             console.log(`Number of issues: ${issuesCount}`);
-            console.log(issuesResponse);
         
             if (issuesCount > 0) {
                 break;
@@ -47,8 +46,8 @@ export class LinearActions{
         
         for (let i = 0; i < issuesCount; i++) {
             const issuesId = issuesResponse.nodes[i].id;
-            await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
-            await linearClient.updateIssue(issuesId, { priority: 1 });
+            await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId, priority: 1 });
+            console.log(issuesResponse);
         }
     }
 
@@ -76,7 +75,6 @@ export class LinearActions{
         
             issuesCount = issuesResponse.nodes.length;
             console.log(`Number of issues: ${issuesCount}`);
-            console.log(issuesResponse);
         
             if (issuesCount > 0) {
                 break;
@@ -94,8 +92,8 @@ export class LinearActions{
         
         for (let i = 0; i < issuesCount; i++) {
             const issuesId = issuesResponse.nodes[i].id;
-            await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId });
-            await linearClient.updateIssue(issuesId, { priority: 1 });
+            await linearClient.updateIssue(issuesId, { stateId: ApprovedStatusId, priority: 1 });
+            console.log(issuesResponse);
         }
     }
 
