@@ -70,6 +70,7 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
     await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
     await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
     //platform check
     await sidebarChat.Goto_Billing_Page_Via_Icon();
     await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
@@ -82,10 +83,13 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
     await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
     //check platform outstanding balance not 0
     await sidebarChat.Goto_Billing_Page_Via_Icon();
     await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
-    await billingPage.Click_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled");
+    await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled");
+    await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual);
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
     //check bill ready email - received
@@ -94,9 +98,13 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
     //check email - payment successful
     await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
     await sidebarChat.Goto_Billing_Page_Via_Icon();
     await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
-    await billingPage.Click_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid");
+    await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid");
+    await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual);
+    await billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee);
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
     //check platform dashboard
