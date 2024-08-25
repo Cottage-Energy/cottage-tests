@@ -47,9 +47,9 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Valid Card Auto Payment', () => {
   
-  test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page, context}) => {
+  test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(1800000);
+    test.setTimeout(600000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -65,31 +65,42 @@ test.describe('Valid Card Auto Payment', () => {
 
     await newTab.bringToFront();*/
     
-
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
     await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
     await page.reload({ waitUntil: 'domcontentloaded' });
-        //platform check and bills page
+    //platform check
+    await sidebarChat.Goto_Billing_Page_Via_Icon();
+    await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
+    await page.waitForTimeout(1000);
+    await sidebarChat.Goto_Overview_Page_Via_Icon();
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
-    await page.waitForTimeout(30000);
+    await page.waitForTimeout(10000);
     await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
-    await page.waitForTimeout(15000);
+    await page.waitForTimeout(10000);
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment");
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
-        //check bill ready email - received
     await page.reload({ waitUntil: 'domcontentloaded' });
-        //check platform dashboard and bills page - outstanding balance not 0
+    //check platform outstanding balance not 0
+    await sidebarChat.Goto_Billing_Page_Via_Icon();
+    await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Click_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled");
+    await page.waitForTimeout(1000);
+    await sidebarChat.Goto_Overview_Page_Via_Icon();
+    //check bill ready email - received
     await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-        //await page.waitForTimeout(90000);
- 
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
-        //check email - payment successful
+    //check email - payment successful
     await page.reload({ waitUntil: 'domcontentloaded' });
-        //check platform dashboard and bills page
-        //add service fee checking
+    await sidebarChat.Goto_Billing_Page_Via_Icon();
+    await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Click_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid");
+    await page.waitForTimeout(1000);
+    await sidebarChat.Goto_Overview_Page_Via_Icon();
+    //check platform dashboard
+    //add service fee checking
   });
 
 

@@ -20,32 +20,51 @@ export class BillingPage {
 
     //methods
     async Click_Electric_Bill_Pay_Button(electric_usage: string) {
+        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
+
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
         const buttonLocator = rowLocator.locator(`//button[contains(text(),"Pay")]`);
+        await expect(buttonLocator).toBeVisible({timeout:30000});
+        await expect(buttonLocator).toBeEnabled({timeout:30000});
+        await buttonLocator.hover();
         await buttonLocator.click();
-
-        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
-        await expect(this.Billing_Pay_Bill_Final_Button).toBeVisible({timeout:30000});
-        await expect(this.Billing_Pay_Bill_Final_Button).toBeEnabled({timeout:30000});
-        await this.Billing_Pay_Bill_Final_Button.hover();
-        await this.Billing_Pay_Bill_Final_Button.click();
     }
 
 
     async Click_Gas_Bill_Pay_Button(gas_usage: string) {
+        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
+
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         const buttonLocator = rowLocator.locator(`//button[contains(text(),"Pay")]`);
+        await expect(buttonLocator).toBeVisible({timeout:30000});
+        await expect(buttonLocator).toBeEnabled({timeout:30000});
+        await buttonLocator.hover();
         await buttonLocator.click();
-
-        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
-        await expect(this.Billing_Pay_Bill_Final_Button).toBeVisible({timeout:30000});
-        await expect(this.Billing_Pay_Bill_Final_Button).toBeEnabled({timeout:30000});
-        await this.Billing_Pay_Bill_Final_Button.hover();
-        await this.Billing_Pay_Bill_Final_Button.click();
     }
 
 
     //assertions
+    async Check_Electric_Bill_Hidden(electric_usage: string) {
+        await expect(this.Billing_Electric_Usage_Row(electric_usage)).not.toBeVisible({timeout:30000});
+    }
+
+    async Check_Gas_Bill_Hidden(gas_usage: string) {
+        await expect(this.Billing_Gas_Usage_Row(gas_usage)).not.toBeVisible({timeout:30000});
+    }
+
+    async Check_Electric_Bill_Visibility(electric_usage: string) {
+        await expect(this.Billing_Electric_Usage_Row(electric_usage)).toBeVisible({timeout:30000});
+    }
+
+    async Click_Electric_Bill_Status(electric_usage: string, status: string) {
+        const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
+        const StatusLocator = rowLocator.locator(`//div[text() = "${status}"]`);
+        await expect(StatusLocator).toBeVisible({timeout:30000});
+    }
+
+    async Check_Gas_Bill_Visibility(gas_usage: string) {
+        await expect(this.Billing_Gas_Usage_Row(gas_usage)).toBeVisible({timeout:30000});
+    }
 
 }
 
