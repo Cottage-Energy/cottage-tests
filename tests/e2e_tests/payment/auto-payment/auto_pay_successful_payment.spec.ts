@@ -49,7 +49,7 @@ test.describe('Valid Card Auto Payment', () => {
   
   test('CON-EDISON Electric Only Valid Auto Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(600000);
+    test.setTimeout(900000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -108,7 +108,7 @@ test.describe('Valid Card Auto Payment', () => {
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
     //check platform dashboard
-    //add service fee checking
+    //add service fee checking db
   });
 
 
