@@ -319,6 +319,44 @@ export class SupabaseQueries{
     }
 
 
+    async Check_Electric_Bill_Service_Fee(ElectricAccountId: string, Amount: number, Usage: number, Expectedfee: string) {
+        
+        const { data: ElectricBill } = await supabase
+            .from('ElectricBill')
+            .select('transactionFee')
+            .eq('electricAccountID', ElectricAccountId)
+            .eq('totalAmountDue', Amount)
+            .eq('totalUsage', Usage)
+            .single()
+            .throwOnError();
+
+        const BillFee = ElectricBill?.transactionFee ?? '';
+        const ActualFee = Number(BillFee) / 100;
+        console.log(ActualFee);
+
+        await expect(ActualFee).toBe(Number(Expectedfee));
+    }
+
+
+    async Check_Gas_Bill_Service_Fee(GasAccountId: string, Amount: number, Usage: number, Expectedfee: string) {
+        
+        const { data: GasBill } = await supabase
+            .from('GasBill')
+            .select('transactionFee')
+            .eq('gasAccountID', GasAccountId)
+            .eq('totalAmountDue', Amount)
+            .eq('totalUsage', Usage)
+            .single()
+            .throwOnError();
+
+        const BillFee = GasBill?.transactionFee ?? '';
+        const ActualFee = Number(BillFee) / 100;
+        console.log(ActualFee);
+
+        await expect(ActualFee).toBe(Number(Expectedfee));
+    }
+
+
     async Update_Companies_to_Building(ShortCode: string, ElectricCompany: string | null, GasCompany: string | null) {
         const { data,error} = await supabase
         .from('Building')
