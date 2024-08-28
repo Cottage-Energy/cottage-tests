@@ -20,7 +20,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await page.close();
+  await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {

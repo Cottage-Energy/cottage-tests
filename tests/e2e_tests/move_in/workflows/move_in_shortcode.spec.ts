@@ -1,11 +1,12 @@
 import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
+import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
+import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
+import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
-import * as MoveIndata from '../../../resources/data/move_in-data.json';
-import * as PaymentData from '../../../resources/data/payment-data.json';
 
 const supabaseQueries = new SupabaseQueries();
-
+const linearActions = new LinearActions();
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -23,17 +24,23 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-
+test.describe.configure({mode: "serial"});
 test.describe('Move In New User Electric & Gas', () => {
   
 
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
+    test.slow();
 
     const PGuser = await generateTestUserData();
 
-    //Supabase query to change bldg to Electric Only
-    await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON",null);
+    await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+    await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
   });
 
 
