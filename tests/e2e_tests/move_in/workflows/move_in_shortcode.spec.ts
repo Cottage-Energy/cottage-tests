@@ -31,12 +31,10 @@ test.describe('Move In New User Electric & Gas', () => {
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
     test.slow();
 
-    const PGuser = await generateTestUserData();
-
-    await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+    await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
+    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
