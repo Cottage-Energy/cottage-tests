@@ -25,14 +25,13 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 test.describe.configure({mode: "serial"});
-test.describe('Move In New User Electric & Gas', () => {
+test.describe('Short Code Billing New User Electric &/or Gas', () => {
   
 
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
     test.slow();
-
     await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
-    await supabaseQueries.Update_Building_Billing("autotest",false);
+    await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -66,31 +65,6 @@ test.describe('Move In New User Electric & Gas', () => {
 
     //Supabase query to change bldg to Electric and Gas Different Company
   });
-
-
-  test('New User for ShortCode Electric and Gas Both Non Billing', async ({moveInpage}) => {
-
-    const PGuser = await generateTestUserData();
-
-    //Supabase query to change bldg to Electric and Gas Same Company
-  });
-
-
-  test('New User for ShortCode Electric is Billing and Gas is Non Billing', async ({moveInpage}) => {
-
-    const PGuser = await generateTestUserData();
-
-    //Supabase query to change bldg to Electric and Gas Same Company
-  });
-
-
-  test('New User for ShortCode Electric is Non Billing and Gas is Billing', async ({moveInpage}) => {
-
-    const PGuser = await generateTestUserData();
-
-    //Supabase query to change bldg to Electric and Gas Same Company
-  });
-
 
 });
 
