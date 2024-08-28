@@ -47,10 +47,10 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     const feePercentage = serviceFeePercentage || 0.03;
 
     const electricAmountActual = (parseInt(AmountElectric) / 100).toFixed(2);
-    const electricServiceFee = ((parseInt(AmountElectric) * (feePercentage / 100))+0.3).toFixed(2);
+    const electricServiceFee = (Math.ceil(((parseInt(AmountElectric) * (feePercentage))+(0.3*100)))/100).toFixed(2);
     const electricAmountTotal = (parseFloat(electricAmountActual) + parseFloat(electricServiceFee)).toFixed(2);
     const gasAmountActual = (parseInt(AmountGas) / 100).toFixed(2);
-    const gasServiceFee = ((parseInt(AmountGas) * (feePercentage / 100))+0.3).toFixed(2);
+    const gasServiceFee = (Math.ceil(((parseInt(AmountGas) * (feePercentage))+(0.3*100)))/100).toFixed(2);
     const gasAmountTotal = (parseFloat(gasAmountActual) + parseFloat(gasServiceFee)).toFixed(2);
   
     const userData: TestUser = {
