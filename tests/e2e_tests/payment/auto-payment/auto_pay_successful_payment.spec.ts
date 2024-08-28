@@ -109,7 +109,6 @@ test.describe('Valid Card Auto Payment', () => {
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
     //check platform dashboard
-    //add service fee checking db
   });
 
 
