@@ -8,13 +8,13 @@ import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 import * as PaymentData from '../../../resources/data/payment-data.json';
-import { fa } from '@faker-js/faker';
-import { Context } from 'sst/context';
+import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
 
 let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
+let MoveIn: any;
 
 
 //test.beforeAll(async ({playwright,page}) => {
@@ -38,6 +38,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
+    await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
     //await page.close();
 });
   
@@ -54,7 +55,7 @@ test.describe('Valid Card Auto Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
+    MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     
