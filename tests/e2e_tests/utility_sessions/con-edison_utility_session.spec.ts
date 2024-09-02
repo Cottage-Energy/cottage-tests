@@ -7,13 +7,13 @@ import { AdminApi } from '../../resources/api/admin_api';
 import { LinearActions } from '../../resources/fixtures/linear_actions';
 import environmentBaseUrl from '../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../resources/utils/tokenConfig';
-import * as PaymentData from '../../resources/data/payment-data.json';
+import { CleanUp } from '../../resources/fixtures/userCleanUp';
 
 
 let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
-
+let MoveIn: any;
 
 //test.beforeAll(async ({playwright,page}) => {
     
@@ -36,7 +36,8 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    //await page.close();
+  await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
+  //await page.close();
 });
   
 /*test.afterAll(async ({ page }) => {
@@ -52,7 +53,7 @@ test.describe('CON-EDISON Utility Session', () => {
     const PGuserUsage = await generateTestUserData();
     
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
+    MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     
     await AdminApi.CON_EDISON_Sign_Up(AdminApiContext,ElectricAccountId);
