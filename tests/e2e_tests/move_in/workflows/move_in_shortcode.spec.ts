@@ -4,9 +4,11 @@ import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
+import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
+let MoveIn: any;
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -17,6 +19,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
+  await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
   await page.close();
 });
 
@@ -33,7 +36,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
+    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

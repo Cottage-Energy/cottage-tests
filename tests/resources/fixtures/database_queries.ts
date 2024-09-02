@@ -439,6 +439,114 @@ export class SupabaseQueries{
     }
 
 
+    async Get_Electric_Account_Id_Non_Test(cottageUserId: string) {
+        const { data: EAccount } = await supabase
+            .from('ElectricAccount')
+            .select('id')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+            .throwOnError();
+        const ElectricAccountId = EAccount?.id ?? '';
+        console.log(ElectricAccountId.toString());
+        return ElectricAccountId.toString();
+    }
+    
+
+    async Get_Gas_Account_Id_Non_Test(cottageUserId: string) {
+        const { data: GAccount } = await supabase
+            .from('GasAccount')
+            .select('id')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+            .throwOnError();
+        const GasAccountId = GAccount?.id ?? '';
+        console.log(GasAccountId.toString());
+        return GasAccountId.toString();
+    }
+
+
+    async Get_Property_Id_by_Electric_Account(cottageUserId: string) {
+        const { data: EAccount } = await supabase
+            .from('ElectricAccount')
+            .select('propertyID')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+            .throwOnError();
+        const PropertyId = EAccount?.propertyID ?? '';
+        console.log(PropertyId.toString());
+        return PropertyId.toString();
+    }
+
+
+    async Get_Property_Id_by_Gas_Account(cottageUserId: string) {
+        const { data: GAccount } = await supabase
+            .from('GasAccount')
+            .select('propertyID')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+            .throwOnError();
+        const PropertyId = GAccount?.propertyID ?? '';
+        console.log(PropertyId.toString());
+        return PropertyId.toString();
+    }
+
+
+    async delete_Cottage_User(cottageUserId: string) {
+        const { error } = await supabase
+            .from('CottageUsers')
+            .delete()
+            .eq('id', cottageUserId);
+    
+        if (error) {
+            console.error('Error:', error);
+        } else {
+            console.log('Successfully deleted Cottage User');
+        }
+    }
+
+
+    async delete_Electric_Account(ElectricAccountID: number) {
+        const { error } = await supabase
+            .from('ElectricAccount')
+            .delete()
+            .eq('id', ElectricAccountID);
+    
+        if (error) {
+            console.error('Error:', error);
+        } else {
+            console.log('Successfully deleted Electric Account');
+        }
+    }
+
+
+    async delete_Gas_Account(GasAccountID: number) {
+        const { error } = await supabase
+            .from('GasAccount')
+            .delete()
+            .eq('id', GasAccountID);
+    
+        if (error) {
+            console.error('Error:', error);
+        } else {
+            console.log('Successfully deleted Gas Account');
+        }
+    }
+
+
+    async delete_Property(PropertyId: number) {
+        const { error } = await supabase
+            .from('Property')
+            .delete()
+            .eq('id', PropertyId);
+    
+        if (error) {
+            console.error('Error:', error);
+        } else {
+            console.log('Successfully deleted Property');
+        }
+    }
+
+
 }
 
 
