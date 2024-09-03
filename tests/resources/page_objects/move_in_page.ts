@@ -34,7 +34,6 @@ export class MoveInPage{
     readonly Move_In_Cannot_Find_Address_Link: Locator;
     readonly Move_In_Address_Not_Listed_Message: Locator;
 
-    readonly Move_In_About_You_Fields: Locator;
     readonly Move_In_About_You_Title: Locator
     readonly Move_In_First_Name_Field: Locator;
     readonly Move_In_Last_Name_Field: Locator;
@@ -115,8 +114,6 @@ export class MoveInPage{
         this.Move_In_Cannot_Find_Address_Link = page.getByRole('button', { name: 'I cannot find my address' });
         this.Move_In_Address_Not_Listed_Message = page.getByRole('heading', { name: 'Address not listed in the' });
 
-
-        this.Move_In_About_You_Fields = page.getByText('Tell us a little about youFirst NameLast NameEmailPhoneMove-in DateSelect a');
         this.Move_In_About_You_Title = page.getByRole('heading', { name: 'Tell us a little about you' });
         this.Move_In_First_Name_Field = page.locator('input[name="firstName"]');
         this.Move_In_Last_Name_Field = page.locator('input[name="lastName"]');
@@ -227,7 +224,7 @@ export class MoveInPage{
 
     async Enter_Personal_Info(firstname:string, lastname:string, phone:string, email:string, day:string){
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_About_You_Fields).toBeVisible({timeout:30000});
+        await expect(this.Move_In_About_You_Title).toBeVisible({timeout:30000});
         await this.Move_In_First_Name_Field.isEditable();
         await this.Move_In_First_Name_Field.hover();
         await this.Move_In_First_Name_Field.click({timeout:10000});
