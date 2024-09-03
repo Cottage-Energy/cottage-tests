@@ -120,18 +120,13 @@ export class LinearActions{
             console.log(`Number of issues: ${issuesCount}`);
             console.log(issuesResponse);
         
-            if (issuesCount > 0) {
+            if (issuesCount === ExpectedCount) {
                 break;
             }
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
             await delay(30000);
-        }
-
-        if (issuesCount === 0) {
-            console.log('No issues found after maximum retries.');
-            return;
         }
 
         expect(issuesCount).toBe(ExpectedCount);

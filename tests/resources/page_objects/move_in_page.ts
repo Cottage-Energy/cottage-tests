@@ -185,6 +185,7 @@ export class MoveInPage{
         await this.Move_In_Address_Dropdown(address).click({timeout:10000});
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);
+        await this.page.waitForTimeout(1000);
     }
 
     async Setup_Account(Electric_New: boolean, Gas_New: boolean){ 

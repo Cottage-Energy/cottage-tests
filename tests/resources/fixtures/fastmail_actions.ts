@@ -4,6 +4,7 @@ import {FastmailClient} from '../../resources/utils/fastmail/client';
 const fastMail = new FastmailClient();
 
 export async function Get_OTP(Email: string) {
+    //add retries
     const EmailLowerCase = Email.toLowerCase();
     const content = await fastMail.fetchEmails({to: EmailLowerCase, subject: "Public Grid: One Time Passcode", from: "Public Grid Team <support@onepublicgrid.com>"});
     console.log(content.length);
@@ -19,6 +20,9 @@ export async function Get_OTP(Email: string) {
         return code;
     }
 }
+
+
+
 
 
 export const FastmailActions = {

@@ -13,6 +13,7 @@ export class OverviewPage {
     }
 
     //methods
+
     async Overview(electric_usage: string) {
         
     }
