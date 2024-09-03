@@ -44,12 +44,12 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', async ({moveInpage, page}) => {
+  test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
 
     const PGuser = await generateTestUserData();
 
     //Supabase query to change bldg to Gas Only
-    await supabaseQueries.Update_Companies_to_Building("autotest",null, "EVERSOURCE");
+    await supabaseQueries.Update_Companies_to_Building("autotest",null, "EVERSOURCE"); 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
   });
 
