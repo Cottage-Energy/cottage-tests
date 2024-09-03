@@ -94,12 +94,12 @@ export class MoveInPage{
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
         this.Move_In_Get_Started_Button = page.getByRole('button', { name: 'Get Started' });
         this.Move_In_Back_Link = page.getByText('Back');
-        this.Move_In_Address_Page_Fields = page.getByText('Where are you looking to start service?AddressUnitNext');
+        this.Move_In_Address_Page_Fields = page.getByRole('heading', { name: 'Where are you looking to' });
         this.Move_In_Address_Field = page.locator('#address');
         this.Move_In_Address_Dropdown = (address: string) => page.getByText(address);
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
 
-        this.Move_In_Account_Setup_Fields = page.getByText('What can we set up for you today?Public Grid starts service and manages your');
+        this.Move_In_Account_Setup_Fields = page.getByRole('heading', { name: 'What can we set up for you' });
         this.Move_In_Electric_New_Button = page.locator('//label[@id = "Electric-new"]');
         this.Move_In_Electric_Existing_Button = page.locator('//label[@id = "Electric-existing"]');
         this.Move_In_Gas_New_Button = page.locator('//label[@id = "Gas-new"]');
