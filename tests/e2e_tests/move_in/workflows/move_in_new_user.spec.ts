@@ -3,6 +3,7 @@ import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
+import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
@@ -20,7 +21,7 @@ test.beforeEach(async ({ page },testInfo) => {
 
 test.afterEach(async ({ page },testInfo) => {
   await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
-  //await page.close();
+  await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
@@ -39,7 +40,8 @@ test.describe('Move In New User', () => {
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED");
   });
 
 
@@ -51,7 +53,8 @@ test.describe('Move In New User', () => {
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
   });
 
 
@@ -62,7 +65,8 @@ test.describe('Move In New User', () => {
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
   });
 
 
@@ -74,7 +78,8 @@ test.describe('Move In New User', () => {
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
   });
 
 
@@ -85,7 +90,8 @@ test.describe('Move In New User', () => {
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
   });
 
 
@@ -97,7 +103,8 @@ test.describe('Move In New User', () => {
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
   });
 
 
@@ -108,7 +115,8 @@ test.describe('Move In New User', () => {
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
-    //check confirnation email
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
   });
 
 

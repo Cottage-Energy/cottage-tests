@@ -4,61 +4,36 @@ import {FastmailClient} from '../../resources/utils/fastmail/client';
 const fastMail = new FastmailClient();
 
 export async function Get_OTP(Email: string) {
-    const maxRetries = 2;
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-    let retries = 0;
-
+    const EmailLowerCase = Email.toLowerCase();
+    const content = await fastMail.fetchEmails({to: EmailLowerCase, subject: "Public Grid: One Time Passcode", from: "Public Grid Team <support@onepublicgrid.com>"});
+    console.log(content.length);
+    await expect(content.length).toEqual(1);
+    const email_body = content[0].bodyValues[2].value;
     
-    while (retries < maxRetries) {
-        const EmailLowerCase = Email.toLowerCase();
-        const content = await fastMail.fetchEmails({to: EmailLowerCase, subject: "Public Grid: One Time Passcode", from: "Public Grid Team <support@onepublicgrid.com>"});
-        console.log(content.length);
-        await expect(content.length).toEqual(1);
-        const email_body = content[0].bodyValues[2].value;
-    
-        const regex = /<p>Enter this code to login: (\d+)<\/p>/;
-        const match = email_body.match(regex);
+    const regex = /<p>Enter this code to login: (\d+)<\/p>/;
+    const match = email_body.match(regex);
 
-        if (match) {
-            const code = match[1];
-            console.log(code);
-            return code;
-            break;
-        }
-
-        retries++;
-        console.log(`Retrying... (${retries}/${maxRetries})`);
-        await delay(30000);
+    if (match) {
+        const code = match[1];
+        console.log(code);
+        return code;
     }
 }
 
 
-export async function Check_Start_Service_Confirmation(Email: string, AccountNumber: string) {
-    const maxRetries = 2;
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-    let retries = 0;
+export async function Check_Start_Service_Confirmation(Email: string, AccountNumber: string, ElectricCompany?: string, GasCompany?: string) {
+    const content = await fastMail.fetchEmails({to: Email, subject: `Start Service Confirmation: ${AccountNumber}`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
+    const email_body = content[0].bodyValues[1].value;
+    //console.log(email_body);
+    await expect(content.length).toEqual(1);
+    await expect(email_body).toContain(AccountNumber);
 
-    
-    while (retries < maxRetries) {
-        const EmailLowerCase = Email.toLowerCase();
-        const content = await fastMail.fetchEmails({to: EmailLowerCase, subject: `Start Service Confirmation: ${AccountNumber}`, from: "Public Grid Team <support@onepublicgrid.com>"});
-        console.log(content.length);
-        await expect(content.length).toEqual(1);
-        const email_body = content[0].bodyValues[2].value;
-    
-        const regex = /<p>Enter this code to login: (\d+)<\/p>/;
-        const match = email_body.match(regex);
+    if (ElectricCompany) {
+        await expect(email_body).toContain(`${ElectricCompany} logo`);
+    }
 
-        if (match) {
-            const code = match[1];
-            console.log(code);
-            return code;
-            break;
-        }
-
-        retries++;
-        console.log(`Retrying... (${retries}/${maxRetries})`);
-        await delay(30000);
+    if (GasCompany) {
+        await expect(email_body).toContain(`${GasCompany} logo`);
     }
 }
 
@@ -67,5 +42,6 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
 
 
 export const FastmailActions = {
-    Get_OTP
+    Get_OTP,
+    Check_Start_Service_Confirmation
 };

@@ -359,12 +359,12 @@ export class MoveInPage{
         await this.Move_In_Dashboard_Link.click();
     }
 
-    async Get_Account_Number(): Promise<string | null> {
-        // Assuming you are using a framework like Protractor or Playwright
+    async Get_Account_Number(){
         const element = await this.Move_In_Account_Number_Value;
         const textValue = await element.textContent();
-        console.log(textValue);
-        return textValue;
+        const accountNumber = textValue?.trim() || '';
+        console.log(accountNumber);
+        return accountNumber;
     }
 
 

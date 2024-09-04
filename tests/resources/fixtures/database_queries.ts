@@ -15,6 +15,19 @@ export class SupabaseQueries{
         await expect(cottageUserId).not.toBe("");
         return cottageUserId;
     }
+
+
+    async Check_Cottage_User_Account_Number(Email: string, accountNumber: any) {
+        const { data: cottageUser } = await supabase
+            .from('CottageUsers')
+            .select('accountNumber')
+            .eq('email', Email)
+            .single()
+            .throwOnError();
+        const cottageUserAccountNUmber = cottageUser?.accountNumber ?? '';
+        await expect(cottageUserAccountNUmber).not.toBeNull;
+        await expect(cottageUserAccountNUmber.toString()).toBe(accountNumber);
+    }
     
 
     async Get_Electric_Account_Id(cottageUserId: string) {
