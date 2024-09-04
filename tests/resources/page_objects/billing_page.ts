@@ -71,11 +71,10 @@ export class BillingPage {
         await expect(rowLocator).toContainText(amount);
     }
 
-    async Check_Electric_Bill_Fee(electric_usage: string, Expectedfee: string) {
+    async Check_Electric_Bill_Total(electric_usage: string, ExpectedTotal: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
-        const feeText = await rowLocator.textContent();
-        console.log(Expectedfee);
-        await expect(rowLocator).toContainText(Expectedfee);
+        console.log(ExpectedTotal);
+        await expect(rowLocator).toContainText(ExpectedTotal);
     }
 
 

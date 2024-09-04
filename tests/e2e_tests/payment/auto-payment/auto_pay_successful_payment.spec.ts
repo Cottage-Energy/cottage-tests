@@ -104,8 +104,7 @@ test.describe('Valid Card Auto Payment', () => {
     await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
     await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid");
     await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
-    await billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual);
-    await billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee);
+    await billingPage.Check_Electric_Bill_Total(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountTotal);
     await supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee);
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
