@@ -14,7 +14,7 @@ export class BillingPage {
         this.Billing_Electric_Usage_Row = (electric_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${electric_usage} kWh")]/ancestor::tr`)
         this.Billing_Gas_Usage_Row = (gas_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${gas_usage} therms")]/ancestor::tr`)
         this.Billing_Pay_Dialog_Title = page.getByRole('heading', { name: 'Bill Payment Details' })
-        //this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
+        ///this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
 
     }
 

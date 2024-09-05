@@ -84,6 +84,34 @@ async function CON_EDISON_Start_Service(apiContext:any, AccountId: string){
     console.log(await response.status()); // Log the status for debugging
     console.log(responseBody); // Log the response body for debugging
 }
+
+
+async function EVERSOURCE_Sign_Up(apiContext:any, AccountId: string){
+    const response = await apiContext['post'](`${baseUrl}/sign-up/eversource`,
+        {data: {
+            electricAccountID: AccountId
+        }}
+    );
+
+    const responseBody = await response.json();
+
+    console.log(await response.status()); // Log the status for debugging
+    console.log(responseBody); // Log the response body for debugging
+}
+
+
+async function EVERSOURCE_Start_Service(apiContext:any, AccountId: string){
+    const response = await apiContext['post'](`${baseUrl}/start-service/everource`,
+        {data: {
+            electricAccountID: AccountId
+        }}
+    );
+
+    const responseBody = await response.json();
+
+    console.log(await response.status()); // Log the status for debugging
+    console.log(responseBody); // Log the response body for debugging
+}
     
   
 
@@ -93,5 +121,7 @@ export const AdminApi = {
     Simulate_Gas_Bill,
     CON_EDISON_Sign_Up,
     CON_EDISON_Verify_Account,
-    CON_EDISON_Start_Service
+    CON_EDISON_Start_Service,
+    EVERSOURCE_Sign_Up,
+    EVERSOURCE_Start_Service
 };
