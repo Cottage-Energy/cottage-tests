@@ -31,7 +31,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe.configure({mode: "serial"});
 test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
-    
+  
     test('COMED Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(350000);
 
