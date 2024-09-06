@@ -14,7 +14,7 @@ export class ServicesPage {
         this.page = page;
         this.Services_Page_Title = page.getByRole('heading', { name: 'Services', exact: true });
         this.Services_New_Address_Section = page.getByText('Moving to a New Address?If');
-        this.Services_Stop_Service_Section = page.getByText('Stop ServiceMoving out? Let');
+        this.Services_Stop_Service_Section = page.getByText('Stop ServiceWant to leave the');
         this.Services_Outage_Section = page.getByText('Outage ServicesPublic Grid');
     }
 
