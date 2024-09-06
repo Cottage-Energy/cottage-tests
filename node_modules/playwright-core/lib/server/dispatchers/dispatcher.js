@@ -297,10 +297,10 @@ class DispatcherConnection {
     const sdkObject = dispatcher._object instanceof _instrumentation.SdkObject ? dispatcher._object : undefined;
     const callMetadata = {
       id: `call@${id}`,
-      wallTime: validMetadata.wallTime || Date.now(),
       location: validMetadata.location,
       apiName: validMetadata.apiName,
       internal: validMetadata.internal,
+      stepId: validMetadata.stepId,
       objectId: sdkObject === null || sdkObject === void 0 ? void 0 : sdkObject.guid,
       pageId: sdkObject === null || sdkObject === void 0 || (_sdkObject$attributio = sdkObject.attribution) === null || _sdkObject$attributio === void 0 || (_sdkObject$attributio = _sdkObject$attributio.page) === null || _sdkObject$attributio === void 0 ? void 0 : _sdkObject$attributio.guid,
       frameId: sdkObject === null || sdkObject === void 0 || (_sdkObject$attributio2 = sdkObject.attribution) === null || _sdkObject$attributio2 === void 0 || (_sdkObject$attributio2 = _sdkObject$attributio2.frame) === null || _sdkObject$attributio2 === void 0 ? void 0 : _sdkObject$attributio2.guid,
@@ -378,7 +378,7 @@ class DispatcherConnection {
         }
       }
       response.error = (0, _errors.serializeError)(e);
-      // The command handler could have set error in the metada, do not reset it if there was no exception.
+      // The command handler could have set error in the metadata, do not reset it if there was no exception.
       callMetadata.error = response.error;
     } finally {
       callMetadata.endTime = (0, _utils.monotonicTime)();

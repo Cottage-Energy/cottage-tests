@@ -222,18 +222,24 @@ class Electron extends _instrumentation.SdkObject {
           return (_app = app) === null || _app === void 0 ? void 0 : _app.emit(ElectronApplication.Events.Close);
         }
       });
+
+      // All waitForLines must be started immediately.
+      // Otherwise the lines might come before we are ready.
       const waitForXserverError = new Promise(async (resolve, reject) => {
         waitForLine(progress, launchedProcess, /Unable to open X display/).then(() => reject(new Error(['Unable to open X display!', `================================`, 'Most likely this is because there is no X server available.', "Use 'xvfb-run' on Linux to launch your tests with an emulated display server.", "For example: 'xvfb-run npm run test:e2e'", `================================`, progress.metadata.log].join('\n')))).catch(() => {});
       });
-      const nodeMatch = await waitForLine(progress, launchedProcess, /^Debugger listening on (ws:\/\/.*)$/);
+      const nodeMatchPromise = waitForLine(progress, launchedProcess, /^Debugger listening on (ws:\/\/.*)$/);
+      const chromeMatchPromise = waitForLine(progress, launchedProcess, /^DevTools listening on (ws:\/\/.*)$/);
+      const debuggerDisconnectPromise = waitForLine(progress, launchedProcess, /Waiting for the debugger to disconnect\.\.\./);
+      const nodeMatch = await nodeMatchPromise;
       const nodeTransport = await _transport.WebSocketTransport.connect(progress, nodeMatch[1]);
       const nodeConnection = new _crConnection.CRConnection(nodeTransport, _helper.helper.debugProtocolLogger(), browserLogsCollector);
 
       // Immediately release exiting process under debug.
-      waitForLine(progress, launchedProcess, /Waiting for the debugger to disconnect\.\.\./).then(() => {
+      debuggerDisconnectPromise.then(() => {
         nodeTransport.close();
       }).catch(() => {});
-      const chromeMatch = await Promise.race([waitForLine(progress, launchedProcess, /^DevTools listening on (ws:\/\/.*)$/), waitForXserverError]);
+      const chromeMatch = await Promise.race([chromeMatchPromise, waitForXserverError]);
       const chromeTransport = await _transport.WebSocketTransport.connect(progress, chromeMatch[1]);
       const browserProcess = {
         onclose: undefined,

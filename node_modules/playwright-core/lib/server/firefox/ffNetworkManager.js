@@ -193,7 +193,7 @@ class FFRouteImpl {
     this._session = session;
     this._request = request;
   }
-  async continue(request, overrides) {
+  async continue(overrides) {
     await this._session.sendMayFail('Network.resumeInterceptedRequest', {
       requestId: this._request._id,
       url: overrides.url,
@@ -207,7 +207,7 @@ class FFRouteImpl {
     await this._session.sendMayFail('Network.fulfillInterceptedRequest', {
       requestId: this._request._id,
       status: response.status,
-      statusText: network.STATUS_TEXTS[String(response.status)] || '',
+      statusText: network.statusText(response.status),
       headers: response.headers,
       base64body
     });
