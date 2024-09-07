@@ -370,6 +370,34 @@ export class SupabaseQueries{
     }
 
 
+    async Get_Question_Id(company: string) {
+        const { data: Question } = await supabase
+            .from('UtilityCompanyQuestion')
+            .select('id')
+            .eq('utilityCompanyID', company)
+            .maybeSingle()
+            .throwOnError();
+        const QuestionId = Question?.id ?? '';
+        return QuestionId;
+    }
+
+
+    async Check_BGE_Answer(cottageUserId: string, questionId: string, Answer: string) {
+        
+        const { data: UtilAnswer } = await supabase
+            .from('UtilityQuestionAnswer')
+            .select('answer')
+            .eq('cottageUserID', cottageUserId)
+            .eq('questionID', questionId)
+            .single()
+            .throwOnError();
+
+        const utilAnswer = UtilAnswer?.answer ?? '';
+
+        await expect(utilAnswer).toBe(Answer);
+    }
+
+
     async Update_Companies_to_Building(ShortCode: string, ElectricCompany: string | null, GasCompany: string | null) {
         const { data,error} = await supabase
         .from('Building')

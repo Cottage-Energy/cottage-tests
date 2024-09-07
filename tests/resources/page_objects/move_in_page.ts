@@ -1,4 +1,3 @@
-import { th } from '@faker-js/faker';
 import { type Page, type Locator, expect } from '@playwright/test';
 
 
@@ -49,8 +48,11 @@ export class MoveInPage{
     readonly Move_In_Next_Month_Button: Locator;
     readonly Move_In_Prev_Month_Button: Locator;
 
-    readonly Move_In_CON_ED_Questions_Fields: Locator;
     readonly Move_In_CON_ED_Questions_Title: Locator;
+
+    readonly Move_In_BGE_Employment_Status_Title: Locator;
+    readonly Move_In_BGE_Employment_Status_Dropdown: Locator;
+    readonly Move_In_BGE_Employment_Selection: (selection: string) => Locator;
     
     readonly Move_In_Identity_Info_Title: Locator;
     readonly Move_In_Birthdate_Field: Locator;
@@ -130,8 +132,11 @@ export class MoveInPage{
         this.Move_In_Prev_Month_Button = page.getByLabel('Go to previous month');
         this.Move_In_Identity_Info_Title = page.getByRole('heading', { name: 'Identity Information' });
 
-        this.Move_In_CON_ED_Questions_Fields = page.getByText('A couple of quick questionsDoes anyone in your household use life-support');
         this.Move_In_CON_ED_Questions_Title =  page.getByRole('heading', { name: 'A couple of quick questions' });
+
+        this.Move_In_BGE_Employment_Status_Title = page.getByText('Employment Status');
+        this.Move_In_BGE_Employment_Status_Dropdown = page.getByRole('combobox');
+        this.Move_In_BGE_Employment_Selection = (selection: string) => page.locator(`//span[contains(text(),"${selection}")]`);
 
         this.Move_In_Birthdate_Field = page.locator('input[name="dateOfBirth"]');
         this.Move_In_Birthdate_Required_Message = page.getByText('Date of Birth Required');
@@ -260,9 +265,27 @@ export class MoveInPage{
 
     async CON_ED_Questions(){
         await this.page.waitForLoadState('domcontentloaded' && 'load');
-        await expect(this.Move_In_CON_ED_Questions_Fields).toBeVisible({timeout:30000});
         await expect(this.Move_In_CON_ED_Questions_Title).toBeVisible({timeout:30000});
         //Answering the questions randomly
+    }
+
+    async BGE_Questions(){
+        const options = [
+            'Employed more than 3 years',
+            'Employed less than 3 years',
+            'Retired',
+            'Receives assistance',
+            'Other'
+          ];
+        const randomIndex = Math.floor(Math.random() * options.length);
+        const randomOption = options[randomIndex];
+        console.log(randomOption);
+        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await expect(this.Move_In_BGE_Employment_Status_Title).toBeVisible({timeout:30000});
+        await this.Move_In_BGE_Employment_Status_Dropdown.hover();
+        await this.Move_In_BGE_Employment_Status_Dropdown.click();
+        await this.Move_In_BGE_Employment_Selection(randomOption).click();
+        return randomOption;
     }
 
 
