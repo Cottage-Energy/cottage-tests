@@ -164,7 +164,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('EVERSOURCE Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, page}) => {
+  test('COMED Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, page}) => {
     
     test.setTimeout(300000);
 
@@ -238,8 +238,8 @@ test.describe('Valid Card Auto Payment', () => {
         //check platform dashboard and bills page
   });
 
-  //Gas Account Only Move In Added
-  //Gas Account Only Finish Account Added
+  //Gas Account Only Move In Added BGE
+  //Gas Account Only Finish Account Added NGMA
 
 });
 

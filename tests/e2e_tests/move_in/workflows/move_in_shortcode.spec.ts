@@ -33,12 +33,12 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
     test.slow();
-    await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
+    await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    //await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
@@ -47,12 +47,12 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
   test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
     test.slow();
-    await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
+    await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-    //await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "NGMA");
@@ -93,12 +93,12 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
 
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
     test.slow();
-    await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
+    await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    //await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "NGMA", null);
@@ -107,12 +107,12 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
 
   test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
     test.slow();
-    await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
+    await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Non_Billing(moveInpage, true, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-    //await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "BGE");
