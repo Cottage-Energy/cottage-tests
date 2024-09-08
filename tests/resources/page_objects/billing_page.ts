@@ -5,6 +5,8 @@ export class BillingPage {
     readonly page: Page;
     readonly Billing_Electric_Usage_Row: (electric_usage: string) => Locator;
     readonly Billing_Gas_Usage_Row: (gas_usage: string) => Locator;
+    readonly Billing_Outstanding_Balance: Locator;
+
     readonly Billing_Pay_Dialog_Title: Locator;
     readonly Billing_Pay_Bill_Final_Button: Locator;
 
@@ -13,8 +15,11 @@ export class BillingPage {
         this.page = page;
         this.Billing_Electric_Usage_Row = (electric_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${electric_usage} kWh")]/ancestor::tr`)
         this.Billing_Gas_Usage_Row = (gas_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${gas_usage} therms")]/ancestor::tr`)
+        this.Billing_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div');
+
+
         this.Billing_Pay_Dialog_Title = page.getByRole('heading', { name: 'Bill Payment Details' })
-        ///this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
+        this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
 
     }
 
@@ -111,6 +116,21 @@ export class BillingPage {
         const rowLocator = this.Billing_Electric_Usage_Row(gas_usage);
         console.log(Expectedfee);
         await expect(rowLocator).toContainText(Expectedfee);
+    }
+
+    async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
+        const electricAmount = parseFloat(ElectricAmount);
+        const gasAmount = parseFloat(GasAmount) || 0;
+        
+        const totalAmount = (electricAmount + gasAmount).toFixed(2);
+        console.log(`TOTAL: ${totalAmount}`);
+        expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount}`);
+        
+    }
+
+
+    async Check_Outstanding_Balance_Auto_Pay_Message(message: string) {
+        expect(this.Billing_Outstanding_Balance).toContainText(message);
     }
 
 }

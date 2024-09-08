@@ -69,13 +69,16 @@ test.describe('Valid Card Auto Payment', () => {
     
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+    //AUTO PAYMENT CHECKS
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
     await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(500);
-    //platform check
+        //platform check
     await sidebarChat.Goto_Billing_Page_Via_Icon();
     await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Check_Outstanding_Balance_Amount(0);
+    await billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
@@ -86,9 +89,11 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(500);
-    //check platform outstanding balance not 0
+        //check platform outstanding balance not 0
     await sidebarChat.Goto_Billing_Page_Via_Icon();
     await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
+    await billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
     await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled");
     await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
     await billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual);
@@ -99,6 +104,8 @@ test.describe('Valid Card Auto Payment', () => {
     await page.reload({ waitUntil: 'domcontentloaded' });
     await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal);
     await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
+    await billingPage.Check_Outstanding_Balance_Amount(0);
+    await billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
     await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid");
     await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
     await billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual);
@@ -108,7 +115,7 @@ test.describe('Valid Card Auto Payment', () => {
     await supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee);
     await page.waitForTimeout(1000);
     await sidebarChat.Goto_Overview_Page_Via_Icon();
-    //check platform dashboard
+        //check platform dashboard
   });
 
 
