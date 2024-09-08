@@ -352,6 +352,50 @@ export class MoveInPage{
         await this.page?.waitForTimeout(500);
     }
 
+
+    async Enter_Valid_Bank_Details(Email:string, FullName:string){
+        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
+
+        const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
+        const stripeFrame = await stripeIframe.contentFrame()
+        await this.page.waitForTimeout(3000);
+    
+        const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
+        const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
+        const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
+        const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
+
+        await BankAccountTab?.click();
+        await this.page.waitForTimeout(500);
+        await EmailInput?.fill(Email);
+        await NameInput?.fill(FullName);
+        await TestInstButton?.click();
+        await this.page.waitForTimeout(500);
+
+        const modalIframe = await this.page?.waitForSelector('[src^="https://js.stripe.com/v3/linked-accounts"]')
+        const modalFrame = await modalIframe.contentFrame()
+        await this.page.waitForTimeout(1000);
+
+        const AgreeButton = await modalFrame?.waitForSelector('[data-testid ="agree-button"]');
+        const SuccessAccountButton = await modalFrame?.waitForSelector('[data-testid ="success"]');
+        const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
+        const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
+
+        await AgreeButton?.waitForElementState('visible');
+        await AgreeButton?.click();
+        await SuccessAccountButton?.waitForElementState('visible');
+        await SuccessAccountButton?.click();
+        await ConfirmButton?.waitForElementState('visible');
+        await ConfirmButton?.click();
+        await SuccessMessage?.waitForElementState('visible');
+        await DoneButton?.click();
+        await this.page.waitForTimeout(500);
+    }
+
     async Enable_Auto_Payment(){
         await expect(this.Move_In_Auto_Payment_Checbox).toBeEnabled({timeout:30000});
         await this.Move_In_Auto_Payment_Checbox.hover();
@@ -399,11 +443,13 @@ export class MoveInPage{
         await expect(this.Move_In_OTP_Field).toBeEnabled({timeout:30000});
     }
 
+
     async Check_OTP_Confirmed_Message(){
         await this.Move_In_OTP_Confirmed_Message.hover();
         await expect(this.Move_In_OTP_Confirmed_Message).toBeVisible({timeout:30000});
         await expect(this.Move_In_Signing_In_Message).toBeVisible({timeout:30000});
     }
+
 
     async Check_Successful_Move_In_Billing_Customer(){
         await this.page.waitForLoadState('domcontentloaded');
@@ -411,6 +457,7 @@ export class MoveInPage{
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
         await expect(this.Move_In_Dashboard_Link).toBeVisible();
     }
+
 
     async Check_Billing_Customer_Added_Payment_Overview_Redirect(){
 
@@ -423,6 +470,7 @@ export class MoveInPage{
         await newPage.close(); //To be removed
     }
 
+
     async Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect(){
         
         const [newPage] = await Promise.all([
@@ -433,7 +481,6 @@ export class MoveInPage{
         await expect(newPage).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
         await newPage.close(); //To be removed
     }
-
 
     
     async Check_Successful_Move_In_Non_Billing_Customer(){

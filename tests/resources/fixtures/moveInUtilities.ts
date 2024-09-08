@@ -11,6 +11,7 @@ const supabaseQueries = new SupabaseQueries();
 export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -30,6 +31,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -38,6 +40,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
 export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -62,6 +65,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -70,6 +74,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
 export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -95,6 +100,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -102,6 +108,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
 export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -122,6 +129,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -130,6 +138,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
 export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -153,6 +162,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -160,6 +170,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
 export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -178,6 +189,7 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -186,6 +198,7 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
 export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -212,6 +225,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -220,6 +234,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
 export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -244,6 +259,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -252,6 +268,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
 export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -276,6 +293,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -284,6 +302,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
 export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -306,6 +325,7 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -313,6 +333,7 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
 export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -342,6 +363,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -349,6 +371,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
 export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -375,6 +398,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -383,6 +407,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
 export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -407,6 +432,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -414,6 +440,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
 export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -443,6 +470,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
@@ -451,6 +479,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
 export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -475,6 +504,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
     return {
         accountNumber,
         cottageUserId,
+        PGUserName,
         PGUserEmail
     };
 }
