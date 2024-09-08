@@ -9,6 +9,7 @@ import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
+import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 
 
 let AdminApiContext: APIRequestContext;
@@ -91,12 +92,12 @@ test.describe('Valid Card Auto Payment', () => {
     await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled");
     await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
     await billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual);
-    //check bill ready email - received
+    await FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal);
     await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
     await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
     await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true);
-    //check email - payment successful
     await page.reload({ waitUntil: 'domcontentloaded' });
+    await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal);
     await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
     await billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid");
     await billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString());
