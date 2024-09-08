@@ -553,7 +553,7 @@ test.describe('Valid Card Auto Payment', () => {
 
     const PGuserUsage = await generateTestUserData();
     
-    await supabaseQueries.Update_Companies_to_Building("autotest",null,"CON-EDISON");
+    await supabaseQueries.Update_Companies_to_Building("autotest", null, "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
