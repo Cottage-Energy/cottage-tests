@@ -100,20 +100,20 @@ export class BillingPage {
     }
 
     async Check_Gas_Bill_View_Button(gas_usage: string) {
-        const rowLocator = this.Billing_Electric_Usage_Row(gas_usage);
+        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         const ViewLocator = rowLocator.locator(`//a[text() = "View"]`);
         await expect(ViewLocator).toBeVisible({timeout:30000});
         await expect(ViewLocator).toBeEnabled({timeout:30000});
     }
 
     async Check_Gas_Bill_Amount(gas_usage: string, amount: string) {
-        const rowLocator = this.Billing_Electric_Usage_Row(gas_usage);
+        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         console.log(amount);
         await expect(rowLocator).toContainText(amount);
     }
 
     async Check_Gas_Bill_Fee(gas_usage: string, Expectedfee: string) {
-        const rowLocator = this.Billing_Electric_Usage_Row(gas_usage);
+        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         console.log(Expectedfee);
         await expect(rowLocator).toContainText(Expectedfee);
     }
