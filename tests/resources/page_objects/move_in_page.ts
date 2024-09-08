@@ -376,8 +376,8 @@ export class MoveInPage{
         await TestInstButton?.click();
         await this.page.waitForTimeout(500);
 
-        const modalIframe = await this.page?.waitForSelector('[src^="https://js.stripe.com/v3/linked-accounts"]')
-        const modalFrame = await modalIframe.contentFrame()
+        const modalIframe = await this.page?.waitForSelector('[src^="https://js.stripe.com/v3/linked-accounts"]');
+        const modalFrame = await modalIframe.contentFrame();
         await this.page.waitForTimeout(1000);
 
         const AgreeButton = await modalFrame?.waitForSelector('[data-testid ="agree-button"]');
