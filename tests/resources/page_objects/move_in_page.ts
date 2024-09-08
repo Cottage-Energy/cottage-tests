@@ -322,7 +322,6 @@ export class MoveInPage{
         await this.Move_In_Identity_Info_Title.click();
     }
 
-
     async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
         await this.page.waitForLoadState('domcontentloaded' && 'load');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
@@ -351,7 +350,6 @@ export class MoveInPage{
         }
         await this.page?.waitForTimeout(500);
     }
-
 
     async Enter_Valid_Bank_Details(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded' && 'load');
