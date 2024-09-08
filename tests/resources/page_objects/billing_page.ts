@@ -82,6 +82,12 @@ export class BillingPage {
         await expect(rowLocator).toContainText(ExpectedFee);
     }
 
+    async Check_Electric_Bill_Fee_Not_Included(electric_usage: string, ExpectedFee: string) {
+        const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
+        console.log(ExpectedFee);
+        await expect(rowLocator).not.toContainText(ExpectedFee);
+    }
+
 
 
 
@@ -116,6 +122,12 @@ export class BillingPage {
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         console.log(Expectedfee);
         await expect(rowLocator).toContainText(Expectedfee);
+    }
+
+    async Check_Gas_Bill_Fee_Not_Included(gas_usage: string, Expectedfee: string) {
+        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
+        console.log(Expectedfee);
+        await expect(rowLocator).not.toContainText(Expectedfee);
     }
 
     async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {

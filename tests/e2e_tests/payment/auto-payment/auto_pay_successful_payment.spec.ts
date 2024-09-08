@@ -646,6 +646,7 @@ test.describe('Valid Card Auto Payment', () => {
 
 
 test.describe('Valid Bank Auto Payment', () => {
+    
     test('CON-EDISON Electric Only Valid Bank Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
     
         test.setTimeout(1800000);
@@ -696,14 +697,17 @@ test.describe('Valid Bank Auto Payment', () => {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal),
+            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
             billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
         ]);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
+        await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
@@ -714,11 +718,10 @@ test.describe('Valid Bank Auto Payment', () => {
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-            billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
-            supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee)
+            billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
+            supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null),
+            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual)
         ]);
-        await page.waitForTimeout(10000);
-        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
       });

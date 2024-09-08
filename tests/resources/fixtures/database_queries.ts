@@ -332,7 +332,7 @@ export class SupabaseQueries{
     }
 
 
-    async Check_Electric_Bill_Service_Fee(ElectricAccountId: string, Amount: number, Usage: number, Expectedfee: string) {
+    async Check_Electric_Bill_Service_Fee(ElectricAccountId: string, Amount: number, Usage: number, Expectedfee: string | null) {
         
         const { data: ElectricBill } = await supabase
             .from('ElectricBill')
@@ -351,7 +351,7 @@ export class SupabaseQueries{
     }
 
 
-    async Check_Gas_Bill_Service_Fee(GasAccountId: string, Amount: number, Usage: number, Expectedfee: string) {
+    async Check_Gas_Bill_Service_Fee(GasAccountId: string, Amount: number, Usage: number, Expectedfee: string | null) {
         
         const { data: GasBill } = await supabase
             .from('GasBill')
