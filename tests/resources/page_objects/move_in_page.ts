@@ -363,12 +363,16 @@ export class MoveInPage{
         await this.page.waitForTimeout(3000);
     
         const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
+
+
+        await BankAccountTab?.waitForElementState('visible');
+        await BankAccountTab?.click();
+        await this.page.waitForTimeout(500);
+
         const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
         const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
         const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
 
-        await BankAccountTab?.click();
-        await this.page.waitForTimeout(500);
         await EmailInput?.fill(Email);
         await NameInput?.fill(FullName);
         await TestInstButton?.click();
@@ -379,18 +383,70 @@ export class MoveInPage{
         await this.page.waitForTimeout(1000);
 
         const AgreeButton = await modalFrame?.waitForSelector('[data-testid ="agree-button"]');
-        const SuccessAccountButton = await modalFrame?.waitForSelector('[data-testid ="success"]');
-        const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
-        const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
-        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
-        const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
-
         await AgreeButton?.waitForElementState('visible');
         await AgreeButton?.click();
+
+        const SuccessAccountButton = await modalFrame?.waitForSelector('[data-testid ="success"]');
         await SuccessAccountButton?.waitForElementState('visible');
         await SuccessAccountButton?.click();
+
+        const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
+        const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
         await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
+
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
+        await SuccessMessage?.waitForElementState('visible');
+        await DoneButton?.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    async Enter_Invalid_Bank_Details(Email:string, FullName:string){
+        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
+
+        const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
+        const stripeFrame = await stripeIframe.contentFrame()
+        await this.page.waitForTimeout(3000);
+    
+        const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
+
+
+        await BankAccountTab?.waitForElementState('visible');
+        await BankAccountTab?.click();
+        await this.page.waitForTimeout(500);
+
+        const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
+        const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
+        const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
+
+        await EmailInput?.fill(Email);
+        await NameInput?.fill(FullName);
+        await TestInstButton?.click();
+        await this.page.waitForTimeout(500);
+
+        const modalIframe = await this.page?.waitForSelector('[src^="https://js.stripe.com/v3/linked-accounts"]')
+        const modalFrame = await modalIframe.contentFrame()
+        await this.page.waitForTimeout(1000);
+
+        const AgreeButton = await modalFrame?.waitForSelector('[data-testid ="agree-button"]');
+        await AgreeButton?.waitForElementState('visible');
+        await AgreeButton?.click();
+
+        const SuccessAccountButton = await modalFrame?.waitForSelector('[data-testid ="success"]');
+
+        const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
+        await FailureAccountButton?.waitForElementState('visible');
+        await FailureAccountButton?.click();
+
+        const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
+        await ConfirmButton?.waitForElementState('visible');
+        await ConfirmButton?.click();
+
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
         await this.page.waitForTimeout(500);
