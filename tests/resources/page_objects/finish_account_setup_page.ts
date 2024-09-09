@@ -38,14 +38,24 @@ export class FinishAccountSetupPage {
         const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
     
     
+        await CardNUmberInput?.waitForElementState('visible');
         await CardNUmberInput?.fill(CCnumber,{timeout:10000});
+
+        await CardExpiration?.waitForElementState('visible');
         await CardExpiration?.fill(CCexpiry,{timeout:10000});
+
+        await CardCVC?.waitForElementState('visible');
         await CardCVC?.fill(CCcvc,{timeout:10000});
-        await CardCountry?.selectOption(CCcountry,{timeout:10000});
+        
+        await CardCountry?.waitForElementState('visible');
+        await CardCountry?.waitForElementState('enabled');
+        await CardCountry?.click();
+        await CardCountry?.selectOption(CCcountry,{timeout:30000});
     
     
         if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
             const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+            await CardZipCode?.waitForElementState('visible');
             await CardZipCode?.fill(CCzip,{timeout:10000});
         }
         await this.page?.waitForTimeout(500);
@@ -74,14 +84,24 @@ export class FinishAccountSetupPage {
         const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
     
     
+        await CardNUmberInput?.waitForElementState('visible');
         await CardNUmberInput?.fill(CCnumber,{timeout:10000});
+
+        await CardExpiration?.waitForElementState('visible');
         await CardExpiration?.fill(CCexpiry,{timeout:10000});
+
+        await CardCVC?.waitForElementState('visible');
         await CardCVC?.fill(CCcvc,{timeout:10000});
-        await CardCountry?.selectOption(CCcountry,{timeout:10000});
+        
+        await CardCountry?.waitForElementState('visible');
+        await CardCountry?.waitForElementState('enabled');
+        await CardCountry?.click();
+        await CardCountry?.selectOption(CCcountry,{timeout:30000});
     
     
         if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
             const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+            await CardZipCode?.waitForElementState('visible');
             await CardZipCode?.fill(CCzip,{timeout:10000});
         }
         await this.page?.waitForTimeout(500);

@@ -647,14 +647,16 @@ test.describe('Valid Card Auto Payment', () => {
 
 test.describe('Valid Bank Auto Payment', () => {
     
-    test('CON-EDISON Electric Only Valid Bank Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Electric Only Valid Bank Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage, true, true);
+        await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
+        await supabaseQueries.Update_Building_Billing("autotest",true);
+        await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+        MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Bank_Account_Added(moveInpage, true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         
