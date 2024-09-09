@@ -648,7 +648,7 @@ test.describe('Valid Card Auto Payment', () => {
 test.describe('Valid Bank Auto Payment', () => {
     
     test('CON-EDISON Electric Only Valid Bank Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
-    
+        //MAKE IT COMED BLDG. with ELECTRIC ONLY
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
