@@ -187,6 +187,7 @@ export class MoveInPage{
         await this.page.waitForTimeout(1000);
         await this.Move_In_Address_Field.click({timeout:10000});
         await this.Move_In_Address_Field.fill(address);
+        await this.Move_In_Address_Dropdown(address)?.waitFor({state: 'visible', timeout: 10000});
         await this.Move_In_Address_Dropdown(address).click({timeout:10000});
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);

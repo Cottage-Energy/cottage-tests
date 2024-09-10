@@ -58,7 +58,7 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       LastName: lastname,
       PhoneNumber: faker.phone.number(),
       Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname, provider: 'joinpublicgrid.com'}),
-      UnitNumber: faker.location.buildingNumber(),
+      UnitNumber: faker.location.buildingNumber() + faker.string.alpha({ length: 1 }),
       Today: today.getDate().toString(),
       Tomorrow: tomorrow.toString(),
       BirthDate: faker.date.birthdate({ min: 18, max: 99, mode: 'age' }).toISOString().split('T')[0],

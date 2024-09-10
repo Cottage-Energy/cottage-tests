@@ -71,7 +71,7 @@ test.describe('Valid Card Manual Payment', () => {
     await page.waitForTimeout(30000);
         //supabase check bill visibility - true
         //supabase check if bill wait for user payment
-        //check bill ready email - received
+        ///check bill ready email - received
         //check platform dashboard and 
     await page.reload({ waitUntil: 'domcontentloaded' });
       //bills page
