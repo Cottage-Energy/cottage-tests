@@ -1072,16 +1072,16 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
     
-    test('XXX CON-EDISON  Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+    test('CON-EDISON  Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(300000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+        await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Auto_Payment_Added(moveInpage, false, true);
+        MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage, false, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         /*
@@ -1133,14 +1133,17 @@ test.describe('Valid Bank Auto Payment', () => {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
-            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountTotal),
+            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
             billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Scheduled"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing");
+        await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
@@ -1151,26 +1154,25 @@ test.describe('Valid Bank Auto Payment', () => {
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
-            billingPage.Check_Gas_Bill_Fee(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
-            supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, PGuserUsage.GasServiceFee)
+            billingPage.Check_Gas_Bill_Fee_Not_Included(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
+            supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, null),
+            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual)
         ]);
-        await page.waitForTimeout(10000);
-        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
     });
     
     
-    test('XXX BGE Gas Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE Gas Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(300000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", null, "CON-EDISON");
+        await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+        MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Skip_Payment(moveInpage, true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         /*
@@ -1190,7 +1192,7 @@ test.describe('Valid Bank Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
     
-        await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         //AUTO PAYMENT CHECKS
@@ -1223,14 +1225,17 @@ test.describe('Valid Bank Auto Payment', () => {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
-            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountTotal),
+            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
             billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Scheduled"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing");
+        await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
@@ -1241,11 +1246,10 @@ test.describe('Valid Bank Auto Payment', () => {
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
-            billingPage.Check_Gas_Bill_Fee(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
-            supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, PGuserUsage.GasServiceFee)
+            billingPage.Check_Gas_Bill_Fee_Not_Included(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
+            supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, null),
+            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual)
         ]);
-        await page.waitForTimeout(10000);
-        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
     });
