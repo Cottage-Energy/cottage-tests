@@ -47,7 +47,7 @@ export class FinishAccountSetupPage {
         await CardCVC?.waitForElementState('visible');
         await CardCVC?.fill(CCcvc,{timeout:10000});
         
-        await CardCountry?.waitForElementState('visible');
+        await CardCountry?.waitForElementState('stable');
         await CardCountry?.waitForElementState('enabled');
         await CardCountry?.click();
         await CardCountry?.selectOption(CCcountry,{timeout:30000});
@@ -93,7 +93,7 @@ export class FinishAccountSetupPage {
         await CardCVC?.waitForElementState('visible');
         await CardCVC?.fill(CCcvc,{timeout:10000});
         
-        await CardCountry?.waitForElementState('visible');
+        await CardCountry?.waitForElementState('stable');
         await CardCountry?.waitForElementState('enabled');
         await CardCountry?.click();
         await CardCountry?.selectOption(CCcountry,{timeout:30000});

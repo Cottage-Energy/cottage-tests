@@ -346,7 +346,7 @@ export class MoveInPage{
         await CardCVC?.waitForElementState('visible');
         await CardCVC?.fill(CCcvc,{timeout:10000});
         
-        await CardCountry?.waitForElementState('visible');
+        await CardCountry?.waitForElementState('stable');
         await CardCountry?.waitForElementState('enabled');
         await CardCountry?.click();
         await CardCountry?.hover();
