@@ -349,6 +349,7 @@ export class MoveInPage{
         await CardCountry?.waitForElementState('visible');
         await CardCountry?.waitForElementState('enabled');
         await CardCountry?.click();
+        await CardCountry?.hover();
         await CardCountry?.selectOption(CCcountry,{timeout:30000});
     
     
