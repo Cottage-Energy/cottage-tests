@@ -129,7 +129,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(300000);
 
@@ -309,7 +309,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
   
 
-  test('NGMA Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(300000);
 
@@ -554,7 +554,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('COMED Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+  test('COMED COMED Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(300000);
 
@@ -990,7 +990,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test('NGMA Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+    test('NGMA NGMA Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
     
         test.setTimeout(300000);
     
@@ -1082,7 +1082,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
     
-    test('BGE Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE BGE Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(300000);
     
@@ -1333,7 +1333,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
     
-    test('CON-EDISON  Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+    test('CON-EDISON CON-EDISON  Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(300000);
     

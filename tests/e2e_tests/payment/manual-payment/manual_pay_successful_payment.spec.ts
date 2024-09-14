@@ -39,7 +39,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    //await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
+    await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
     //await page.close();
 });
   
@@ -103,15 +103,13 @@ test.describe('Valid Card Manual Payment', () => {
       await Promise.all([
           billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-          //billingPage make Payment button visible
+          billingPage.Check_Make_Payment_Button_Visible_Enable(),
           billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Pending"),
           billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
           FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
       ]);
-      //click Pay button
       await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFee);
-
       await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
       billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
       await page.waitForTimeout(30000);
@@ -133,16 +131,16 @@ test.describe('Valid Card Manual Payment', () => {
   });
 
 
-  test('xx CON-EDISON COMED Electric Only Valid Bank Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
+  test('COMED NGMA Electric Only Valid Bank Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
       //MAKE IT COMED BLDG. with ELECTRIC ONLY
       test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
-      await supabaseQueries.Update_Companies_to_Building("autotest", "CON-EDISON", "COMED");
+      await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", "NGMA");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage, true, false);
+      MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, false);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       
@@ -155,10 +153,10 @@ test.describe('Valid Card Manual Payment', () => {
       
       const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-      //AUTO PAYMENT CHECKS
+      //Manual PAYMENT CHECKS
       await Promise.all([
-          supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
-          supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true),
+        supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
+        supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true),
       ]);
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
@@ -166,8 +164,7 @@ test.describe('Valid Card Manual Payment', () => {
       await sidebarChat.Goto_Billing_Page_Via_Icon();
       await Promise.all([
           billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
-          billingPage.Check_Outstanding_Balance_Amount(0),
-          billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+          billingPage.Check_Outstanding_Balance_Amount(0)
       ]);
       await page.waitForTimeout(1000);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
@@ -176,7 +173,7 @@ test.describe('Valid Card Manual Payment', () => {
       await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
       await page.waitForTimeout(10000);
       await Promise.all([
-          supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
+          supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user"),
           supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
       ]);
       await page.reload({ waitUntil: 'domcontentloaded' });
@@ -186,14 +183,14 @@ test.describe('Valid Card Manual Payment', () => {
       await Promise.all([
           billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-          billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
-          billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled"),
+          billingPage.Check_Make_Payment_Button_Visible_Enable(),
+          billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Pending"),
           billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-          FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+          FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
       ]);
+      await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFee);
       await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-      await page.reload({ waitUntil: 'domcontentloaded' });
       billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
       await page.waitForTimeout(30000);
       await page.reload({ waitUntil: 'domcontentloaded' });
@@ -202,29 +199,28 @@ test.describe('Valid Card Manual Payment', () => {
           supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
           billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Outstanding_Balance_Amount(0),
-          billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
           billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
           billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-          billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
-          supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null),
-          FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual)
+          billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
+          supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee),
+          FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal)
       ]);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
-          //check platform dashboard
+        //check platform dashboard
   });
 
 
-  test('xx NGMA Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+  test('CON-EDISON Electric Only Valid Auto Payment Finish Account Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
   
       test.setTimeout(300000);
   
       const PGuserUsage = await generateTestUserData();
       
-      await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
+      await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage, true, false);
+      MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, false);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -244,13 +240,13 @@ test.describe('Valid Card Manual Payment', () => {
       // Switch to the new tab
       await newPage.bringToFront();*/
   
-      await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+      await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-      //AUTO PAYMENT CHECKS
+      //Manual PAYMENT CHECKS
       await Promise.all([
-          supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
-          supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true),
+        supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
+        supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true),
       ]);
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
@@ -258,8 +254,7 @@ test.describe('Valid Card Manual Payment', () => {
       await sidebarChat.Goto_Billing_Page_Via_Icon();
       await Promise.all([
           billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
-          billingPage.Check_Outstanding_Balance_Amount(0),
-          billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+          billingPage.Check_Outstanding_Balance_Amount(0)
       ]);
       await page.waitForTimeout(1000);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
@@ -268,7 +263,7 @@ test.describe('Valid Card Manual Payment', () => {
       await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
       await page.waitForTimeout(10000);
       await Promise.all([
-          supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
+          supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user"),
           supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
       ]);
       await page.reload({ waitUntil: 'domcontentloaded' });
@@ -278,14 +273,14 @@ test.describe('Valid Card Manual Payment', () => {
       await Promise.all([
           billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-          billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
-          billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled"),
+          billingPage.Check_Make_Payment_Button_Visible_Enable(),
+          billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Pending"),
           billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-          FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+          FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
       ]);
+      await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFee);
       await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-      await page.reload({ waitUntil: 'domcontentloaded' });
       billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
       await page.waitForTimeout(30000);
       await page.reload({ waitUntil: 'domcontentloaded' });
@@ -294,20 +289,19 @@ test.describe('Valid Card Manual Payment', () => {
           supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
           billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Outstanding_Balance_Amount(0),
-          billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
           billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
           billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-          billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
-          supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null),
-          FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual)
+          billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
+          supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee),
+          FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal)
       ]);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
-          //check platform dashboard
+        //check platform dashboard
   });
   
   
-  test('xx BGE Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+  test('x EVERSOURCE Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(300000);
   
@@ -558,7 +552,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
   
   
-  test('xx CON-EDISON  Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
+  test('x COMED  Gas Only Valid Auto Payment Move In Added', async ({moveInpage, finishAccountSetupPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(300000);
   

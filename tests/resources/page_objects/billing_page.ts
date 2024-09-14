@@ -11,6 +11,9 @@ export class BillingPage {
     readonly Billing_Pay_Dialog_Box: Locator;
     readonly Billing_Pay_Bill_Final_Button: Locator;
 
+    readonly Billing_Make_Payment_Button: Locator;
+    readonly Billing_Successully_Initiated_Payment_Message: Locator;
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -22,6 +25,9 @@ export class BillingPage {
         this.Billing_Pay_Dialog_Title = page.getByRole('heading', { name: 'Bill Payment Details' })
         this.Billing_Pay_Dialog_Box = page.getByLabel('Bill Payment Details');
         this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
+
+        this.Billing_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
+        this.Billing_Successully_Initiated_Payment_Message = page.getByText('Notification 🥳');//getByText('Successfully initiated');
 
     }
 
@@ -43,6 +49,8 @@ export class BillingPage {
 
         await this.Billing_Pay_Bill_Final_Button.hover();
         await this.Billing_Pay_Bill_Final_Button.click();
+
+        await expect(this.Billing_Successully_Initiated_Payment_Message).toBeVisible({timeout:30000});
     }
 
 
@@ -66,7 +74,7 @@ export class BillingPage {
         await this.Billing_Pay_Bill_Final_Button.hover();
         await this.Billing_Pay_Bill_Final_Button.click();
 
-        //getByText('Successfully initiated')
+        await expect(this.Billing_Successully_Initiated_Payment_Message).toBeVisible({timeout:10000});
     }
 
 
@@ -158,13 +166,19 @@ export class BillingPage {
         
         const totalAmount = (electricAmount + gasAmount).toFixed(2);
         console.log(`TOTAL: ${totalAmount}`);
-        expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount}`);
+        await expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount}`);
         
     }
 
 
     async Check_Outstanding_Balance_Auto_Pay_Message(message: string) {
-        expect(this.Billing_Outstanding_Balance).toContainText(message);
+        await expect(this.Billing_Outstanding_Balance).toContainText(message);
+    }
+
+
+    async Check_Make_Payment_Button_Visible_Enable() {
+        await expect(this.Billing_Make_Payment_Button).toBeEnabled();
+        await expect(this.Billing_Make_Payment_Button).toBeVisible();
     }
 
 }
