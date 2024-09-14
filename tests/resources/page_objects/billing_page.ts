@@ -8,6 +8,7 @@ export class BillingPage {
     readonly Billing_Outstanding_Balance: Locator;
 
     readonly Billing_Pay_Dialog_Title: Locator;
+    readonly Billing_Pay_Dialog_Box: Locator;
     readonly Billing_Pay_Bill_Final_Button: Locator;
 
     //locators
@@ -19,32 +20,53 @@ export class BillingPage {
 
 
         this.Billing_Pay_Dialog_Title = page.getByRole('heading', { name: 'Bill Payment Details' })
+        this.Billing_Pay_Dialog_Box = page.getByLabel('Bill Payment Details');
         this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
 
     }
 
     //methods
-    async Click_Electric_Bill_Pay_Button(electric_usage: string) {
-        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
-
-        const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
+    async Click_Electric_Bill_Pay_Button(electric_usage: any, amount: any, fee: any | null) {
+        const rowLocator = this.Billing_Electric_Usage_Row(electric_usage.toString());
         const buttonLocator = rowLocator.locator(`//button[contains(text(),"Pay")]`);
         await expect(buttonLocator).toBeVisible({timeout:30000});
         await expect(buttonLocator).toBeEnabled({timeout:30000});
         await buttonLocator.hover();
         await buttonLocator.click();
+
+        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
+        await expect(this.Billing_Pay_Dialog_Box).toContainText(amount.toString())
+
+        if (fee !== null){
+            await expect(this.Billing_Pay_Dialog_Box).toContainText(fee.toString())
+        }
+
+        await this.Billing_Pay_Bill_Final_Button.hover();
+        await this.Billing_Pay_Bill_Final_Button.click();
     }
 
 
-    async Click_Gas_Bill_Pay_Button(gas_usage: string) {
+    async Click_Gas_Bill_Pay_Button(gas_usage: any, amount: any, fee: any | null) {
         await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
 
-        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
+        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage.toString());
         const buttonLocator = rowLocator.locator(`//button[contains(text(),"Pay")]`);
         await expect(buttonLocator).toBeVisible({timeout:30000});
         await expect(buttonLocator).toBeEnabled({timeout:30000});
         await buttonLocator.hover();
         await buttonLocator.click();
+
+        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
+        await expect(this.Billing_Pay_Dialog_Box).toContainText(amount.toString())
+
+        if (fee !== null){
+            await expect(this.Billing_Pay_Dialog_Box).toContainText(fee.toString())
+        }
+
+        await this.Billing_Pay_Bill_Final_Button.hover();
+        await this.Billing_Pay_Bill_Final_Button.click();
+
+        //getByText('Successfully initiated')
     }
 
 
