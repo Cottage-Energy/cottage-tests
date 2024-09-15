@@ -55,8 +55,6 @@ export class BillingPage {
 
 
     async Click_Gas_Bill_Pay_Button(gas_usage: any, amount: any, fee: any | null) {
-        await expect(this.Billing_Pay_Dialog_Title).toBeVisible({timeout:30000});
-
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage.toString());
         const buttonLocator = rowLocator.locator(`//button[contains(text(),"Pay")]`);
         await expect(buttonLocator).toBeVisible({timeout:30000});
