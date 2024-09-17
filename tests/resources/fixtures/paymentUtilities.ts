@@ -1,4 +1,3 @@
-
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { LinearActions } from '../../resources/fixtures/linear_actions';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
@@ -6,10 +5,7 @@ import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
 
-
-export class PaymentUtilities{
-
-
+export class PaymentUtilities {
     async Auto_Bank_Payment_Electric_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
@@ -72,4 +68,6 @@ export class PaymentUtilities{
 
 }
 
-export default PaymentUtilities
+
+
+export default PaymentUtilities;
