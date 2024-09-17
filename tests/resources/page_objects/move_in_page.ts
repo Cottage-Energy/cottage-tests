@@ -324,6 +324,10 @@ export class MoveInPage{
     }
 
     async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+        const maxRetries = 2;
+        let attempt = 0;
+        let success = false;
+        
         await this.page.waitForLoadState('domcontentloaded' && 'load');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
@@ -348,9 +352,20 @@ export class MoveInPage{
         
         await CardCountry?.waitForElementState('stable');
         await CardCountry?.waitForElementState('enabled');
-        await CardCountry?.click();
-        await CardCountry?.hover();
-        await CardCountry?.selectOption(CCcountry,{timeout:30000});
+
+
+        while (attempt < maxRetries && !success) {
+            try {
+                await CardCountry?.selectOption(CCcountry, { timeout: 30000 });
+                success = true; // If the operation succeeds, set success to true
+            } catch (error) {
+                attempt++;
+                console.error(`Attempt ${attempt} failed: ${error}`);
+                if (attempt >= maxRetries) {
+                throw new Error(`Failed to select option after ${maxRetries} attempts`);
+                }
+            }
+        }
     
     
         if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
