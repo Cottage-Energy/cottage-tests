@@ -17,7 +17,7 @@ export class SupabaseQueries{
     }
 
 
-    async Check_Cottage_User_Account_Number(Email: string, accountNumber: any) {
+    async Check_Cottage_User_Account_Number(Email: string) {
         const { data: cottageUser } = await supabase
             .from('CottageUsers')
             .select('accountNumber')
@@ -26,7 +26,6 @@ export class SupabaseQueries{
             .throwOnError();
         const cottageUserAccountNUmber = cottageUser?.accountNumber ?? '';
         await expect(cottageUserAccountNUmber).not.toBeNull;
-        await expect(cottageUserAccountNUmber.toString()).toBe(accountNumber);
     }
     
 

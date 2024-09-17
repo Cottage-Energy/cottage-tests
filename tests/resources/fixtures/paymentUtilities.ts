@@ -6,6 +6,7 @@ const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
 
 export class PaymentUtilities {
+    
     async Auto_Bank_Payment_Electric_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([

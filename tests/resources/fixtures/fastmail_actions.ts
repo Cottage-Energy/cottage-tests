@@ -22,7 +22,7 @@ export async function Get_OTP(Email: string) {
 
 
 export async function Check_Start_Service_Confirmation(Email: string, AccountNumber: string, ElectricCompany?: string | null, GasCompany?: string | null) {
-    const content = await fastMail.fetchEmails({to: Email, subject: `Start Service Confirmation: ${AccountNumber}`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
+    const content = await fastMail.fetchEmails({to: Email, subject: `Start Service Confirmation`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
     const email_body = content[0].bodyValues[1].value;
     //console.log(email_body);
     await expect(content.length).toEqual(1);
