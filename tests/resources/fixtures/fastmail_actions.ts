@@ -3,9 +3,26 @@ import {FastmailClient} from '../../resources/utils/fastmail/client';
 
 const fastMail = new FastmailClient();
 
+
 export async function Get_OTP(Email: string) {
     const EmailLowerCase = Email.toLowerCase();
-    const content = await fastMail.fetchEmails({to: EmailLowerCase, subject: "Public Grid: One Time Passcode", from: "Public Grid Team <support@onepublicgrid.com>"});
+    const maxRetries = 2;
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    let content: any[] = [];
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: EmailLowerCase, subject: "Public Grid: One Time Passcode", from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) {
+            break;
+        }
+        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
+        await delay(30000); // delay
+    }
+
+    if (!content || content.length === 0) {
+        throw new Error("Failed to fetch OTP email after multiple attempts.");
+    }
+
     console.log(content.length);
     await expect(content.length).toEqual(1);
     const email_body = content[0].bodyValues[2].value;
@@ -18,7 +35,6 @@ export async function Get_OTP(Email: string) {
         console.log(code);
         return code;
     }
-    
 }
 
 

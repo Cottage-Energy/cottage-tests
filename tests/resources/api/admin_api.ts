@@ -6,41 +6,77 @@ const env = process.env.ENV || 'dev';
 const baseUrl = environmentBaseUrl[env].admin_api;
 
 
-async function Simulate_Electric_Bill(apiContext:any, AccountId: string, Amount:number, Usage:number){
-    const response = await apiContext['post'](`${baseUrl}/payments/simulate`,
-        {data: {
-            accountId: AccountId,
-            accountType: 'Electric',
-            totalAmountDue: Amount,
-            totalUsage: Usage
-        }}
-    );
+async function Simulate_Electric_Bill(apiContext: any, AccountId: string, Amount: number, Usage: number) {
+    const maxRetries = 3;
+    const retryDelay = 10000; // 10 second
 
-    const responseBody = await response.json();
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        const response = await apiContext['post'](`${baseUrl}/payments/simulate`,
+            {
+                data: {
+                    accountId: AccountId,
+                    accountType: 'Electric',
+                    totalAmountDue: Amount,
+                    totalUsage: Usage
+                }
+            }
+        );
 
-    console.log(await response.status()); // Log the status for debugging
-    console.log(responseBody); // Log the response body for debugging
+        const responseBody = await response.json();
 
-    expect(response.status()).toBe(200);
+        console.log(await response.status()); // Log the status for debugging
+        console.log(responseBody); // Log the response body for debugging
+
+        if (response.status() === 200) {
+            expect(response.status()).toBe(200);
+            return;
+        } else {
+            if (attempt < maxRetries) {
+                console.log(`Attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, retryDelay));
+            } else {
+                console.log(`Attempt ${attempt} failed. No more retries left.`);
+                expect(response.status()).toBe(200); // This will fail the test
+            }
+        }
+    }
 }
 
 
-async function Simulate_Gas_Bill(apiContext:any, AccountId: string, Amount:number, Usage:number){
-    const response = await apiContext['post'](`${baseUrl}/payments/simulate`,
-        {data: {
-            accountId: AccountId,
-            accountType: 'Gas',
-            totalAmountDue: Amount,
-            totalUsage: Usage
-        }}
-    );
+async function Simulate_Gas_Bill(apiContext: any, AccountId: string, Amount: number, Usage: number) {
+    const maxRetries = 3;
+    const retryDelay = 10000; // 10 seconds
 
-    const responseBody = await response.json();
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        const response = await apiContext['post'](`${baseUrl}/payments/simulate`,
+            {
+                data: {
+                    accountId: AccountId,
+                    accountType: 'Gas',
+                    totalAmountDue: Amount,
+                    totalUsage: Usage
+                }
+            }
+        );
 
-    console.log(await response.status()); // Log the status for debugging
-    console.log(responseBody); // Log the response body for debugging
+        const responseBody = await response.json();
 
-    expect(response.status()).toBe(200);
+        console.log(await response.status()); // Log the status for debugging
+        console.log(responseBody); // Log the response body for debugging
+
+        if (response.status() === 200) {
+            expect(response.status()).toBe(200);
+            return;
+        } else {
+            if (attempt < maxRetries) {
+                console.log(`Attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, retryDelay));
+            } else {
+                console.log(`Attempt ${attempt} failed. No more retries left.`);
+                expect(response.status()).toBe(200); // This will fail the test
+            }
+        }
+    }
 }
 
 

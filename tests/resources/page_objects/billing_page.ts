@@ -163,8 +163,18 @@ export class BillingPage {
         const gasAmount = parseFloat(GasAmount) || 0;
         
         const totalAmount = (electricAmount + gasAmount);
-        console.log(`TOTAL: ${totalAmount}`);
-        await expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount}`);
+
+        if (totalAmount > 0) {
+            let totalAmount2dec = totalAmount.toFixed(2);
+            if (totalAmount2dec.endsWith('0')) {
+                totalAmount2dec = parseFloat(totalAmount2dec).toString();
+            }
+            console.log(`TOTAL: ${totalAmount2dec}`);
+            await expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount2dec}`);
+        } else {
+            console.log(`TOTAL: ${totalAmount}`);
+            await expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount}`);
+        }
         
     }
 

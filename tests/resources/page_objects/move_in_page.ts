@@ -323,6 +323,12 @@ export class MoveInPage{
         await this.Move_In_Identity_Info_Title.click();
     }
 
+    async Check_Payment_Page_Visibility(){
+        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        const isVisible = await this.Move_In_Payment_Details_Title.isVisible();
+        return isVisible;
+    }
+
     async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
         const maxRetries = 2;
         let attempt = 0;

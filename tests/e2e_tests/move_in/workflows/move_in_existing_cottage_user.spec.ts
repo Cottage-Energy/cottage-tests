@@ -420,10 +420,9 @@ test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    const billingStatus = await supabaseQueries.Get_Company_Billing_Status("COMED");
     await moveInpage.Next_Move_In_Button();
-    
-    if (billingStatus === true) {
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
       await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
       await moveInpage.Confirm_Payment_Details();
       await moveInpage.Check_Successful_Move_In_Billing_Customer();

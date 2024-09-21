@@ -69,18 +69,6 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Company_Billing_Status(id: string) {
-        const { data: CompanyBilling } = await supabase
-            .from('UtilityCompany')
-            .select('isHandleBilling')
-            .eq('id', id)
-            .maybeSingle()
-            .throwOnError();
-        const billingStatus = CompanyBilling?.isHandleBilling ?? '';
-        console.log("BILLING:" + billingStatus);
-        return billingStatus;
-    }
-
 
     async Check_Gas_Account_Id_Not_Present(cottageUserId: string) {
         const { data: GAccount,error } = await supabase
@@ -120,30 +108,78 @@ export class SupabaseQueries{
     }
 
 
-    async Check_Electric_Bill_Visibility(ElectricAccountId: string, state:boolean) {
-        const { data: ElectricBillVis } = await supabase
-            .from('ElectricBill')
-            .select('visible')
-            .eq('electricAccountID', ElectricAccountId)
-            .single()
-            .throwOnError();
+    async Check_Electric_Bill_Visibility(ElectricAccountId: string, state: boolean) {
+        const maxRetries = 3;
+        let retries = 0;
+        let ElectricBillVis;
+
+        while (retries < maxRetries) {
+            const { data } = await supabase
+                .from('ElectricBill')
+                .select('visible')
+                .eq('electricAccountID', ElectricAccountId)
+                .single()
+                .throwOnError();
+
+            ElectricBillVis = data;
+
+            if (ElectricBillVis) {
+                break;
+            }
+
+            retries++;
+            if (retries < maxRetries) {
+                console.log(`No data found, retrying in 10 seconds... (${retries}/${maxRetries})`);
+                await new Promise(resolve => setTimeout(resolve, 10000)); // wait for 10 seconds
+            }
+        }
+
+        if (!ElectricBillVis) {
+            throw new Error('No data found after maximum retries');
+        }
+
         const ElectricBillvisib = ElectricBillVis?.visible ?? '';
         console.log(ElectricBillvisib);
         await expect(ElectricBillvisib).toBe(state);
     }
 
 
-    async Check_Gas_Bill_Visibility(GasAccountId: string, state:boolean) {
-        const { data: GasBillVis } = await supabase
-            .from('GasBill')
-            .select('visible')
-            .eq('gasAccountID', GasAccountId)
-            .single()
-            .throwOnError();
+    async Check_Gas_Bill_Visibility(GasAccountId: string, state: boolean) {
+        const maxRetries = 3;
+        let retries = 0;
+        let GasBillVis;
+    
+        while (retries < maxRetries) {
+            const { data } = await supabase
+                .from('GasBill')
+                .select('visible')
+                .eq('gasAccountID', GasAccountId)
+                .single()
+                .throwOnError();
+    
+            GasBillVis = data;
+    
+            if (GasBillVis) {
+                break;
+            }
+    
+            retries++;
+            if (retries < maxRetries) {
+                console.log(`No data found, retrying in 10 seconds... (${retries}/${maxRetries})`);
+                await new Promise(resolve => setTimeout(resolve, 10000)); // wait for 10 seconds
+            }
+        }
+    
+        if (!GasBillVis) {
+            throw new Error('No data found after maximum retries');
+        }
+    
         const GasBillvisib = GasBillVis?.visible ?? '';
         console.log(GasBillvisib);
         await expect(GasBillvisib).toBe(state);
     }
+
+    
 
 
     async Check_Electric_Bill_Paid_Notif(ElectricAccountId: string, state:boolean) {
