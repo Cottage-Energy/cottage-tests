@@ -20,8 +20,8 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
-  //await page.close();
+  await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
+  await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe('Move In New User', () => {
 
 
   test('COMED New User', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -46,7 +46,7 @@ test.describe('Move In New User', () => {
 
 
   test('CON-EDISON New User Add Auto Payment', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -59,7 +59,7 @@ test.describe('Move In New User', () => {
 
 
   test('EVERSOURCE New User Add Auto Payment', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -71,7 +71,7 @@ test.describe('Move In New User', () => {
 
 
   test('CON-EDISON New User Add Manual Payment', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -84,7 +84,7 @@ test.describe('Move In New User', () => {
 
 
   test('EVERSOURCE New User Add Manual Payment', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -96,7 +96,7 @@ test.describe('Move In New User', () => {
 
 
   test('CON-EDISON New User Skip Add Payment', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -109,7 +109,7 @@ test.describe('Move In New User', () => {
 
 
   test('EVERSOURCE New User Skip Add Payment', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(120000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

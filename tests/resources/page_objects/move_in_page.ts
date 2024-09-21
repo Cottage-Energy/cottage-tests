@@ -349,13 +349,12 @@ export class MoveInPage{
 
         await CardCVC?.waitForElementState('visible');
         await CardCVC?.fill(CCcvc,{timeout:10000});
-        
-        await CardCountry?.waitForElementState('stable');
-        await CardCountry?.waitForElementState('enabled');
-
 
         while (attempt < maxRetries && !success) {
             try {
+                await CardCountry?.waitForElementState('stable');
+                await CardCountry?.waitForElementState('enabled');
+                await CardCountry?.hover();
                 await CardCountry?.selectOption(CCcountry, { timeout: 30000 });
                 success = true; // If the operation succeeds, set success to true
             } catch (error) {
@@ -546,6 +545,7 @@ export class MoveInPage{
 
         await newPage.waitForLoadState('domcontentloaded');
         await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
+        await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeHidden({timeout:60000});
         await newPage.close(); //To be removed
     }
 
@@ -557,7 +557,8 @@ export class MoveInPage{
         ]);
 
         await newPage.waitForLoadState('domcontentloaded');
-        await expect(newPage).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
+        await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
+        await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeVisible({timeout:60000});
         await newPage.close(); //To be removed
     }
 
