@@ -180,8 +180,6 @@ export class SupabaseQueries{
     }
 
     
-
-
     async Check_Electric_Bill_Paid_Notif(ElectricAccountId: string, state:boolean) {
         
         const maxRetries = 5;
