@@ -18,6 +18,7 @@ export async function Get_OTP(Email: string) {
         console.log(code);
         return code;
     }
+    
 }
 
 

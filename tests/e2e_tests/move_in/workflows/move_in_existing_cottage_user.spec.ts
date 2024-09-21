@@ -420,10 +420,19 @@ test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
+    const billingStatus = await supabaseQueries.Get_Company_Billing_Status("COMED");
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
-    const accountNumber = await moveInpage.Get_Account_Number();
+    
+    if (billingStatus === true) {
+      await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
 
+    const accountNumber = await moveInpage.Get_Account_Number();
     await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(PGuser.Email,1);

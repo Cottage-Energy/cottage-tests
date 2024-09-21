@@ -20,7 +20,7 @@ export class SidebarChat {
     readonly Chat_Window: Locator;
     readonly Close_Chat_Icon: Locator;
 
-    readonly Overview_Page_Usage_Chart_Title: Locator;
+    readonly Overview_Page_Title: Locator;
     readonly Billing_Page_Title: Locator;
     readonly Services_Page_Title: Locator;
     readonly Support_Page_Title: Locator;
@@ -47,7 +47,7 @@ export class SidebarChat {
         this.Chat_Window = page.locator('div').filter({ hasText: /^Public GridHow can we help with Public Grid\?$/ }).nth(1);
         this.Close_Chat_Icon = page.getByRole('button', { name: 'Close chat' });
 
-        this.Overview_Page_Usage_Chart_Title = page.getByRole('heading', { name: 'Energy Usage Details' });
+        this.Overview_Page_Title = page.locator('//h3[contains(text(),"Welcome back")]');
         this.Billing_Page_Title = page.getByRole('heading', { name: 'Billing', exact: true });
         this.Services_Page_Title = page.getByRole('heading', { name: 'Services', exact: true });
         this.Support_Page_Title = page.getByRole('heading', { name: 'We are here to help' });
@@ -66,7 +66,7 @@ export class SidebarChat {
         await expect(this.Overview_Icon).toBeEnabled({timeout:30000});
         await this.Overview_Icon.hover();
         await this.Overview_Icon.click();
-        await expect(this.Overview_Page_Usage_Chart_Title).toBeVisible({timeout:30000});
+        await expect(this.Overview_Page_Title).toBeVisible({timeout:30000});
     }
 
     async Goto_Billing_Page_Via_Icon(){

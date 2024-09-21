@@ -69,6 +69,19 @@ export class SupabaseQueries{
     }
 
 
+    async Get_Company_Billing_Status(id: string) {
+        const { data: CompanyBilling } = await supabase
+            .from('UtilityCompany')
+            .select('isHandleBilling')
+            .eq('id', id)
+            .maybeSingle()
+            .throwOnError();
+        const billingStatus = CompanyBilling?.isHandleBilling ?? '';
+        console.log("BILLING:" + billingStatus);
+        return billingStatus;
+    }
+
+
     async Check_Gas_Account_Id_Not_Present(cottageUserId: string) {
         const { data: GAccount,error } = await supabase
             .from('GasAccount')
