@@ -55,6 +55,7 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
 }
 
 
+
 export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string, ElectricUsage: any, ElectricBillTotal: any) {
     const content = await fastMail.fetchEmails({to: Email, subject: `Your Electric Bill is Scheduled for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
     const email_body = content[0].bodyValues[1].value;
