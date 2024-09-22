@@ -32,7 +32,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   
 
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
-    test.slow();
+    test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -46,7 +46,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
-    test.slow();
+    test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -60,7 +60,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Same Company', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -92,7 +92,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
   
 
   test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
-    test.slow();
+    test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -106,7 +106,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
-    test.slow();
+    test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -120,7 +120,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Same Company', async ({moveInpage, page}) => {
-    test.slow();
+    test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });

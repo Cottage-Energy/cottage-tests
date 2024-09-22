@@ -28,7 +28,7 @@ export class LinearActions{
             });
         
             issuesCount = issuesResponse.nodes.length;
-            console.log(`Number of issues: ${issuesCount}`);
+            console.log(`Number of Electric Bills: ${issuesCount}`);
         
             if (issuesCount > 0) {
                 break;
@@ -74,7 +74,7 @@ export class LinearActions{
             });
         
             issuesCount = issuesResponse.nodes.length;
-            console.log(`Number of issues: ${issuesCount}`);
+            console.log(`Number of Gas Bills: ${issuesCount}`);
         
             if (issuesCount > 0) {
                 break;
