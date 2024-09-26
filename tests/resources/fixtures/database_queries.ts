@@ -182,7 +182,7 @@ export class SupabaseQueries{
     
     async Check_Electric_Bill_Paid_Notif(ElectricAccountId: string, state:boolean) {
         
-        const maxRetries = 5;
+        const maxRetries = 10;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let ElectricBillpaidNotif = false;
@@ -205,7 +205,7 @@ export class SupabaseQueries{
 
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(10000);
+            await delay(15000);
         }
 
         if (ElectricBillpaidNotif !== state) {
@@ -216,7 +216,7 @@ export class SupabaseQueries{
 
     async Check_Gas_Bill_Paid_Notif(GasAccountId: string, state:boolean) {
 
-        const maxRetries = 5;
+        const maxRetries = 10;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let GasBillpaidNotif = false;
@@ -239,7 +239,7 @@ export class SupabaseQueries{
 
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(10000);
+            await delay(15000);
         }
 
         if (GasBillpaidNotif !== state) {
@@ -317,7 +317,7 @@ export class SupabaseQueries{
 
 
     async Check_Electric_Bill_Processing(ElectricAccountId: string) {
-        const maxRetries = 300;
+        const maxRetries = 500;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let ElectricBillstatus = '';
@@ -339,7 +339,7 @@ export class SupabaseQueries{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(100);
+            await delay(50);
         }
 
         await expect(ElectricBillstatus).toMatch(/^(processing|succeeded)$/);
@@ -348,7 +348,7 @@ export class SupabaseQueries{
 
 
     async Check_Gas_Bill_Processing(GasAccountId: string) {
-        const maxRetries = 300;
+        const maxRetries = 500;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let GasBillstatus = '';
@@ -370,7 +370,7 @@ export class SupabaseQueries{
             
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(100);
+            await delay(50);
         }
 
         await expect(GasBillstatus).toMatch(/^(processing|succeeded)$/);

@@ -96,7 +96,6 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover();
         await this.Overview_Save_Payment_Button.click();
 
-        await this.Overview_Success_Message.hover({timeout:10000});
         await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
@@ -155,7 +154,6 @@ export class OverviewPage {
         await expect(this.Overview_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
         await this.Overview_Auto_Payment_Checkbox.hover();
         await this.Overview_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
-        await this.Overview_Auto_Payment_Disabled_Message.hover({timeout:10000});
         await expect(this.Overview_Auto_Payment_Disabled_Message).toBeVisible({timeout:30000});
         
         await this.page?.waitForTimeout(500);
@@ -164,7 +162,6 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover({timeout:10000});
         await this.Overview_Save_Payment_Button.click();
 
-        await this.Overview_Success_Message.hover({timeout:10000});
         await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
@@ -206,6 +203,7 @@ export class OverviewPage {
         await SuccessAccountButton?.click();
 
         const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
+
         const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
         await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
@@ -214,13 +212,13 @@ export class OverviewPage {
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
+        await this.Overview_Save_Payment_Button.waitFor({state:"attached",timeout:10000});
         await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
         await this.Overview_Save_Payment_Button.hover({timeout:10000});
         await this.Overview_Save_Payment_Button.click({timeout:10000});
 
-        await this.Overview_Success_Message.hover({timeout:10000});
         await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
@@ -270,12 +268,11 @@ export class OverviewPage {
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
-        await this.page?.waitForTimeout(500);
+        await this.page?.waitForTimeout(1000);
 
         await expect(this.Overview_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
         await this.Overview_Auto_Payment_Checkbox.hover();
         await this.Overview_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
-        await this.Overview_Auto_Payment_Disabled_Message.hover({timeout:10000});
         await expect(this.Overview_Auto_Payment_Disabled_Message).toBeVisible({timeout:30000});
         
         await this.page?.waitForTimeout(500);
@@ -284,7 +281,6 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover();
         await this.Overview_Save_Payment_Button.click();
 
-        await this.Overview_Success_Message.hover({timeout:10000});
         await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
@@ -335,17 +331,15 @@ export class OverviewPage {
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
         await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
         await this.Overview_Save_Payment_Button.hover();
         await this.Overview_Save_Payment_Button.click();
 
-        await this.Overview_Success_Message.hover({timeout:10000});
         await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
-
 
     
 

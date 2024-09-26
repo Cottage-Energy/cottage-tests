@@ -53,6 +53,16 @@ export default defineConfig({
        use: { ...devices['iPhone 12'] },
     },
 
+    /* Test against specific tags. */
+    {
+      name: 'smoke',
+      grep: /@smoke/,
+    },
+    {
+      name: 'regression',
+      grep: /@regression/,
+    },
+
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',

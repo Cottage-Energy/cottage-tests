@@ -40,7 +40,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
   
 test.afterEach(async ({ page },testInfo) => {
     await CleanUp.Test_User_Clean_Up(MoveIn.cottageUserId);
-    await page.close();
+    //await page.close();
 });
   
 /*test.afterAll(async ({ page }) => {
@@ -51,7 +51,7 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe.configure({mode: "serial"});
 test.describe('Valid Card Manual Payment', () => {
     
-  test('NGMA Electric Only Valid Manual Card Payment Move In Added', async ({moveInpage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, page, sidebarChat, billingPage, context}) => {
       //MAKE IT COMED BLDG. with ELECTRIC ONLY
       test.setTimeout(1800000);
   
@@ -424,7 +424,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
   
 
-  test('NGMA BGE Electric & Gas Valid Manual Card Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA BGE Electric & Gas Valid Manual Card Payment Finish Account Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(300000);
   
