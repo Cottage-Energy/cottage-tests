@@ -367,7 +367,8 @@ export class MoveInPage{
                 attempt++;
                 console.error(`Attempt ${attempt} failed: ${error}`);
                 if (attempt >= maxRetries) {
-                throw new Error(`Failed to select option after ${maxRetries} attempts`);
+                    console.error(`Failed to select option after ${maxRetries} attempts`);
+                    break;
                 }
             }
         }

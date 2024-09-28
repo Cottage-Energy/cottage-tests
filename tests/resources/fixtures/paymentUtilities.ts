@@ -19,7 +19,9 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -42,7 +44,9 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -74,7 +78,9 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
     }
 
@@ -90,7 +96,9 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
@@ -118,7 +126,9 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal, PGuserUsage.GasAmountTotal),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
@@ -174,7 +184,9 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
     }
 
@@ -190,7 +202,9 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -213,7 +227,9 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountTotal),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -245,7 +261,9 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
     }
 
@@ -261,7 +279,9 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -284,7 +304,9 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -318,7 +340,9 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
     }
 
@@ -336,7 +360,9 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
@@ -362,7 +388,9 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
@@ -423,7 +451,9 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
     }
 
@@ -439,7 +469,9 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -462,7 +494,9 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled"),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -496,7 +530,9 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
     }
 
@@ -515,6 +551,8 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
 
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -538,6 +576,8 @@ export class PaymentUtilities {
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
             overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
@@ -570,6 +610,8 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
     
         ]);
     }
@@ -586,6 +628,8 @@ export class PaymentUtilities {
           //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
     
         ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -611,7 +655,9 @@ export class PaymentUtilities {
           //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
-            overviewPage.Check_Make_Payment_Button_Visible_Enable()
+            overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
     
         ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -673,7 +719,8 @@ export class PaymentUtilities {
           //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-    
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
     }
 
@@ -689,6 +736,8 @@ export class PaymentUtilities {
           //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
     
         ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -712,6 +761,8 @@ export class PaymentUtilities {
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
             overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
     
         ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -745,6 +796,8 @@ export class PaymentUtilities {
         //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
     
         ]);
     }
@@ -761,6 +814,8 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -784,6 +839,8 @@ export class PaymentUtilities {
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
             overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -817,6 +874,8 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
         
         ]);
     }
@@ -833,6 +892,8 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -859,6 +920,8 @@ export class PaymentUtilities {
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
             overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -920,6 +983,8 @@ export class PaymentUtilities {
         //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             
         ]);
     }
@@ -936,6 +1001,8 @@ export class PaymentUtilities {
             //platform check
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Gas_Card_Is_Clear(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
                 
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -959,6 +1026,8 @@ export class PaymentUtilities {
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
             overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
                     
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -992,6 +1061,8 @@ export class PaymentUtilities {
             //check platform dashboard
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+            overviewPage.Check_Electricity_Card_Not_Visible(),
                     
         ]);
     }

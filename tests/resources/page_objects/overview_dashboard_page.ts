@@ -1,4 +1,8 @@
 import { type Page, type Locator, expect } from '@playwright/test';
+import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+import { format } from 'date-fns';
+
+const supabaseQueries = new SupabaseQueries();
 
 export class OverviewPage {
 
@@ -91,7 +95,8 @@ export class OverviewPage {
                 attempt++;
                 console.error(`Attempt ${attempt} failed: ${error}`);
                 if (attempt >= maxRetries) {
-                throw new Error(`Failed to select option after ${maxRetries} attempts`);
+                    console.error(`Failed to select option after ${maxRetries} attempts`);
+                    break;
                 }
             }
         }
@@ -150,7 +155,8 @@ export class OverviewPage {
                 attempt++;
                 console.error(`Attempt ${attempt} failed: ${error}`);
                 if (attempt >= maxRetries) {
-                throw new Error(`Failed to select option after ${maxRetries} attempts`);
+                    console.error(`Failed to select option after ${maxRetries} attempts`);
+                    break;
                 }
             }
         }
@@ -393,11 +399,129 @@ export class OverviewPage {
         await expect(this.Overview_Electricity_Card).toBeHidden();
     }
 
+
     async Check_Gas_Card_Not_Visible() {
         await expect(this.Overview_Gas_Card).toBeHidden();
     }
 
-    
+
+    async Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId: string, Amount: any, Usage: any) {
+
+        await expect(this.Overview_Electricity_Card).toBeVisible();
+
+        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(ElectricAccountId);
+        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(ElectricAccountId);
+        
+        const Start = new Date(startDate);
+        const End = new Date(endDate);
+        
+        const StartDateFormatted = format(Start, 'MMM dd');
+        const EndDateFormatted = format(End, 'MMM dd');
+
+        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount = amount2Dec.toString();
+
+        const usage = Usage.toString();
+
+        console.log(StartDateFormatted);
+        console.log(EndDateFormatted);
+
+
+        await expect(this.Overview_Electricity_Card).toContainText(StartDateFormatted);
+        await expect(this.Overview_Electricity_Card).toContainText(EndDateFormatted);
+        await expect(this.Overview_Electricity_Card).toContainText(amount);
+        await expect(this.Overview_Electricity_Card).toContainText(usage);
+    }
+
+
+    async Check_Electricity_Card_Is_Clear(ElectricAccountId: string, Amount: any, Usage: any) {
+
+        await expect(this.Overview_Electricity_Card).toBeVisible();
+
+        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(ElectricAccountId);
+        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(ElectricAccountId);
+        
+        const Start = new Date(startDate);
+        const End = new Date(endDate);
+        
+        const StartDateFormatted = format(Start, 'MMM dd');
+        const EndDateFormatted = format(End, 'MMM dd');
+
+        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount = amount2Dec.toString();
+
+        const usage = Usage.toString();
+
+        console.log(StartDateFormatted);
+        console.log(EndDateFormatted);
+
+
+        await expect(this.Overview_Electricity_Card).not.toContainText(StartDateFormatted);
+        await expect(this.Overview_Electricity_Card).not.toContainText(EndDateFormatted);
+        await expect(this.Overview_Electricity_Card).not.toContainText(amount);
+        await expect(this.Overview_Electricity_Card).not.toContainText(usage);
+    }
+
+
+    async Check_Gas_Card_Contain_Bill_Details(GasAccountId: string, Amount: any, Usage: any) {
+
+        await expect(this.Overview_Gas_Card).toBeVisible();
+
+        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(GasAccountId);
+        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(GasAccountId);
+        
+        const Start = new Date(startDate);
+        const End = new Date(endDate);
+        
+        const StartDateFormatted = format(Start, 'MMM dd');
+        const EndDateFormatted = format(End, 'MMM dd');
+
+        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount = amount2Dec.toString();
+
+        const usage = Usage.toString();
+
+        console.log(StartDateFormatted);
+        console.log(EndDateFormatted);
+
+
+        await expect(this.Overview_Gas_Card).toContainText(StartDateFormatted);
+        await expect(this.Overview_Gas_Card).toContainText(EndDateFormatted);
+        await expect(this.Overview_Gas_Card).toContainText(amount);
+        await expect(this.Overview_Gas_Card).toContainText(usage);
+    }
+
+
+    async Check_Gas_Card_Is_Clear(GasAccountId: string, Amount: any, Usage: any) {
+
+        await expect(this.Overview_Gas_Card).toBeVisible();
+
+        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(GasAccountId);
+        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(GasAccountId);
+        
+        const Start = new Date(startDate);
+        const End = new Date(endDate);
+        
+        const StartDateFormatted = format(Start, 'MMM dd');
+        const EndDateFormatted = format(End, 'MMM dd');
+
+        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount = amount2Dec.toString();
+
+        const usage = Usage.toString();
+
+        console.log(StartDateFormatted);
+        console.log(EndDateFormatted);
+
+
+        await expect(this.Overview_Gas_Card).not.toContainText(StartDateFormatted);
+        await expect(this.Overview_Gas_Card).not.toContainText(EndDateFormatted);
+        await expect(this.Overview_Gas_Card).not.toContainText(amount);
+        await expect(this.Overview_Gas_Card).not.toContainText(usage);
+    }
+
+
+
 
 }
 

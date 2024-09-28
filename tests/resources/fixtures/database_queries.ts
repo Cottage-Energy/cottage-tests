@@ -634,6 +634,53 @@ export class SupabaseQueries{
     }
 
 
+    async Get_Electric_Bill_Start_Date(ElectricAccountId: string) {
+        const { data: ElectricBill } = await supabase
+            .from('ElectricBill')
+            .select('startDate')
+            .eq('electricAccountID', ElectricAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const StartDate = ElectricBill?.startDate ?? '';
+        return StartDate;
+    }
+
+
+    async Get_Electric_Bill_End_Date(ElectricAccountId: string) {
+        const { data: ElectricBill } = await supabase
+            .from('ElectricBill')
+            .select('endDate')
+            .eq('electricAccountID', ElectricAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const EndDate = ElectricBill?.endDate ?? '';
+        return EndDate;
+    }
+
+
+    async Get_Gas_Bill_Start_Date(GasAccountId: string) {
+        const { data: GasBill } = await supabase
+            .from('GasBill')
+            .select('startDate')
+            .eq('gasAccountID', GasAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const StartDate = GasBill?.startDate ?? '';
+        return StartDate;
+    }
+
+
+    async Get_Gas_Bill_End_Date(GasAccountId: string) {
+        const { data: GasBill } = await supabase
+            .from('GasBill')
+            .select('endDate')
+            .eq('gasAccountID', GasAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const EndDate = GasBill?.endDate ?? '';
+        return EndDate;
+    }
+
 }
 
 
