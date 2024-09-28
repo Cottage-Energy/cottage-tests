@@ -4,6 +4,9 @@ export class OverviewPage {
 
     //variables
     readonly page: Page;
+    readonly Overview_Outstanding_Balance: Locator;
+    readonly Overview_Make_Payment_Button: Locator;
+
     readonly Overview_Get_Started_Widget: Locator
     readonly Overview_Setup_Payment_Link: Locator
 
@@ -17,6 +20,9 @@ export class OverviewPage {
     //locators
     constructor(page: Page) {
         this.page = page;
+        this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div');
+        this.Overview_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
+
         this.Overview_Get_Started_Widget = page.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div');
         this.Overview_Setup_Payment_Link = page.getByText('Setup a Payment Method');
 
@@ -344,6 +350,37 @@ export class OverviewPage {
     
 
     //assertions
+
+    async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
+        const electricAmount = parseFloat(ElectricAmount);
+        const gasAmount = parseFloat(GasAmount) || 0;
+        
+        const totalAmount = (electricAmount + gasAmount);
+
+        if (totalAmount > 0) {
+            let totalAmount2dec = totalAmount.toFixed(2);
+            if (totalAmount2dec.endsWith('0')) {
+                totalAmount2dec = parseFloat(totalAmount2dec).toString();
+            }
+            console.log(`TOTAL: ${totalAmount2dec}`);
+            await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount2dec}`);
+        } else {
+            console.log(`TOTAL: ${totalAmount}`);
+            await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount}`);
+        }
+        
+    }
+
+
+    async Check_Outstanding_Balance_Auto_Pay_Message(message: string) {
+        await expect(this.Overview_Outstanding_Balance).toContainText(message);
+    }
+
+
+    async Check_Make_Payment_Button_Visible_Enable() {
+        await expect(this.Overview_Make_Payment_Button).toBeEnabled();
+        await expect(this.Overview_Make_Payment_Button).toBeVisible();
+    }
 
 
 }

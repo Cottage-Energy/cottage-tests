@@ -17,18 +17,6 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Email_via_CottageUserID(cottageUserId: string) {
-        const { data: CottageUser } = await supabase
-            .from('CottageUsers')
-            .select('email')
-            .eq('id', cottageUserId)
-            .single()
-            .throwOnError();
-        const Email = CottageUser?.email ?? '';
-        return Email.toString();
-    }
-
-
     async Check_Cottage_User_Account_Number(Email: string) {
         const { data: cottageUser } = await supabase
             .from('CottageUsers')

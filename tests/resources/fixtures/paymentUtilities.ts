@@ -1,13 +1,14 @@
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { LinearActions } from '../../resources/fixtures/linear_actions';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
+import OverviewPage from '../page_objects/overview_dashboard_page';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
 
 export class PaymentUtilities {
 
-    async Auto_Card_Payment_Electric_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Auto_Card_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -16,6 +17,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
@@ -35,6 +40,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
@@ -63,10 +72,14 @@ export class PaymentUtilities {
         await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
     }
 
 
-    async Auto_Card_Payment_Electric_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Auto_Card_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -75,6 +88,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString());
@@ -99,6 +116,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal, PGuserUsage.GasAmountTotal),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
@@ -151,10 +172,14 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
     }
 
 
-    async Auto_Card_Payment_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Auto_Card_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -163,6 +188,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
@@ -182,6 +211,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountTotal),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
@@ -210,10 +243,14 @@ export class PaymentUtilities {
         await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
     }
 
 
-    async Auto_Bank_Payment_Electric_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Auto_Bank_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -222,6 +259,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
@@ -241,6 +282,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
@@ -271,10 +316,14 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
     }
 
 
-    async Auto_Bank_Payment_Electric_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Auto_Bank_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -285,6 +334,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString());
@@ -307,6 +360,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
@@ -364,10 +421,14 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
     }
 
 
-    async Auto_Bank_Payment_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Auto_Bank_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -376,6 +437,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
@@ -395,6 +460,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Payment Scheduled")
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
@@ -425,13 +494,17 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
     }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Manual_Card_Payment_Electric_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Manual_Card_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //Manual PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -440,6 +513,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
@@ -458,6 +535,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
+            overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
@@ -487,10 +568,14 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+    
+        ]);
     }
 
 
-    async Manual_Card_Payment_Electric_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Manual_Card_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
       //MANUAL PAYMENT CHECKS
       await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
       await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -499,6 +584,10 @@ export class PaymentUtilities {
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
           //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+    
+        ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
       await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
       await billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString());
@@ -520,11 +609,16 @@ export class PaymentUtilities {
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
           //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
+            overviewPage.Check_Make_Payment_Button_Visible_Enable()
+    
+        ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
       await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
       await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
       await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
-      billingPage.Check_Make_Payment_Button_Visible_Enable();
+      await billingPage.Check_Make_Payment_Button_Visible_Enable();
       await Promise.all([
           supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true),
           supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true),
@@ -577,10 +671,14 @@ export class PaymentUtilities {
       ]);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
           //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+    
+        ]);
     }
 
 
-    async Manual_Card_Payment_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Manual_Card_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
       //Manual PAYMENT CHECKS
       await Promise.all([
         supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -589,6 +687,10 @@ export class PaymentUtilities {
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
           //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+    
+        ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
       await Promise.all([
           billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
@@ -607,6 +709,11 @@ export class PaymentUtilities {
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
           //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
+            overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+    
+        ]);
       await sidebarChat.Goto_Billing_Page_Via_Icon();
       await Promise.all([
           billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
@@ -636,10 +743,14 @@ export class PaymentUtilities {
       ]);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
         //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+    
+        ]);
     }
 
 
-    async Manual_Bank_Payment_Electric_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Manual_Bank_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //Manual PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -648,6 +759,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+        
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
@@ -666,6 +781,11 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
+            overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+        
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
@@ -695,10 +815,14 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+        
+        ]);
     }
 
 
-    async Manual_Bank_Payment_Electric_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Manual_Bank_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
         //MANUAL PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -707,6 +831,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString());
@@ -728,11 +856,16 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
+            overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+            
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
         await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
-        billingPage.Check_Make_Payment_Button_Visible_Enable();
+        await billingPage.Check_Make_Payment_Button_Visible_Enable();
         await Promise.all([
         supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true),
         supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true),
@@ -785,10 +918,14 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            
+        ]);
     }
 
 
-    async Manual_Bank_Payment_Gas_Checks(page:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Manual_Bank_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
         //Manual PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -797,6 +934,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+                
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
@@ -815,6 +956,11 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
+            overviewPage.Check_Make_Payment_Button_Visible_Enable(),
+                    
+        ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
@@ -844,6 +990,10 @@ export class PaymentUtilities {
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+                    
+        ]);
     }
     
 }
