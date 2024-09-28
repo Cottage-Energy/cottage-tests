@@ -132,6 +132,50 @@ export class LinearActions{
         expect(issuesCount).toBe(ExpectedCount);
     }
 
+
+    async DeleteLinearTickets(Email: string) {
+        const MoveInteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `move-ins-${env}` } } })).nodes[0].id;
+        const BillingteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `billing-${env}` } } })).nodes[0].id;
+  
+        const MoveInIssues = await linearClient.issues({
+            filter: {
+                team: { id: { eq: MoveInteamId } },
+                title: { contains: Email },
+            },
+        });
+        
+        
+        const BillingIssues = await linearClient.issues({
+            filter: {
+                team: { id: { eq: BillingteamId } },
+                description: { contains: Email },
+            },
+        });
+
+
+        
+        const MoveInCount = MoveInIssues.nodes.length;
+        const BillingCount = BillingIssues.nodes.length;
+
+        if (MoveInCount > 0) {
+            for (let i = 0; i < MoveInCount; i++) {
+                const issuesId = MoveInIssues.nodes[i].id;
+                await linearClient.deleteIssue(issuesId);
+                console.log(`Deleted Move-In Ticket: ${issuesId}`);
+            }
+        }
+
+        if (BillingCount > 0) {
+            for (let i = 0; i < BillingCount; i++) {
+                const issuesId = BillingIssues.nodes[i].id;
+                await linearClient.deleteIssue(issuesId);
+                console.log(`Deleted Billing Ticket: ${issuesId}`);
+            }
+        }
+        
+    }
+
+
 }
 
 export default LinearActions
