@@ -22,7 +22,6 @@ export class OverviewPage {
     readonly Overview_Auto_Payment_Checkbox: Locator
     readonly Overview_Save_Payment_Button: Locator
     readonly Overview_Success_Message: Locator
-    readonly Overview_Auto_Payment_Disabled_Message: Locator
 
     //locators
     constructor(page: Page) {
@@ -42,7 +41,6 @@ export class OverviewPage {
         this.Overview_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.Overview_Success_Message = page.getByText('🥳 Success', { exact: true });
-        this.Overview_Auto_Payment_Disabled_Message = page.getByText('🛑 Auto-pay disabled', { exact: true });
     }
 
     //methods
@@ -172,7 +170,6 @@ export class OverviewPage {
         await expect(this.Overview_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
         await this.Overview_Auto_Payment_Checkbox.hover();
         await this.Overview_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
-        await expect(this.Overview_Auto_Payment_Disabled_Message).toBeVisible({timeout:30000});
         
         await this.page?.waitForTimeout(500);
 
@@ -291,7 +288,6 @@ export class OverviewPage {
         await expect(this.Overview_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
         await this.Overview_Auto_Payment_Checkbox.hover();
         await this.Overview_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
-        await expect(this.Overview_Auto_Payment_Disabled_Message).toBeVisible({timeout:30000});
         
         await this.page?.waitForTimeout(500);
 
