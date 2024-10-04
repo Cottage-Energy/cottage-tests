@@ -560,10 +560,8 @@ export class PaymentUtilities {
         await page.waitForTimeout(10000);
         await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(10000);
-        await Promise.all([
-            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user"),
-            supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
-        ]);
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user");
+        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
@@ -745,10 +743,8 @@ export class PaymentUtilities {
       await page.waitForTimeout(10000);
       await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
       await page.waitForTimeout(10000);
-      await Promise.all([
-          supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "waiting_for_user"),
-          supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
-      ]);
+      await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "waiting_for_user");
+      await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true);
       await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(500);
           //check platform outstanding balance not 0
@@ -823,10 +819,8 @@ export class PaymentUtilities {
         await page.waitForTimeout(10000);
         await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(10000);
-        await Promise.all([
-            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user"),
-            supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
-        ]);
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user");
+        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
@@ -1010,10 +1004,8 @@ export class PaymentUtilities {
         await page.waitForTimeout(10000);
         await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
         await page.waitForTimeout(10000);
-        await Promise.all([
-            supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "waiting_for_user"),
-            supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
-        ]);
+        await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "waiting_for_user");
+        await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
             //check platform outstanding balance not 0
