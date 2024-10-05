@@ -30,7 +30,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 test.describe.configure({mode: "serial"});
-test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
+test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
   
     test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(350000);
@@ -146,7 +146,7 @@ test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist',
 });
 
 
-test.describe.only('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
+test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
     
   test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
@@ -262,7 +262,7 @@ test.describe.only('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
 });
 
 
-test.describe.only('Move In Existing User: Cottageuser & GasAccount Exist', () => {
+test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     
   test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
@@ -379,7 +379,7 @@ test.describe.only('Move In Existing User: Cottageuser & GasAccount Exist', () =
 });
 
 
-test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
+test.describe('Move In Existing User: Cottageuser Exist Only', () => {
     
   test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
