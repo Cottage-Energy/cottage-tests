@@ -10,7 +10,7 @@ let homePage: HomePage;
 });*/
 
 test.beforeEach(async ({ page },testInfo) => {
-  await page.goto('/',{ waitUntil: 'domcontentloaded' && 'load' });
+  await page.goto('/',{ waitUntil: 'domcontentloaded' });
   homePage = new HomePage(page);
 });
 
