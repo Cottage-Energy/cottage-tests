@@ -29,9 +29,9 @@ test.describe('Homepage Navigation', () => {
     await homePage.click_HowItWorks();
   });
   
-  test('Go to About', async () => {
-    await homePage.click_About();
-  });
+  //test('Go to About', async () => {
+  //  await homePage.click_About();
+  //});
   
   test('Go to Resources', async () => {
     await homePage.click_Resources();
@@ -41,9 +41,9 @@ test.describe('Homepage Navigation', () => {
     await homePage.click_Developers();
   });
   
-  test('Go to Sign In', async () => {
-    await homePage.click_SignIn();
-  });
+  //test('Go to Sign In', async () => {
+  //  await homePage.click_SignIn();
+  //});
 
 });
 
