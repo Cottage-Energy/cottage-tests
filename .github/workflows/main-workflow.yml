@@ -56,7 +56,7 @@ jobs:
     - name: Run Playwright tests
       run: |
         if [ "${{ github.event.inputs.scope }}" == "smoke" ]; then
-          npx playwright test --grep /@smoke/
+          npx playwright test --project=Chromium --grep /@smoke/
         elif [ "${{ github.event.inputs.scope }}" == "regression" ]; then
           npx playwright test --grep /@regression/
         fi
