@@ -25,27 +25,27 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Homepage Navigation', () => {
   
-  test('Go to How it Works', async ({page}) => {
+  test('Go to How it Works', {tag: ['@smoke', '@regression'],}, async ({page}) => {
     await homePage.click_HowItWorks();
     console.log('Navigated to:', page.url());
   });
   
-  test('Go to About', async ({page}) => {
+  test('Go to About', {tag: ['@smoke', '@regression'],}, async ({page}) => {
     await homePage.click_About();
     console.log('Navigated to:', page.url());
   });
   
-  test('Go to Resources', async ({page}) => {
+  test('Go to Resources', {tag: ['@smoke', '@regression'],}, async ({page}) => {
     await homePage.click_Resources();
     console.log('Navigated to:', page.url());
   });
   
-  test('Go to Developers', async ({page}) => {
+  test('Go to Developers', {tag: ['@smoke', '@regression'],}, async ({page}) => {
     await homePage.click_Developers();
     console.log('Navigated to:', page.url());
   });
   
-  test('Go to Sign In', async ({page}) => {
+  test('Go to Sign In', {tag: ['@smoke', '@regression'],}, async ({page}) => {
     await homePage.click_SignIn();
     console.log('Navigated to:', page.url());
   });

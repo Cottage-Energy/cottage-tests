@@ -23,6 +23,14 @@ on:
           - dev
           - staging
           - production
+        scope:
+          description: 'Test Scope'
+          required: true
+          default: 'smoke'
+          type: choice
+          options:
+          - smoke
+          - regression
 
 
 jobs:
@@ -46,7 +54,12 @@ jobs:
       run: echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
     - name: Run Playwright tests
-      run: npx playwright test  ./tests/e2e_tests/homepage/homepage_navigation.spec.ts
+      run: |
+        if [ "${{ github.event.inputs.scope }}" == "smoke" ]; then
+          npx playwright test --grep /@smoke/
+        elif [ "${{ github.event.inputs.scope }}" == "regression" ]; then
+          npx playwright test --grep /@regression/
+        fi
 
     - name: Test Report Generation
       uses: actions/upload-artifact@v4
