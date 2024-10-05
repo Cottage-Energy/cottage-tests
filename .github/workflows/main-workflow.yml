@@ -1,6 +1,6 @@
 name: Public-Grid-Test-Workflow
 
-run-name: PG Test Run Build ${{github.run_number}}
+run-name: PG ${{ github.event.inputs.scope }} Test Run Build ${{github.run_number}} - ${{ github.event.inputs.environment }}
 
 on:
     workflow_dispatch:
@@ -26,11 +26,11 @@ on:
         scope:
           description: 'Test Scope'
           required: true
-          default: 'smoke'
+          default: 'Smoke'
           type: choice
           options:
-          - smoke
-          - regression
+          - Smoke
+          - Regression
 
 
 jobs:
@@ -55,9 +55,9 @@ jobs:
 
     - name: Run Playwright tests
       run: |
-        if [ "${{ github.event.inputs.scope }}" == "smoke" ]; then
+        if [ "${{ github.event.inputs.scope }}" == "Smoke" ]; then
           npx playwright test --grep /@smoke/ --project=Chromium --project=Mobile_Chrome
-        elif [ "${{ github.event.inputs.scope }}" == "regression" ]; then
+        elif [ "${{ github.event.inputs.scope }}" == "Regression" ]; then
           npx playwright test --grep /@regression/
         fi
 
@@ -65,5 +65,5 @@ jobs:
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: PG_Test_Results_${{github.run_number}}  # Name of the folder
+        name: PG_${{ github.event.inputs.scope }}_Test_Results_${{github.run_number}} - ${{ github.event.inputs.environment }}  # Name of the folder
         path: test-results/*  
