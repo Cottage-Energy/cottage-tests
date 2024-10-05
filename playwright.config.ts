@@ -29,17 +29,17 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'Chromium',
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
-      name: 'firefox',
+      name: 'Firefox',
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
-      name: 'safari',
+      name: 'Safari',
       use: { ...devices['Desktop Safari'] },
     },
 
@@ -55,11 +55,11 @@ export default defineConfig({
 
     /* Test against specific tags. */
     {
-      name: 'smoke',
+      name: 'Smoke',
       grep: /@smoke/,
     },
     {
-      name: 'regression',
+      name: 'Regression',
       grep: /@regression/,
     },
 
