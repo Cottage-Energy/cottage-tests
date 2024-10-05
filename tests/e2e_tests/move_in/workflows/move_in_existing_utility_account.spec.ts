@@ -26,7 +26,7 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe.configure({mode: "serial"});
 test.describe('Move In Existing Utility Accout', () => {
   
-  test('COMED New User', async ({moveInpage, page}) => {
+  test('COMED New User', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,false,false);
  
@@ -35,7 +35,7 @@ test.describe('Move In Existing Utility Accout', () => {
   });
 
 
-  test('CON-EDISON New User Add Auto Payment', async ({moveInpage, page}) => {
+  test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     
@@ -45,7 +45,7 @@ test.describe('Move In Existing Utility Accout', () => {
   });
 
 
-  test('EVERSOURCE New User Add Auto Payment', async ({moveInpage, page}) => {
+  test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,false,false);
     
@@ -54,7 +54,7 @@ test.describe('Move In Existing Utility Accout', () => {
   });
 
 
-  test('CON-EDISON New User Add Manual Payment', async ({moveInpage, page}) => {
+  test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,false,false);
 
@@ -64,7 +64,7 @@ test.describe('Move In Existing Utility Accout', () => {
   });
 
 
-  test('EVERSOURCE New User Add Manual Payment', async ({moveInpage, page}) => {
+  test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,false,false);
     
@@ -73,7 +73,7 @@ test.describe('Move In Existing Utility Accout', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', async ({moveInpage, page}) => {
+  test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,false,false);
     
@@ -83,7 +83,7 @@ test.describe('Move In Existing Utility Accout', () => {
   });
 
 
-  test('EVERSOURCE New User Skip Add Payment', async ({moveInpage, page}) => {
+  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
     //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,false,false);
     

@@ -31,7 +31,7 @@ test.describe.configure({mode: "serial"});
 test.describe('Short Code Billing New User Electric &/or Gas', () => {
   
 
-  test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -45,7 +45,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
+  test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -59,7 +59,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', async ({moveInpage, page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@smoke', '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -73,7 +73,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -91,7 +91,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
   
 
-  test('New User for ShortCode Electric Only', async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
@@ -105,7 +105,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', async ({moveInpage, page}) => { // Use BGE and NGMA
+  test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",false);
@@ -119,7 +119,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', async ({moveInpage, page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",false);
@@ -133,7 +133,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@smoke', '@regression'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",false);

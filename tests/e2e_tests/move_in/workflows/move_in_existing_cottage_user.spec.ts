@@ -32,7 +32,7 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe.configure({mode: "serial"});
 test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
   
-    test('COMED Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
+    test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -69,7 +69,7 @@ test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist',
     });
 
 
-    test('Eversource Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
+    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -106,7 +106,7 @@ test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist',
     });
 
 
-    test('CON EDISON Cottageuser & ElectricAccount Exist', async ({page, moveInpage, servicesPage}) => {
+    test('CON EDISON Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -148,7 +148,7 @@ test.describe.only('Move In Existing User: Cottageuser & ElectricAccount Exist',
 
 test.describe.only('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
     
-  test('COMED Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: [ '@smoke','@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -185,7 +185,7 @@ test.describe.only('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
   });
 
 
-  test('Eversource Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
+  test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -222,7 +222,7 @@ test.describe.only('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
   });
 
 
-  test('CON EDISON Cottageuser, Electric & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
+  test('CON EDISON Cottageuser, Electric & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -264,7 +264,7 @@ test.describe.only('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
 
 test.describe.only('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     
-  test('COMED Cottageuser & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -302,7 +302,7 @@ test.describe.only('Move In Existing User: Cottageuser & GasAccount Exist', () =
   });
 
 
-  test('Eversource Cottageuser & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
+  test('Eversource Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -339,7 +339,7 @@ test.describe.only('Move In Existing User: Cottageuser & GasAccount Exist', () =
   });
 
 
-  test('CON EDISON Cottageuser & Gas Account Exist', async ({page, moveInpage, servicesPage}) => {
+  test('CON EDISON Cottageuser & Gas Account Exist', {tag: [ '@smoke','@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -381,7 +381,7 @@ test.describe.only('Move In Existing User: Cottageuser & GasAccount Exist', () =
 
 test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
     
-  test('COMED Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -444,7 +444,7 @@ test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
   });
 
 
-  test('COMED EVERSOURCE Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+  test('COMED EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -504,7 +504,7 @@ test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
   });
 
 
-  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -563,7 +563,7 @@ test.describe.only('Move In Existing User: Cottageuser Exist Only', () => {
   });
 
 
-  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', async ({page, moveInpage, servicesPage}) => {
+  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();

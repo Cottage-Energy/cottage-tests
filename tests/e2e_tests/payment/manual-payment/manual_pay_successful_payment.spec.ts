@@ -53,7 +53,7 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe.configure({mode: "serial"});
 test.describe('Valid Card Manual Payment', () => {
     
-  test('NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       //MAKE IT COMED BLDG. with ELECTRIC ONLY
       test.setTimeout(1800000);
   
@@ -505,7 +505,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('NGMA NGMA Gas Only Valid Bank Payment Move In Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA NGMA Gas Only Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(600000);
 
