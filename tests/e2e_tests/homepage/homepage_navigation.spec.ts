@@ -25,24 +25,29 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('Homepage Navigation', () => {
   
-  test('Go to How it Works', async () => {
+  test('Go to How it Works', async ({page}) => {
     await homePage.click_HowItWorks();
+    console.log('Navigated to:', page.url());
   });
   
-  test('Go to About', async () => {
+  test('Go to About', async ({page}) => {
     await homePage.click_About();
+    console.log('Navigated to:', page.url());
   });
   
-  test('Go to Resources', async () => {
+  test('Go to Resources', async ({page}) => {
     await homePage.click_Resources();
+    console.log('Navigated to:', page.url());
   });
   
-  test('Go to Developers', async () => {
+  test('Go to Developers', async ({page}) => {
     await homePage.click_Developers();
+    console.log('Navigated to:', page.url());
   });
   
-  test('Go to Sign In', async () => {
+  test('Go to Sign In', async ({page}) => {
     await homePage.click_SignIn();
+    console.log('Navigated to:', page.url());
   });
 
 });
