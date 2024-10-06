@@ -1,8 +1,22 @@
 name: Public-Grid-Test-Workflow
-
 run-name: PG ${{ github.event.inputs.scope }} Test Run Build ${{github.run_number}} - ${{ github.event.inputs.environment }}
 
 on:
+    workflow_call:
+      inputs:
+        logLevel:
+          description: 'Log Level'
+          required: true
+          type: string
+        environment:
+          description: 'Environment'
+          required: true
+          type: string
+        scope:
+          description: 'Test Scope'
+          required: true
+          type: string
+    
     workflow_dispatch:
       inputs:
         logLevel:
@@ -31,7 +45,6 @@ on:
           options:
           - Smoke
           - Regression
-
 
 jobs:
   PG_Test_Run:
