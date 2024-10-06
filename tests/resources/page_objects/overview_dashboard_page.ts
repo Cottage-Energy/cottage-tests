@@ -183,7 +183,7 @@ export class OverviewPage {
 
 
     async Enter_Auto_Payment_Valid_Bank_Details_After_Skip(Email:string, FullName:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
@@ -240,7 +240,7 @@ export class OverviewPage {
 
 
     async Enter_Manual_Payment_Valid_Bank_Details_After_Skip(Email:string, FullName:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
@@ -301,7 +301,7 @@ export class OverviewPage {
 
     
     async Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(Email:string, FullName:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
