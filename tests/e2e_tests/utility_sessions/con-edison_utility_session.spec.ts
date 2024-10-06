@@ -46,7 +46,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('CON-EDISON Utility Session', () => {
   
-  test('CON-EDISON Electric Account', async ({moveInpage, page, context}) => {
+  test('CON-EDISON Electric Account', {tag: ['@regression'],}, async ({moveInpage, page, context}) => {
     
     test.setTimeout(900000);
 
