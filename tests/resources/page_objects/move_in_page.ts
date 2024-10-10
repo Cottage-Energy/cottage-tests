@@ -167,7 +167,7 @@ export class MoveInPage{
 
     //methods
     async Agree_on_Terms_and_Get_Started() {
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_PG_Description).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:30000});
@@ -265,7 +265,7 @@ export class MoveInPage{
 
 
     async CON_ED_Questions(){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_CON_ED_Questions_Title).toBeVisible({timeout:30000});
         //Answering the questions randomly
     }
@@ -281,7 +281,7 @@ export class MoveInPage{
         const randomIndex = Math.floor(Math.random() * options.length);
         const randomOption = options[randomIndex];
         console.log(randomOption);
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_BGE_Employment_Status_Title).toBeVisible({timeout:30000});
         await this.Move_In_BGE_Employment_Status_Dropdown.hover();
         await this.Move_In_BGE_Employment_Status_Dropdown.click();
@@ -292,7 +292,7 @@ export class MoveInPage{
 
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
@@ -303,7 +303,7 @@ export class MoveInPage{
 
 
     async CON_ED_Enter_ID_Info(birthdate:string, IDnumber:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
         await this.Move_In_Birthdate_Field.click({timeout:10000});
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
@@ -324,7 +324,7 @@ export class MoveInPage{
     }
 
     async Check_Payment_Page_Visibility(){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         const isVisible = await this.Move_In_Payment_Details_Title.isVisible();
         return isVisible;
     }
@@ -334,7 +334,7 @@ export class MoveInPage{
         let attempt = 0;
         let success = false;
         
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
@@ -383,7 +383,7 @@ export class MoveInPage{
     }
 
     async Enter_Valid_Bank_Details(Email:string, FullName:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
@@ -432,7 +432,7 @@ export class MoveInPage{
     }
 
     async Enter_Invalid_Bank_Details(Email:string, FullName:string){
-        await this.page.waitForLoadState('domcontentloaded' && 'load');
+        await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
