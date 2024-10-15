@@ -6,11 +6,11 @@ on:
     - cron: '0 0 * * 0'
 #    - cron: '0 0 * * 1'
 #    - cron: '0 0 * * 2'
-    - cron: '0 0 * * 3'
+    - cron: '0 17 * * 2'
 
 jobs:
   PG_Test_Run_Scheduled_Regression_Dev:
-    if: github.event.schedule == '0 0 * * 0' || github.event.schedule == '0 0 * * 3'
+    if: github.event.schedule == '0 0 * * 0' || github.event.schedule == '0 17 * * 2'
     uses: ./.github/workflows/main-workflow.yml
     with:
       logLevel: 'DEBUG'
