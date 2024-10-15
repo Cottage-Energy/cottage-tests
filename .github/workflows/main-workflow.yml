@@ -1,5 +1,5 @@
 name: Public-Grid-Test-Workflow
-run-name: PG ${{ github.event.inputs.scope || github.event.client_payload.scope }} Test Run Build ${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment }}
+run-name: PG ${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }} Test Run Build ${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
 
 on:
   workflow_call:
@@ -67,13 +67,13 @@ jobs:
 
     - name: Set environment variable
       run: |
-        echo "ENV=${{ github.event.inputs.environment || github.event.client_payload.environment }}" >> $GITHUB_ENV
+        echo "ENV=${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_ENV
 
     - name: Run Playwright tests
       run: |
-        if [ "${{ github.event.inputs.scope || github.event.client_payload.scope }}" == "Smoke" ]; then
+        if [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Smoke" ]; then
           npx playwright test --grep /@smoke/ --project=Chromium --project=Mobile_Chrome
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope }}" == "Regression" ]; then
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression" ]; then
           npx playwright test --grep /@regression/ --project=Chromium --project=Mobile_Chrome
         fi
 
@@ -81,5 +81,5 @@ jobs:
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: PG_${{ github.event.inputs.scope || github.event.client_payload.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment }}
+        name: PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
         path: test-results/*
