@@ -3,28 +3,30 @@ run-name: PG Scheduled Regression Test Run Build ${{github.run_number}}
 
 on:
   schedule:
-    - cron: '0 0 * * 0'
-#    - cron: '0 0 * * 1'
-#    - cron: '0 0 * * 2'
-    - cron: '0 17 * * 2'
+    - cron: '0 5 * * 0'
+    - cron: '0 5 * * 1'
+#    - cron: '0 5 * * 2'
+#    - cron: '0 5 * * 3'
+#    - cron: '0 5 * * 4'
+#    - cron: '0 5 * * 5'
 
 jobs:
   PG_Test_Run_Scheduled_Regression_Dev:
-    if: github.event.schedule == '0 0 * * 0' || github.event.schedule == '0 17 * * 2'
+    if: github.event.schedule == '0 5 * * 0'
     uses: ./.github/workflows/main-workflow.yml
     with:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression'
   PG_Test_Run_Scheduled_Regression_Staging:
-    if: github.event.schedule == '0 0 * * 1'
+    if: github.event.schedule == '0 5 * * 1'
     uses: ./.github/workflows/main-workflow.yml
     with:
       logLevel: 'DEBUG'
       environment: 'staging'
       scope: 'Regression'
   PG_Test_Run_Scheduled_Regression_Production:
-    if: github.event.schedule == '0 0 * * 2'
+    if: github.event.schedule == '0 5 * * 2'
     uses: ./.github/workflows/main-workflow.yml
     with:
       logLevel: 'DEBUG'

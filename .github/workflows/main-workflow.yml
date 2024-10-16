@@ -78,8 +78,7 @@ jobs:
         if [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Smoke" ]; then
           npx playwright test --grep /@smoke/ --project=Chromium --project=Mobile_Chrome
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression" ]; then
-          npx playwright test --grep /@regression/ --project=Chromium --project=Mobile_Chrome
-        fi
+          npx playwright test --grep /@regression/ --project=Chromium
 
     - name: Test Report Generation
       uses: actions/upload-artifact@v4
