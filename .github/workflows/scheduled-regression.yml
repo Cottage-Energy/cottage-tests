@@ -19,14 +19,14 @@ jobs:
       environment: 'dev'
       scope: 'Regression'
   PG_Test_Run_Scheduled_Regression_Staging:
-    if: github.event.schedule == '0 5 * * 1'
+    if: github.event.schedule == '0 5 * * 2'
     uses: ./.github/workflows/main-workflow.yml
     with:
       logLevel: 'DEBUG'
       environment: 'staging'
       scope: 'Regression'
   PG_Test_Run_Scheduled_Regression_Production:
-    if: github.event.schedule == '0 5 * * 2'
+    if: github.event.schedule == '0 5 * * 4'
     uses: ./.github/workflows/main-workflow.yml
     with:
       logLevel: 'DEBUG'
