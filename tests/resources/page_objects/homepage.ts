@@ -33,7 +33,7 @@ export class HomePage{
         
         this.Sign_In_Button = page.getByText('Sign In');
         this.Sign_In_Title = page.getByRole('heading', { name: 'Welcome Back 👋' });
-        this.Sign_In_Email_Field = page.locator('[id="\\:Rd9uufhra\\:-form-item"]');
+        this.Sign_In_Email_Field = page.locator('//input[@name="email"]');
         this.Sign_In_OTP_Button = page.getByRole('button', { name: 'Sign in with OTP' });
     }
 
@@ -45,6 +45,7 @@ export class HomePage{
         await this.page.waitForLoadState('load');
         await this.HowItWorks_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
         await expect (this.HowItWorks_Title).toBeVisible();
     }
 
@@ -53,6 +54,7 @@ export class HomePage{
         await this.page.waitForLoadState('load');
         await this.About_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
         await expect (this.About_Content).toBeVisible();
     }
 
@@ -60,6 +62,7 @@ export class HomePage{
         await this.page.waitForLoadState('load');
         await this.Resources_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
         await expect (this.Resources_Title).toBeVisible();
     }
 
@@ -67,6 +70,7 @@ export class HomePage{
         await this.page.waitForLoadState('load');
         await this.Developers_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
         await expect (this.Developers_Title).toBeVisible();
     }
 
@@ -74,6 +78,7 @@ export class HomePage{
         await this.page.waitForLoadState('load');
         await this.Sign_In_Button.click();
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
         await expect (this.Sign_In_Title).toBeVisible({timeout: 30000});
         await expect (this.Sign_In_Email_Field).toBeVisible();
         await expect (this.Sign_In_OTP_Button).toBeVisible();
