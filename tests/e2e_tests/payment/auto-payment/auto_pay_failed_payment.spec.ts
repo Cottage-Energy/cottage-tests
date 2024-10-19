@@ -295,7 +295,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
 });
 
 
-test.describe('Invalid Card to Valid Bank Auto Payment', () => {
+test.describe('xxInvalid Card to Valid Bank Auto Payment', () => {
 
     test('EVERSOURCE EVERSOURCE Electric Only Finish Account Added to Pay Button Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
@@ -518,7 +518,7 @@ test.describe('Invalid Card to Valid Bank Auto Payment', () => {
 });
 
 
-test.describe('Invalid Bank to Valid Card Auto Payment', () => {
+test.describe('xxInvalid Bank to Valid Card Auto Payment', () => {
     
     test('COMED Electric Move In Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY
@@ -745,7 +745,7 @@ test.describe('Invalid Bank to Valid Card Auto Payment', () => {
 });
 
 
-test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
+test.describe('xxInvalid Bank to Valid Bank Auto Payment', () => {
     
     test('NGMA NGMA Electric Profile Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
