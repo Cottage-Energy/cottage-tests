@@ -8,12 +8,13 @@ const supabaseQueries = new SupabaseQueries();
 //Modify flow such that if both electric and gas are false it will not continue the flow
 //Modify also, that if Electric is false and Gas is not visible it not continue the flow
 
-export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
@@ -27,7 +28,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -83,12 +84,13 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
 }
 
 
-export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
@@ -100,7 +102,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -119,12 +121,13 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
 }
 
 
-export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
@@ -136,7 +139,7 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -192,12 +195,13 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
 }
 
 
-export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
@@ -210,7 +214,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -298,12 +302,13 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
@@ -314,7 +319,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -363,12 +368,13 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
 }
 
 
-export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
@@ -381,7 +387,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -439,12 +445,13 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
@@ -455,7 +462,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -581,12 +588,13 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
 }
 
 
-export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
@@ -601,7 +609,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -622,12 +630,13 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
 }
 
 
-export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
@@ -642,7 +651,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -820,12 +829,13 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     };
 }
 
-export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
@@ -840,7 +850,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();

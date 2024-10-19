@@ -4,66 +4,75 @@ export class ProfilePage {
 
     //variables
     readonly page: Page;
-    readonly Overview_Outstanding_Balance: Locator;
-    readonly Overview_Make_Payment_Button: Locator;
+    readonly Profile_Account_Title: Locator;
 
-    readonly Overview_Electricity_Card: Locator;
-    readonly Overview_Gas_Card: Locator;
+    readonly Profile_Payment_Info_Tab: Locator;
+    readonly Profile_Payment_Info_Title: Locator;
+ 
 
-    readonly Overview_Get_Started_Widget: Locator
-    readonly Overview_Setup_Payment_Link: Locator
+    readonly Profile_Setup_Payment_Title: Locator
+    readonly Profile_Setup_Payment_Button: Locator
 
-    readonly Overview_Add_Payment_Title: Locator
-    readonly Overview_Service_Fee_Message: Locator
-    readonly Overview_Auto_Payment_Checkbox: Locator
-    readonly Overview_Save_Payment_Button: Locator
-    readonly Overview_Success_Message: Locator
+    readonly Profile_Edit_Payment_Button: Locator
 
-    readonly Overview_User_Menu: (firstName: string) => Locator;
-    readonly Overview_Profile_Button: Locator;
+    readonly Profile_Auto_Payment_Checkbox: Locator
+    readonly Profile_Save_Payment_Button: Locator
+    readonly Profile_Success_Message: Locator
+
+
 
     //locators
     constructor(page: Page) {
         this.page = page;
-        this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div');
-        this.Overview_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
 
-        this.Overview_Electricity_Card = page.locator('//span[text()="Electricity"]/parent::h3/parent::div/parent::div');
-        this.Overview_Gas_Card = page.locator('//span[text()="Gas"]/parent::h3/parent::div/parent::div');
+        this.Profile_Account_Title = page.getByRole('heading', { name: 'Account', exact: true });
 
-        this.Overview_Get_Started_Widget = page.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div');
-        this.Overview_Setup_Payment_Link = page.getByText('Setup a Payment Method');
+        this.Profile_Payment_Info_Tab = page.getByRole('tab', { name: 'Payment Information' });
+        this.Profile_Payment_Info_Title = page.getByRole('heading', { name: 'Payment Information' });
 
-        this.Overview_Add_Payment_Title = page.getByRole('heading', { name: 'Add Payment Method' });
-        this.Overview_Service_Fee_Message = page.getByText('Credit Card payments will be');
+        this.Profile_Setup_Payment_Title = page.locator('div').filter({ hasText: /^Set up payment method$/ }).first();
+        this.Profile_Setup_Payment_Button = page.getByRole('button', { name: 'Set Up Payment' });
 
-        this.Overview_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
-        this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
-        this.Overview_Success_Message = page.getByText('🥳 Success', { exact: true });
+        this.Profile_Edit_Payment_Button = page.getByRole('button', { name: 'Edit' });
 
-        this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
-        this.Overview_Profile_Button = page.getByRole('menuitem', { name: 'Profile' });
+        this.Profile_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
+        this.Profile_Save_Payment_Button = page.getByRole('button', { name: 'Save' });
+        
+        
+        this.Profile_Success_Message = page.getByText('🥳 Success', { exact: true });
+
     }
 
     //methods
-
-    async Go_to_Profile(firstName: string) {
-        await this.Overview_User_Menu(firstName).waitFor({state:"visible",timeout:10000});
-        await this.Overview_User_Menu(firstName).hover();
-        await this.Overview_User_Menu(firstName).click();
-        await this.Overview_Profile_Button.waitFor({state:"visible",timeout:10000});
-        await this.Overview_Profile_Button.hover();
-        await this.Overview_Profile_Button.click();
+    async Go_to_Payment_Info_Tab() {
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+        await expect(this.Profile_Payment_Info_Tab).toBeEnabled({timeout:30000});
+        await this.Profile_Payment_Info_Tab.hover();
+        await this.Profile_Payment_Info_Tab.click();
+        await expect(this.Profile_Payment_Info_Title).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(500);
     }
 
-    async Click_Setup_Payment_Link(){
-        await expect(this.Overview_Get_Started_Widget).toBeVisible({timeout:30000});
-        await this.Overview_Setup_Payment_Link.waitFor({state:"visible",timeout:10000});
-        await this.Overview_Setup_Payment_Link.hover({timeout:10000});
-        await this.Overview_Setup_Payment_Link.click({timeout:10000});
 
-        await expect(this.Overview_Add_Payment_Title).toBeVisible({timeout:30000});
-        await expect(this.Overview_Service_Fee_Message).toBeVisible({timeout:30000});
+    async click_Setup_Payment_Button(){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+        await expect(this.Profile_Setup_Payment_Title).toBeVisible({timeout:30000});
+        await expect(this.Profile_Setup_Payment_Button).toBeVisible({timeout:30000});
+        await this.Profile_Setup_Payment_Button.hover();
+        await this.Profile_Setup_Payment_Button.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    async click_Edit_Payment_Button(){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+        await expect(this.Profile_Edit_Payment_Button).toBeVisible({timeout:30000});
+        await expect(this.Profile_Edit_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Profile_Edit_Payment_Button.hover();
+        await this.Profile_Edit_Payment_Button.click();
+        await this.page.waitForTimeout(3000);
     }
 
 
@@ -72,7 +81,7 @@ export class ProfilePage {
         
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(5000);
     
         const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
         const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
@@ -118,12 +127,13 @@ export class ProfilePage {
         }
         await this.page?.waitForTimeout(500);
 
-        await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Overview_Save_Payment_Button.hover();
-        await this.Overview_Save_Payment_Button.click();
+        await expect(this.Profile_Save_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Profile_Save_Payment_Button.hover();
+        await this.page?.waitForTimeout(500);
+        await this.Profile_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+        await expect(this.Profile_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.page).toHaveURL(/.*\/app\/account.*/, { timeout: 30000 });
     }
 
 
@@ -178,18 +188,19 @@ export class ProfilePage {
         }
         await this.page?.waitForTimeout(500);
 
-        await expect(this.Overview_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
-        await this.Overview_Auto_Payment_Checkbox.hover();
-        await this.Overview_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
+        await expect(this.Profile_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
+        await this.Profile_Auto_Payment_Checkbox.hover();
+        await this.Profile_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
         
         await this.page?.waitForTimeout(500);
 
-        await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Overview_Save_Payment_Button.hover({timeout:10000});
-        await this.Overview_Save_Payment_Button.click();
+        await expect(this.Profile_Save_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Profile_Save_Payment_Button.hover({timeout:10000});
+        await this.page?.waitForTimeout(500);
+        await this.Profile_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+        await expect(this.Profile_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.page).toHaveURL(/.*\/app\/account.*/, { timeout: 30000 });
     }
 
 
@@ -240,13 +251,14 @@ export class ProfilePage {
         await DoneButton?.click();
         await this.page.waitForTimeout(1000);
 
-        await this.Overview_Save_Payment_Button.waitFor({state:"attached",timeout:10000});
-        await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Overview_Save_Payment_Button.hover({timeout:10000});
-        await this.Overview_Save_Payment_Button.click({timeout:10000});
+        await this.Profile_Save_Payment_Button.waitFor({state:"attached",timeout:10000});
+        await expect(this.Profile_Save_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Profile_Save_Payment_Button.hover({timeout:10000});
+        await this.page?.waitForTimeout(500);
+        await this.Profile_Save_Payment_Button.click({timeout:10000});
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+        await expect(this.Profile_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.page).toHaveURL(/.*\/app\/account.*/, { timeout: 30000 });
     }
 
 
@@ -296,18 +308,19 @@ export class ProfilePage {
         await DoneButton?.click();
         await this.page?.waitForTimeout(1000);
 
-        await expect(this.Overview_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
-        await this.Overview_Auto_Payment_Checkbox.hover();
-        await this.Overview_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
+        await expect(this.Profile_Auto_Payment_Checkbox).toBeEnabled({timeout:30000});
+        await this.Profile_Auto_Payment_Checkbox.hover();
+        await this.Profile_Auto_Payment_Checkbox.setChecked(false,{timeout:10000});
         
         await this.page?.waitForTimeout(500);
 
-        await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Overview_Save_Payment_Button.hover();
-        await this.Overview_Save_Payment_Button.click();
+        await expect(this.Profile_Save_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Profile_Save_Payment_Button.hover();
+        await this.page?.waitForTimeout(500);
+        await this.Profile_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+        await expect(this.Profile_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.page).toHaveURL(/.*\/app\/account.*/, { timeout: 30000 });
     }
 
     
@@ -358,58 +371,18 @@ export class ProfilePage {
         await DoneButton?.click();
         await this.page.waitForTimeout(1000);
 
-        await expect(this.Overview_Save_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Overview_Save_Payment_Button.hover();
-        await this.Overview_Save_Payment_Button.click();
+        await expect(this.Profile_Save_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Profile_Save_Payment_Button.hover();
+        await this.page?.waitForTimeout(500);
+        await this.Profile_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+        await expect(this.Profile_Success_Message).toBeVisible({timeout:30000});
+        await expect(this.page).toHaveURL(/.*\/app\/account.*/, { timeout: 30000 });
     }
 
     
 
-    //assertions
-
-    async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
-        const electricAmount = parseFloat(ElectricAmount);
-        const gasAmount = parseFloat(GasAmount) || 0;
-        
-        const totalAmount = (electricAmount + gasAmount);
-
-        if (totalAmount > 0) {
-            let totalAmount2dec = totalAmount.toFixed(2);
-            if (totalAmount2dec.endsWith('0')) {
-                totalAmount2dec = parseFloat(totalAmount2dec).toString();
-            }
-            console.log(`TOTAL: ${totalAmount2dec}`);
-            await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount2dec}`);
-        } else {
-            console.log(`TOTAL: ${totalAmount}`);
-            await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount}`);
-        }
-        
-    }
-
-
-    async Check_Outstanding_Balance_Auto_Pay_Message(message: string) {
-        await expect(this.Overview_Outstanding_Balance).toContainText(message);
-    }
-
-
-    async Check_Make_Payment_Button_Visible_Enable() {
-        await expect(this.Overview_Make_Payment_Button).toBeEnabled();
-        await expect(this.Overview_Make_Payment_Button).toBeVisible();
-    }
-
-
-    async Check_Electricity_Card_Not_Visible() {
-        await expect(this.Overview_Electricity_Card).toBeHidden();
-    }
-
-
-    async Check_Gas_Card_Not_Visible() {
-        await expect(this.Overview_Gas_Card).toBeHidden();
-    }
+    //assertionns
 
 
 
