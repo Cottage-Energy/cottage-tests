@@ -41,7 +41,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+    //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
     //await page.close();
 });
   
@@ -82,8 +82,11 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
     
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await overviewPage.Go_to_Profile(MoveIn.PGUserFirstName);
+
+
+
+        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(15000);

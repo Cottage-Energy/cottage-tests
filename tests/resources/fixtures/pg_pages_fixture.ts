@@ -5,6 +5,7 @@ import { SidebarChat } from '../page_objects/sidebar_chat';
 import { OverviewPage } from '../page_objects/overview_dashboard_page';
 import { BillingPage } from '../page_objects/billing_page';
 import { ServicesPage } from '../page_objects/services_page';
+import { ProfilePage } from '../page_objects/account_profile_page';
 
 
 type pages = {
@@ -14,6 +15,7 @@ type pages = {
     overviewPage: OverviewPage,
     billingPage: BillingPage
     servicesPage: ServicesPage
+    profilePage: ProfilePage
 }
 
 
@@ -41,6 +43,10 @@ const testPages = base.extend<pages>({
 
     servicesPage: async ({page},use) => {
         await use(new ServicesPage(page));
+    },
+
+    profilePage: async ({page},use) => {
+        await use(new ProfilePage(page));
     },
 
 

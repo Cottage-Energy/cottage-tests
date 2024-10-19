@@ -23,6 +23,9 @@ export class OverviewPage {
     readonly Overview_Save_Payment_Button: Locator
     readonly Overview_Success_Message: Locator
 
+    readonly Overview_User_Menu: (firstName: string) => Locator;
+    readonly Overview_Profile_Button: Locator;
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -41,9 +44,21 @@ export class OverviewPage {
         this.Overview_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.Overview_Success_Message = page.getByText('🥳 Success', { exact: true });
+
+        this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
+        this.Overview_Profile_Button = page.getByRole('menuitem', { name: 'Profile' });
     }
 
     //methods
+
+    async Go_to_Profile(firstName: string) {
+        await this.Overview_User_Menu(firstName).waitFor({state:"visible",timeout:10000});
+        await this.Overview_User_Menu(firstName).hover();
+        await this.Overview_User_Menu(firstName).click();
+        await this.Overview_Profile_Button.waitFor({state:"visible",timeout:10000});
+        await this.Overview_Profile_Button.hover();
+        await this.Overview_Profile_Button.click();
+    }
 
     async Click_Setup_Payment_Link(){
         await expect(this.Overview_Get_Started_Widget).toBeVisible({timeout:30000});

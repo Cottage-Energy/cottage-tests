@@ -12,6 +12,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -41,6 +42,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -50,6 +52,7 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -74,6 +77,7 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -83,6 +87,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -108,6 +113,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -117,6 +123,7 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -143,6 +150,7 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -152,6 +160,7 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -177,6 +186,7 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -186,6 +196,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -212,6 +223,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -221,6 +233,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -247,6 +260,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -256,6 +270,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -277,6 +292,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -286,6 +302,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -310,6 +327,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -319,6 +337,7 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -338,6 +357,7 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -347,6 +367,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -374,6 +395,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -383,6 +405,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -410,6 +433,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -419,6 +443,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -444,6 +469,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -453,6 +479,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -478,6 +505,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -487,6 +515,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -512,6 +541,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -521,6 +551,7 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -544,6 +575,7 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -553,6 +585,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -583,6 +616,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -592,6 +626,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -623,6 +658,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -632,6 +668,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -663,6 +700,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -672,6 +710,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -702,6 +741,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -711,6 +751,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -738,6 +779,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -747,6 +789,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -772,6 +815,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -780,6 +824,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -810,6 +855,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -819,6 +865,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -844,6 +891,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -853,6 +901,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -880,6 +929,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
@@ -889,6 +939,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -915,6 +966,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
         accountNumber,
         cottageUserId,
         PGUserName,
+        PGUserFirstName,
         PGUserEmail
     };
 }
