@@ -9,7 +9,7 @@ export class OverviewPage {
     //variables
     readonly page: Page;
     readonly Overview_Outstanding_Balance: Locator;
-    readonly Overview_Make_Payment_Button: Locator;
+    readonly Overview_Pay_Bill_Link: Locator;
 
     readonly Overview_Electricity_Card: Locator;
     readonly Overview_Gas_Card: Locator;
@@ -30,7 +30,7 @@ export class OverviewPage {
     constructor(page: Page) {
         this.page = page;
         this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div');
-        this.Overview_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
+        this.Overview_Pay_Bill_Link = page.locator('//button[contains(text(),"Pay Bill")]');
 
         this.Overview_Electricity_Card = page.locator('//span[text()="Electricity"]/parent::h3/parent::div/parent::div');
         this.Overview_Gas_Card = page.locator('//span[text()="Gas"]/parent::h3/parent::div/parent::div');
@@ -387,9 +387,11 @@ export class OverviewPage {
             }
             console.log(`TOTAL: ${totalAmount2dec}`);
             await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount2dec}`);
+            return totalAmount2dec;
         } else {
             console.log(`TOTAL: ${totalAmount}`);
             await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount}`);
+            return totalAmount;
         }
         
     }
@@ -400,9 +402,9 @@ export class OverviewPage {
     }
 
 
-    async Check_Make_Payment_Button_Visible_Enable() {
-        await expect(this.Overview_Make_Payment_Button).toBeEnabled();
-        await expect(this.Overview_Make_Payment_Button).toBeVisible();
+    async Check_Pay_Bill_Link_Visible_Enable() {
+        await expect(this.Overview_Pay_Bill_Link).toBeEnabled();
+        await expect(this.Overview_Pay_Bill_Link).toBeVisible();
     }
 
 
