@@ -687,11 +687,17 @@ export class PaymentUtilities {
 
       await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFee);
       await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-      billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
 
       await billingPage.Click_Gas_Bill_Pay_Button(PGuserUsage.GasUsage, PGuserUsage.GasAmountActual, PGuserUsage.GasServiceFee);
       await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
-      billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing");
+
+      await Promise.all([
+        billingPage.Check_Outstanding_Balance_Amount(0),
+        billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your $${oustandingAmount} payment is processing.`),
+        billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
+        billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing")
+      ]);
+
 
       await Promise.all([
           supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
@@ -782,7 +788,11 @@ export class PaymentUtilities {
       ]);
       await billingPage.Click_Gas_Bill_Pay_Button(PGuserUsage.GasUsage, PGuserUsage.GasAmountActual, PGuserUsage.GasServiceFee);
       await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
-      billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing");
+      await Promise.all([
+        billingPage.Check_Outstanding_Balance_Amount(0),
+        billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your $${oustandingAmount} payment is processing.`),
+        billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing")
+      ]);
       await page.waitForTimeout(30000);
       await page.reload({ waitUntil: 'domcontentloaded' });
       await Promise.all([
@@ -857,7 +867,11 @@ export class PaymentUtilities {
         ]);
         await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, null);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-        billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your $${oustandingAmount} payment is processing.`),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
+        ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
@@ -947,11 +961,15 @@ export class PaymentUtilities {
 
         await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, null);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-        billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing");
 
         await billingPage.Click_Gas_Bill_Pay_Button(PGuserUsage.GasUsage, PGuserUsage.GasAmountActual, null);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
-        billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing");
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your $${oustandingAmount} payment is processing.`),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing")
+        ]);
 
         await Promise.all([
         supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
@@ -1043,7 +1061,11 @@ export class PaymentUtilities {
         ]);
         await billingPage.Click_Gas_Bill_Pay_Button(PGuserUsage.GasUsage, PGuserUsage.GasAmountActual, null);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
-        billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing");
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your $${oustandingAmount} payment is processing.`),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing")
+        ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
