@@ -414,7 +414,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId),
             supabaseQueries.Check_Gas_Bill_Processing(GasAccountId)
         ]);
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.reload();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your $${oustandingAmount} payment is processing.`),
