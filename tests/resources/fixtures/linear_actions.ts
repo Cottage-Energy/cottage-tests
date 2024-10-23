@@ -152,7 +152,7 @@ export class LinearActions{
         const BillingIssues = await linearClient.issues({
             filter: {
                 team: { id: { eq: BillingteamId } },
-                description: { contains: Email },
+                description: { contains: emailLower },
             },
         });
 
