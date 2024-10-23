@@ -152,7 +152,7 @@ export class MoveInPage{
         this.Move_In_Auto_Payment_Checbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit', exact: true });
         this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now (and Submit)' });
-        this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add Bill Payment Method' });
+        this.Move_In_Payment_Details_Title = page.locator('//h3[text()="Add Bill Payment Method"]');
         this.Move_In_Service_Fee_Message = page.getByText('Card payments will be charged');
         this.Move_In_Success_Message = page.getByText('Success🥳Your account is');
         this.Move_In_Account_Number = page.getByText('Account Number:');
@@ -327,7 +327,10 @@ export class MoveInPage{
 
     async Check_Payment_Page_Visibility(){
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+        await this.page.waitForTimeout(3000);
         const isVisible = await this.Move_In_Payment_Details_Title.isVisible();
+        console.log(isVisible);
         return isVisible;
     }
 
