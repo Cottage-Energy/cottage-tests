@@ -7,6 +7,7 @@ const env = process.env.ENV || 'dev';
 export class LinearActions{
 
     async SetElectricBillToApprove(Email: string) {
+        const emailLower = Email.toLowerCase();
         const BillingteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `billing-${env}` } } })).nodes[0].id;
         const NullStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "null" } } })).nodes[0].id;
         const ApprovedStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "approved" } } })).nodes[0].id;
@@ -21,7 +22,7 @@ export class LinearActions{
             issuesResponse = await linearClient.issues({
                 filter: {
                     team: { id: { eq: BillingteamId } },
-                    description: { contains: Email },
+                    description: { contains: emailLower },
                     state: { id: { eq: NullStatusId } },
                     title: { contains: "Electric Bill" },
                 },
@@ -53,6 +54,7 @@ export class LinearActions{
 
 
     async SetGasBillToApprove(Email: string) {
+        const emailLower = Email.toLowerCase();
         const BillingteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `billing-${env}` } } })).nodes[0].id;
         const NullStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "null" } } })).nodes[0].id;
         const ApprovedStatusId = (await linearClient.workflowStates({ filter: { team: { id: { eq: BillingteamId } }, name: { eqIgnoreCase: "approved" } } })).nodes[0].id;
@@ -67,7 +69,7 @@ export class LinearActions{
             issuesResponse = await linearClient.issues({
                 filter: {
                     team: { id: { eq: BillingteamId } },
-                    description: { contains: Email },
+                    description: { contains: emailLower },
                     state: { id: { eq: NullStatusId } },
                     title: { contains: "Gas Bill" },
                 },
@@ -100,6 +102,7 @@ export class LinearActions{
 
 
     async CountMoveInTicket(Email: string, ExpectedCount: number) {
+        const emailLower = Email.toLowerCase();
         const MoveInteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `move-ins-${env}` } } })).nodes[0].id;
 
         const maxRetries = 2;
@@ -112,7 +115,7 @@ export class LinearActions{
             issuesResponse = await linearClient.issues({
                 filter: {
                     team: { id: { eq: MoveInteamId } },
-                    title: { contains: Email },
+                    title: { contains: emailLower },
                 },
             });
         
@@ -134,13 +137,14 @@ export class LinearActions{
 
 
     async DeleteLinearTickets(Email: string) {
+        const emailLower = Email.toLowerCase();
         const MoveInteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `move-ins-${env}` } } })).nodes[0].id;
         const BillingteamId = (await linearClient.teams({ filter: { name: { eqIgnoreCase: `billing-${env}` } } })).nodes[0].id;
   
         const MoveInIssues = await linearClient.issues({
             filter: {
                 team: { id: { eq: MoveInteamId } },
-                title: { contains: Email },
+                title: { contains: emailLower },
             },
         });
         

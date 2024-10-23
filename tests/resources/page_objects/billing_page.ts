@@ -183,6 +183,8 @@ export class BillingPage {
             console.log(`TOTAL: ${totalAmount}`);
             await expect(this.Billing_Outstanding_Balance).toContainText(`${totalAmount}`);
         }
+
+        return totalAmount.toFixed(2);
         
     }
 

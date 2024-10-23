@@ -4,10 +4,12 @@ import {supabase} from '../../resources/utils/supabase';
 export class SupabaseQueries{
 
     async Get_Cottage_User_Id(Email: string) {
+        const email = Email.toLowerCase();
+        console.log(email);
         const { data: cottageUser } = await supabase
             .from('CottageUsers')
             .select('id')
-            .eq('email', Email)
+            .eq('email', email)
             .single()
             .throwOnError();
         const cottageUserId = cottageUser?.id ?? '';
@@ -18,10 +20,11 @@ export class SupabaseQueries{
 
 
     async Check_Cottage_User_Account_Number(Email: string) {
+        const email = Email.toLowerCase();
         const { data: cottageUser } = await supabase
             .from('CottageUsers')
             .select('accountNumber')
-            .eq('email', Email)
+            .eq('email', email)
             .single()
             .throwOnError();
         const cottageUserAccountNUmber = cottageUser?.accountNumber ?? '';

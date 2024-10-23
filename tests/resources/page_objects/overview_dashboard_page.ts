@@ -387,12 +387,12 @@ export class OverviewPage {
             }
             console.log(`TOTAL: ${totalAmount2dec}`);
             await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount2dec}`);
+            return totalAmount2dec;
         } else {
             console.log(`TOTAL: ${totalAmount}`);
             await expect(this.Overview_Outstanding_Balance).toContainText(`${totalAmount}`);
+            return totalAmount;
         }
-
-        return totalAmount.toFixed(2);
         
     }
 
