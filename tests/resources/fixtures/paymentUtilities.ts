@@ -59,8 +59,8 @@ export class PaymentUtilities {
         ]);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await Promise.all([
-            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
@@ -152,8 +152,10 @@ export class PaymentUtilities {
         ]);
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
-            supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
+        ]);
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -242,8 +244,8 @@ export class PaymentUtilities {
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
         await Promise.all([
-            supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
@@ -324,8 +326,8 @@ export class PaymentUtilities {
         ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await Promise.all([
-            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
@@ -423,8 +425,10 @@ export class PaymentUtilities {
         ]);
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
-            supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
+        ]);
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
         ]);
         await page.waitForTimeout(30000);
@@ -518,6 +522,7 @@ export class PaymentUtilities {
         ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
@@ -601,8 +606,8 @@ export class PaymentUtilities {
         ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await Promise.all([
-            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
@@ -701,10 +706,14 @@ export class PaymentUtilities {
 
       await Promise.all([
           supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
-          supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
           supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
-          supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
       ]);
+
+      
+      await Promise.all([
+        supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
+        supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
+    ]);
 
       await page.waitForTimeout(30000);
       await page.reload({ waitUntil: 'domcontentloaded' });
@@ -795,8 +804,8 @@ export class PaymentUtilities {
       ]);
       await page.waitForTimeout(30000);
       await page.reload({ waitUntil: 'domcontentloaded' });
+      await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
       await Promise.all([
-          supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
           supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
           billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
           billingPage.Check_Outstanding_Balance_Amount(0),
@@ -874,8 +883,8 @@ export class PaymentUtilities {
         ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await Promise.all([
-            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
@@ -973,10 +982,13 @@ export class PaymentUtilities {
 
         await Promise.all([
         supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
-        supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
         supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
-        supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
         ]);
+
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
+            supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
+        ]);     
 
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1068,8 +1080,8 @@ export class PaymentUtilities {
         ]);
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
         await Promise.all([
-            supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),

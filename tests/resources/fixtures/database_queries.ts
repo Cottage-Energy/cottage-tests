@@ -200,7 +200,7 @@ export class SupabaseQueries{
     
     async Check_Electric_Bill_Paid_Notif(ElectricAccountId: string, state:boolean) {
         
-        const maxRetries = 10;
+        const maxRetries = 20;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let ElectricBillpaidNotif = false;
@@ -267,7 +267,7 @@ export class SupabaseQueries{
 
 
     async Check_Electric_Bill_Status(ElectricAccountId: string, status: string) {
-        const maxRetries = 100;
+        const maxRetries = 300;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let ElectricBillstatus = '';
@@ -290,7 +290,7 @@ export class SupabaseQueries{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(5000);
+            await delay(3000);
         }
         
         // If the loop exits without matching the status, throw an error
@@ -301,7 +301,7 @@ export class SupabaseQueries{
 
 
     async Check_Gas_Bill_Status(GasAccountId: string, status:string) {
-        const maxRetries = 100;
+        const maxRetries = 300;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let GasBillstatus = '';
@@ -324,7 +324,7 @@ export class SupabaseQueries{
             
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(5000);
+            await delay(3000);
         }
             
         // If the loop exits without matching the status, throw an error
