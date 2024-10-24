@@ -328,7 +328,7 @@ export class MoveInPage{
     async Check_Payment_Page_Visibility(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(5000);
         const isVisible = await this.Move_In_Payment_Details_Title.isVisible();
         console.log(isVisible);
         return isVisible;
