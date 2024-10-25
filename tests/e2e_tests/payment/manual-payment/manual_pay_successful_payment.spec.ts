@@ -109,7 +109,7 @@ test.describe('Valid Card Manual Payment', () => {
 
   test('CON-EDISON CON-EDISON Electric Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
   
-      test.setTimeout(900000);
+      test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
@@ -147,7 +147,7 @@ test.describe('Valid Card Manual Payment', () => {
   
   test('EVERSOURCE EVERSOURCE Electric & Gas Valid Manual Card Payment Move In Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
-      test.setTimeout(900000);
+      test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
@@ -187,7 +187,7 @@ test.describe('Valid Card Manual Payment', () => {
 
   test('NGMA BGE Electric & Gas Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
-      test.setTimeout(900000);
+      test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
@@ -229,7 +229,7 @@ test.describe('Valid Card Manual Payment', () => {
   
   test('COMED COMED  Gas Only Valid Manual Card Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
-      test.setTimeout(900000);
+      test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
@@ -265,7 +265,7 @@ test.describe('Valid Card Manual Payment', () => {
 
   test('EVERSOURCE BGE Gas Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
-      test.setTimeout(900000);
+      test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
@@ -303,7 +303,7 @@ test.describe('Valid Card Manual Payment', () => {
   
   test('EVERSOURCE Gas Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
-      test.setTimeout(900000);
+      test.setTimeout(1800000);
   
       const PGuserUsage = await generateTestUserData();
       
@@ -370,7 +370,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('COMED COMED Electric Only Valid Bank Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -408,7 +408,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('COMED CON-EDISON Electric Only Valid Bank Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -446,7 +446,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('BGE BGE Electric & Gas Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -486,7 +486,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('BGE NGMA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -528,7 +528,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('NGMA NGMA Gas Only Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -564,7 +564,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('CON-EDISON EVERSOURCE Gas Only Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
@@ -600,7 +600,7 @@ test.describe('Valid Bank Manual Payment', () => {
 
   test('COMED Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
-    test.setTimeout(900000);
+    test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     

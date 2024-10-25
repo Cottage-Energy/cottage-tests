@@ -325,8 +325,8 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing")
         ]);
         await page.waitForTimeout(30000);
-        await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
