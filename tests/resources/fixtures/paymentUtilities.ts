@@ -882,8 +882,8 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
         ]);
         await page.waitForTimeout(30000);
-        await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
@@ -989,7 +989,6 @@ export class PaymentUtilities {
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
         ]);     
-
         await page.waitForTimeout(30000);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
@@ -1079,8 +1078,8 @@ export class PaymentUtilities {
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing")
         ]);
         await page.waitForTimeout(30000);
-        await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
