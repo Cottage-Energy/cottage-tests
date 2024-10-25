@@ -521,8 +521,8 @@ export class PaymentUtilities {
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing"),
         ]);
         await page.waitForTimeout(30000);
-        await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded"),
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
