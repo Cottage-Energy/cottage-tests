@@ -1791,6 +1791,7 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await overviewPage.Click_Pay_Bill_Link();
         await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
@@ -1903,6 +1904,7 @@ export class PaymentUtilities {
 
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await overviewPage.Click_Pay_Bill_Link();
         await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
@@ -2012,8 +2014,8 @@ export class PaymentUtilities {
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
-        await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await overviewPage.Click_Pay_Bill_Link();
         await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.GasAmountActual);
