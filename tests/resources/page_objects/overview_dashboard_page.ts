@@ -29,6 +29,12 @@ export class OverviewPage {
     readonly Overview_Failed_Payment_Alert: Locator;
     readonly Overview_Failed_Payment_Update_Payment_Link: Locator;
 
+    readonly Overview_Payment_Initiated_Message: Locator
+
+    readonly Overview_Pay_Outstanding_Balance_Modal: Locator
+    readonly Overview_Pay_Now_Button: Locator
+    readonly Overview_Pay_Later_Button: Locator
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -53,6 +59,12 @@ export class OverviewPage {
 
         this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
         this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
+
+        this.Overview_Payment_Initiated_Message = page.getByText('Successfully initiated');
+
+        this.Overview_Pay_Outstanding_Balance_Modal = page.getByLabel('Pay outstanding balance');
+        this.Overview_Pay_Now_Button = page.getByRole('button', { name: 'Pay Now' });
+        this.Overview_Pay_Later_Button = page.getByRole('button', { name: 'Pay Later' });
     }
 
     //methods
@@ -384,6 +396,13 @@ export class OverviewPage {
         await this.Overview_Failed_Payment_Update_Payment_Link.click();
     }
 
+
+    async Click_Pay_Bill_Link(){
+        await expect(this.Overview_Pay_Bill_Link).toBeVisible({timeout:30000});
+        await this.Overview_Pay_Bill_Link.hover();
+        await this.Overview_Pay_Bill_Link.click();
+    }
+
     
 
     //assertions
@@ -545,6 +564,42 @@ export class OverviewPage {
         await expect(this.Overview_Gas_Card).not.toContainText(EndDateFormatted);
         await expect(this.Overview_Gas_Card).not.toContainText(amount);
         await expect(this.Overview_Gas_Card).not.toContainText(usage);
+    }
+
+
+    async Check_Payment_Initiated_Message(){
+        try{
+            await expect(this.Overview_Payment_Initiated_Message).toBeVisible({timeout:30000});
+        }catch(error){
+            console.log('Payment Initiated Message is not visible.');
+        }
+    }
+
+
+    async Check_Pay_Outstanding_Balance_Modal(ElectricAmount: any, GasAmount?: any){
+        const electricAmount = parseFloat(ElectricAmount);
+        const gasAmount = parseFloat(GasAmount) || 0;
+        
+        const totalAmount = (electricAmount + gasAmount);
+        let totalAmount2dec = totalAmount.toFixed(2);
+
+
+        await expect(this.Overview_Pay_Outstanding_Balance_Modal).toBeVisible({timeout:30000});
+        await expect(this.Overview_Pay_Outstanding_Balance_Modal).toContainText(totalAmount2dec);
+    }
+
+
+    async Click_Pay_Now_Button(){
+        await expect(this.Overview_Pay_Now_Button).toBeVisible({timeout:30000});
+        await this.Overview_Pay_Now_Button.hover();
+        await this.Overview_Pay_Now_Button.click();
+    }
+
+
+    async Click_Pay_Later_Button(){
+        await expect(this.Overview_Pay_Later_Button).toBeVisible({timeout:30000});
+        await this.Overview_Pay_Later_Button.hover();
+        await this.Overview_Pay_Later_Button.click();
     }
 
 

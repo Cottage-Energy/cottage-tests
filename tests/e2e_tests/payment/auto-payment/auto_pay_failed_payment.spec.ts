@@ -90,8 +90,6 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
-
-        
         await paymentUtilities.Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
     });
     
@@ -132,8 +130,6 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
       await page.waitForTimeout(500);
-
-
       await paymentUtilities.Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
@@ -170,14 +166,11 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
-
-
-
         await paymentUtilities.Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
 
 
-    test('CON-EDISON Electric Only Move In Added to Pay Bill Link Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('CON-EDISON Electric Only Move In Added to Pay Bill Link Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
       
         test.setTimeout(1800000);
     
@@ -198,10 +191,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
-
-
-
-        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
     });
   
 
@@ -246,14 +236,11 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
       await page.waitForTimeout(500);
-
-
-
-      await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+      await paymentUtilities.Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
   
-    test('COMED Gas Only Finish Account Added to Pay Bill Link Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Gas Only Finish Account Added to Pay Bill Link Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
       
       test.setTimeout(1800000);
   
@@ -287,9 +274,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
       const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
       await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
       await page.waitForTimeout(500);
-
-
-      await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+      await paymentUtilities.Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
   
 });
