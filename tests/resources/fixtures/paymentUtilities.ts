@@ -1,7 +1,7 @@
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { LinearActions } from '../../resources/fixtures/linear_actions';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
-import OverviewPage from '../page_objects/overview_dashboard_page';
+import * as PaymentData from '../../resources/data/payment-data.json';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
@@ -58,8 +58,8 @@ export class PaymentUtilities {
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
         ]);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
-        await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
@@ -243,8 +243,8 @@ export class PaymentUtilities {
             FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
-        await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, true),
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
@@ -1100,6 +1100,101 @@ export class PaymentUtilities {
                     
         ]);
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    async Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+        //AUTO PAYMENT CHECKS
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
+            supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true),
+        ]);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+            //platform check
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
+        ]);
+        await sidebarChat.Goto_Billing_Page_Via_Icon();
+        await Promise.all([
+            billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay")
+        ]);
+        await page.waitForTimeout(1000);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
+        await page.waitForTimeout(10000);
+        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await page.waitForTimeout(10000);
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
+        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
+            //check platform outstanding balance not 0
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
+        ]);
+        await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "failed");
+        await page.waitForTimeout(5000);
+        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, null, 1);
+
+        await sidebarChat.Goto_Billing_Page_Via_Icon();
+        await page.waitForTimeout(1000);
+        await Promise.all([
+            billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
+            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
+            billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
+        ]);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+        //UPDATE PAYMENT Section
+        await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
+        await profilePage.Go_to_Payment_Info_Tab();
+        await profilePage.click_Edit_Payment_Button();
+        await profilePage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await profilePage.Check_Payment_Initiated_Message();
+        await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await sidebarChat.Goto_Billing_Page_Via_Icon();
+        await page.waitForTimeout(1000);
+
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, true),
+            billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
+            billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
+            supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee)
+        ]);
+        await page.waitForTimeout(5000);
+        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+            //check platform dashboard
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message("Enrolled in Auto-pay"),
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
+        ]);
+    }
+
     
 }
 

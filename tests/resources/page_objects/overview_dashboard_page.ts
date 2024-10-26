@@ -26,6 +26,9 @@ export class OverviewPage {
     readonly Overview_User_Menu: (firstName: string) => Locator;
     readonly Overview_Profile_Button: Locator;
 
+    readonly Overview_Failed_Payment_Alert: Locator;
+    readonly Overview_Failed_Payment_Update_Payment_Link: Locator;
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -47,6 +50,9 @@ export class OverviewPage {
 
         this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
         this.Overview_Profile_Button = page.getByRole('menuitem', { name: 'Profile' });
+
+        this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
+        this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
     }
 
     //methods
@@ -368,6 +374,14 @@ export class OverviewPage {
 
         await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+    }
+
+
+    async Check_Click_Failed_Payment_Update_Payment_Link(){
+        await expect(this.Overview_Failed_Payment_Alert).toBeVisible({timeout:10000});  
+        await this.Overview_Failed_Payment_Update_Payment_Link.waitFor({state:"visible",timeout:10000});
+        await this.Overview_Failed_Payment_Update_Payment_Link.hover();
+        await this.Overview_Failed_Payment_Update_Payment_Link.click();
     }
 
     

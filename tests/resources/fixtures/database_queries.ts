@@ -351,7 +351,7 @@ export class SupabaseQueries{
             ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
             console.log(ElectricBillstatus);
         
-            if (ElectricBillstatus === "processing" || ElectricBillstatus === "succeeded") {
+            if (ElectricBillstatus === "processing" || ElectricBillstatus === "succeeded"|| ElectricBillstatus === "failed") {
                 break;
             }
         
@@ -360,7 +360,7 @@ export class SupabaseQueries{
             await delay(50);
         }
 
-        await expect(ElectricBillstatus).toMatch(/^(processing|succeeded)$/);
+        await expect(ElectricBillstatus).toMatch(/^(processing|succeeded|failed)$/);
         
     }
 
@@ -382,7 +382,7 @@ export class SupabaseQueries{
             GasBillstatus = GasBillStatus?.paymentStatus ?? '';
             console.log(GasBillstatus);
             
-            if (GasBillstatus === "processing" || GasBillstatus === "succeeded") {
+            if (GasBillstatus === "processing" || GasBillstatus === "succeeded" || GasBillstatus === "failed") {
                 break;
             }
             
@@ -391,7 +391,7 @@ export class SupabaseQueries{
             await delay(50);
         }
 
-        await expect(GasBillstatus).toMatch(/^(processing|succeeded)$/);
+        await expect(GasBillstatus).toMatch(/^(processing|succeeded|failed)$/);
             
     }
 

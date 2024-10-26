@@ -197,6 +197,31 @@ export async function Check_Gas_Bill_Payment_Success(Email: string, GasBillTotal
 }
 
 
+export async function Check_Failed_Payment_Email(Email: string, ElectricBillTotal: any, GasBillTotal: any | null, ExpectedEmail: number) {
+    const maxRetries = 2;
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    let content: any[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `[Action Required] Update your Payment Details`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) {
+            break;
+        }
+        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
+        await delay(30000); // delay
+    }
+    if (!content || content.length === 0) {
+        throw new Error("Failed to Failed Payment email after multiple attempts.");
+    }
+
+    const email_body = content[0].bodyValues[1].value;
+    await expect(content.length).toEqual(ExpectedEmail);
+    //await expect(email_body).toContain(`$${ElectricBillTotal}`);
+}
+
+
+
+
+
 
 
 
@@ -208,6 +233,7 @@ export const FastmailActions = {
     Check_Electric_Bill_Payment_Success,
     Check_Gas_Bill_Scheduled_Payment_Email,
     Check_Gas_Bill_Ready_Email,
-    Check_Gas_Bill_Payment_Success
+    Check_Gas_Bill_Payment_Success,
+    Check_Failed_Payment_Email
     
 };

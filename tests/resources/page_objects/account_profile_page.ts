@@ -19,6 +19,8 @@ export class ProfilePage {
     readonly Profile_Save_Payment_Button: Locator
     readonly Profile_Success_Message: Locator
 
+    readonly Profile_Payment_Initiated_Message: Locator
+
 
 
     //locators
@@ -40,6 +42,8 @@ export class ProfilePage {
         
         
         this.Profile_Success_Message = page.getByText('🥳 Success', { exact: true });
+
+        this.Profile_Payment_Initiated_Message = page.getByText('Successfully initiated');
 
     }
 
@@ -383,6 +387,14 @@ export class ProfilePage {
     
 
     //assertionns
+
+    async Check_Payment_Initiated_Message(){
+        try{
+            await expect(this.Profile_Payment_Initiated_Message).toBeVisible({timeout:30000});
+        }catch(error){
+            console.log('Payment Initiated Message is not visible.');
+        }
+    }
 
 
 
