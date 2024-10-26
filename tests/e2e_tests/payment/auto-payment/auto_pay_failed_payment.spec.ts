@@ -96,7 +96,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
     });
     
   
-    test('CON-EDISON CON-EDISON Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('CON-EDISON CON-EDISON Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
       
       test.setTimeout(1800000);
   
@@ -134,11 +134,11 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
       await page.waitForTimeout(500);
 
 
-      await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+      await paymentUtilities.Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
-    test('BGE COMED Gas Only Move In Added to Failed Message Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE COMED Gas Only Move In Added to Failed Message Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
       
         test.setTimeout(1800000);
     
@@ -173,7 +173,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
 
 
 
-        await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
 
 

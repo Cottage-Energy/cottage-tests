@@ -197,7 +197,7 @@ export async function Check_Gas_Bill_Payment_Success(Email: string, GasBillTotal
 }
 
 
-export async function Check_Failed_Payment_Email(Email: string, ElectricBillTotal: any, GasBillTotal: any | null, ExpectedEmail: number) {
+export async function Check_Failed_Payment_Email(Email: string, ElectricBillTotal: any | null, GasBillTotal: any | null) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
@@ -210,12 +210,35 @@ export async function Check_Failed_Payment_Email(Email: string, ElectricBillTota
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to Failed Payment email after multiple attempts.");
+        throw new Error("Failed to Get Failed Payment email after multiple attempts.");
     }
 
-    const email_body = content[0].bodyValues[1].value;
-    await expect(content.length).toEqual(ExpectedEmail);
-    //await expect(email_body).toContain(`$${ElectricBillTotal}`);
+
+    if (ElectricBillTotal === null) {
+        const email_body = content[0].bodyValues[1].value;
+        //await expect(content.length).toEqual(1);
+
+        await expect(email_body).toContain(`$${GasBillTotal}`);
+    }
+    else if (GasBillTotal === null) {
+        const email_body = content[0].bodyValues[1].value;
+        //await expect(content.length).toEqual(1);
+
+        await expect(email_body).toContain(`$${ElectricBillTotal}`);
+    }
+    else {
+        const email1_body = content[0].bodyValues[1].value;
+        const email2_body = content[1].bodyValues[1].value;
+        //await expect(content.length).toEqual(2);
+
+        try {
+            await expect(email1_body).toContain(`$${ElectricBillTotal}`);
+            await expect(email2_body).toContain(`$${GasBillTotal}`);
+        } catch (error) {
+            await expect(email1_body).toContain(`$${GasBillTotal}`);
+            await expect(email2_body).toContain(`$${ElectricBillTotal}`);
+        }
+    }
 }
 
 
