@@ -60,7 +60,7 @@ export class OverviewPage {
         this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
         this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
 
-        this.Overview_Payment_Initiated_Message = page.getByText('Successfully initiated'); //getByText('Notification 🥳');
+        this.Overview_Payment_Initiated_Message = page.getByText('Notification 🥳'); //getByText('Successfully initiated'); //
 
         this.Overview_Pay_Outstanding_Balance_Modal = page.getByLabel('Pay outstanding balance');
         this.Overview_Pay_Now_Button = page.getByRole('button', { name: 'Pay Now' });
