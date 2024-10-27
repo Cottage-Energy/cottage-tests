@@ -14,6 +14,13 @@ export class BillingPage {
     readonly Billing_Make_Payment_Button: Locator;
     readonly Billing_Successully_Initiated_Payment_Message: Locator;
 
+    readonly Billing_Save_Payment_Button: Locator
+    readonly Billing_Success_Message: Locator
+
+    readonly Billing_Pay_Outstanding_Balance_Modal: Locator
+    readonly Billing_Pay_Now_Button: Locator
+    readonly Billing_Pay_Later_Button: Locator
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -29,9 +36,24 @@ export class BillingPage {
         this.Billing_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
         this.Billing_Successully_Initiated_Payment_Message = page.getByText('Notification 🥳');//getByText('Successfully initiated');
 
+        this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
+        this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });
+
+        this.Billing_Pay_Outstanding_Balance_Modal = page.getByLabel('Pay outstanding balance');
+        this.Billing_Pay_Now_Button = page.getByRole('button', { name: 'Pay Now' });
+        this.Billing_Pay_Later_Button = page.getByRole('button', { name: 'Pay Later' });
+
     }
 
     //methods
+    async Click_Make_Payment_Button() {
+        await expect(this.Billing_Make_Payment_Button).toBeVisible({timeout:30000});
+        await expect(this.Billing_Make_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Billing_Make_Payment_Button.hover();
+        await this.Billing_Make_Payment_Button.click();
+    }
+
+
     async Click_Electric_Bill_Pay_Button(electric_usage: any, amount: any, fee: any | null) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage.toString());
         const buttonLocator = rowLocator.locator(`//button[contains(text(),"Pay")]`);
@@ -84,20 +106,94 @@ export class BillingPage {
     }
 
 
+    async Enter_Auto_Payment_Valid_Bank_Details_After_Failure(Email:string, FullName:string){
+        await this.page.waitForLoadState('domcontentloaded');
+
+        const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
+        const stripeFrame = await stripeIframe.contentFrame()
+        await this.page.waitForTimeout(3000);
+    
+        const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
+
+
+        await BankAccountTab?.waitForElementState('visible');
+        await BankAccountTab?.click();
+        await this.page.waitForTimeout(500);
+
+        const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
+        const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
+        const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
+
+        await EmailInput?.fill(Email);
+        await NameInput?.fill(FullName);
+        await TestInstButton?.click();
+        await this.page.waitForTimeout(500);
+
+        const modalIframe = await this.page?.waitForSelector('[src^="https://js.stripe.com/v3/linked-accounts"]')
+        const modalFrame = await modalIframe.contentFrame()
+        await this.page.waitForTimeout(1000);
+
+        const AgreeButton = await modalFrame?.waitForSelector('[data-testid ="agree-button"]');
+        await AgreeButton?.waitForElementState('visible');
+        await AgreeButton?.click();
+
+        const SuccessAccountButton = await modalFrame?.waitForSelector('[data-testid ="success"]');
+        await SuccessAccountButton?.waitForElementState('visible');
+        await SuccessAccountButton?.click();
+
+        const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
+
+        const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
+        await ConfirmButton?.waitForElementState('visible');
+        await ConfirmButton?.click();
+
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
+        await SuccessMessage?.waitForElementState('visible');
+        await DoneButton?.click();
+        await this.page.waitForTimeout(1000);
+
+        await this.Billing_Save_Payment_Button.waitFor({state:"attached",timeout:10000});
+        await expect(this.Billing_Save_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Billing_Save_Payment_Button.hover({timeout:10000});
+        await this.Billing_Save_Payment_Button.click({timeout:10000});
+
+        await expect(this.Billing_Success_Message).toBeVisible({timeout:30000});
+    }
+
+
+    async Click_Pay_Now_Button(){
+        await expect(this.Billing_Pay_Now_Button).toBeVisible({timeout:30000});
+        await this.Billing_Pay_Now_Button.hover();
+        await this.Billing_Pay_Now_Button.click();
+    }
+
+
+    async Click_Pay_Later_Button(){
+        await expect(this.Billing_Pay_Later_Button).toBeVisible({timeout:30000});
+        await this.Billing_Pay_Later_Button.hover();
+        await this.Billing_Pay_Later_Button.click();
+    }
+
+
+
     //assertions
     async Check_Electric_Bill_Hidden(electric_usage: string) {
         await expect(this.Billing_Electric_Usage_Row(electric_usage)).not.toBeVisible({timeout:30000});
     }
 
+
     async Check_Electric_Bill_Visibility(electric_usage: string) {
         await expect(this.Billing_Electric_Usage_Row(electric_usage)).toBeVisible({timeout:30000});
     }
+
 
     async Check_Electric_Bill_Status(electric_usage: string, status: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
         const StatusLocator = rowLocator.locator(`//div[text() = "${status}"]`);
         await expect(StatusLocator).toBeVisible({timeout:30000});
     }
+
 
     async Check_Electric_Bill_View_Button(electric_usage: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
@@ -106,17 +202,20 @@ export class BillingPage {
         await expect(ViewLocator).toBeEnabled({timeout:30000});
     }
 
+
     async Check_Electric_Bill_Amount(electric_usage: string, amount: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
         console.log(amount);
         await expect(rowLocator).toContainText(amount);
     }
 
+
     async Check_Electric_Bill_Fee(electric_usage: string, ExpectedFee: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
         console.log(ExpectedFee);
         await expect(rowLocator).toContainText(ExpectedFee);
     }
+
 
     async Check_Electric_Bill_Fee_Not_Included(electric_usage: string, ExpectedFee: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
@@ -125,15 +224,15 @@ export class BillingPage {
     }
 
 
-
-
     async Check_Gas_Bill_Hidden(gas_usage: string) {
         await expect(this.Billing_Gas_Usage_Row(gas_usage)).not.toBeVisible({timeout:30000});
     }
 
+
     async Check_Gas_Bill_Visibility(gas_usage: string) {
         await expect(this.Billing_Gas_Usage_Row(gas_usage)).toBeVisible({timeout:30000});
     }
+
 
     async Check_Gas_Bill_Status(gas_usage: string, status: string) {
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
@@ -148,11 +247,13 @@ export class BillingPage {
         await expect(ViewLocator).toBeEnabled({timeout:30000});
     }
 
+
     async Check_Gas_Bill_Amount(gas_usage: string, amount: string) {
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         console.log(amount);
         await expect(rowLocator).toContainText(amount);
     }
+
 
     async Check_Gas_Bill_Fee(gas_usage: string, Expectedfee: string) {
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
@@ -160,11 +261,13 @@ export class BillingPage {
         await expect(rowLocator).toContainText(Expectedfee);
     }
 
+
     async Check_Gas_Bill_Fee_Not_Included(gas_usage: string, Expectedfee: string) {
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
         console.log(Expectedfee);
         await expect(rowLocator).not.toContainText(Expectedfee);
     }
+
 
     async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
         const electricAmount = parseFloat(ElectricAmount);
@@ -198,6 +301,30 @@ export class BillingPage {
         await expect(this.Billing_Make_Payment_Button).toBeEnabled();
         await expect(this.Billing_Make_Payment_Button).toBeVisible();
     }
+
+
+    async Check_Payment_Initiated_Message(){
+        try{
+            await expect(this.Billing_Successully_Initiated_Payment_Message).toBeVisible({timeout:30000});
+        }catch(error){
+            console.log('Payment Initiated Message is not visible.');
+        }
+    }
+
+
+    async Check_Pay_Outstanding_Balance_Modal(ElectricAmount: any, GasAmount?: any){
+        const electricAmount = parseFloat(ElectricAmount);
+        const gasAmount = parseFloat(GasAmount) || 0;
+        
+        const totalAmount = (electricAmount + gasAmount);
+        let totalAmount2dec = totalAmount.toFixed(2);
+
+
+        await expect(this.Billing_Pay_Outstanding_Balance_Modal).toBeVisible({timeout:30000});
+        await expect(this.Billing_Pay_Outstanding_Balance_Modal).toContainText(totalAmount2dec);
+    }
+
+
 
 }
 

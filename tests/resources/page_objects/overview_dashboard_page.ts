@@ -60,7 +60,7 @@ export class OverviewPage {
         this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
         this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
 
-        this.Overview_Payment_Initiated_Message = page.getByText('Successfully initiated');
+        this.Overview_Payment_Initiated_Message = page.getByText('Notification 🥳');//getByText('Successfully initiated');
 
         this.Overview_Pay_Outstanding_Balance_Modal = page.getByLabel('Pay outstanding balance');
         this.Overview_Pay_Now_Button = page.getByRole('button', { name: 'Pay Now' });
@@ -403,6 +403,20 @@ export class OverviewPage {
         await this.Overview_Pay_Bill_Link.click();
     }
 
+
+    async Click_Pay_Now_Button(){
+        await expect(this.Overview_Pay_Now_Button).toBeVisible({timeout:30000});
+        await this.Overview_Pay_Now_Button.hover();
+        await this.Overview_Pay_Now_Button.click();
+    }
+
+
+    async Click_Pay_Later_Button(){
+        await expect(this.Overview_Pay_Later_Button).toBeVisible({timeout:30000});
+        await this.Overview_Pay_Later_Button.hover();
+        await this.Overview_Pay_Later_Button.click();
+    }
+
     
 
     //assertions
@@ -586,20 +600,6 @@ export class OverviewPage {
 
         await expect(this.Overview_Pay_Outstanding_Balance_Modal).toBeVisible({timeout:30000});
         await expect(this.Overview_Pay_Outstanding_Balance_Modal).toContainText(totalAmount2dec);
-    }
-
-
-    async Click_Pay_Now_Button(){
-        await expect(this.Overview_Pay_Now_Button).toBeVisible({timeout:30000});
-        await this.Overview_Pay_Now_Button.hover();
-        await this.Overview_Pay_Now_Button.click();
-    }
-
-
-    async Click_Pay_Later_Button(){
-        await expect(this.Overview_Pay_Later_Button).toBeVisible({timeout:30000});
-        await this.Overview_Pay_Later_Button.hover();
-        await this.Overview_Pay_Later_Button.click();
     }
 
 
