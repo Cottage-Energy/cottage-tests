@@ -34,7 +34,7 @@ export class BillingPage {
         this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
 
         this.Billing_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
-        this.Billing_Successully_Initiated_Payment_Message = page.getByText('Notification 🥳');//getByText('Successfully initiated');
+        this.Billing_Successully_Initiated_Payment_Message = page.getByText('Successfully initiated');//getByText('Notification 🥳');//
 
         this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });

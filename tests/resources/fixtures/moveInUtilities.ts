@@ -7,6 +7,8 @@ const supabaseQueries = new SupabaseQueries();
 
 //Modify flow such that if both electric and gas are false it will not continue the flow
 //Modify also, that if Electric is false and Gas is not visible it not continue the flow
+//COMED block can be used for DTE
+//EVERSOURCE block can be used for NGMA, PSEG
 
 export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
@@ -1019,6 +1021,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
 
 
 export const MoveInTestUtilities = {
+    //COMED Block can be used for DTE
     COMED_New_User_Move_In,
     COMED_New_User_Move_In_Skip_Payment,
     COMED_New_User_Move_In_Auto_Payment_Added,
@@ -1033,6 +1036,7 @@ export const MoveInTestUtilities = {
     CON_ED_New_User_Move_In_Manual_Bank_Payment_Added,
     CON_ED_New_User_Move_In_Skip_Payment,
 
+    //EVERSOURCE Block can be used for NGMA, PSEG
     EVERSOURCE_New_User_Move_In_Auto_Payment_Added,
     EVERSOURCE_New_User_Move_In_Non_Billing,
     EVERSOURCE_New_User_Move_In_Manual_Payment_Added,

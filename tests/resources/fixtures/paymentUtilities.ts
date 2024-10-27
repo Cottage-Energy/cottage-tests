@@ -1739,7 +1739,7 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -1831,7 +1831,7 @@ export class PaymentUtilities {
     }
 
 
-    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -1962,7 +1962,7 @@ export class PaymentUtilities {
     }
 
 
-    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, GasAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -2057,7 +2057,7 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -2116,7 +2116,7 @@ export class PaymentUtilities {
         //UPDATE PAYMENT Section
         await billingPage.Click_Make_Payment_Button();
         await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.PGUserEmail, MoveIn.PGUserName);
-        await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
+        await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual);
         await billingPage.Click_Pay_Now_Button();
         await billingPage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
@@ -2147,7 +2147,7 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -2276,7 +2276,7 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -2335,7 +2335,7 @@ export class PaymentUtilities {
         //UPDATE PAYMENT Section
         await billingPage.Click_Make_Payment_Button();
         await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.PGUserEmail, MoveIn.PGUserName);
-        await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
+        await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.GasAmountActual);
         await billingPage.Click_Pay_Now_Button();
         await billingPage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
