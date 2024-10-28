@@ -43,7 +43,7 @@ export class ProfilePage {
         
         this.Profile_Success_Message = page.getByText('🥳 Success', { exact: true });
 
-        this.Profile_Payment_Initiated_Message = page.getByText('Successfully initiated');//getByText('Good to go!');//getByText('Notification 🥳');//
+        this.Profile_Payment_Initiated_Message = page.locator('//div[contains(text(),"Successfully initiated payment")]');//getByText('Good to go!');//getByText('Notification 🥳');//
 
     }
 
