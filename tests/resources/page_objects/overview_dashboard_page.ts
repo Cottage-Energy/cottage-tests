@@ -81,20 +81,29 @@ export class OverviewPage {
 
     async Accept_New_Terms_And_Conditions(){
         await this.page.waitForLoadState('domcontentloaded');
-        await this.Overview_New_Terms_Modal_Title.waitFor({state:"visible",timeout:10000});
-        await expect(this.Overview_New_Terms_Modal_Content).toBeVisible({timeout:30000});
-        await expect(this.Overview_New_Terms_Modal_Agree_Checkbox).toBeVisible({timeout:30000});
-        await expect (this.Overview_New_Terms_Modal_Accept_Button).toBeVisible({timeout:30000});
+        await this.page.waitForLoadState('load');
+        await this.page.waitForTimeout(3000);
 
-        await this.Overview_New_Terms_Modal_Agree_Checkbox.hover({timeout:30000});
-        await this.Overview_New_Terms_Modal_Agree_Checkbox.isEnabled({timeout:10000});
-        await this.Overview_New_Terms_Modal_Agree_Checkbox.setChecked(true,{timeout:10000});
-        await this.Overview_New_Terms_Modal_Accept_Button.hover({timeout:30000});
-        await this.Overview_New_Terms_Modal_Accept_Button.isEnabled({timeout:10000});
-        await this.Overview_New_Terms_Modal_Accept_Button.click();
+        const vis  = await this.Overview_New_Terms_Modal_Title.isVisible();
+        console.log("Updated Terms:",vis);
 
-        await expect(this.Overview_New_Terms_Modal_Title).not.toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(1000);
+        if(vis == true){
+            await expect(this.Overview_New_Terms_Modal_Title).toBeVisible({timeout:30000});
+            await expect(this.Overview_New_Terms_Modal_Content).toBeVisible({timeout:30000});
+            await expect(this.Overview_New_Terms_Modal_Agree_Checkbox).toBeVisible({timeout:30000});
+            await expect (this.Overview_New_Terms_Modal_Accept_Button).toBeVisible({timeout:30000});
+    
+            await this.Overview_New_Terms_Modal_Agree_Checkbox.hover({timeout:30000});
+            await this.Overview_New_Terms_Modal_Agree_Checkbox.isEnabled({timeout:10000});
+            await this.Overview_New_Terms_Modal_Agree_Checkbox.setChecked(true,{timeout:10000});
+            await this.Overview_New_Terms_Modal_Accept_Button.hover({timeout:30000});
+            await this.Overview_New_Terms_Modal_Accept_Button.isEnabled({timeout:10000});
+            await this.Overview_New_Terms_Modal_Accept_Button.click();
+    
+            await expect(this.Overview_New_Terms_Modal_Title).not.toBeVisible({timeout:30000});
+            await this.page.waitForTimeout(1000);
+        }
+
     }
 
     async Go_to_Profile(firstName: string) {
