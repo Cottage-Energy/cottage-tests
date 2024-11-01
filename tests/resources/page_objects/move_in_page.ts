@@ -79,6 +79,8 @@ export class MoveInPage{
     readonly Move_In_Feedback_Thanks_Message: Locator;
     readonly Move_In_Dashboard_Link:Locator;
 
+    readonly Move_In_New_Move_In_Request_Link: Locator;
+
   
     
 
@@ -161,6 +163,8 @@ export class MoveInPage{
         this.Move_In_Survey_Submit_Button = page.getByText('Tell us how your experience was so far!Submit');
         this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback 💚');
         this.Move_In_Dashboard_Link = page.getByRole('link', { name: 'Dashboard' });
+
+        this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new Move-in Request"]');
     }
 
 
@@ -486,11 +490,13 @@ export class MoveInPage{
         await this.page.waitForTimeout(500);
     }
 
+
     async Enable_Auto_Payment(){
         await expect(this.Move_In_Auto_Payment_Checbox).toBeEnabled({timeout:30000});
         await this.Move_In_Auto_Payment_Checbox.hover();
         await this.Move_In_Auto_Payment_Checbox.setChecked(true,{timeout:10000});
     }
+
 
     async Disable_Auto_Payment(){
         await expect(this.Move_In_Auto_Payment_Checbox).toBeEnabled({timeout:30000});
@@ -498,11 +504,13 @@ export class MoveInPage{
         await this.Move_In_Auto_Payment_Checbox.setChecked(false,{timeout:10000});
     } 
 
+
     async Confirm_Payment_Details(){
         await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:30000});
         await this.Move_In_Submit_Button.hover();
         await this.Move_In_Submit_Button.click();
     }
+
 
     async Skip_Payment_Details(){
         await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
@@ -510,11 +518,13 @@ export class MoveInPage{
         await this.Move_In_Skip_Button.click();
     }
 
+
     async Click_Dashboard_Link(){
         await expect(this.Move_In_Dashboard_Link).toBeEnabled({timeout:10000});
         await this.Move_In_Dashboard_Link.hover();
         await this.Move_In_Dashboard_Link.click();
     }
+
 
     async Get_Account_Number(){
         const element = await this.Move_In_Account_Number_Value;
@@ -522,6 +532,15 @@ export class MoveInPage{
         const accountNumber = textValue?.trim() || '';
         console.log(accountNumber);
         return accountNumber;
+    }
+
+    async Click_Start_New_Move_In_Request(){
+        await expect(this.Move_In_New_Move_In_Request_Link).toBeVisible({timeout:10000});
+        await expect(this.Move_In_New_Move_In_Request_Link).toBeEnabled({timeout:10000});
+        await this.Move_In_New_Move_In_Request_Link.hover();
+        await this.Move_In_New_Move_In_Request_Link.click();
+
+        await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
     }
 
 
