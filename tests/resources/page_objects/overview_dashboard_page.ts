@@ -80,11 +80,22 @@ export class OverviewPage {
     //methods
 
     async Accept_New_Terms_And_Conditions(){
+        const maxRetries = 30;
+        let retries = 0;
+        let vis = false;
+
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await this.page.waitForTimeout(3000);
 
-        const vis  = await this.Overview_New_Terms_Modal_Title.isVisible();
+        while (retries < maxRetries) {
+            vis = await this.Overview_New_Terms_Modal_Title.isVisible();
+            if (vis == true) {
+                break;
+            }
+            retries++;
+            await new Promise(resolve => setTimeout(resolve, 1500)); // wait for 1.5 seconds
+        }
+        
         console.log("Updated Terms:",vis);
 
         if(vis == true){
