@@ -19,7 +19,7 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Cottage_User_Id_Orig_Email(Email: string) {
+    /*async Get_Cottage_User_Id_Orig_Email(Email: string) {
         console.log(Email);
         const { data: cottageUser } = await supabase
             .from('CottageUsers')
@@ -31,7 +31,7 @@ export class SupabaseQueries{
         console.log(cottageUserId);
         await expect(cottageUserId).not.toBe("");
         return cottageUserId;
-    }
+    }*/
 
 
     async Check_Cottage_User_Account_Number(Email: string) {
