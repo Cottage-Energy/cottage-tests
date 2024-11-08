@@ -246,6 +246,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -283,6 +284,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -320,6 +322,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -419,6 +422,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -457,6 +461,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -568,6 +573,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -639,6 +645,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -681,6 +688,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -723,6 +731,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -765,6 +774,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -806,6 +816,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -844,6 +855,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -880,6 +892,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -921,6 +934,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -957,6 +971,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -995,6 +1010,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();

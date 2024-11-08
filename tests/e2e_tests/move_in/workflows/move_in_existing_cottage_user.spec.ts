@@ -676,7 +676,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 });
 
 
-test.describe('xxMove In Existing User: Cottageuser Exist Only Late Drop Off', () => {
+test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
   test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {

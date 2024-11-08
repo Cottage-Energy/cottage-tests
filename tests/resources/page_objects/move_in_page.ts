@@ -81,6 +81,10 @@ export class MoveInPage{
 
     readonly Move_In_New_Move_In_Request_Link: Locator;
 
+    readonly Move_In_ESCO_Title: Locator;
+    readonly Move_In_ESCO_Content: Locator;
+    readonly Move_In_ESCO_Got_It_Button: Locator;
+
   
     
 
@@ -165,6 +169,10 @@ export class MoveInPage{
         this.Move_In_Dashboard_Link = page.getByRole('link', { name: 'Dashboard' });
 
         this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new Move-in Request"]');
+
+        this.Move_In_ESCO_Title = page.getByRole('heading', { name: 'Because you live in New York' });
+        this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,')
+        this.Move_In_ESCO_Got_It_Button = page.getByRole('button', { name: 'Got it!' })
     }
 
 
@@ -541,6 +549,40 @@ export class MoveInPage{
         await this.Move_In_New_Move_In_Request_Link.click();
 
         await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
+    }
+
+
+    async Read_ESCO_Conditions(){
+        const maxRetries = 30;
+        let retries = 0;
+        let vis = false;
+
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+
+        while (retries < maxRetries) {
+            vis = await this.Move_In_ESCO_Title.isVisible();
+            if (vis == true) {
+                break;
+            }
+            retries++;
+            await new Promise(resolve => setTimeout(resolve, 500)); // wait for 0.5 seconds
+        }
+        
+        console.log("ESCO Terms:",vis);
+
+        if(vis == true){
+            await expect(this.Move_In_ESCO_Title).toBeVisible({timeout:30000});
+            await expect(this.Move_In_ESCO_Content).toBeVisible({timeout:30000});
+            await expect (this.Move_In_ESCO_Got_It_Button).toBeVisible({timeout:30000});
+    
+            await this.Move_In_ESCO_Got_It_Button.hover({timeout:30000});
+            await this.Move_In_ESCO_Got_It_Button.isEnabled({timeout:10000});
+            await this.Move_In_ESCO_Got_It_Button.click();
+    
+            await this.page.waitForTimeout(500);
+        }
+
     }
 
 
