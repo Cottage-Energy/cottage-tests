@@ -7,6 +7,8 @@ import { BillingPage } from '../page_objects/billing_page';
 import { ServicesPage } from '../page_objects/services_page';
 import { ProfilePage } from '../page_objects/account_profile_page';
 
+import { SupabaseQueries } from '../fixtures/database_queries';
+
 
 type pages = {
     homepage: HomePage,
@@ -16,6 +18,8 @@ type pages = {
     billingPage: BillingPage
     servicesPage: ServicesPage
     profilePage: ProfilePage
+
+    supabaseQueries: SupabaseQueries
 }
 
 
@@ -48,6 +52,10 @@ const testPages = base.extend<pages>({
     profilePage: async ({page},use) => {
         await use(new ProfilePage(page));
     },
+
+    supabaseQueries: async ({page},use) => {
+        await use(new SupabaseQueries());
+    }
 
 
 })

@@ -40,7 +40,7 @@ test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exi
 
       await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
       await supabaseQueries.Update_Building_Billing("autotest",false);
-      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+      await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
       MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);

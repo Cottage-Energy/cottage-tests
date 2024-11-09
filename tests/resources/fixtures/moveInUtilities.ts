@@ -922,6 +922,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
 }
 
 
+
 export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
@@ -957,6 +958,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
         PGUserEmail
     };
 }
+
 
 
 export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {

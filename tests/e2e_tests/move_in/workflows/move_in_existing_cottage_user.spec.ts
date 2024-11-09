@@ -3,12 +3,12 @@ import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
-import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
+//import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
-const supabaseQueries = new SupabaseQueries();
+//const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
 let MoveIn: any;
 
@@ -33,7 +33,7 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
   test.describe.configure({mode: "serial"});
   
-    test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+    test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -73,7 +73,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
     });
 
 
-    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -113,7 +113,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
     });
 
 
-    test('CON EDISON Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+    test('CON EDISON Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -135,6 +135,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Setup_Account(true, true);
       await moveInpage.Next_Move_In_Button();
+      await moveInpage.Read_ESCO_Conditions();
       await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Check_Email_Registered_Message();
@@ -159,7 +160,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -199,7 +200,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
   });
 
 
-  test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -221,6 +222,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
@@ -239,7 +241,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
   });
 
 
-  test('CON EDISON Cottageuser, Electric & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('CON EDISON Cottageuser, Electric & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -285,7 +287,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -326,7 +328,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   });
 
 
-  test('Eversource Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('Eversource Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -348,6 +350,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
@@ -366,7 +369,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   });
 
 
-  test('CON EDISON Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('CON EDISON Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -397,6 +400,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
       await moveInpage.Enter_OTP(OTP);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Check_OTP_Confirmed_Message();
+      await moveInpage.Read_ESCO_Conditions();//should be removed, esco should before getting info
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
       await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "CON-EDISON");
@@ -412,7 +416,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -479,7 +483,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('COMED EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('COMED EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -544,7 +548,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -608,7 +612,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -622,6 +626,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
@@ -639,6 +644,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
@@ -679,7 +685,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -750,7 +756,7 @@ test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Of
   });
 
 
-  test('COMED EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('COMED EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -820,7 +826,7 @@ test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Of
   });
 
 
-  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -888,7 +894,7 @@ test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Of
   });
 
 
-  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage}) => {
+  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -902,6 +908,7 @@ test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Of
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
@@ -925,6 +932,7 @@ test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Of
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();

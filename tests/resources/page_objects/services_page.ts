@@ -24,7 +24,8 @@ export class ServicesPage {
 
     //assertions
     async Services_Check_Page_Content() {
-        await this.page.waitForLoadState('load' && 'domcontentloaded');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
         await expect(this.page).toHaveURL(/.*\/app\/services.*/, {timeout:30000});
         await expect(this.Services_Page_Title).toBeVisible({timeout:30000});
         await expect(this.Services_New_Address_Section).toBeVisible({timeout:30000});
