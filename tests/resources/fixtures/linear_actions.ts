@@ -24,7 +24,7 @@ export class LinearActions{
                     team: { id: { eq: BillingteamId } },
                     description: { contains: emailLower },
                     state: { id: { eq: NullStatusId } },
-                    title: { contains: "Electric Bill" },
+                    title: { contains: "Electric" },
                 },
             });
         
@@ -71,7 +71,7 @@ export class LinearActions{
                     team: { id: { eq: BillingteamId } },
                     description: { contains: emailLower },
                     state: { id: { eq: NullStatusId } },
-                    title: { contains: "Gas Bill" },
+                    title: { contains: "Gas" },
                 },
             });
         
