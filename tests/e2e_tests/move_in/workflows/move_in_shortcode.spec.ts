@@ -27,8 +27,9 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-test.describe.configure({mode: "serial"});
+
 test.describe('Short Code Billing New User Electric &/or Gas', () => {
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
@@ -89,6 +90,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 });
 
 test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
