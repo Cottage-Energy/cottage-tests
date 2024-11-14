@@ -1169,7 +1169,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await profilePage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await profilePage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1281,7 +1281,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await profilePage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await profilePage.Check_Payment_Initiated_Message();
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
@@ -1390,7 +1390,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await profilePage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await profilePage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1484,7 +1484,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await profilePage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1596,7 +1596,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await profilePage.Check_Payment_Initiated_Message();
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
@@ -1705,7 +1705,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await profilePage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1798,7 +1798,7 @@ export class PaymentUtilities {
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await overviewPage.Click_Pay_Bill_Link();
-        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual);
         await overviewPage.Click_Pay_Now_Button();
         await overviewPage.Check_Payment_Initiated_Message();
@@ -1911,7 +1911,7 @@ export class PaymentUtilities {
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await overviewPage.Click_Pay_Bill_Link();
-        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
         await overviewPage.Click_Pay_Now_Button();
         await overviewPage.Check_Payment_Initiated_Message();
@@ -2021,7 +2021,7 @@ export class PaymentUtilities {
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await overviewPage.Click_Pay_Bill_Link();
-        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+        await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.GasAmountActual);
         await overviewPage.Click_Pay_Now_Button();
         await overviewPage.Check_Payment_Initiated_Message();

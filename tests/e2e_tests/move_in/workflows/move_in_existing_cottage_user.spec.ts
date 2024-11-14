@@ -39,7 +39,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       const PGuser = await generateTestUserData();
 
       await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
-      await supabaseQueries.Update_Building_Billing("autotest",false);
+      await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -400,7 +400,6 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
       await moveInpage.Enter_OTP(OTP);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Check_OTP_Confirmed_Message();
-      await moveInpage.Read_ESCO_Conditions();//should be removed, esco should before getting info
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
       await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "CON-EDISON");
@@ -431,12 +430,12 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await linearActions.CountMoveInTicket(PGuser.Email,0);
 
-    //check if the user will be able to login - suppose to be not a directed move-in again
+    //check if the user will be able to login - suppose to be not
  
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -500,7 +499,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
@@ -565,7 +564,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
@@ -630,7 +629,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(30000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
@@ -702,6 +701,7 @@ test.describe.skip('xxMove In Existing User: Cottageuser Exist Only Late Drop Of
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
+    await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Get_Electric_Account_Id(cottageUserID);

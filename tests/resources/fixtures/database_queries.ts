@@ -19,21 +19,6 @@ export class SupabaseQueries{
     }
 
 
-    /*async Get_Cottage_User_Id_Orig_Email(Email: string) {
-        console.log(Email);
-        const { data: cottageUser } = await supabase
-            .from('CottageUsers')
-            .select('id')
-            .eq('email', Email)
-            .single()
-            .throwOnError();
-        const cottageUserId = cottageUser?.id ?? '';
-        console.log(cottageUserId);
-        await expect(cottageUserId).not.toBe("");
-        return cottageUserId;
-    }*/
-
-
     async Check_Cottage_User_Account_Number(Email: string) {
         const email = Email.toLowerCase();
         const { data: cottageUser } = await supabase
@@ -44,6 +29,8 @@ export class SupabaseQueries{
             .throwOnError();
         const cottageUserAccountNUmber = cottageUser?.accountNumber ?? '';
         await expect(cottageUserAccountNUmber).not.toBeNull;
+        console.log("PG Account No.:", cottageUserAccountNUmber.toString());
+        return cottageUserAccountNUmber.toString();
     }
     
 
@@ -98,6 +85,58 @@ export class SupabaseQueries{
         console.log(error);
         await expect(GAccount).toBeNull();
     }
+
+
+    //////////// Bill Queries ////////////
+
+    //Get Bill ID
+    async Get_Electric_Bill_Id(ElectricAccountId: string, Amount: number, Usage: number) {
+
+    }
+
+
+    async Get_Gas_Bill_Id(GasAccountId: string, Amount: number, Usage: number) {
+        
+    }
+    //Get Charge ID and Validity
+    async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
+        const maxRetries = 300;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let ElectricBillstatus = '';
+        
+        while (retries < maxRetries) {
+            const { data: ElectricBillStatus } = await supabase
+                .from('ElectricBill')
+                .select('paymentStatus')
+                .eq('electricAccountID', electricBillID)
+                .single()
+                .throwOnError();
+                
+            ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
+            console.log(ElectricBillstatus);
+        
+            if (ElectricBillstatus === status) {
+                await expect(ElectricBillstatus).toBe(status);
+                break;
+            }
+        
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(3000);
+        }
+        
+        // If the loop exits without matching the status, throw an error
+        if (ElectricBillstatus !== status) {
+            throw new Error(`Expected status '${status}' not met after ${maxRetries} retries.`);
+        }
+    }
+
+
+    async Get_Gas_Charge_Id_validity(gasBillID: any, validity: boolean) {
+
+    }
+
 
 
     async Check_Eletric_Bill_Reminder(ElectricAccountId: string, state:boolean) {
@@ -434,6 +473,57 @@ export class SupabaseQueries{
     }
 
 
+    async Get_Electric_Bill_Start_Date(ElectricAccountId: string) {
+        const { data: ElectricBill } = await supabase
+            .from('ElectricBill')
+            .select('startDate')
+            .eq('electricAccountID', ElectricAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const StartDate = ElectricBill?.startDate ?? '';
+        return StartDate;
+    }
+
+
+    async Get_Electric_Bill_End_Date(ElectricAccountId: string) {
+        const { data: ElectricBill } = await supabase
+            .from('ElectricBill')
+            .select('endDate')
+            .eq('electricAccountID', ElectricAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const EndDate = ElectricBill?.endDate ?? '';
+        return EndDate;
+    }
+
+
+    async Get_Gas_Bill_Start_Date(GasAccountId: string) {
+        const { data: GasBill } = await supabase
+            .from('GasBill')
+            .select('startDate')
+            .eq('gasAccountID', GasAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const StartDate = GasBill?.startDate ?? '';
+        return StartDate;
+    }
+
+
+    async Get_Gas_Bill_End_Date(GasAccountId: string) {
+        const { data: GasBill } = await supabase
+            .from('GasBill')
+            .select('endDate')
+            .eq('gasAccountID', GasAccountId)
+            .maybeSingle()
+            .throwOnError();
+        const EndDate = GasBill?.endDate ?? '';
+        return EndDate;
+    }
+
+
+    //////////////// Move-in Queries ////////////////
+
+
     async Get_Question_Id(company: string) {
         const { data: Question } = await supabase
             .from('UtilityCompanyQuestion')
@@ -651,53 +741,6 @@ export class SupabaseQueries{
         }
     }
 
-
-    async Get_Electric_Bill_Start_Date(ElectricAccountId: string) {
-        const { data: ElectricBill } = await supabase
-            .from('ElectricBill')
-            .select('startDate')
-            .eq('electricAccountID', ElectricAccountId)
-            .maybeSingle()
-            .throwOnError();
-        const StartDate = ElectricBill?.startDate ?? '';
-        return StartDate;
-    }
-
-
-    async Get_Electric_Bill_End_Date(ElectricAccountId: string) {
-        const { data: ElectricBill } = await supabase
-            .from('ElectricBill')
-            .select('endDate')
-            .eq('electricAccountID', ElectricAccountId)
-            .maybeSingle()
-            .throwOnError();
-        const EndDate = ElectricBill?.endDate ?? '';
-        return EndDate;
-    }
-
-
-    async Get_Gas_Bill_Start_Date(GasAccountId: string) {
-        const { data: GasBill } = await supabase
-            .from('GasBill')
-            .select('startDate')
-            .eq('gasAccountID', GasAccountId)
-            .maybeSingle()
-            .throwOnError();
-        const StartDate = GasBill?.startDate ?? '';
-        return StartDate;
-    }
-
-
-    async Get_Gas_Bill_End_Date(GasAccountId: string) {
-        const { data: GasBill } = await supabase
-            .from('GasBill')
-            .select('endDate')
-            .eq('gasAccountID', GasAccountId)
-            .maybeSingle()
-            .throwOnError();
-        const EndDate = GasBill?.endDate ?? '';
-        return EndDate;
-    }
 
 }
 

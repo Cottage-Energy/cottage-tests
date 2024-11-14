@@ -71,8 +71,18 @@ export class MoveInPage{
     readonly Move_In_Auto_Payment_Checbox: Locator;
     readonly Move_In_Submit_Button: Locator;
     readonly Move_In_Skip_Button: Locator;
+
+    readonly Move_In_Confirm_Skip_Payment_Title: Locator;
+    readonly Move_In_Confirm_Skip_Payment_Question_Link: Locator;
+    readonly Move_In_Confirm_Skip_Payment_Add_Now_Button: Locator;
+    readonly Move_In_Confirm_Skip_Payment_Add_Later_Button: Locator;
+
     readonly Move_In_Success_Message: Locator;
     readonly Move_In_Account_Number: Locator;
+
+    readonly Move_In_Almost_Done_Message: Locator;
+    readonly Move_In_Registration_Status: Locator;
+
     readonly Move_In_Account_Number_Value: Locator;
     readonly Move_In_Survey_Star: Locator;
     readonly Move_In_Survey_Submit_Button: Locator;
@@ -158,10 +168,20 @@ export class MoveInPage{
         this.Move_In_Auto_Payment_Checbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit', exact: true });
         this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now (and Submit)' });
+
+        this.Move_In_Confirm_Skip_Payment_Title = page.getByRole('heading', { name: 'We need a payment method on' });
+        this.Move_In_Confirm_Skip_Payment_Question_Link = page.getByText('Questions? Chat with us so we');
+        this.Move_In_Confirm_Skip_Payment_Add_Now_Button = page.getByRole('button', { name: 'Add a payment method now' });
+        this.Move_In_Confirm_Skip_Payment_Add_Later_Button = page.getByRole('button', { name: 'I will add my payment later' });
+
         this.Move_In_Payment_Details_Title = page.locator('//h3[text()="Add Bill Payment Method"]');
         this.Move_In_Service_Fee_Message = page.getByText('Card payments will be charged');
         this.Move_In_Success_Message = page.getByText('Success🥳Your account is');
         this.Move_In_Account_Number = page.getByText('Account Number:');
+
+        this.Move_In_Almost_Done_Message = page.getByRole('heading', { name: 'Almost Done!' })
+        this.Move_In_Registration_Status = page.locator('//p[contains(text(),"Registration Status")]');
+
         this.Move_In_Account_Number_Value = page.locator("//div[contains(@class,'callout-text')]//child::b");
         this.Move_In_Survey_Star = page.locator('path').nth(2);
         this.Move_In_Survey_Submit_Button = page.getByText('Tell us how your experience was so far!Submit');
@@ -524,6 +544,15 @@ export class MoveInPage{
         await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
         await this.Move_In_Skip_Button.hover();
         await this.Move_In_Skip_Button.click();
+
+        await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
+        
+        await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
+        await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
     }
 
 
@@ -610,6 +639,15 @@ export class MoveInPage{
     }
 
 
+    async Check_Almost_Done_Move_In_Billing_Customer(){
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Almost_Done_Message).toBeVisible({timeout:60000});
+        await expect(this.Move_In_Registration_Status).toBeVisible({timeout:60000});
+        await expect(this.Move_In_Registration_Status).toContainText('Pending');
+        await expect(this.Move_In_Dashboard_Link).toBeVisible();
+    }
+
+
     async Check_Billing_Customer_Added_Payment_Overview_Redirect(){
 
         const [newPage] = await Promise.all([
@@ -618,8 +656,8 @@ export class MoveInPage{
 
         await newPage.waitForLoadState('domcontentloaded');
         await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
-        await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeHidden({timeout:60000});
-        await newPage.close(); //To be removed
+        await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeVisible({timeout:60000});
+        await newPage.close();
     }
 
 
@@ -630,8 +668,7 @@ export class MoveInPage{
         ]);
 
         await newPage.waitForLoadState('domcontentloaded');
-        await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
-        await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeVisible({timeout:60000});
+        await expect(newPage).toHaveURL(/.*\/app\/finish-account-setup.*/, { timeout: 60000 });
         await newPage.close(); //To be removed
     }
 

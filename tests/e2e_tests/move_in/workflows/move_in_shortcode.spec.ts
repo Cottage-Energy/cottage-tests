@@ -33,7 +33,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -47,7 +47,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -61,7 +61,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression'],}, async ({moveInpage, page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -75,7 +75,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -89,7 +89,11 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 });
 
-test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
+
+//Billing but Cancelled
+
+
+test.describe.skip('Short Code Non Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 

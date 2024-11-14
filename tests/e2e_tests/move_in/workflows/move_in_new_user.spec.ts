@@ -20,7 +20,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -42,6 +42,7 @@ test.describe('Move In New User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED");
+    //check Account Status
   });
 
 
@@ -55,6 +56,7 @@ test.describe('Move In New User', () => {
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
+    //check Account Status
   });
 
 
@@ -67,6 +69,7 @@ test.describe('Move In New User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
+    //check Account Status
   });
 
 
@@ -80,6 +83,7 @@ test.describe('Move In New User', () => {
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
+    //check Account Status
   });
 
 
@@ -92,32 +96,43 @@ test.describe('Move In New User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
+    //check Account Status
   });
 
 
   test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(240000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await page.waitForTimeout(60000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //check no email
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
+    //finish setup paymment
     await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
+    //check Account Status
   });
 
 
   test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(240000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(60000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //check no email
+    //add query to check if the user is added to the UtilityCredentials table
+    //finish setup paymment
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    //add query to check if the user is added to the UtilityCredentials table
-    await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
+    //check Account Status
   });
+
+  //Skip then Cancel Registration
 
 
 });

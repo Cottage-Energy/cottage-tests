@@ -126,7 +126,7 @@ export class OverviewPage {
         await this.Overview_Profile_Button.click();
     }
 
-    async Click_Setup_Payment_Link(){
+    /*async Click_Setup_Payment_Link(){
         await expect(this.Overview_Get_Started_Widget).toBeVisible({timeout:30000});
         await this.Overview_Setup_Payment_Link.waitFor({state:"visible",timeout:10000});
         await this.Overview_Setup_Payment_Link.hover({timeout:10000});
@@ -134,10 +134,10 @@ export class OverviewPage {
 
         await expect(this.Overview_Add_Payment_Title).toBeVisible({timeout:30000});
         await expect(this.Overview_Service_Fee_Message).toBeVisible({timeout:30000});
-    }
+    }*/
 
 
-    async Enter_Auto_Payment_Details_After_Skip(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+    async Enter_Auto_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
         
         
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -197,7 +197,7 @@ export class OverviewPage {
     }
 
 
-    async Enter_Manual_Payment_Details_After_Skip(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+    async Enter_Manual_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
         
         
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -263,7 +263,7 @@ export class OverviewPage {
     }
 
 
-    async Enter_Auto_Payment_Valid_Bank_Details_After_Skip(Email:string, FullName:string){
+    async Enter_Auto_Payment_Valid_Bank_Details(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -320,7 +320,7 @@ export class OverviewPage {
     }
 
 
-    async Enter_Manual_Payment_Valid_Bank_Details_After_Skip(Email:string, FullName:string){
+    async Enter_Manual_Payment_Valid_Bank_Details(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -381,7 +381,7 @@ export class OverviewPage {
     }
 
     
-    async Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(Email:string, FullName:string){
+    async Enter_Auto_Payment_Invalid_Bank_Details(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')

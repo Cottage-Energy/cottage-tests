@@ -69,13 +69,13 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Skip_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
-    const accountNumber = await moveInpage.Get_Account_Number();
+
+    await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    const accountNumber = await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
         cottageUserId,
@@ -581,13 +581,12 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Skip_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
-    const accountNumber = await moveInpage.Get_Account_Number();
+    await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    const accountNumber = await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
         cottageUserId,
@@ -615,13 +614,12 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Skip_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
-    const accountNumber = await moveInpage.Get_Account_Number();
+    await moveInpage.Check_Almost_Done_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    const accountNumber = await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
         cottageUserId,
@@ -826,13 +824,12 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Skip_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
-    const accountNumber = await moveInpage.Get_Account_Number();
+    await moveInpage.Check_Almost_Done_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    const accountNumber = await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
         cottageUserId,
@@ -1021,13 +1018,12 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Skip_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
-    const accountNumber = await moveInpage.Get_Account_Number();
+    await moveInpage.Check_Almost_Done_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
 
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    const accountNumber = await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
         cottageUserId,
