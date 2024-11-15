@@ -876,6 +876,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     };
 }
 
+
 export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();

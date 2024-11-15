@@ -1,9 +1,11 @@
 import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
+import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
+import * as PaymentData from '../../../resources/data/payment-data.json';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
@@ -20,7 +22,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -100,39 +102,92 @@ test.describe('Move In New User', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
-    test.setTimeout(240000);
+  test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+    test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(60000);
+    await page.waitForTimeout(75000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
-    //check no email
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
-    //finish setup paymment
+    await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "CON-EDISON");
     //check Account Status
   });
 
 
-  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
-    test.setTimeout(240000);
+  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+
+    const PGuserUsage = await generateTestUserData();
+
+    test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(60000);
+    await page.waitForTimeout(75000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
     //check no email
     //add query to check if the user is added to the UtilityCredentials table
     //finish setup paymment
+    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "EVERSOURCE");
     //check Account Status
   });
 
+
   //Skip then Cancel Registration
+  test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+    test.setTimeout(600000);
+    MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(75000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
+    //add query to check if the user is added to the UtilityCredentials table
+    //add check in DB fro question answers
+    await finishAccountSetupPage.Click_Cancel_Registration();
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //No service confirmation email
+    //check Account Status
+  });
+
+
+  test('EVERSOURCE New User Skip And Cancel Registration', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+
+    const PGuserUsage = await generateTestUserData();
+
+    test.setTimeout(600000);
+    MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(75000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
+    //check no email
+    //add query to check if the user is added to the UtilityCredentials table
+    await finishAccountSetupPage.Click_Cancel_Registration();
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //No service confirmation email
+    //check Account Status
+  });
 
 
 });

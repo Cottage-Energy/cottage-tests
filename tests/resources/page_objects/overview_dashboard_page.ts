@@ -651,7 +651,14 @@ export class OverviewPage {
     }
 
 
+    async Check_Get_Started_Widget_Not_Visible() {
+        await expect(this.Overview_Get_Started_Widget).toBeHidden();
+    }
 
+
+    async Check_Get_Started_Widget_Visible() {
+        await expect(this.Overview_Get_Started_Widget).toBeVisible();
+    }
 
 }
 

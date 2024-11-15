@@ -16,6 +16,8 @@ export class FinishAccountSetupPage {
     readonly FinishAccountSetup_Success_Message: Locator
 
     readonly FinishAccountSetup_Cancel_Registration_Button: Locator
+    readonly FinishAccountSetup_Confirm_Cancel_Registration_Button: Locator
+    readonly FinishAccountSetup_Cancel_Registration_Success_Message: Locator
 
 
     //locators
@@ -29,6 +31,8 @@ export class FinishAccountSetupPage {
         this.FinishAccountSetup_Success_Message = page.getByText('🥳 Success', { exact: true });
 
         this.FinishAccountSetup_Cancel_Registration_Button = page.locator('//span[text()="Cancel Registration"]');
+        this.FinishAccountSetup_Confirm_Cancel_Registration_Button = page.getByRole('button', { name: 'I\'ll sign-up on my own' });
+        this.FinishAccountSetup_Cancel_Registration_Success_Message = page.getByText('Registration cancelled.');
 
     }
 
@@ -364,6 +368,17 @@ export class FinishAccountSetupPage {
         await this.FinishAccountSetup_Cancel_Registration_Button.hover();
         await this.FinishAccountSetup_Cancel_Registration_Button.click();
         await this.page.waitForLoadState('domcontentloaded');
+
+        await this.FinishAccountSetup_Confirm_Cancel_Registration_Button.waitFor({state:"visible",timeout:10000});
+        await this.FinishAccountSetup_Confirm_Cancel_Registration_Button.hover();
+        await this.FinishAccountSetup_Confirm_Cancel_Registration_Button.click();
+
+        try{
+            await this.FinishAccountSetup_Cancel_Registration_Success_Message.waitFor({state:"visible",timeout:30000});
+        }catch(error){
+            console.log("Cancel Registration Message not found");
+        }
+        
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
 

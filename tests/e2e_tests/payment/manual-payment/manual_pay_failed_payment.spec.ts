@@ -41,7 +41,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+    await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
     //await page.close();
 });
   
@@ -51,9 +51,9 @@ test.afterEach(async ({ page },testInfo) => {
 
 
 test.describe.configure({mode: "serial"});
-test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => { 
+test.describe.skip('Invalid Card to Valid Card Auto Payment', () => { 
 
-    test('COMED COMED Electric Only Profile Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
+    test('COMED COMED Electric Only Profile Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
         test.setTimeout(1800000);
     
@@ -81,22 +81,17 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Go_to_Profile(MoveIn.PGUserFirstName);
-        await profilePage.Go_to_Payment_Info_Tab();
-        await profilePage.click_Setup_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(30000);
-
-        
-        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await page.waitForTimeout(500);
+        await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
     });
     
   
-    test('CON-EDISON CON-EDISON Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('CON-EDISON CON-EDISON Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -131,14 +126,12 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
           AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
-      await page.waitForTimeout(30000);
-
-
-      await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+      await page.waitForTimeout(500);
+      await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
-    test('BGE COMED Gas Only Move In Added to Failed Message Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE COMED Gas Only Move In Added to Failed Message Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
         test.setTimeout(1800000);
     
@@ -169,15 +162,12 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
         await overviewPage.Accept_New_Terms_And_Conditions();
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(30000);
-
-
-
-        await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await page.waitForTimeout(500);
+        await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
 
 
-    test('CON-EDISON Electric Only Move In Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('CON-EDISON Electric Only Move In Added to Pay Bill Link Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
         test.setTimeout(1800000);
     
@@ -197,15 +187,12 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
         await overviewPage.Accept_New_Terms_And_Conditions();
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(30000);
-
-
-
-        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await page.waitForTimeout(500);
+        await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
   
 
-    test('COMED EVERSOURCE Electric & Gas Profile Added to Make Payment Button Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
+    test('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -233,11 +220,8 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
   
       // Switch to the new tab
       await newPage.bringToFront();*/
+      await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await overviewPage.Accept_New_Terms_And_Conditions();
-      await overviewPage.Go_to_Profile(MoveIn.PGUserFirstName);
-      await profilePage.Go_to_Payment_Info_Tab();
-      await profilePage.click_Setup_Payment_Button();
-      await profilePage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
       const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -245,15 +229,12 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
           AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
-      await page.waitForTimeout(30000);
-
-
-
-      await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+      await page.waitForTimeout(500);
+      await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
   
-    test('COMED Gas Only Finish Account Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Gas Only Finish Account Added to Pay Bill Link Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -281,15 +262,14 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
   
       // Switch to the new tab
       await newPage.bringToFront();*/
+   
+      
+      await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await overviewPage.Accept_New_Terms_And_Conditions();
-      await overviewPage.Click_Setup_Payment_Link();
-      await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
       await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-      await page.waitForTimeout(30000);
-
-
-      await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+      await page.waitForTimeout(500);
+      await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
   
 });
@@ -297,7 +277,7 @@ test.describe.skip('xxInvalid Card to Valid Card Auto Payment', () => {
 
 test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
 
-    test('EVERSOURCE EVERSOURCE Electric Only Finish Account Added to Pay Button Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('xxEVERSOURCE EVERSOURCE Electric Only Finish Account Added to Pay Button Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
         test.setTimeout(1800000);
     
@@ -325,17 +305,18 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        
+        
+        await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
   
 
-    test('COMED BGE Electric & Gas Valid Profile Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('xxCOMED BGE Electric & Gas Valid Profile Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -363,21 +344,21 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
   
       // Switch to the new tab
       await newPage.bringToFront();*/
+      
+      await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await overviewPage.Accept_New_Terms_And_Conditions();
-      await overviewPage.Click_Setup_Payment_Link();
-      await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
       await Promise.all([
           AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
-      await page.waitForTimeout(15000);
+      await page.waitForTimeout(500)
       await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
-    test('BGE CON-EDISON Gas Only Move In Added to Pay Button Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('xxBGE CON-EDISON Gas Only Move In Added to Pay Button Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -408,12 +389,12 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
         await overviewPage.Accept_New_Terms_And_Conditions();
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 
-    test('CON-EDISON Electric Only Move In Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('xxCON-EDISON Electric Only Move In Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
         test.setTimeout(1800000);
     
@@ -433,12 +414,12 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
         await overviewPage.Accept_New_Terms_And_Conditions();
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
       
     
-    test('NGMA NGMA Electric & Gas Move In Added to Profile Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('xxNGMA NGMA Electric & Gas Move In Added to Profile Update', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -473,12 +454,12 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
-    test('CON-EDISON Gas Only Valid Profile Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('xxCON-EDISON Gas Only Valid Profile Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
         test.setTimeout(1800000);
     
@@ -506,21 +487,21 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        
+        await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
   
 });
 
 
-test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
+test.describe.skip('Invalid Bank to Valid Bank Auto Payment', () => {
     
-    test('COMED Electric Move In Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Electric Move In Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY
         test.setTimeout(1800000);
     
@@ -529,7 +510,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
         await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Bank_Account_Added(moveInpage, true, true);
+        MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpage, true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         
@@ -542,21 +523,21 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
         await overviewPage.Accept_New_Terms_And_Conditions();
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(15000);
-        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await page.waitForTimeout(500)
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
     });
 
     
-    test('BGE BGE Electric & Gas Move In Added to Failed Message Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","BGE","BGE");
+        await supabaseQueries.Update_Companies_to_Building("autotest","DTE","DTE");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Bank_Account_Added(moveInpage, true, true);
+        MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpage, true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         /*
@@ -582,21 +563,21 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
-        await page.waitForTimeout(15000);
-        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await page.waitForTimeout(500)
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
-    test('EVERSOURCE CON-EDISON Gas Profile Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('EVERSOURCE NGMA Gas Profile Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "CON-EDISON");
+        await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "NGMA");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, false, true);
+        MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage, false, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         /*
@@ -615,23 +596,23 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(15000);
-        await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await page.waitForTimeout(500)
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
 
 
-    test('NGMA NGMA Electric Profile Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('PSEG PSEG Electric Profile Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
     
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
+        await supabaseQueries.Update_Companies_to_Building("autotest","PSEG","PSEG");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage, true, false);
@@ -653,26 +634,26 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(15000);
-        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await page.waitForTimeout(500)
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
     
 
-    test('EVERSOURCE COMED Electric & Gas Move In Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('NGMA CON-EDISON Electric & Gas Finish Account Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","COMED");
+        await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","CON-EDISON");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+        MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         /*
@@ -691,30 +672,29 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
-        await page.waitForTimeout(15000);
-        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await page.waitForTimeout(500)
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
     
-    test('BGE Gas Finish Account Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('NGMA Gas Finish Account Added to Make Payment Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
+        await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
         await supabaseQueries.Update_Building_Billing("autotest",true);
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-        MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+        MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage, true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         /*
@@ -733,21 +713,20 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(15000);
-        await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await page.waitForTimeout(500)
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 });
 
 
-test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
+test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
     
-    test('NGMA NGMA Electric Profile Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('NGMA NGMA Electric Profile Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
     
         test.setTimeout(1800000);
     
@@ -775,17 +754,17 @@ test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        
+        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
     
 
-    test('EVERSOURCE COMED Electric & Gas Move In Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('EVERSOURCE COMED Electric & Gas Move In Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -813,21 +792,21 @@ test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        
+        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
     
-    test('BGE Gas Finish Account Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE Gas Finish Account Added to Pay Button Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -855,17 +834,17 @@ test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        
+        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 
-    test('COMED Electric Move In Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Electric Move In Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY
         test.setTimeout(1800000);
     
@@ -887,12 +866,12 @@ test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
         await overviewPage.Accept_New_Terms_And_Conditions();
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
 
     
-    test('BGE BGE Electric & Gas Move In Added to Profile Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE BGE Electric & Gas Move In Added to Profile Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -927,12 +906,12 @@ test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
-    test('EVERSOURCE CON-EDISON Gas Profile Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('EVERSOURCE CON-EDISON Gas Profile Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -960,12 +939,12 @@ test.describe.skip('xxInvalid Bank to Valid Bank Auto Payment', () => {
     
         // Switch to the new tab
         await newPage.bringToFront();*/
+        
+        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        await overviewPage.Click_Setup_Payment_Link();
-        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
-        await page.waitForTimeout(15000);
+        await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
