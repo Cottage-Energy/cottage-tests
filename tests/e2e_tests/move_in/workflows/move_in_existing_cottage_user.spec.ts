@@ -681,7 +681,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 });
 
 
-test.describe('xxMove In Existing User: Cottageuser Exist Only Late Drop Off', () => {
+test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
   test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, supabaseQueries, finishAccountSetupPage, overviewPage}) => {
