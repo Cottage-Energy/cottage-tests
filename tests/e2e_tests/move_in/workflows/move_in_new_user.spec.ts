@@ -146,7 +146,6 @@ test.describe('Move In New User', () => {
   });
 
 
-  //Skip then Cancel Registration
   test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);

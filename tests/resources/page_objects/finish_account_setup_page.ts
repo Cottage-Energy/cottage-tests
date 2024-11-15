@@ -194,6 +194,8 @@ export class FinishAccountSetupPage {
 
         await EmailInput?.fill(Email);
         await NameInput?.fill(FullName);
+        await TestInstButton?.hover();
+        await this.page.waitForTimeout(500);
         await TestInstButton?.click();
         await this.page.waitForTimeout(500);
 
@@ -256,6 +258,8 @@ export class FinishAccountSetupPage {
 
         await EmailInput?.fill(Email);
         await NameInput?.fill(FullName);
+        await TestInstButton?.hover();
+        await this.page.waitForTimeout(500);
         await TestInstButton?.click();
         await this.page.waitForTimeout(500);
 
@@ -322,6 +326,8 @@ export class FinishAccountSetupPage {
 
         await EmailInput?.fill(Email);
         await NameInput?.fill(FullName);
+        await TestInstButton?.hover();
+        await this.page.waitForTimeout(500);
         await TestInstButton?.click();
         await this.page.waitForTimeout(500);
 
