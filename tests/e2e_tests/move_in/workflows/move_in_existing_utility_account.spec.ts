@@ -2,9 +2,11 @@ import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
+import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
+let MoveIn: any;
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -16,6 +18,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 

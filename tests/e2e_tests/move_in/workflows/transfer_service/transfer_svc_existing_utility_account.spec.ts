@@ -1,10 +1,12 @@
 import { test,expect } from '../../../../resources/fixtures/pg_pages_fixture';
-import { MoveInTestUtilities } from '../../../../resources/fixtures/moveInUtilities';
+import { TransferServiceTestUtilities } from '../../../../resources/fixtures/transferServiceUtilities';
 import { LinearActions } from '../../../../resources/fixtures/linear_actions';
 import { SupabaseQueries } from '../../../../resources/fixtures/database_queries';
+import { CleanUp } from '../../../../resources/fixtures/userCleanUp';
 
 const supabaseQueries = new SupabaseQueries();
 const linearActions = new LinearActions();
+let MoveIn: any;
 
 /*test.beforeAll(async ({playwright,page}) => {
 
@@ -12,10 +14,11 @@ const linearActions = new LinearActions();
 
 test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
-  await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+  await page.goto('/move-in?transfer-service=true',{ waitUntil: 'domcontentloaded' });
 });
 
 test.afterEach(async ({ page },testInfo) => {
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -28,7 +31,7 @@ test.describe('Move In Existing Utility Accout', () => {
   
   test('COMED New User', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    //const MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,false,false);
+    const MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage,false,false);
  
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email

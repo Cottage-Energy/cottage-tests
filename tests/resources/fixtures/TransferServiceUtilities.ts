@@ -3,6 +3,7 @@ import { SupabaseQueries } from './database_queries';
 import * as MoveIndata from '../data/move_in-data.json';
 import * as PaymentData from '../data/payment-data.json';
 
+
 const supabaseQueries = new SupabaseQueries();
 
 //Modify flow such that if both electric and gas are false it will not continue the flow
@@ -21,13 +22,12 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
+
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
         await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
@@ -61,13 +61,11 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Skip_Payment_Details();
 
     await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()
@@ -97,13 +95,11 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -134,13 +130,11 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -171,13 +165,11 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -207,13 +199,11 @@ export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpag
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -244,15 +234,14 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -282,15 +271,14 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -320,15 +308,14 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
@@ -354,12 +341,11 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -389,12 +375,11 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
@@ -420,15 +405,14 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -459,15 +443,14 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -499,12 +482,11 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -535,12 +517,11 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -571,15 +552,14 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Skip_Payment_Details();
     await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()
     await moveInpage.Click_Dashboard_Link();
@@ -607,12 +587,11 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Skip_Payment_Details();
     await moveInpage.Check_Almost_Done_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
@@ -641,7 +620,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -649,9 +628,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     //await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -684,7 +661,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -692,9 +669,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     //await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -727,7 +702,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -735,9 +710,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     //await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Disable_Auto_Payment();
     await moveInpage.Confirm_Payment_Details();
@@ -770,7 +743,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -778,9 +751,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
     //await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -812,7 +783,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -820,9 +791,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
     //await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Skip_Payment_Details();
     await moveInpage.Check_Almost_Done_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
@@ -850,7 +819,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -858,9 +827,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
     //await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
@@ -888,7 +855,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -896,9 +863,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -930,7 +895,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -938,9 +903,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
     await moveInpage.CON_ED_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
@@ -967,16 +930,14 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -1006,16 +967,14 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
-    await moveInpage.Next_Move_In_Button();
+
     await moveInpage.Skip_Payment_Details();
     await moveInpage.Check_Almost_Done_Move_In_Billing_Customer();
     await moveInpage.Click_Dashboard_Link();
@@ -1033,7 +992,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
 }
 
 
-export const MoveInTestUtilities = {
+export const TransferServiceTestUtilities = {
     //COMED Block can be used for DTE
     COMED_New_User_Move_In,
     COMED_New_User_Move_In_Skip_Payment,

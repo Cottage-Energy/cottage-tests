@@ -7,12 +7,14 @@ export class MoveInPage{
     readonly Move_In_Terms_Logo: Locator;
     readonly Move_In_Terms_PG_Description: Locator;
     readonly Move_In_Terms_Service_Description: Locator;
+    readonly Move_In_Tx_Svc_Service_Description: Locator;
     readonly Move_In_Terms_Payment_Description: Locator;
     readonly Move_In_Terms_Automation_Description: Locator;
     readonly Move_In_Terms_Checkbox: Locator;
     readonly Move_In_Get_Started_Button: Locator;
  
     readonly Move_In_Address_Page_Fields: Locator;
+    readonly Move_In_Tx_Svc_Address_Field: Locator;
     readonly Move_In_Back_Link: Locator;
     readonly Move_In_Address_Field: Locator;
     readonly Move_In_Address_Dropdown: (address: string) => Locator;
@@ -23,6 +25,12 @@ export class MoveInPage{
     readonly Move_In_Electric_Existing_Button: Locator;
     readonly Move_In_Gas_New_Button: Locator;
     readonly Move_In_Gas_Existing_Button: Locator;
+
+    readonly Move_In_Tx_Svc_Title: Locator;
+    readonly Move_In_Tx_Svc_Electric_Service: Locator;
+    readonly Move_In_Tx_Svc_Gas_Service: Locator;
+    readonly Move_In_Tx_Svc_Content: Locator;
+    readonly Move_In_Tx_Svc_Agreement_Checkbox: Locator;
 
     readonly Move_In_Email_Registered_Message: Locator;
     readonly Move_In_OTP_Field: Locator;
@@ -105,14 +113,15 @@ export class MoveInPage{
         this.Move_In_Terms_Logo = page.locator('circle');
         this.Move_In_Terms_PG_Description = page.getByText('Public Grid is a free');
         this.Move_In_Terms_Service_Description = page.getByText('Service is started with your');
+        this.Move_In_Tx_Svc_Service_Description = page.getByText('Service is guaranteed by your');
         this.Move_In_Terms_Payment_Description = page.getByText('You‘ll never pay more than if');
         this.Move_In_Terms_Automation_Description = page.getByText('You‘ll never pay more than if');
-        
         
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
         this.Move_In_Get_Started_Button = page.getByRole('button', { name: 'Get Started' });
         this.Move_In_Back_Link = page.getByText('Back');
         this.Move_In_Address_Page_Fields = page.getByRole('heading', { name: 'Where are you looking to' });
+        this.Move_In_Tx_Svc_Address_Field = page.getByRole('heading', { name: 'Where do you live?' });
         this.Move_In_Address_Field = page.locator('#address');
         this.Move_In_Address_Dropdown = (address: string) => page.getByText(address);
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
@@ -122,6 +131,12 @@ export class MoveInPage{
         this.Move_In_Electric_Existing_Button = page.locator('//label[@id = "Electric-existing"]');
         this.Move_In_Gas_New_Button = page.locator('//label[@id = "Gas-new"]');
         this.Move_In_Gas_Existing_Button = page.locator('//label[@id = "Gas-existing"]');
+
+        this.Move_In_Tx_Svc_Title = page.getByRole('heading', { name: 'Good news! We are in your' });
+        this.Move_In_Tx_Svc_Electric_Service = page.locator('div').filter({ hasText: /^ElectricityService with$/ }).nth(1);
+        this.Move_In_Tx_Svc_Gas_Service = page.locator('div').filter({ hasText: /^Natural GasService with$/ }).nth(1)
+        this.Move_In_Tx_Svc_Content = page.getByText('How it works:We close your');
+        this.Move_In_Tx_Svc_Agreement_Checkbox = page.getByLabel('I want Public Grid to close');
 
         this.Move_In_Email_Registered_Message = page.getByText('That email is already');
         this.Move_In_OTP_Field = page.locator('input[name="otpCode"]');
@@ -142,7 +157,7 @@ export class MoveInPage{
         this.Move_In_Email_Field = page.locator('input[name="email"]');
         this.Move_In_Email_Invalid_Message = page.getByText('Email address must be valid.');
         
-        this.Move_In_Date_Field = page.getByRole('button', { name: 'Select a move-in date' });
+        this.Move_In_Date_Field = page.locator('//p[contains(text(),"Date")]//following::div[@type="button"]');
         this.Move_In_Date_Selector = (day: string) => page.locator('//button[text()='+ day +'and not(@disabled) and not(contains(@class,"text-muted"))]');
         this.Move_In_Next_Month_Button = page.getByLabel('Go to next month');
         this.Move_In_Prev_Month_Button = page.getByLabel('Go to previous month');
@@ -203,7 +218,12 @@ export class MoveInPage{
         await this.page.waitForLoadState('load');
         await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_PG_Description).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:30000});
+        try{
+            await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:1000});
+        }
+        catch{
+            await expect(this.Move_In_Tx_Svc_Service_Description).toBeVisible({timeout:10000});
+        }
         await expect(this.Move_In_Terms_Payment_Description).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_Automation_Description).toBeVisible({timeout:30000});
         await this.Move_In_Terms_Checkbox.hover({timeout:30000});
@@ -214,9 +234,15 @@ export class MoveInPage{
         await this.Move_In_Get_Started_Button.click();
     }
 
+
     async Enter_Address(address:string, unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:30000});
+        try{
+            await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:3000});
+        }
+        catch{
+            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
+        }
         await this.page.waitForTimeout(1000);
         await this.Move_In_Address_Field.click({timeout:10000});
         await this.Move_In_Address_Field.fill(address);
@@ -226,6 +252,7 @@ export class MoveInPage{
         await this.Move_In_Unit_Field.fill(unit);
         await this.page.waitForTimeout(1000);
     }
+
 
     async Setup_Account(Electric_New: boolean, Gas_New: boolean){ 
         await expect(this.Move_In_Account_Setup_Fields).toBeVisible({timeout:30000});
@@ -253,6 +280,32 @@ export class MoveInPage{
             }
         }
 
+    }
+
+
+    async Transfer_Service_Agreement(){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+        await expect(this.Move_In_Tx_Svc_Title).toBeVisible({timeout:10000});
+        
+        try{
+            await expect(this.Move_In_Tx_Svc_Electric_Service).toBeVisible({timeout:1500});
+        }
+        catch{
+            console.log("No Electric Service");
+        }
+
+        try{
+            await expect(this.Move_In_Tx_Svc_Gas_Service).toBeVisible({timeout:1500});
+        }
+        catch{
+            console.log("No Gas Service");
+        }
+        
+        await expect(this.Move_In_Tx_Svc_Content).toBeVisible({timeout:10000});
+        await this.Move_In_Tx_Svc_Agreement_Checkbox.hover();
+        await this.Move_In_Tx_Svc_Agreement_Checkbox.isEnabled();
+        await this.Move_In_Tx_Svc_Agreement_Checkbox.setChecked(true,{timeout:10000});
     }
 
     

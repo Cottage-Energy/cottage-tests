@@ -1,6 +1,6 @@
 import { test,expect } from '../../../../resources/fixtures/pg_pages_fixture';
 import { generateTestUserData } from '../../../../resources/fixtures/test_user';
-import { MoveInTestUtilities } from '../../../../resources/fixtures/moveInUtilities';
+import { TransferServiceTestUtilities } from '../../../../resources/fixtures/transferServiceUtilities';
 import { FastmailActions } from '../../../../resources/fixtures/fastmail_actions';
 import { LinearActions } from '../../../../resources/fixtures/linear_actions';
 //import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
@@ -40,8 +40,8 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 
       await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
       await supabaseQueries.Update_Building_Billing("autotest",true);
-      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
+      await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+      MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
@@ -80,8 +80,8 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 
       await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
       await supabaseQueries.Update_Building_Billing("autotest",true);
-      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, false);
+      await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+      MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
@@ -120,8 +120,8 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 
       await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
       await supabaseQueries.Update_Building_Billing("autotest",true);
-      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, false);
+      await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+      MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, false);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
@@ -167,8 +167,8 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -207,16 +207,16 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -248,16 +248,16 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 
     await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, true);
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -294,8 +294,8 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage, false, true);
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage, false, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -335,16 +335,16 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, false, true);
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, false, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -376,16 +376,16 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
     await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, false, true);
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage, false, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -490,7 +490,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -507,7 +507,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     //check if the user will be able to login - suppose to be not a directed move-in again
 
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -555,7 +555,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -572,7 +572,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     //check if the user will be able to login - suppose to be not a directed move-in again
     
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -619,7 +619,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -637,7 +637,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     //check if the user will be able to login - suppose to be not a directed move-in again
 
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,AltPGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -732,7 +732,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
     await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -780,7 +780,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
     await supabaseQueries.Update_Companies_to_Building("autotest","PSEG","PSEG");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -826,7 +826,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","DTE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
