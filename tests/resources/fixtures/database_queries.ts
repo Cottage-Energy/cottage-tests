@@ -91,80 +91,68 @@ export class SupabaseQueries{
 
     //Get Bill ID
     async Get_Electric_Bill_Id(ElectricAccountId: string, Amount: number, Usage: number) {
-
+        const { data: EBill } = await supabase
+            .from('ElectricBill')
+            .select('id')
+            .eq('electricAccountID', ElectricAccountId)
+            .eq('totalAmountDue', Amount)
+            .eq('totalUsage', Usage)    
+            .single()
+            .throwOnError();
+        const ElectricBillId = EBill?.id ?? '';
+        console.log(ElectricBillId.toString());
+        return ElectricBillId.toString();
     }
 
 
     async Get_Gas_Bill_Id(GasAccountId: string, Amount: number, Usage: number) {
-        
+        const { data: GBill } = await supabase
+            .from('GasBill')
+            .select('id')
+            .eq('gasAccountID', GasAccountId)
+            .eq('totalAmountDue', Amount)
+            .eq('totalUsage', Usage)    
+            .single()
+            .throwOnError();
+        const GasBillId = GBill?.id ?? '';
+        console.log(GasBillId.toString());
+        return GasBillId.toString();        
     }
+
+
     //Get Charge ID and Validity
     async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
-        const maxRetries = 300;
-        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-        let retries = 0;
-        let ElectricBillstatus = '';
-        
-        while (retries < maxRetries) {
-            const { data: ElectricBillStatus } = await supabase
-                .from('ElectricBill')
-                .select('paymentStatus')
-                .eq('electricAccountID', electricBillID)
-                .single()
-                .throwOnError();
-                
-            ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
-            console.log(ElectricBillstatus);
-        
-            if (ElectricBillstatus === status) {
-                await expect(ElectricBillstatus).toBe(status);
-                break;
-            }
-        
-            retries++;
-            console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(3000);
-        }
-        
-        // If the loop exits without matching the status, throw an error
-        if (ElectricBillstatus !== status) {
-            throw new Error(`Expected status '${status}' not met after ${maxRetries} retries.`);
-        }
+        const { data: ECharge } = await supabase
+            .from('ElectricBillCharge')
+            .select('chargeId, isValid')
+            .eq('electricBillId', electricBillID)   
+            .single()
+            .throwOnError();
+        const ElectricChargeId = ECharge?.chargeId ?? '';
+        const ElectricChargeValidity = ECharge?.isValid ?? '';
+        await expect(ElectricChargeId).not.toBeNull();
+        await expect(ElectricChargeValidity).toBe(validity);
+        console.log("Charge ID:",ElectricChargeId.toString(),"Validity:",ElectricChargeValidity);
+        return ElectricChargeId.toString();
     }
 
 
     async Get_Gas_Charge_Id_validity(gasBillID: any, validity: boolean) {
-
-    }
-
-
-
-    async Check_Eletric_Bill_Reminder(ElectricAccountId: string, state:boolean) {
-        const { data: ElectricBillReminder } = await supabase
-            .from('ElectricBill')
-            .select('isSendReminder')
-            .eq('electricAccountID', ElectricAccountId)
+        const { data: GCharge } = await supabase
+            .from('GasBillCharge')
+            .select('chargeId, isValid')
+            .eq('gasBillId', gasBillID)   
             .single()
             .throwOnError();
-        const ElectricBillreminder = ElectricBillReminder?.isSendReminder ?? '';
-        console.log(ElectricBillreminder);
-        await expect(ElectricBillreminder).toBe(state);
+        const GasChargeId = GCharge?.chargeId ?? '';
+        const GasChargeValidity = GCharge?.isValid ?? '';
+        await expect(GasChargeId).not.toBeNull();
+        await expect(GasChargeValidity).toBe(validity);
+        console.log("Charge ID:",GasChargeId.toString(),"Validity:",GasChargeValidity);
+        return GasChargeId.toString();
     }
 
-
-    async Check_Gas_Bill_Reminder(GasAccountId: string, state:boolean) {
-        const { data: GasBillReminder } = await supabase
-            .from('GasBill')
-            .select('isSendReminder')
-            .eq('gasAccountID', GasAccountId)
-            .single()
-            .throwOnError();
-        const GasBillreminder = GasBillReminder?.isSendReminder ?? '';
-        console.log(GasBillreminder);
-        await expect(GasBillreminder).toBe(state);
-    }
-
-
+    //////////////////////////////////to be modified to refer to Charges Table or the Electric/Gas Charge using Charge ID //////////////////
     async Check_Electric_Bill_Visibility(ElectricAccountId: string, state: boolean) {
         const maxRetries = 3;
         let retries = 0;
@@ -234,6 +222,32 @@ export class SupabaseQueries{
         const GasBillvisib = GasBillVis?.visible ?? '';
         console.log(GasBillvisib);
         await expect(GasBillvisib).toBe(state);
+    }
+
+    //////////////////////////////// To be Modified to Refer to Payment Table  using Charge ID //////////////////
+    async Check_Eletric_Bill_Reminder(ElectricAccountId: string, state:boolean) {
+        const { data: ElectricBillReminder } = await supabase
+            .from('ElectricBill')
+            .select('isSendReminder')
+            .eq('electricAccountID', ElectricAccountId)
+            .single()
+            .throwOnError();
+        const ElectricBillreminder = ElectricBillReminder?.isSendReminder ?? '';
+        console.log(ElectricBillreminder);
+        await expect(ElectricBillreminder).toBe(state);
+    }
+
+
+    async Check_Gas_Bill_Reminder(GasAccountId: string, state:boolean) {
+        const { data: GasBillReminder } = await supabase
+            .from('GasBill')
+            .select('isSendReminder')
+            .eq('gasAccountID', GasAccountId)
+            .single()
+            .throwOnError();
+        const GasBillreminder = GasBillReminder?.isSendReminder ?? '';
+        console.log(GasBillreminder);
+        await expect(GasBillreminder).toBe(state);
     }
 
     
@@ -472,6 +486,7 @@ export class SupabaseQueries{
         await expect(ActualFee).toBe(Number(Expectedfee));
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
 
     async Get_Electric_Bill_Start_Date(ElectricAccountId: string) {
         const { data: ElectricBill } = await supabase

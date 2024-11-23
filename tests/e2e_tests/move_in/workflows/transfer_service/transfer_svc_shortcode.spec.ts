@@ -27,15 +27,16 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-test.describe.configure({mode: "serial"});
+
 test.describe('Short Code Billing New User Electric &/or Gas', () => {
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
@@ -46,10 +47,10 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
@@ -60,10 +61,10 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression'],}, async ({moveInpage, page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -74,10 +75,10 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -86,16 +87,123 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", "CON-EDISON");
   });
 
+
 });
 
-test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
+
+//Billing but Cancelled
+test.describe('Short Code Billing Canceled Registration', () => {
+  test.describe.configure({mode: "serial"});
+  
+
+  test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+    test.setTimeout(900000);
+    await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", null);
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(75000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
+    //add query to check if the user is added to the UtilityCredentials table
+    //add check in DB fro question answers
+    await finishAccountSetupPage.Click_Cancel_Registration();
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //No service confirmation email
+    //check Account Status
+  });
+
+
+  test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => { // Use BGE and NGMA
+    test.setTimeout(900000);
+    await supabaseQueries.Update_Companies_to_Building("autotest", null, "PSEG");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await page.waitForTimeout(75000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
+    //add query to check if the user is added to the UtilityCredentials table
+    //add check in DB fro question answers
+    await finishAccountSetupPage.Click_Cancel_Registration();
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //No service confirmation email
+    //check Account Status
+  });
+
+
+  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+    test.setTimeout(900000);
+    await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", "DTE");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(75000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
+    //add query to check if the user is added to the UtilityCredentials table
+    //add check in DB fro question answers
+    await finishAccountSetupPage.Click_Cancel_Registration();
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //No service confirmation email
+    //check Account Status
+  });
+
+
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+    test.setTimeout(900000);
+    await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", "CON-EDISON");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(75000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.PGUserEmail);
+    await page.goto('/sign-in');
+    //add query to check if the user is added to the UtilityCredentials table
+    //add check in DB fro question answers
+    await finishAccountSetupPage.Click_Cancel_Registration();
+    await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Check_Get_Started_Widget_Visible();
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //No service confirmation email
+    //check Account Status
+  });
+  
+
+});
+
+
+
+test.describe.skip('Short Code Non Billing New User Electric &/or Gas', () => {
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
@@ -109,7 +217,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",false);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Non_Billing(moveInpage, true, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
@@ -123,7 +231,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",false);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -137,7 +245,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",false);
-    await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Non_Billing(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
