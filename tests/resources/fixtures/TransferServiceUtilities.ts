@@ -11,7 +11,7 @@ const supabaseQueries = new SupabaseQueries();
 //COMED block can be used for DTE
 //EVERSOURCE block can be used for NGMA, PSEG
 
-export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COMED_New_User_Move_In(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -51,7 +51,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
 }
 
 
-export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -84,7 +84,7 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
 }
 
 
-export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -119,7 +119,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
 }
 
 
-export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -155,7 +155,7 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
 }
 
 
-export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -189,7 +189,7 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
 }
 
 
-export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -223,7 +223,7 @@ export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpag
 }
 
 
-export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -261,7 +261,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
 }
 
 
-export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -298,7 +298,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
 }
 
 
-export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -330,7 +330,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewEl
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -365,7 +365,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -394,7 +394,7 @@ export async function EVERSOURCE_New_User_Move_In_Non_Billing(moveInpage: any, N
 }
 
 
-export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -433,7 +433,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
 }
 
 
-export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -471,7 +471,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -507,7 +507,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -542,7 +542,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
 }
 
 
-export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -577,7 +577,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -609,7 +609,7 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
 }
 
 
-export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -650,7 +650,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
 }
 
 
-export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -692,7 +692,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
 }
 
 
-export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -733,7 +733,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
 }
 
 
-export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -773,7 +773,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
 }
 
 
-export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -809,7 +809,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
 }
 
 
-export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -844,7 +844,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any, NewElect
 }
 
 
-export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -885,7 +885,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
 }
 
 
-export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -920,7 +920,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
 }
 
 
-export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -957,7 +957,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
 }
 
 
-export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;

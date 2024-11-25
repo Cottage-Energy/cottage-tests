@@ -37,7 +37,7 @@ test.describe('Transfer Service New User', () => {
 
   test('COMED New User', {tag: ['@smoke', '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(150000);
-    MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
@@ -50,7 +50,7 @@ test.describe('Transfer Service New User', () => {
 
   test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(150000);
-    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
@@ -64,7 +64,7 @@ test.describe('Transfer Service New User', () => {
 
   test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(150000);
-    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
@@ -77,7 +77,7 @@ test.describe('Transfer Service New User', () => {
 
   test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(150000);
-    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
@@ -91,7 +91,7 @@ test.describe('Transfer Service New User', () => {
 
   test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(150000);
-    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
@@ -104,7 +104,7 @@ test.describe('Transfer Service New User', () => {
 
   test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(600000);
-    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
@@ -128,7 +128,7 @@ test.describe('Transfer Service New User', () => {
     const PGuserUsage = await generateTestUserData();
 
     test.setTimeout(600000);
-    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
@@ -149,7 +149,7 @@ test.describe('Transfer Service New User', () => {
 
   test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(600000);
-    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
@@ -173,7 +173,7 @@ test.describe('Transfer Service New User', () => {
     const PGuserUsage = await generateTestUserData();
 
     test.setTimeout(600000);
-    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,true,true);
+    MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
