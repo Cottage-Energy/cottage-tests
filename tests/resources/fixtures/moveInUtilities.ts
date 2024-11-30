@@ -8,7 +8,7 @@ const supabaseQueries = new SupabaseQueries();
 //Modify flow such that if both electric and gas are false it will not continue the flow
 //Modify also, that if Electric is false and Gas is not visible it not continue the flow
 //COMED block can be used for DTE
-//EVERSOURCE block can be used for NGMA, PSEG
+//EVERSOURCE block can be used for NGMA, PSEG, NYS-EG
 
 export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
     
