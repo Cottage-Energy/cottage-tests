@@ -618,11 +618,10 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, C
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -659,11 +658,10 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -700,11 +698,10 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -741,11 +738,10 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -781,11 +777,10 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any) {
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
@@ -817,11 +812,10 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any) {
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     //await moveInpage.CON_ED_Questions();
