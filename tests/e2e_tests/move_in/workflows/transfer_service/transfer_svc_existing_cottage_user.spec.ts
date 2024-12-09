@@ -414,9 +414,6 @@ test.describe('Transfer Service Existing User: Cottageuser & GasAccount Exist', 
 });
 
 
-
-
-
 test.describe('Transfer Service Existing User: Cottageuser Exist Did Drop Off', () => {
   test.describe.configure({mode: "serial"});
     

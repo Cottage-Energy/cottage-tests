@@ -31,7 +31,7 @@ test.describe('Move In Existing Utility Accout', () => {
   
   test('COMED New User', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    const MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage,false,false);
+    const MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage);
  
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
@@ -50,7 +50,7 @@ test.describe('Move In Existing Utility Accout', () => {
 
   test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,false,false);
+    //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage);
     
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
@@ -59,7 +59,7 @@ test.describe('Move In Existing Utility Accout', () => {
 
   test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,false,false);
+    //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage);
 
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
@@ -69,7 +69,7 @@ test.describe('Move In Existing Utility Accout', () => {
 
   test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,false,false);
+    //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage);
     
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
@@ -78,7 +78,7 @@ test.describe('Move In Existing Utility Accout', () => {
 
   test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage,false,false);
+    //const MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
     
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
@@ -88,7 +88,7 @@ test.describe('Move In Existing Utility Accout', () => {
 
   test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.slow();
-    //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage,false,false);
+    //const MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
     
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
