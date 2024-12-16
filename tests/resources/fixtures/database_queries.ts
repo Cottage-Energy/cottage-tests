@@ -100,7 +100,7 @@ export class SupabaseQueries{
             .single()
             .throwOnError();
         const ElectricBillId = EBill?.id ?? '';
-        console.log(ElectricBillId.toString());
+        console.log("Electric Bill ID:", ElectricBillId.toString());
         return ElectricBillId.toString();
     }
 
@@ -115,7 +115,7 @@ export class SupabaseQueries{
             .single()
             .throwOnError();
         const GasBillId = GBill?.id ?? '';
-        console.log(GasBillId.toString());
+        console.log("Gas Bill ID:", GasBillId.toString());
         return GasBillId.toString();        
     }
 

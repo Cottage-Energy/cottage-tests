@@ -36,6 +36,7 @@ test.describe('Move In Existing Utility Accout', () => {
     //add query to check if the user is added to the UtilityCredentials table
     //check confirnation email
   });
+  
 
 
   test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression'],}, async ({moveInpage, page}) => {

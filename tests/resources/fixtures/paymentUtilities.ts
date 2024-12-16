@@ -1,10 +1,9 @@
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
-import { LinearActions } from '../../resources/fixtures/linear_actions';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
 import * as PaymentData from '../../resources/data/payment-data.json';
+import { AdminApi } from '../../resources/api/admin_api';
 
 const supabaseQueries = new SupabaseQueries();
-const linearActions = new LinearActions();
 
 export class PaymentUtilities {
 
@@ -12,7 +11,10 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Successfull Payment Checks
 
-    async Auto_Card_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Auto_Card_Payment_Electric_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -37,7 +39,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -89,7 +91,11 @@ export class PaymentUtilities {
     }
 
 
-    async Auto_Card_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Auto_Card_Payment_Electric_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -115,8 +121,8 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -199,7 +205,10 @@ export class PaymentUtilities {
     }
 
 
-    async Auto_Card_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Auto_Card_Payment_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -224,7 +233,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
@@ -274,7 +283,10 @@ export class PaymentUtilities {
     }
 
 
-    async Auto_Bank_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Auto_Bank_Payment_Electric_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -299,7 +311,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -355,7 +367,11 @@ export class PaymentUtilities {
     }
 
 
-    async Auto_Bank_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Auto_Bank_Payment_Electric_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -383,8 +399,10 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
+            //AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            //AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -470,7 +488,10 @@ export class PaymentUtilities {
     }
 
 
-    async Auto_Bank_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Auto_Bank_Payment_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -495,7 +516,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
@@ -555,7 +576,10 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Manual_Card_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Manual_Card_Payment_Electric_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        
         //Manual PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -579,7 +603,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user");
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
@@ -634,8 +658,12 @@ export class PaymentUtilities {
     }
 
 
-    async Manual_Card_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
-      //MANUAL PAYMENT CHECKS
+    async Manual_Card_Payment_Electric_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+      
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+      
+        //MANUAL PAYMENT CHECKS
       await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
       await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
       await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false);
@@ -659,8 +687,8 @@ export class PaymentUtilities {
       await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
       await page.waitForTimeout(10000);
       await Promise.all([
-          linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-          linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+          AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+          AdminApi.Approve_Bill(AdminApiContext, GasBillID)
       ]);
       await page.waitForTimeout(10000);
       await Promise.all([
@@ -752,8 +780,11 @@ export class PaymentUtilities {
     }
 
 
-    async Manual_Card_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
-      //Manual PAYMENT CHECKS
+    async Manual_Card_Payment_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+      
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+      
+        //Manual PAYMENT CHECKS
       await Promise.all([
         supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
         supabaseQueries.Check_Gas_Bill_Reminder(GasAccountId, true),
@@ -776,7 +807,7 @@ export class PaymentUtilities {
       await sidebarChat.Goto_Overview_Page_Via_Icon();
       await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
       await page.waitForTimeout(10000);
-      await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+      await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
       await page.waitForTimeout(10000);
       await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "waiting_for_user");
       await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true);
@@ -832,7 +863,10 @@ export class PaymentUtilities {
     }
 
 
-    async Manual_Bank_Payment_Electric_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Manual_Bank_Payment_Electric_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        
         //Manual PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -856,7 +890,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user");
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
@@ -911,7 +945,11 @@ export class PaymentUtilities {
     }
 
 
-    async Manual_Bank_Payment_Electric_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Manual_Bank_Payment_Electric_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //MANUAL PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -936,8 +974,8 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -1027,7 +1065,10 @@ export class PaymentUtilities {
     }
 
 
-    async Manual_Bank_Payment_Gas_Checks(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Manual_Bank_Payment_Gas_Checks(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //Manual PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -1051,7 +1092,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "waiting_for_user");
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true);
@@ -1110,7 +1151,10 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Failed Payment Checks
 
-    async Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -1135,7 +1179,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -1201,7 +1245,11 @@ export class PaymentUtilities {
     }
 
 
-    async Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -1227,8 +1275,8 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -1331,7 +1379,10 @@ export class PaymentUtilities {
     }
 
 
-    async Card_Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, GasAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -1356,7 +1407,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
@@ -1425,7 +1476,10 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -1450,7 +1504,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -1516,7 +1570,11 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -1542,8 +1600,8 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -1646,7 +1704,10 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Alert_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Alert_Update_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, profilePage: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -1671,7 +1732,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
@@ -1740,7 +1801,10 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+    
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -1765,7 +1829,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -1832,7 +1896,11 @@ export class PaymentUtilities {
     }
 
 
-    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -1858,8 +1926,8 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -1963,7 +2031,10 @@ export class PaymentUtilities {
     }
 
 
-    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -1988,7 +2059,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
@@ -2058,7 +2129,10 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false),
@@ -2083,7 +2157,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -2148,7 +2222,11 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+        
+        const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+        
         //AUTO PAYMENT CHECKS
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, false);
         await supabaseQueries.Check_Eletric_Bill_Reminder(ElectricAccountId, true);
@@ -2174,8 +2252,8 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
         await Promise.all([
-            linearActions.SetElectricBillToApprove(MoveIn.PGUserEmail),
-            linearActions.SetGasBillToApprove(MoveIn.PGUserEmail)
+            AdminApi.Approve_Bill(AdminApiContext, ElectriBillID),
+            AdminApi.Approve_Bill(AdminApiContext, GasBillID)
         ]);
         await page.waitForTimeout(10000);
         await Promise.all([
@@ -2277,7 +2355,10 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+        
+        const GasBillID = await supabaseQueries.Get_Gas_Bill_Id(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
+
         //AUTO PAYMENT CHECKS
         await Promise.all([
             supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, false),
@@ -2302,7 +2383,7 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Check_Gas_Bill_Paid_Notif(GasAccountId, false);
         await page.waitForTimeout(10000);
-        await linearActions.SetGasBillToApprove(MoveIn.PGUserEmail);
+        await AdminApi.Approve_Bill(AdminApiContext, GasBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "scheduled_for_payment"),
         await supabaseQueries.Check_Gas_Bill_Visibility(GasAccountId, true)
