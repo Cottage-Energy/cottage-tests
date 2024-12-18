@@ -48,10 +48,10 @@ test.afterEach(async ({ page },testInfo) => {
   
 });*/
 
-
+test.describe.configure({mode: "serial"});
 
 test.describe('Valid Card Auto Payment', () => {
-    test.describe.configure({mode: "serial"});
+    
   
   test('CON-EDISON Electric Only Valid Auto Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
@@ -350,7 +350,7 @@ test.describe('Valid Card Auto Payment', () => {
 
 
 test.describe('Valid Bank Auto Payment', () => {
-    test.describe.configure({mode: "serial"});
+    
     
     test('COMED Electric Only Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY

@@ -10,7 +10,6 @@ import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
-import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 
 
 let AdminApiContext: APIRequestContext;
@@ -41,7 +40,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+    //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
     //await page.close();
 });
   
@@ -87,7 +86,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
-        await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
     });
     
   
@@ -127,7 +126,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
       await page.waitForTimeout(500);
-      await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
+      await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
@@ -163,7 +162,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
-        await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
+        await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
 
 
@@ -188,7 +187,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
-        await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
   
 
@@ -230,7 +229,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
       await page.waitForTimeout(500);
-      await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+      await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
   
@@ -269,7 +268,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
       const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
       await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
       await page.waitForTimeout(500);
-      await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+      await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
   
 });
@@ -312,7 +311,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
   
 
@@ -354,7 +353,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
       ]);
       await page.waitForTimeout(500)
-      await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+      await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
@@ -390,7 +389,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 
@@ -415,7 +414,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
       
     
@@ -455,7 +454,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
@@ -493,7 +492,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
   
 });
@@ -524,7 +523,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
     });
 
     
@@ -564,7 +563,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
@@ -602,7 +601,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
     });
 
 
@@ -640,7 +639,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
     
 
@@ -681,7 +680,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
     
@@ -718,7 +717,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 });
@@ -760,7 +759,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
     
 
@@ -802,7 +801,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
     
@@ -840,7 +839,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 
@@ -867,7 +866,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
         const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
 
     
@@ -907,7 +906,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
 
@@ -945,7 +944,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
         const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 });
