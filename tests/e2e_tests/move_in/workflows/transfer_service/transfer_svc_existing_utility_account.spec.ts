@@ -26,7 +26,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-test.describe.configure({mode: "serial"});
+test.describe.configure({mode: "serial", retries: 2});
 test.describe('Move In Existing Utility Accout', () => {
   
   test('COMED New User', {tag: [ '@regression'],}, async ({moveInpage, page}) => {

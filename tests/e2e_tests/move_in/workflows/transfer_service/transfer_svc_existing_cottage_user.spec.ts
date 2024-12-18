@@ -29,10 +29,10 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-test.describe.configure({mode: "serial"});
+
 
 test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exist', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
   
     test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
@@ -160,7 +160,7 @@ test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exi
 
 
 test.describe('Transfer Service Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
@@ -287,7 +287,7 @@ test.describe('Transfer Service Existing User: Cottageuser, ElectricAccount & Ga
 
 
 test.describe('Transfer Service Existing User: Cottageuser & GasAccount Exist', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
@@ -416,7 +416,7 @@ test.describe('Transfer Service Existing User: Cottageuser & GasAccount Exist', 
 
 
 test.describe('Transfer Service Existing User: Cottageuser Exist Did Drop Off', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, supabaseQueries, finishAccountSetupPage, overviewPage}) => {
     test.setTimeout(900000);

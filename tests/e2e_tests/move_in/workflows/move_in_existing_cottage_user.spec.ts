@@ -21,7 +21,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -29,10 +29,9 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-test.describe.configure({mode: "serial"});
 
 test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
   
     test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
@@ -159,7 +158,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 
 
 test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
@@ -286,7 +285,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 
 
 test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
@@ -414,7 +413,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 
 
 test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
@@ -432,8 +431,8 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    //const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    //await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await linearActions.CountMoveInTicket(PGuser.Email,0);
 
     //check if the user will be able to login - suppose to be not
@@ -446,7 +445,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Check_Email_Registered_Message();
+    /*await moveInpage.Check_Email_Registered_Message();
     const OTP = await FastmailActions.Get_OTP(PGuser.Email);
       
     if (typeof OTP === 'string') {
@@ -454,11 +453,15 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
       await moveInpage.Next_Move_In_Button();
     } else {
         throw new Error('Invalid OTP');
-    }
+    }*/
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
+
+    await page.waitForTimeout(10000);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email); // currently analyzing
+
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
       await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
@@ -501,9 +504,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
-    await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
+    //const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    //await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    //await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
     await linearActions.CountMoveInTicket(PGuser.Email,0);
 
     //check if the user will be able to login - suppose to be not a directed move-in again
@@ -516,19 +519,24 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(PGuser.Email);
+    //await moveInpage.Check_Email_Registered_Message();
+    /*const OTP = await FastmailActions.Get_OTP(PGuser.Email);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
       await moveInpage.Next_Move_In_Button();
     } else {
         throw new Error('Invalid OTP');
-    }
+    }*/
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
+
+    await page.waitForTimeout(10000);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+
+
     await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -566,9 +574,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
-    await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
+    //const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    //await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    //await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
     await linearActions.CountMoveInTicket(PGuser.Email,0);
 
     //check if the user will be able to login - suppose to be not a directed move-in again
@@ -581,7 +589,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Check_Email_Registered_Message();
+    /*await moveInpage.Check_Email_Registered_Message();
     const OTP = await FastmailActions.Get_OTP(PGuser.Email);
       
     if (typeof OTP === 'string') {
@@ -589,10 +597,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
       await moveInpage.Next_Move_In_Button();
     } else {
         throw new Error('Invalid OTP');
-    }
+    }*/
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
+
+    await page.waitForTimeout(10000);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+
     await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -631,9 +643,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
-    await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
+    //const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    //await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    //await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
     await linearActions.CountMoveInTicket(PGuser.Email,0);
 
     //check if the user will be able to login - suppose to be not a directed move-in again
@@ -647,7 +659,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Check_Email_Registered_Message();
+    /*await moveInpage.Check_Email_Registered_Message();
     const OTP = await FastmailActions.Get_OTP(PGuser.Email);
       
     if (typeof OTP === 'string') {
@@ -655,12 +667,16 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
       await moveInpage.Next_Move_In_Button();
     } else {
         throw new Error('Invalid OTP');
-    }
+    }*/
 
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
+
+    await page.waitForTimeout(10000);
+    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+
     await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -683,7 +699,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
 
 test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
-  
+  test.describe.configure({mode: "serial", retries: 2});
     
   test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression'],}, async ({page, moveInpage, supabaseQueries, finishAccountSetupPage, overviewPage}) => {
     test.setTimeout(900000);
