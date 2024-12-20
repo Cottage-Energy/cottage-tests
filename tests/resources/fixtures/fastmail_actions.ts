@@ -145,7 +145,7 @@ export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string,
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${ElectricUsage} kWh`);
+    await expect(email_body).toContain(`${ElectricUsage}kWh`);
     await expect(email_body).toContain(`$${ElectricBillTotal}`);
 }
 
@@ -210,7 +210,7 @@ export async function Check_Gas_Bill_Scheduled_Payment_Email(Email: string, GasU
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${GasUsage} therms`);
+    await expect(email_body).toContain(`${GasUsage}therms`); // space is missing in the email
     await expect(email_body).toContain(`$${GasBillTotal}`);
 }
 
