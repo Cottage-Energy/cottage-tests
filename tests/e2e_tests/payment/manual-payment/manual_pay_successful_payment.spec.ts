@@ -49,9 +49,9 @@ test.afterEach(async ({ page },testInfo) => {
   
 });*/
 
-test.describe.configure({mode: "serial"});
 
 test.describe('Valid Card Manual Payment', () => {
+  test.describe.configure({mode: "serial"});
   
     
   test('NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
@@ -343,6 +343,7 @@ test.describe('Valid Card Manual Payment', () => {
 
 
 test.describe('Valid Bank Manual Payment', () => {
+  test.describe.configure({mode: "serial"});
   
   
   test('EVERSOURCE Electric Only Valid Manual Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
