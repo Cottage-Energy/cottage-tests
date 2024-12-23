@@ -986,6 +986,37 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
 }
 
 
+export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+    
+    const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
+    const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
+    
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.TEXASaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Texas_Service_Agreement();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Texas_Questions();
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    const accountNumber = await moveInpage.Get_Account_Number();
+    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    return {
+        accountNumber,
+        cottageUserId,
+        PGUserName,
+        PGUserFirstName,
+        PGUserEmail
+    };
+}
+
+
 export const TransferServiceTestUtilities = {
     //COMED Block can be used for DTE
     COMED_New_User_Move_In,
@@ -1020,5 +1051,7 @@ export const TransferServiceTestUtilities = {
     BGE_CON_ED_New_User_Move_In_Non_Billing,
 
     CON_ED_COMED_New_User_Move_In_Bank_Account_Added,
-    CON_ED_COMED_New_User_Move_In_Skip_Payment
+    CON_ED_COMED_New_User_Move_In_Skip_Payment,
+
+    TEXAS_New_User_Move_In
 };

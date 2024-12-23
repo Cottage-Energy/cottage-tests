@@ -32,6 +32,9 @@ export class MoveInPage{
     readonly Move_In_Tx_Svc_Content: Locator;
     readonly Move_In_Tx_Svc_Agreement_Checkbox: Locator;
 
+    readonly Move_In_Texas_Agreement_Title: Locator;
+    readonly Move_In_Texas_Agreement_Content: Locator;
+
     readonly Move_In_Email_Registered_Message: Locator;
     readonly Move_In_OTP_Field: Locator;
     readonly Move_In_OTP_Confirmed_Message: Locator;
@@ -61,6 +64,13 @@ export class MoveInPage{
     readonly Move_In_BGE_Employment_Status_Title: Locator;
     readonly Move_In_BGE_Employment_Status_Dropdown: Locator;
     readonly Move_In_BGE_Employment_Selection: (selection: string) => Locator;
+
+    readonly Move_In_Texas_Lenght_of_Staying_Question: Locator;
+    readonly Move_In_Texas_Lenght_of_Staying_Dropdown: Locator;
+    readonly Move_In_Texas_Lenght_of_Staying_Selection: (selection: string) => Locator;
+    readonly Move_In_Texas_Thermostat_Question: Locator;
+    readonly Move_In_Texas_Thermostat_Yes_Button: Locator;
+    readonly Move_In_Texas_Thermostat_No_Button: Locator;
     
     readonly Move_In_Identity_Info_Title: Locator;
     readonly Move_In_Birthdate_Field: Locator;
@@ -138,6 +148,9 @@ export class MoveInPage{
         this.Move_In_Tx_Svc_Content = page.getByText('How it works:We close your');
         this.Move_In_Tx_Svc_Agreement_Checkbox = page.getByLabel('I want Public Grid to close');
 
+        this.Move_In_Texas_Agreement_Title = page.getByRole('heading', { name: 'Good News! We are in your' });
+        this.Move_In_Texas_Agreement_Content = page.getByText('Public Grid starts service for:ElectricityHow it worksWe scan the market for');
+
         this.Move_In_Email_Registered_Message = page.getByText('That email is already');
         this.Move_In_OTP_Field = page.locator('input[name="otpCode"]');
         this.Move_In_OTP_Confirmed_Message = page.getByText('OTP Confirmed ✅', { exact: true });
@@ -168,6 +181,13 @@ export class MoveInPage{
         this.Move_In_BGE_Employment_Status_Title = page.getByText('Employment Status');
         this.Move_In_BGE_Employment_Status_Dropdown = page.getByRole('combobox');
         this.Move_In_BGE_Employment_Selection = (selection: string) => page.locator(`//span[contains(text(),"${selection}")]`);
+
+        this.Move_In_Texas_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
+        this.Move_In_Texas_Lenght_of_Staying_Dropdown = page.getByRole('combobox');
+        this.Move_In_Texas_Lenght_of_Staying_Selection = (selection: string) => page.locator(`//span[contains(text(),"${selection}")]`);
+        this.Move_In_Texas_Thermostat_Question = page.getByText('Do you own a smart thermostat?');
+        this.Move_In_Texas_Thermostat_Yes_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "Yes")]');
+        this.Move_In_Texas_Thermostat_No_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "No")]');
 
         this.Move_In_Birthdate_Field = page.locator('input[name="dateOfBirth"]');
         this.Move_In_Birthdate_Required_Message = page.getByText('Date of Birth Required');
@@ -308,6 +328,14 @@ export class MoveInPage{
         await this.Move_In_Tx_Svc_Agreement_Checkbox.setChecked(true,{timeout:10000});
     }
 
+
+    async Texas_Service_Agreement(){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+        await expect(this.Move_In_Texas_Agreement_Title).toBeVisible({timeout:10000});
+        await expect(this.Move_In_Texas_Agreement_Content).toBeVisible({timeout:10000});
+    }
+
     
     async Next_Move_In_Button(){
         await expect(this.Move_In_Next_Button).toBeEnabled({timeout:10000});
@@ -376,6 +404,41 @@ export class MoveInPage{
         return randomOption;
     }
 
+
+    async Texas_Questions(){
+        const Q1options = [
+            'Less than 6 months',
+            '6 months',
+            '1 year or longer',
+            'Unsure',
+          ];
+        const Q1randomIndex = Math.floor(Math.random() * Q1options.length);
+        const Q1randomOption = Q1options[Q1randomIndex];
+        console.log(Q1randomOption);
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Texas_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
+        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.hover();
+        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.click();
+        await this.page.waitForTimeout(500);
+        await this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:10000});
+
+        await this.page.waitForTimeout(500);
+
+        const Q2options = [
+            this.Move_In_Texas_Thermostat_Yes_Button,
+            this.Move_In_Texas_Thermostat_No_Button
+          ];
+        
+        await expect(this.Move_In_Texas_Thermostat_Question).toBeVisible({timeout:30000});
+        const Q2randomOption = Q2options[Math.floor(Math.random() * Q2options.length)];
+        const Q2randomOptionText = await Q2randomOption.textContent();
+        await Q2randomOption.click(); 
+        console.log(Q2randomOptionText);
+        return {
+            Q1randomOption,
+            Q2randomOptionText
+        }
+    }
 
 
     async Enter_ID_Info(birthdate:string, IDnumber:string){

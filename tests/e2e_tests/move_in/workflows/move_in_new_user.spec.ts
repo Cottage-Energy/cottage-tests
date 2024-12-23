@@ -189,5 +189,20 @@ test.describe('Move In New User', () => {
   });
 
 
+  test('TEXAS New User', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
+    test.setTimeout(150000);
+    MoveIn = await MoveInTestUtilities.TEXAS_New_User_Move_In(moveInpage,true,true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //add query to check if the user is added to the UtilityCredentials table
+    //add check in DB fro question answers
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
+    //check Account Status
+  });
+
+
+
 });
 
