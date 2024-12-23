@@ -60,6 +60,10 @@ export class MoveInPage{
     readonly Move_In_Prev_Month_Button: Locator;
 
     readonly Move_In_CON_ED_Questions_Title: Locator;
+    readonly Move_In_CON_ED_Life_Support_Yes_Button: Locator;
+    readonly Move_In_CON_ED_Life_Support_No_Button: Locator;
+    readonly Move_In_CON_ED_62_years_Yes_Button: Locator;
+    readonly Move_In_CON_ED_62_years_No_Button: Locator;
 
     readonly Move_In_BGE_Employment_Status_Title: Locator;
     readonly Move_In_BGE_Employment_Status_Dropdown: Locator;
@@ -177,6 +181,10 @@ export class MoveInPage{
         this.Move_In_Identity_Info_Title = page.getByRole('heading', { name: 'Identity Information' });
 
         this.Move_In_CON_ED_Questions_Title =  page.getByRole('heading', { name: 'A couple of quick questions' });
+        this.Move_In_CON_ED_Life_Support_Yes_Button = page.locator('//p[contains(text(),"life-support")]//parent::div//div//label[contains(@for, "Yes")]');
+        this.Move_In_CON_ED_Life_Support_No_Button = page.locator('//p[contains(text(),"life-support")]//parent::div//div//label[contains(@for, "No")]');
+        this.Move_In_CON_ED_62_years_Yes_Button = page.locator('//p[contains(text(),"62 years")]//parent::div//div//label[contains(@for, "Yes")]');
+        this.Move_In_CON_ED_62_years_No_Button = page.locator('//p[contains(text(),"62 years")]//parent::div//div//label[contains(@for, "No")]');
 
         this.Move_In_BGE_Employment_Status_Title = page.getByText('Employment Status');
         this.Move_In_BGE_Employment_Status_Dropdown = page.getByRole('combobox');
@@ -382,7 +390,31 @@ export class MoveInPage{
     async CON_ED_Questions(){
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_CON_ED_Questions_Title).toBeVisible({timeout:30000});
-        //Answering the questions randomly
+        
+        const Q1options = [
+            this.Move_In_CON_ED_Life_Support_Yes_Button,
+            this.Move_In_CON_ED_Life_Support_No_Button
+          ];
+        
+        const Q1randomOption = Q1options[Math.floor(Math.random() * Q1options.length)];
+        const Q1randomOptionText = await Q1randomOption.textContent();
+        await Q1randomOption.click(); 
+        console.log(Q1randomOptionText);
+
+        const Q2options = [
+            this.Move_In_CON_ED_62_years_Yes_Button,
+            this.Move_In_CON_ED_62_years_No_Button
+          ];
+        
+        const Q2randomOption = Q2options[Math.floor(Math.random() * Q2options.length)];
+        const Q2randomOptionText = await Q2randomOption.textContent();
+        await Q2randomOption.click(); 
+        console.log(Q2randomOptionText);
+
+        return {
+            Q1randomOptionText,
+            Q2randomOptionText
+        }
     }
 
     async BGE_Questions(){
