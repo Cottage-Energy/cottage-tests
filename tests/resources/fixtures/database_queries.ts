@@ -19,6 +19,18 @@ export class SupabaseQueries{
     }
 
 
+    async Check_Cottage_User_Id_Not_Present(Email: string) {
+        const email = Email.toLowerCase();
+        console.log(email);
+        const { data: cottageUser } = await supabase
+            .from('CottageUsers')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle()
+        await expect(cottageUser).toBeNull();
+    }
+
+
     async Check_Cottage_User_Account_Number(Email: string) {
         const email = Email.toLowerCase();
         const { data: cottageUser } = await supabase
@@ -85,6 +97,30 @@ export class SupabaseQueries{
         console.log(error);
         await expect(GAccount).toBeNull();
     }
+
+
+    async Check_Waitlist(Email: string) {
+        const { data: waitList } = await supabase
+            .from('WaitList')
+            .select('id')
+            .eq('email', Email)
+            .single()
+            .throwOnError();
+        const waitListId = waitList?.id ?? '';
+        console.log(waitListId);
+        await expect(waitList).not.toBeNull();
+    }
+
+
+    async Check_Waitlist_Not_Present(Email: string) {
+        const { data: waitList } = await supabase
+            .from('WaitList')
+            .select('id')
+            .eq('email', Email)
+            .maybeSingle()
+        await expect(waitList).toBeNull();
+    }
+
 
 
     //////////// Bill Queries ////////////

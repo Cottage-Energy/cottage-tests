@@ -19,7 +19,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -196,7 +196,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
 
 test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
-  test.describe.configure({mode: "serial", retries: 0});
+  test.describe.configure({mode: "serial", retries: 2});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {

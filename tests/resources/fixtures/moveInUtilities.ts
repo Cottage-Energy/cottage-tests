@@ -920,7 +920,6 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
 }
 
 
-
 export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
@@ -956,7 +955,6 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any, N
         PGUserEmail
     };
 }
-
 
 
 export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
@@ -1068,6 +1066,27 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
 }
 
 
+export async function Move_In_Existing_Utility_Account(moveInpage: any, NewElectric: boolean, NewGas: boolean, SubmitRequest: boolean) {
+    
+    const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
+    const PGUserEmail = PGuser.Email;
+
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Existing_Utility_Account_Connect_Request(PGUserEmail, SubmitRequest);
+    return {
+        PGUserName,
+        PGUserFirstName,
+        PGUserEmail
+    };
+}
+
+
 export const MoveInTestUtilities = {
     //COMED Block can be used for DTE
     COMED_New_User_Move_In,
@@ -1104,5 +1123,7 @@ export const MoveInTestUtilities = {
     CON_ED_COMED_New_User_Move_In_Bank_Account_Added,
     CON_ED_COMED_New_User_Move_In_Skip_Payment,
 
-    TEXAS_New_User_Move_In
+    TEXAS_New_User_Move_In,
+
+    Move_In_Existing_Utility_Account
 };

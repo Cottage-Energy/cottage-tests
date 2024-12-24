@@ -26,6 +26,14 @@ export class MoveInPage{
     readonly Move_In_Gas_New_Button: Locator;
     readonly Move_In_Gas_Existing_Button: Locator;
 
+    readonly Move_In_Existing_Account_Page_Title: Locator;
+    readonly Move_In_Existing_Account_Page_Content: Locator;
+    readonly Move_In_Existing_Account_Email_Field: Locator;
+    readonly Move_In_Existing_Account_Submmit_Button: Locator;
+    readonly Move_In_Existing_Account_Submit_Message: Locator;
+    readonly Move_In_Existing_Account_Skip_Button: Locator;
+    readonly Move_In_Existing_Account_Skip_Message: Locator;
+
     readonly Move_In_Tx_Svc_Title: Locator;
     readonly Move_In_Tx_Svc_Electric_Service: Locator;
     readonly Move_In_Tx_Svc_Gas_Service: Locator;
@@ -145,6 +153,14 @@ export class MoveInPage{
         this.Move_In_Electric_Existing_Button = page.locator('//label[@id = "Electric-existing"]');
         this.Move_In_Gas_New_Button = page.locator('//label[@id = "Gas-new"]');
         this.Move_In_Gas_Existing_Button = page.locator('//label[@id = "Gas-existing"]');
+
+        this.Move_In_Existing_Account_Page_Title = page.getByRole('heading', { name: 'You’re all set!' });
+        this.Move_In_Existing_Account_Page_Content = page.getByText('Looks like you’re already set up with utilities for your new apartment.If you’d');
+        this.Move_In_Existing_Account_Email_Field = page.getByRole('textbox');
+        this.Move_In_Existing_Account_Submmit_Button = page.getByRole('button', { name: 'Submit' });
+        this.Move_In_Existing_Account_Submit_Message = page.getByText('Awesome! We will be in touch');
+        this.Move_In_Existing_Account_Skip_Button = page.getByRole('button', { name: 'Skip for now' });
+        this.Move_In_Existing_Account_Skip_Message = page.getByText('We hope you had a safe and');
 
         this.Move_In_Tx_Svc_Title = page.getByRole('heading', { name: 'Good news! We are in your' });
         this.Move_In_Tx_Svc_Electric_Service = page.locator('div').filter({ hasText: /^ElectricityService with$/ }).nth(1);
@@ -306,6 +322,34 @@ export class MoveInPage{
                 await this.Move_In_Gas_Existing_Button.hover();
                 await this.Move_In_Gas_Existing_Button.click();
             }
+        }
+
+    }
+
+
+    async Existing_Utility_Account_Connect_Request(email: string|null, submit: boolean){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+
+        await expect(this.Move_In_Existing_Account_Page_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Existing_Account_Page_Content).toBeVisible({timeout:30000});
+
+        if(email != null){
+            await this.Move_In_Existing_Account_Email_Field.click();
+            await this.Move_In_Existing_Account_Email_Field.fill(email);
+        }
+
+        if(submit == true){
+            await this.Move_In_Existing_Account_Submmit_Button.hover();
+            await this.Move_In_Existing_Account_Submmit_Button.click();
+            await this.page.waitForTimeout(1000);
+            await expect(this.Move_In_Existing_Account_Submit_Message).toBeVisible({timeout:30000});
+        }
+        else{
+            await this.Move_In_Existing_Account_Skip_Button.hover();
+            await this.Move_In_Existing_Account_Skip_Button.click();
+            await this.page.waitForTimeout(1000);
+            await expect(this.Move_In_Existing_Account_Skip_Message).toBeVisible({timeout:30000});
         }
 
     }
@@ -615,6 +659,7 @@ export class MoveInPage{
         await DoneButton?.click();
         await this.page.waitForTimeout(500);
     }
+
 
     async Enter_Invalid_Bank_Details(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded');

@@ -67,6 +67,13 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
 }
 
 
+export async function Check_Start_Service_Confirmation_Not_Present(Email: string) {
+    let content: any[] = [];
+    content = await fastMail.fetchEmails({to: Email, subject: `Start Service Confirmation`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
+    await expect(content.length).toEqual(0);
+}
+
+
 export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Email: string) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -312,6 +319,7 @@ export async function Check_Failed_Payment_Email(Email: string, ElectricBillTota
 export const FastmailActions = {
     Get_OTP,
     Check_Start_Service_Confirmation,
+    Check_Start_Service_Confirmation_Not_Present,
     Check_Need_Payment_Method_to_Start_Electricity_Service,
     Check_Need_Payment_Method_to_Start_Gas_Service,
     Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service,
