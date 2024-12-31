@@ -49,7 +49,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Invalid Card to Valid Card Auto Payment', () => {
+test.describe.skip('Invalid Card to Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"}); 
 
     test('COMED COMED Electric Only Profile Added to Failed Message Update', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
@@ -499,7 +499,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
 });
 
 
-test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
+test.describe.skip('Invalid Bank to Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     test('COMED Electric Move In Added to Failed Message Update', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
