@@ -32,7 +32,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial", retries: 2});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
     test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -46,7 +46,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
+  test('New User for ShortCode Gas Only', {tag: [ '@regression2'],}, async ({moveInpage, page}) => {
     test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "DTE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -60,7 +60,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression'],}, async ({moveInpage, page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression3'],}, async ({moveInpage, page}) => {
     test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NYS-EG", "NYS-EG");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -74,7 +74,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression4'],}, async ({moveInpage,page}) => {
     test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "PSEG");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -96,7 +96,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
   test.describe.configure({mode: "serial", retries: 2});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression5'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(900000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -119,7 +119,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => { // Use BGE and NGMA
+  test('New User for ShortCode Gas Only', {tag: [ '@regression6'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => { // Use BGE and NGMA
     test.setTimeout(900000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "DTE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -143,7 +143,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(900000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", "PSEG");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -167,7 +167,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(900000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -200,7 +200,7 @@ test.describe.skip('Short Code Non Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial", retries: 2});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
@@ -214,7 +214,7 @@ test.describe.skip('Short Code Non Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', {tag: [ '@regression'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
+  test('New User for ShortCode Gas Only', {tag: [ '@regression3'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",false);
@@ -228,7 +228,7 @@ test.describe.skip('Short Code Non Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: [ '@regression4'],}, async ({moveInpage, page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",false);
@@ -242,7 +242,7 @@ test.describe.skip('Short Code Non Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', {tag: ['@regression'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: ['@regression5'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",false);

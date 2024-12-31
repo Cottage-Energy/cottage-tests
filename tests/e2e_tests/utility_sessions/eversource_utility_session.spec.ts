@@ -46,7 +46,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 test.describe('EVERSOURCE Utility Session', () => {
   
-  test('EVERSOURCE Electric Account', {tag: ['@regression'],}, async ({moveInpage, page, context}) => {
+  test('EVERSOURCE Electric Account', {tag: ['@regression2'],}, async ({moveInpage, page, context}) => {
     
     test.setTimeout(900000);
 

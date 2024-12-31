@@ -59,8 +59,32 @@ export default defineConfig({
       grep: /@smoke/,
     },
     {
-      name: 'Regression',
-      grep: /@regression/,
+      name: 'Regression1',
+      grep: /@regression1/,
+    },
+    {
+      name: 'Regression2',
+      grep: /@regression2/,
+    },
+    {
+      name: 'Regression3',
+      grep: /@regression3/,
+    },
+    {
+      name: 'Regression4',
+      grep: /@regression4/,
+    },
+    {
+      name: 'Regression5',
+      grep: /@regression5/,
+    },
+    {
+      name: 'Regression6',
+      grep: /@regression6/,
+    },
+    {
+      name: 'Regression7',
+      grep: /@regression7/,
     },
 
     /* Test against branded browsers. */

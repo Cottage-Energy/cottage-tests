@@ -54,7 +54,7 @@ test.describe('Valid Card Manual Payment', () => {
   test.describe.configure({mode: "serial"});
   
     
-  test('NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       //MAKE IT COMED BLDG. with ELECTRIC ONLY
       test.setTimeout(1800000);
   
@@ -81,7 +81,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
 
 
-  test('COMED NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('COMED NGMA Electric Only Valid Manual Card Payment Move In Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       //MAKE IT COMED BLDG. with ELECTRIC ONLY
       test.setTimeout(1800000);
   
@@ -108,7 +108,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
 
 
-  test('CON-EDISON CON-EDISON Electric Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('CON-EDISON CON-EDISON Electric Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
   
       test.setTimeout(1800000);
   
@@ -146,7 +146,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
   
   
-  test('EVERSOURCE EVERSOURCE Electric & Gas Valid Manual Card Payment Move In Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE EVERSOURCE Electric & Gas Valid Manual Card Payment Move In Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(1800000);
   
@@ -186,7 +186,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
   
 
-  test('NGMA BGE Electric & Gas Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('NGMA BGE Electric & Gas Valid Manual Card Payment Finish Account Added', {tag: ['@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -228,7 +228,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
   
   
-  test('COMED COMED  Gas Only Valid Manual Card Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('COMED COMED  Gas Only Valid Manual Card Payment Move In Added', {tag: ['@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(1800000);
   
@@ -264,7 +264,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
 
 
-  test('EVERSOURCE BGE Gas Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('EVERSOURCE BGE Gas Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -302,7 +302,7 @@ test.describe('Valid Card Manual Payment', () => {
   });
   
   
-  test('EVERSOURCE Gas Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('EVERSOURCE Gas Only Valid Manual Card Payment Finish Account Added', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -346,7 +346,7 @@ test.describe('Valid Bank Manual Payment', () => {
   test.describe.configure({mode: "serial"});
   
   
-  test('EVERSOURCE Electric Only Valid Manual Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE Electric Only Valid Manual Bank Payment Move In Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -371,7 +371,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('COMED COMED Electric Only Valid Bank Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('COMED COMED Electric Only Valid Bank Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
     
     test.setTimeout(1800000);
 
@@ -409,7 +409,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('COMED CON-EDISON Electric Only Valid Bank Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('COMED CON-EDISON Electric Only Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
     
     test.setTimeout(1800000);
 
@@ -447,7 +447,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
   
 
-  test('BGE BGE Electric & Gas Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('BGE BGE Electric & Gas Valid Bank Payment Move In Added', {tag: ['@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -487,7 +487,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('BGE NGMA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('BGE NGMA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@smoke', '@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
     
     test.setTimeout(1800000);
 
@@ -529,7 +529,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('NGMA NGMA Gas Only Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA NGMA Gas Only Valid Bank Payment Move In Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -565,7 +565,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('CON-EDISON EVERSOURCE Gas Only Valid Bank Payment Move In Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('CON-EDISON EVERSOURCE Gas Only Valid Bank Payment Move In Added', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -601,7 +601,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('COMED Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('COMED Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
     
     test.setTimeout(1800000);
 

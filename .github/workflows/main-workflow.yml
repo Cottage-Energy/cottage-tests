@@ -44,7 +44,13 @@ on:
         type: choice
         options:
         - Smoke
-        - Regression
+        - Regression1
+        - Regression2
+        - Regression3
+        - Regression4
+        - Regression5
+        - Regression6
+        - Regression7
 
   repository_dispatch:
     types: [deploy]
@@ -77,8 +83,20 @@ jobs:
       run: |
         if [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Smoke" ]; then
           npx playwright test --grep /@smoke/ --project=Chromium
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression" ]; then
-          npx playwright test --grep /@regression/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression1" ]; then
+          npx playwright test --grep /@regression1/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression2" ]; then
+          npx playwright test --grep /@regression2/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression3" ]; then
+          npx playwright test --grep /@regression3/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression4" ]; then
+          npx playwright test --grep /@regression14/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regressio5" ]; then
+          npx playwright test --grep /@regression5/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression6" ]; then
+          npx playwright test --grep /@regression6/ --project=Chromium
+        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression7" ]; then
+          npx playwright test --grep /@regression7/ --project=Chromium
         fi
 
     - name: Test Report Generation
