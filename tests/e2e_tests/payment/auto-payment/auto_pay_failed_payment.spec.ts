@@ -90,7 +90,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
     });
     
   
-    test('CON-EDISON CON-EDISON Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
+    test('CON-EDISON CON-EDISON Electric & Gas Move In Added to Failed Message Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -191,7 +191,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
     });
   
 
-    test('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
+    test('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -529,7 +529,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
     });
 
     
-    test('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
+    test('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -873,7 +873,7 @@ test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
     });
 
     
-    test('BGE BGE Electric & Gas Move In Added to Profile Update', {tag: ['@smoke', '@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('BGE BGE Electric & Gas Move In Added to Profile Update', {tag: ['@regression'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
