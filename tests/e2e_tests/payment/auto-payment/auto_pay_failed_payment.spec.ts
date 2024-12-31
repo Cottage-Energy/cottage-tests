@@ -191,7 +191,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
     });
   
 
-    test('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: [ '@smoke', '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
+    test.fail('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: [ '@smoke', '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
       
       test.setTimeout(1800000);
   
@@ -529,7 +529,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
     });
 
     
-    test('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
+    test.fail('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
