@@ -35,7 +35,7 @@ test.describe.configure({mode: "serial", retries: 2});
 test.describe('Transfer Service New User', () => {
 
 
-  test('COMED New User', {tag: ['@smoke', '@regression'],}, async ({moveInpage, page}) => {
+  test('COMED New User', {tag: [ '@regression'],}, async ({moveInpage, page}) => {
     test.setTimeout(150000);
     MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);

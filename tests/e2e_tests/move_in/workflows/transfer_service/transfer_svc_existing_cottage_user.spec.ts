@@ -74,7 +74,7 @@ test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exi
     });
 
 
-    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -545,7 +545,7 @@ test.describe('Transfer Service Existing User: Cottageuser Exist Did Drop Off', 
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@regression'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();

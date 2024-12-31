@@ -73,7 +73,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
     });
 
 
-    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+    test('Eversource Cottageuser & ElectricAccount Exist', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
       test.setTimeout(350000);
 
       const PGuser = await generateTestUserData();
@@ -624,7 +624,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: ['@regression'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -836,7 +836,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@smoke', '@regression'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@regression'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
