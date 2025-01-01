@@ -60,7 +60,6 @@ jobs:
       environment: 'dev'
       scope: 'Regression6'
 
-
   PG_Test_Run_Scheduled_Regression7_Dev:
     if: github.event.schedule == '0 5 * * 6'
     uses: ./.github/workflows/main-workflow.yml
