@@ -31,7 +31,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe.configure({mode: "serial", retries: 2});
+test.describe.configure({mode: "serial"});
 test.describe('Move In New User', () => {
 
 

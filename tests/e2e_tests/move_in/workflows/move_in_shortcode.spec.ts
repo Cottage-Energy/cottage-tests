@@ -29,7 +29,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 
 test.describe('Short Code Billing New User Electric &/or Gas', () => {
-  test.describe.configure({mode: "serial", retries: 2});
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page}) => {
@@ -93,7 +93,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 //Billing but Cancelled
 test.describe('Short Code Billing Canceled Registration', () => {
-  test.describe.configure({mode: "serial", retries: 2});
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression5'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
@@ -196,7 +196,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
 
 test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
-  test.describe.configure({mode: "serial", retries: 2});
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {

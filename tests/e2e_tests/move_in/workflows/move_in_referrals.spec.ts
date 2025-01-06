@@ -29,7 +29,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 
 test.describe('Short Code Referal', () => {
-  test.describe.configure({mode: "serial", retries: 2});
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
@@ -52,7 +52,7 @@ test.describe('Short Code Referal', () => {
 
 //Billing but Cancelled
 test.describe('Short Code Referal Canceled Registration', () => {
-  test.describe.configure({mode: "serial", retries: 2});
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
@@ -85,7 +85,7 @@ test.describe('Short Code Referal Canceled Registration', () => {
 
 
 test.describe('Non Short Code Referal', () => {
-  test.describe.configure({mode: "serial", retries: 2});
+  test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression3'],}, async ({moveInpage,page}) => {
