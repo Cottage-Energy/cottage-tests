@@ -50,7 +50,7 @@ export class PaymentUtilities {
         await Promise.all([
             
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
-            
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
@@ -139,6 +139,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
@@ -243,6 +244,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
@@ -321,6 +323,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
@@ -415,6 +418,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
@@ -526,6 +530,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
@@ -613,6 +618,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Pay_Bill_Link_Visible_Enable(),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
@@ -701,6 +707,7 @@ export class PaymentUtilities {
           //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Pay_Bill_Link_Visible_Enable(),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
     
@@ -817,6 +824,7 @@ export class PaymentUtilities {
           //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Pay_Bill_Link_Visible_Enable(),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
     
@@ -900,6 +908,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Pay_Bill_Link_Visible_Enable(),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
@@ -989,6 +998,7 @@ export class PaymentUtilities {
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual),
             overviewPage.Check_Pay_Bill_Link_Visible_Enable(),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             
@@ -1102,6 +1112,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Pay_Bill_Link_Visible_Enable(),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
                     
@@ -1189,6 +1200,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
@@ -1293,6 +1305,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal),
@@ -1417,6 +1430,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
             FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
@@ -1514,6 +1528,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
@@ -1618,6 +1633,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
@@ -1742,6 +1758,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
             FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
@@ -1839,6 +1856,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
@@ -1944,6 +1962,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal),
@@ -2069,6 +2088,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
             FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
@@ -2167,6 +2187,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
@@ -2270,6 +2291,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
@@ -2393,6 +2415,7 @@ export class PaymentUtilities {
             //check platform outstanding balance not 0
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
             FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
