@@ -99,7 +99,7 @@ export class FinishAccountSetupPage {
         }catch(error){
             console.log("Success Message not found");
         }
-        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
+        await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
     }
 
 

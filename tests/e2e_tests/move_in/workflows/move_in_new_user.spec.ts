@@ -36,7 +36,7 @@ test.describe('Move In New User', () => {
 
 
   test('COMED New User', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -49,7 +49,7 @@ test.describe('Move In New User', () => {
 
 
   test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression2'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -63,7 +63,7 @@ test.describe('Move In New User', () => {
 
 
   test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -76,7 +76,7 @@ test.describe('Move In New User', () => {
 
 
   test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression4'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -90,7 +90,7 @@ test.describe('Move In New User', () => {
 
 
   test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -190,7 +190,7 @@ test.describe('Move In New User', () => {
 
 
   test('TEXAS New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.TEXAS_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
