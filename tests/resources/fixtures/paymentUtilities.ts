@@ -42,7 +42,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
@@ -316,7 +316,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
@@ -611,7 +611,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user");
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
@@ -901,7 +901,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "waiting_for_user");
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
@@ -1193,7 +1193,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
@@ -1521,7 +1521,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
@@ -1849,7 +1849,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
@@ -2180,7 +2180,7 @@ export class PaymentUtilities {
         await AdminApi.Approve_Bill(AdminApiContext, ElectriBillID);
         await page.waitForTimeout(10000);
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-        await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        //await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);

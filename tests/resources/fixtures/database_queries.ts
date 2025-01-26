@@ -125,6 +125,31 @@ export class SupabaseQueries{
 
     //////////// Bill Queries ////////////
 
+    //Apprrove Bill
+    async Approve_Electric_Bill(BillId: string) {
+        const { data,error} = await supabase
+        .from('ElectricBill')
+        .update({ paymentStatus: 'approved' })
+        .eq('id', BillId )
+        .select()
+        .throwOnError();
+        console.log(data);
+        console.log(error);
+    }
+
+
+    async Approve_Gas_Bill(BillId: string) {
+        const { data,error} = await supabase
+        .from('GasBill')
+        .update({ paymentStatus: 'approved' })
+        .eq('id', BillId )
+        .select()
+        .throwOnError();
+        console.log(data);
+        console.log(error);
+    }
+
+
     //Get Bill ID
     async Get_Electric_Bill_Id(ElectricAccountId: string, Amount: number, Usage: number) {
         const { data: EBill } = await supabase

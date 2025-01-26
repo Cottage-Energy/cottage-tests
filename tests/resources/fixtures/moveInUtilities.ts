@@ -1053,6 +1053,8 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
