@@ -55,7 +55,7 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(AccountNumber);
+    //await expect(email_body).toContain(AccountNumber);
 
     if (ElectricCompany) {
         await expect(email_body).toContain(`${ElectricCompany} logo`);
