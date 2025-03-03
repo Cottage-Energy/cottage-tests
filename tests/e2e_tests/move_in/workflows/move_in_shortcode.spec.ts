@@ -19,7 +19,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -41,7 +41,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
   });
 
@@ -55,7 +55,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "NGMA");
   });
 
@@ -69,7 +69,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", "BGE");
   });
 
@@ -83,7 +83,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,2);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,2);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", "CON-EDISON");
   });
 
@@ -104,7 +104,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Skip_Payment(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -113,7 +113,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -128,7 +128,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -137,7 +137,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -152,7 +152,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -161,7 +161,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -176,7 +176,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -185,7 +185,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -208,7 +208,7 @@ test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
   });
 

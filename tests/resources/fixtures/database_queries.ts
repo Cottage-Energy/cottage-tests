@@ -182,7 +182,7 @@ export class SupabaseQueries{
 
 
     //Get Charge ID and Validity
-    async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
+    /*async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
         const { data: ECharge } = await supabase
             .from('ElectricBillCharge')
             .select('chargeId, isValid')
@@ -195,7 +195,7 @@ export class SupabaseQueries{
         await expect(ElectricChargeValidity).toBe(validity);
         console.log("Charge ID:",ElectricChargeId.toString(),"Validity:",ElectricChargeValidity);
         return ElectricChargeId.toString();
-    }
+    }*/
 
 
     async Get_Gas_Charge_Id_validity(gasBillID: any, validity: boolean) {

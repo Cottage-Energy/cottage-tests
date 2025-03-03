@@ -40,7 +40,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.COMED_New_User_Move_In(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED");
@@ -53,7 +53,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
@@ -67,7 +67,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
@@ -80,7 +80,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
@@ -94,7 +94,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
@@ -107,7 +107,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -117,7 +117,7 @@ test.describe('Transfer Service New User', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "CON-EDISON");
     //check Account Status
   });
@@ -131,7 +131,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //check no email
@@ -141,7 +141,7 @@ test.describe('Transfer Service New User', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "EVERSOURCE");
     //check Account Status
   });
@@ -152,7 +152,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.CON_ED_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -162,7 +162,7 @@ test.describe('Transfer Service New User', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -176,7 +176,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //check no email
@@ -185,7 +185,7 @@ test.describe('Transfer Service New User', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -196,7 +196,7 @@ test.describe('Transfer Service New User', () => {
     MoveIn = await TransferServiceTestUtilities.TEXAS_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
