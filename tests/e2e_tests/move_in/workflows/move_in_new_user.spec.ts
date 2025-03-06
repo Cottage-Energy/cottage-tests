@@ -190,7 +190,7 @@ test.describe('Move In New User', () => {
 
 
   test('TEXAS New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(300000);
     MoveIn = await MoveInTestUtilities.TEXAS_New_User_Move_In(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

@@ -289,7 +289,9 @@ export class MoveInPage{
         }
         await this.page.waitForTimeout(1000);
         await this.Move_In_Address_Field.click({timeout:10000});
-        await this.Move_In_Address_Field.fill(address);
+        await this.Move_In_Address_Field.pressSequentially(address,{delay:50});
+        await this.page.waitForTimeout(1000);
+        await this.Move_In_Address_Field.press('Backspace');
         await this.Move_In_Address_Dropdown(address)?.waitFor({state: 'visible', timeout: 30000});
         await this.Move_In_Address_Dropdown(address).click({timeout:10000});
         await this.Move_In_Unit_Field.click();

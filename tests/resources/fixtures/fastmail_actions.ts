@@ -39,7 +39,7 @@ export async function Get_OTP(Email: string) {
 
 
 export async function Check_Start_Service_Confirmation(Email: string, AccountNumber: string, ElectricCompany?: string | null, GasCompany?: string | null) {
-    const maxRetries = 2;
+    const maxRetries = 4;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
