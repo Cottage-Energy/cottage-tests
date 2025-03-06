@@ -195,16 +195,16 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
 
 
-test.describe('Short Code Non Billing New User Electric &/or Gas', () => {
+test.describe('Short Code TX Non Billing/ Coserv New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
-    await supabaseQueries.Update_Companies_to_Building("autotest", "NYS-EG", null);
-    await supabaseQueries.Update_Building_Billing("autotest",false);
+    await supabaseQueries.Update_Companies_to_Building("autotest", "COSERV", null);
+    await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.TEXAS_New_User_Move_In(moveInpage,true,true);
+    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

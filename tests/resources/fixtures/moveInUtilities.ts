@@ -1044,6 +1044,7 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.TEXASaddress,PGuser.UnitNumber);
+    //await moveInpage.Enter_Address(MoveIndata.COSERVaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Texas_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
@@ -1056,6 +1057,47 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
     //await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     //await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    const accountNumber = await moveInpage.Get_Account_Number();
+    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    return {
+        accountNumber,
+        cottageUserId,
+        PGUserName,
+        PGUserFirstName,
+        PGUserEmail
+    };
+}
+
+
+export async function COSERV_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+    
+    const PGuser = await generateTestUserData();
+    const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
+    const PGUserFirstName = "PGTest " + PGuser.FirstName;
+    const PGUserEmail = PGuser.Email;
+    const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
+    
+    await moveInpage.Agree_on_Terms_and_Get_Started()
+    await moveInpage.Enter_Address(MoveIndata.COSERVaddress,PGuser.UnitNumber);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Setup_Account(NewElectric, NewGas);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
+    await moveInpage.Next_Move_In_Button();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
@@ -1127,6 +1169,7 @@ export const MoveInTestUtilities = {
     CON_ED_COMED_New_User_Move_In_Skip_Payment,
 
     TEXAS_New_User_Move_In,
+    COSERV_New_User_Move_In,
 
     Move_In_Existing_Utility_Account
 };

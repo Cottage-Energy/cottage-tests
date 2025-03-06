@@ -48,6 +48,19 @@ test.describe('Move In New User', () => {
   });
 
 
+  test('COSERV New User', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
+    test.setTimeout(180000);
+    MoveIn = await MoveInTestUtilities.COSERV_New_User_Move_In(moveInpage,true,true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //add query to check if the user is added to the UtilityCredentials table
+    await page.waitForTimeout(10000);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED");
+    //check Account Status
+  });
+
+
   test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression2'],}, async ({moveInpage, page}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage,true,true);
