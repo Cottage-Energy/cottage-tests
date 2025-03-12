@@ -806,6 +806,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');

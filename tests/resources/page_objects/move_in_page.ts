@@ -154,8 +154,8 @@ export class MoveInPage{
         this.Move_In_Gas_New_Button = page.locator('//label[@id = "Gas-new"]');
         this.Move_In_Gas_Existing_Button = page.locator('//label[@id = "Gas-existing"]');
 
-        this.Move_In_Existing_Account_Page_Title = page.getByRole('heading', { name: 'You’re all set!' });
-        this.Move_In_Existing_Account_Page_Content = page.getByText('Looks like you’re already set up with utilities for your new apartment.If you’d');
+        this.Move_In_Existing_Account_Page_Title = page.getByRole('heading', { name: 'You are all set!' });
+        this.Move_In_Existing_Account_Page_Content = page.getByText('Looks like you\'re already set');
         this.Move_In_Existing_Account_Email_Field = page.getByRole('textbox');
         this.Move_In_Existing_Account_Submmit_Button = page.getByRole('button', { name: 'Submit' });
         this.Move_In_Existing_Account_Submit_Message = page.getByText('Awesome! We will be in touch');
