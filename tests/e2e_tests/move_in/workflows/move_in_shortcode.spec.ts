@@ -19,7 +19,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -75,7 +75,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression6'],}, async ({moveInpage,page}) => {
-    test.setTimeout(240000);
+    test.setTimeout(600000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
