@@ -58,7 +58,7 @@ class PlaneClient {
   
   
   
-  
+    
     async deleteIssue(projectId: string, issueId: string) {
       try {
         const response = await this.apiCall<any>(
