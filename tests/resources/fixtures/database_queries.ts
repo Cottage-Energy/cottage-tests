@@ -3,18 +3,32 @@ import {supabase} from '../../resources/utils/supabase';
 
 export class SupabaseQueries{
 
-    async Get_Cottage_User_Id(Email: string) {
+    async Get_Cottage_User_Id(Email: string, TextConsent?: boolean) {
         const email = Email.toLowerCase();
         console.log(email);
         const { data: cottageUser } = await supabase
             .from('CottageUsers')
-            .select('id')
+            .select('*')
             .eq('email', email)
             .single()
             .throwOnError();
         const cottageUserId = cottageUser?.id ?? '';
+        const UserDateofTextConsent = cottageUser?.dateOfTextMessageConsent ?? null;
+        const isAbleToSendText = cottageUser?.isAbleToSendTextMessages ?? null;
         console.log(cottageUserId);
+        console.log('TextDate:', UserDateofTextConsent);
+        console.log('Text:', isAbleToSendText);
         await expect(cottageUserId).not.toBe("");
+
+        if (TextConsent === true) {
+            await expect(UserDateofTextConsent).not.toBeNull();
+            await expect(isAbleToSendText).toBe(true);
+        }
+        else if (TextConsent === false) {
+            await expect(UserDateofTextConsent).toBeNull();
+            await expect(isAbleToSendText).toBe(false);
+        }
+
         return cottageUserId;
     }
 

@@ -59,6 +59,7 @@ export class MoveInPage{
     readonly Move_In_Last_Name_Null_Message: Locator;
     readonly Move_In_Phone_Field: Locator;
     readonly Move_In_Phone_Invalid_Message: Locator;
+    readonly Move_In_Receive_Text_Checkbox: Locator;
     readonly Move_In_Email_Field: Locator;
     readonly Move_In_Email_Invalid_Message: Locator;
     
@@ -187,6 +188,7 @@ export class MoveInPage{
         this.Move_In_Last_Name_Null_Message = page.locator('[id="\\:r6\\:-form-item-message"]');
         this.Move_In_Phone_Field = page.locator('input[name="phone"]');
         this.Move_In_Phone_Invalid_Message = page.getByText('Phone number must be in 000-');
+        this.Move_In_Receive_Text_Checkbox = page.getByLabel('I agree to receive text');
         this.Move_In_Email_Field = page.locator('input[name="email"]');
         this.Move_In_Email_Invalid_Message = page.getByText('Email address must be valid.');
         
@@ -424,6 +426,21 @@ export class MoveInPage{
             await this.page.waitForTimeout(500);
             await this.Move_In_About_You_Title.click();
         }
+
+        await expect(this.Move_In_Receive_Text_Checkbox).toBeVisible({timeout:10000});
+        await expect(this.Move_In_Receive_Text_Checkbox).toBeChecked();
+
+        // Randomize whether to check the checkbox or not
+        const shouldCheck = Math.random() < 0.5;
+
+        if (shouldCheck) {
+            await this.Move_In_Receive_Text_Checkbox.setChecked(true, { timeout: 10000 });
+        } else {
+            await this.Move_In_Receive_Text_Checkbox.setChecked(false, { timeout: 10000 });
+        }
+
+        console.log('Receive Text:', shouldCheck);
+        return shouldCheck;
     }
 
 
