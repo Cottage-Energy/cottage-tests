@@ -100,7 +100,6 @@ export class SupabaseQueries{
     }
 
 
-
     async Check_Gas_Account_Id_Not_Present(cottageUserId: string) {
         const { data: GAccount,error } = await supabase
             .from('GasAccount')

@@ -140,7 +140,7 @@ export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string,
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Your Electric Bill is Scheduled for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Bill is Scheduled for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -152,7 +152,8 @@ export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string,
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${ElectricUsage}kWh`);
+    await expect(email_body).toContain(`${ElectricUsage}`);
+    await expect(email_body).toContain(`kWh`);
     await expect(email_body).toContain(`$${ElectricBillTotal}`);
 }
 

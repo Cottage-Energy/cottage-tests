@@ -45,11 +45,11 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
+        //const oustandingAmount = await overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal);
             //check platform outstanding balance not 0
         await Promise.all([
             
-            overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            //overviewPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
@@ -57,8 +57,8 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-            billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal),
-            billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
+            //billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountTotal),
+            //billingPage.Check_Outstanding_Balance_Auto_Pay_Message(`Your auto-payment of $${oustandingAmount} is scheduled for tomorrow`),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Scheduled"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),

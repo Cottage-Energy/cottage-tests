@@ -101,9 +101,16 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -136,10 +143,17 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -171,9 +185,16 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any)
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -204,10 +225,16 @@ export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpag
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
 
-    await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -243,9 +270,16 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -280,9 +314,16 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -347,9 +388,16 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -414,10 +462,17 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -452,10 +507,17 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -488,10 +550,17 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -523,10 +592,17 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -629,9 +705,16 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, C
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -669,10 +752,17 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -709,10 +799,17 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Disable_Auto_Payment();
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Disable_Auto_Payment();
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -749,9 +846,16 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -859,9 +963,16 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
-    await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
@@ -932,10 +1043,16 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
-
-    await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    if (PaymentPageVisibility === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else {
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+    
     const accountNumber = await moveInpage.Get_Account_Number();
     await moveInpage.Click_Dashboard_Link();
     await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();

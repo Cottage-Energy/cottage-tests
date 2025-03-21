@@ -96,9 +96,12 @@ export class MoveInPage{
     readonly Move_In_CON_ED_ID_Number_Field: Locator;
     readonly Move_In_Identify_Info_Message: Locator;
     readonly Move_In_Prev_Address_Field: Locator;
+
     readonly Move_In_Payment_Details_Title: Locator;
+    readonly Move_In_Pay_Through_PG_Title: Locator;
+    readonly Move_In_Pay_Through_PG_Yes: Locator;
+    readonly Move_In_Pay_Through_PG_No: Locator;
     readonly Move_In_Service_Fee_Message: Locator;
-    
     readonly Move_In_Auto_Payment_Checbox: Locator;
     readonly Move_In_Submit_Button: Locator;
     readonly Move_In_Skip_Button: Locator;
@@ -236,6 +239,9 @@ export class MoveInPage{
         this.Move_In_Confirm_Skip_Payment_Add_Later_Button = page.getByRole('button', { name: 'I will add my payment later' });
 
         this.Move_In_Payment_Details_Title = page.locator('//h3[text()="Add Bill Payment Method"]');
+        this.Move_In_Pay_Through_PG_Title = page.getByText('Do you want to pay your bill');
+        this.Move_In_Pay_Through_PG_Yes = page.getByLabel('Yes');
+        this.Move_In_Pay_Through_PG_No = page.getByLabel('No', { exact: true });
         this.Move_In_Service_Fee_Message = page.getByText('Card payments will be charged');
         this.Move_In_Success_Message = page.getByText('Success🥳Your account is');
         this.Move_In_Account_Number = page.getByText('Account Number:');
@@ -578,13 +584,15 @@ export class MoveInPage{
         return isVisible;
     }
 
-    async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
+    //consider if Pay Through PG is visible
+    async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
         const maxRetries = 2;
         let attempt = 0;
         let success = false;
         
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -631,7 +639,8 @@ export class MoveInPage{
         await this.page?.waitForTimeout(500);
     }
 
-    async Enter_Valid_Bank_Details(Email:string, FullName:string){
+
+    async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
@@ -681,7 +690,7 @@ export class MoveInPage{
     }
 
 
-    async Enter_Invalid_Bank_Details(Email:string, FullName:string){
+    async Enter_Invalid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
@@ -754,6 +763,11 @@ export class MoveInPage{
 
 
     async Skip_Payment_Details(){
+        await expect(this.Move_In_Pay_Through_PG_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Pay_Through_PG_Yes).toBeVisible({timeout:30000});
+        await this.Move_In_Pay_Through_PG_Yes.hover();
+        await this.Move_In_Pay_Through_PG_Yes.click();
+
         await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
         await this.Move_In_Skip_Button.hover();
         await this.Move_In_Skip_Button.click();

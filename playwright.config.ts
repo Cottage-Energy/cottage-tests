@@ -11,7 +11,7 @@ import baseEnvUrl from './tests/resources/utils/environmentBaseUrl';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests/e2e_tests',
+  //testDir: './tests/e2e_tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
