@@ -11,7 +11,10 @@ const supabaseQueries = new SupabaseQueries();
 //COMED block can be used for DTE, PSEG
 //EVERSOURCE block can be used for NGMA, NYS-EG
 
-export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+//Create a unified code block for all the move in flows
+//Move pay through PG here with default value of true
+
+export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -30,10 +33,15 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
