@@ -143,6 +143,13 @@ export class OverviewPage {
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
         await this.page.waitForTimeout(3000);
+
+        const CardTab = await stripeFrame?.waitForSelector('[id = "card-tab"]');
+
+
+        await CardTab?.waitForElementState('visible');
+        await CardTab?.click();
+        await this.page.waitForTimeout(500);
     
         const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
         const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
@@ -203,6 +210,13 @@ export class OverviewPage {
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
         await this.page.waitForTimeout(3000);
+
+        const CardTab = await stripeFrame?.waitForSelector('[id = "card-tab"]');
+
+
+        await CardTab?.waitForElementState('visible');
+        await CardTab?.click();
+        await this.page.waitForTimeout(500);
     
         const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
         const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
