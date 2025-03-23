@@ -31,7 +31,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -72,7 +72,7 @@ export async function COMED_New_User_TX_Address(moveInpage: any, NewElectric: bo
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -148,7 +148,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -192,7 +192,7 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -325,7 +325,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -413,7 +413,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -459,7 +459,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -549,7 +549,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -710,7 +710,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -760,7 +760,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
@@ -948,7 +948,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -1079,7 +1079,7 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -1119,7 +1119,7 @@ export async function COSERV_New_User_Move_In(moveInpage: any, NewElectric: bool
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Payment_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }

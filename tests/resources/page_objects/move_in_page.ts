@@ -584,20 +584,123 @@ export class MoveInPage{
         return isVisible;
     }
 
+
+    async Enter_Card_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+
+        if(PayThroughPGVisible){
+            if(PayThroughPG == true){
+                await this.Move_In_Pay_Through_PG_Yes.hover();
+                await this.Move_In_Pay_Through_PG_Yes.click();
+
+                console.log("Pay through PG:", PayThroughPG);
+
+                await this.Enter_Payment_Details(CCnumber, CCexpiry, CCcvc, CCcountry, CCzip);
+
+                return PayThroughPG;
+            }
+            else{
+                await this.Move_In_Pay_Through_PG_No.hover();
+                await this.Move_In_Pay_Through_PG_No.click();
+
+                console.log("Pay through PG:", PayThroughPG);
+
+                return PayThroughPG;
+            }
+        }
+        else{
+            await this.Enter_Payment_Details(CCnumber, CCexpiry, CCcvc, CCcountry, CCzip);
+        }
+        
+    }
+
+
+    async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+
+        if(PayThroughPGVisible){
+            if(PayThroughPG == true){
+                await this.Move_In_Pay_Through_PG_Yes.hover();
+                await this.Move_In_Pay_Through_PG_Yes.click();
+
+                console.log("Pay through PG:", PayThroughPG);
+
+                await this.Enter_Sucessful_Bank_Details(Email, FullName);
+
+                return PayThroughPG;
+            }
+            else{
+                await this.Move_In_Pay_Through_PG_No.hover();
+                await this.Move_In_Pay_Through_PG_No.click();
+
+                console.log("Pay through PG:", PayThroughPG);
+
+                return PayThroughPG;
+            }
+        }
+        else{
+            await this.Enter_Sucessful_Bank_Details(Email, FullName);
+        }
+        
+    }
+
+
+    async Enter_Invalid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+
+        if(PayThroughPGVisible){
+            if(PayThroughPG == true){
+                await this.Move_In_Pay_Through_PG_Yes.hover();
+                await this.Move_In_Pay_Through_PG_Yes.click();
+
+                console.log("Pay through PG:", PayThroughPG);
+
+                await this.Enter_Failed_Bank_Details(Email, FullName);
+
+                return PayThroughPG;
+            }
+            else{
+                await this.Move_In_Pay_Through_PG_No.hover();
+                await this.Move_In_Pay_Through_PG_No.click();
+
+                console.log("Pay through PG:", PayThroughPG);
+
+                return PayThroughPG;
+            }
+        }
+        else{
+            await this.Enter_Failed_Bank_Details(Email, FullName);
+        }
+        
+    }
+
     //consider if Pay Through PG is visible
-    async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
+    async Enter_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
         const maxRetries = 2;
         let attempt = 0;
         let success = false;
-        
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
         await this.page.waitForTimeout(3000);
+
+        const CardTab = await stripeFrame?.waitForSelector('[id = "card-tab"]');
+
+
+        await CardTab?.waitForElementState('visible');
+        await CardTab?.click();
+        await this.page.waitForTimeout(500);
     
         const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
         const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
@@ -640,9 +743,8 @@ export class MoveInPage{
     }
 
 
-    async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+    async Enter_Sucessful_Bank_Details(Email:string, FullName:string){
+
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -690,9 +792,8 @@ export class MoveInPage{
     }
 
 
-    async Enter_Invalid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+    async Enter_Failed_Bank_Details(Email:string, FullName:string){
+
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')

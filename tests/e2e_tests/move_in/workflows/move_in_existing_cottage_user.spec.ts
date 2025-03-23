@@ -464,7 +464,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
-      await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
       await moveInpage.Confirm_Payment_Details();
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
@@ -537,7 +537,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
 
 
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -605,7 +605,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await page.waitForTimeout(10000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
 
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -677,7 +677,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await page.waitForTimeout(10000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
 
-    await moveInpage.Enter_Payment_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await moveInpage.Confirm_Payment_Details();
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();
