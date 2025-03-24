@@ -19,7 +19,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -37,6 +37,15 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+
+    // Check if the URL has the shortCode query parameter and its value
+    const url = new URL(page.url());
+    const hasShortCode = url.searchParams.has('shortCode');
+    const shortCodeValue = url.searchParams.get('shortCode');
+    
+    console.log('Has shortCode:', hasShortCode);
+    console.log('shortCode value:', shortCodeValue);
+
     MoveIn = await MoveInTestUtilities.BGE_New_User_Move_In_Auto_Payment_Added(moveInpage, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);

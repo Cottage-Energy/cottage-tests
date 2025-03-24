@@ -18,11 +18,11 @@ let MoveIn: any;
 
 test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
-  await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+  await page.goto('/move-in?',{ waitUntil: 'domcontentloaded' });
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
