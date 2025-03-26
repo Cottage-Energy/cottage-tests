@@ -135,8 +135,49 @@ export class SupabaseQueries{
     }
 
 
+    async Get_isHandledBilling_Building(ShortCode: string) {
+        const { data: Building } = await supabase
+            .from('Building')
+            .select('isHandleBilling')
+            .eq('shortCode', ShortCode)
+            .single()
+            .throwOnError();
+        const isHandledBilling = Building?.isHandleBilling ?? '';
+        console.log(isHandledBilling);
+        return isHandledBilling;
+    }
+
+
+    async Get_isHandledBilling_Utility(utilityId: string) {
+        const { data: Utility } = await supabase
+            .from('UtilityCompany')
+            .select('isHandleBilling')
+            .eq('id', utilityId)
+            .single()
+            .throwOnError();
+        const isHandledBilling = Utility?.isHandleBilling ?? '';
+        console.log(isHandledBilling);
+        return isHandledBilling;
+    }
+
+
+    async Get_isBillingRequired_Utility(utilityId: string) {
+        const { data: Utility } = await supabase
+            .from('UtilityCompany')
+            .select('isBillingRequired')
+            .eq('id', utilityId)
+            .single()
+            .throwOnError();
+        const isBillingRequired = Utility?.isBillingRequired ?? '';
+        console.log(isBillingRequired);
+        return isBillingRequired;
+    }
+
+
 
     //////////// Bill Queries ////////////
+    //Insert bill
+
 
     //Apprrove Bill
     async Approve_Electric_Bill(BillId: string) {
@@ -195,7 +236,7 @@ export class SupabaseQueries{
 
 
     //Get Charge ID and Validity
-    /*async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
+    async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
         const { data: ECharge } = await supabase
             .from('ElectricBillCharge')
             .select('chargeId, isValid')
@@ -208,7 +249,7 @@ export class SupabaseQueries{
         await expect(ElectricChargeValidity).toBe(validity);
         console.log("Charge ID:",ElectricChargeId.toString(),"Validity:",ElectricChargeValidity);
         return ElectricChargeId.toString();
-    }*/
+    }
 
 
     async Get_Gas_Charge_Id_validity(gasBillID: any, validity: boolean) {

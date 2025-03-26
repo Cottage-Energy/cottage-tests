@@ -1,5 +1,8 @@
 import { type Page, type Locator, expect } from '@playwright/test';
+import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+import { el } from '@faker-js/faker';
 
+const supabaseQueries = new SupabaseQueries();
 
 export class MoveInPage{
     //variables
@@ -486,6 +489,7 @@ export class MoveInPage{
         }
     }
 
+
     async BGE_Questions(){
         const options = [
             'Employed more than 3 years',
@@ -575,12 +579,33 @@ export class MoveInPage{
         await this.Move_In_Identity_Info_Title.click();
     }
 
-    async Check_Payment_Page_Visibility(){
+    async Check_Payment_Page_Visibility(ElectricCompany?: string | null, GasCompany?: string | null){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await this.page.waitForTimeout(10000);
-        const isVisible = await this.Move_In_Payment_Details_Title.isVisible();
-        console.log(isVisible);
+
+        const url = new URL(this.page.url());
+        const hasShortCode = url.searchParams.has('shortCode');
+        const shortCodeValue = url.searchParams.get('shortCode');
+        let isVisible
+        
+        console.log('Has shortCode:', hasShortCode);
+        console.log('shortCode value:', shortCodeValue);
+
+        if(hasShortCode === true){
+            isVisible = await supabaseQueries.Get_isHandledBilling_Building(shortCodeValue || '');
+        }
+        else{
+            if(GasCompany != null){
+                const vis1 = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
+                const vis2 = await supabaseQueries.Get_isHandledBilling_Utility(GasCompany);
+                isVisible = vis1 || vis2;
+            }
+            else{
+                isVisible = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
+            }
+        }
+
+        console.log('paymentIsVisible:', isVisible);
         return isVisible;
     }
 

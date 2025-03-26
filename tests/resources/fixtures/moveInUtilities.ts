@@ -14,7 +14,7 @@ const supabaseQueries = new SupabaseQueries();
 //Create a unified code block for all the move in flows
 //Move pay through PG here with default value of true
 
-export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+export async function COMED_New_User_Move_In(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -32,7 +32,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     if (PaymentPageVisibility === true && PayThroughPG === true) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
@@ -60,7 +60,7 @@ export async function COMED_New_User_Move_In(moveInpage: any, NewElectric: boole
 }
 
 
-export async function COMED_New_User_TX_Address(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COMED_New_User_TX_Address(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -78,11 +78,17 @@ export async function COMED_New_User_TX_Address(moveInpage: any, NewElectric: bo
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -101,7 +107,7 @@ export async function COMED_New_User_TX_Address(moveInpage: any, NewElectric: bo
 }
 
 
-export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -136,7 +142,7 @@ export async function COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewEl
 }
 
 
-export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -154,11 +160,17 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -180,7 +192,7 @@ export async function COMED_New_User_Move_In_Auto_Payment_Added(moveInpage: any,
 }
 
 
-export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -198,13 +210,19 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
@@ -225,7 +243,7 @@ export async function COMED_New_User_Move_In_Manual_Payment_Added(moveInpage: an
 }
 
 
-export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -242,11 +260,17 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -268,7 +292,7 @@ export async function COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any,
 }
 
 
-export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -285,11 +309,17 @@ export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpag
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -311,7 +341,7 @@ export async function COMED_New_User_Move_In_Failed_Bank_Account_Added(moveInpag
 }
 
 
-export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -331,11 +361,17 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -357,7 +393,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
 }
 
 
-export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -376,11 +412,17 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -402,7 +444,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -419,11 +461,17 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -445,7 +493,7 @@ export async function EVERSOURCE_New_User_Move_In_Auto_Payment_Added(moveInpage:
 }
 
 
-export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -465,12 +513,18 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -492,7 +546,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
 }
 
 
-export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -511,12 +565,18 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -538,7 +598,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -555,12 +615,18 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -582,7 +648,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Payment_Added(moveInpag
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -598,12 +664,18 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -625,7 +697,7 @@ export async function EVERSOURCE_New_User_Move_In_Manual_Bank_Payment_Added(move
 }
 
 
-export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -661,7 +733,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, NewE
 }
 
 
-export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -694,7 +766,7 @@ export async function EVERSOURCE_New_User_Move_In_Skip_Payment(moveInpage: any, 
 }
 
 
-export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -716,11 +788,17 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+    
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -744,7 +822,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, N
 }
 
 
-export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -766,12 +844,18 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -795,7 +879,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
 }
 
 
-export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -816,12 +900,18 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -845,7 +935,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
 }
 
 
-export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -866,11 +956,17 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+    
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -894,7 +990,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, N
 }
 
 
-export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -932,7 +1028,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, NewElec
 }
 
 
-export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -954,11 +1050,17 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -982,7 +1084,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
 }
 
 
-export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -1002,11 +1104,17 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -1028,7 +1136,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
 }
 
 
-export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any, NewElectric: boolean, NewGas: boolean) {
+export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -1065,7 +1173,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
 }
 
 
-export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function TEXAS_New_User_Move_In(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -1085,15 +1193,22 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
+    
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
@@ -1107,7 +1222,7 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
 }
 
 
-export async function COSERV_New_User_Move_In(moveInpage: any, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+export async function COSERV_New_User_Move_In(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
@@ -1125,11 +1240,17 @@ export async function COSERV_New_User_Move_In(moveInpage: any, NewElectric: bool
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress);
     await moveInpage.Next_Move_In_Button();
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
-    if (PaymentPageVisibility === true) {
-        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+
+    if (PaymentPageVisibility === true && PayThroughPG === true) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && PayThroughPG === false) {
+        await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+        await moveInpage.Confirm_Payment_Details();
+        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
