@@ -420,6 +420,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
+    let PayThroughPG: boolean = false;
 
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -462,14 +463,20 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await page.waitForTimeout(10000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email); // currently analyzing
 
-    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility('COMED');
-    if (PaymentPageVisibility === true) {
-      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility('COMED', null);
+
+    if (PaymentPageVisibility === true && PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
       await moveInpage.Confirm_Payment_Details();
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
     }
+    else if (PaymentPageVisibility === true && !PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
     else {
-        await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
@@ -491,6 +498,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
+    let PayThroughPG: boolean = false;
 
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -536,10 +544,22 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await page.waitForTimeout(10000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
 
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility("COMED","EVERSOURCE");
 
-    await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    if (PaymentPageVisibility === true && PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && !PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+    else {
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+
     const accountNumber = await moveInpage.Get_Account_Number();
 
     await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
@@ -561,6 +581,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
+    let PayThroughPG: boolean = false;
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -600,14 +621,28 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     }*/
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","EVERSOURCE");
     await moveInpage.Next_Move_In_Button();
 
     await page.waitForTimeout(10000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
 
-    await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility("EVERSOURCE","EVERSOURCE");
+
+    if (PaymentPageVisibility === true && PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && !PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+    else {
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+ 
     const accountNumber = await moveInpage.Get_Account_Number();
 
     await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
@@ -629,6 +664,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
+    let PayThroughPG: boolean = false;
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -672,14 +708,27 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.CON_ED_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
+    await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","CON-EDISON");
     await moveInpage.Next_Move_In_Button();
 
     await page.waitForTimeout(10000);
     const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
 
-    await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
-    await moveInpage.Confirm_Payment_Details();
-    await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility("EVERSOURCE","CON-EDISON");
+
+    if (PaymentPageVisibility === true && PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Billing_Customer();
+    }
+    else if (PaymentPageVisibility === true && !PayThroughPG) {
+      await moveInpage.Enter_Card_Details(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
+      await moveInpage.Confirm_Payment_Details();
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
+    else {
+      await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
+    }
     const accountNumber = await moveInpage.Get_Account_Number();
 
     await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
