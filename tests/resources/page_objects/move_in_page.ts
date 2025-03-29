@@ -645,16 +645,12 @@ export class MoveInPage{
                 console.log("Pay through PG:", PayThroughPG);
 
                 await this.Enter_Payment_Details(CCnumber, CCexpiry, CCcvc, CCcountry, CCzip);
-
-                return PayThroughPG;
             }
             else{
                 await this.Move_In_Pay_Through_PG_No.hover();
                 await this.Move_In_Pay_Through_PG_No.click();
 
                 console.log("Pay through PG:", PayThroughPG);
-
-                return PayThroughPG;
             }
         }
         else{
@@ -678,16 +674,12 @@ export class MoveInPage{
                 console.log("Pay through PG:", PayThroughPG);
 
                 await this.Enter_Sucessful_Bank_Details(Email, FullName);
-
-                return PayThroughPG;
             }
             else{
                 await this.Move_In_Pay_Through_PG_No.hover();
                 await this.Move_In_Pay_Through_PG_No.click();
 
                 console.log("Pay through PG:", PayThroughPG);
-
-                return PayThroughPG;
             }
         }
         else{
@@ -711,16 +703,12 @@ export class MoveInPage{
                 console.log("Pay through PG:", PayThroughPG);
 
                 await this.Enter_Failed_Bank_Details(Email, FullName);
-
-                return PayThroughPG;
             }
             else{
                 await this.Move_In_Pay_Through_PG_No.hover();
                 await this.Move_In_Pay_Through_PG_No.click();
 
                 console.log("Pay through PG:", PayThroughPG);
-
-                return PayThroughPG;
             }
         }
         else{

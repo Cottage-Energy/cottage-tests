@@ -135,6 +135,19 @@ export class SupabaseQueries{
     }
 
 
+    async Check_isRegistrationComplete(cottageUserId: string, state: boolean = true) {
+        const { data: Resident } = await supabase
+            .from('Resident')
+            .select('isRegistrationComplete')
+            .eq('cottageUserID', cottageUserId)
+            .single()
+            .throwOnError();
+        const isRegistrationComplete = Resident?.isRegistrationComplete ?? '';
+        console.log('isRegComplete:',isRegistrationComplete);
+        await expect(isRegistrationComplete).toBe(state);
+    }
+
+
     async Get_isPriorAddressRequired_Utility(utilityId: string) {
         console.log(utilityId);
         const { data: Utility } = await supabase
