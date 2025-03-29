@@ -241,12 +241,12 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
   });
 
 
-  test.skip('New User for TX Dereg Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
+  test('New User for TX Dereg Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "TX-DEREG", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.TEXAS_New_User_Move_In(moveInpage, "TX-DEREG", null,true,true);
+    MoveIn = await MoveInTestUtilities.TX_DEREG_New_User_Move_In(moveInpage, "TX-DEREG", null,true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

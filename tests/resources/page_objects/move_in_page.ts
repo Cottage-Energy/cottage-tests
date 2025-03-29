@@ -569,14 +569,32 @@ export class MoveInPage{
     }
 
 
-    async Enter_ID_Info_Prev_Add(prevAddress:string){
-        await expect(this.Move_In_Identity_Info_Title).toBeVisible({timeout:30000});
-        await this.Move_In_Prev_Address_Field.click();
-        await this.page.waitForTimeout(500);
-        await this.Move_In_Prev_Address_Field.fill(prevAddress);
-        await this.Move_In_Address_Dropdown(prevAddress).click();
-        await this.page.waitForTimeout(500);
-        await this.Move_In_Identity_Info_Title.click();
+    async Enter_ID_Info_Prev_Add(prevAddress:string, ElectricCompany: string | null, GasCompany: string | null){
+        
+        let isVisible
+
+        if(ElectricCompany === null){
+            isVisible = await supabaseQueries.Get_isPriorAddressRequired_Utility(GasCompany || '');
+        }
+        else if(GasCompany === null){
+            isVisible = await supabaseQueries.Get_isPriorAddressRequired_Utility(ElectricCompany || '');
+        }
+        else{
+            const vis1 = await supabaseQueries.Get_isPriorAddressRequired_Utility(ElectricCompany || '');
+            const vis2 = await supabaseQueries.Get_isPriorAddressRequired_Utility(GasCompany || '');
+            isVisible = vis1 || vis2;
+        }
+
+        console.log('isPriorAddressRequired:', isVisible);
+
+        if (isVisible === true){
+            await this.Move_In_Prev_Address_Field.click({timeout:30000});
+            await this.page.waitForTimeout(500);
+            await this.Move_In_Prev_Address_Field.fill(prevAddress,{timeout:30000});
+            await this.Move_In_Address_Dropdown(prevAddress).click();
+            await this.page.waitForTimeout(500);
+            await this.Move_In_Identity_Info_Title.click();
+        }
     }
 
     async Check_Payment_Page_Visibility(ElectricCompany?: string | null, GasCompany?: string | null){
@@ -595,13 +613,16 @@ export class MoveInPage{
             isVisible = await supabaseQueries.Get_isHandledBilling_Building(shortCodeValue || '');
         }
         else{
-            if(GasCompany != null){
-                const vis1 = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
-                const vis2 = await supabaseQueries.Get_isHandledBilling_Utility(GasCompany);
-                isVisible = vis1 || vis2;
+            if(ElectricCompany === null){
+                isVisible = await supabaseQueries.Get_isHandledBilling_Utility(GasCompany || '');
+            }
+            else if(GasCompany === null){
+                isVisible = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
             }
             else{
-                isVisible = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
+                const vis1 = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
+                const vis2 = await supabaseQueries.Get_isHandledBilling_Utility(GasCompany || '');
+                isVisible = vis1 || vis2;
             }
         }
 
@@ -889,23 +910,42 @@ export class MoveInPage{
 
 
     async Skip_Payment_Details(){
-        await expect(this.Move_In_Pay_Through_PG_Title).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Pay_Through_PG_Yes).toBeVisible({timeout:30000});
-        await this.Move_In_Pay_Through_PG_Yes.hover();
-        await this.Move_In_Pay_Through_PG_Yes.click();
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
-        await this.Move_In_Skip_Button.hover();
-        await this.Move_In_Skip_Button.click();
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
 
-        await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
-        await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
-        
-        await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
-        await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
+        if(PayThroughPGVisible){
+            await expect(this.Move_In_Pay_Through_PG_Yes).toBeVisible({timeout:30000});
+            await this.Move_In_Pay_Through_PG_Yes.hover();
+            await this.Move_In_Pay_Through_PG_Yes.click();
+
+            await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
+            await this.Move_In_Skip_Button.hover();
+            await this.Move_In_Skip_Button.click();
+    
+            await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
+            
+            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
+            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
+        }
+        else{
+            await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
+            await this.Move_In_Skip_Button.hover();
+            await this.Move_In_Skip_Button.click();
+    
+            await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
+            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
+            
+            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
+            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();   
+        }
     }
 
 

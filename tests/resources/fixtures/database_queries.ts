@@ -135,6 +135,19 @@ export class SupabaseQueries{
     }
 
 
+    async Get_isPriorAddressRequired_Utility(utilityId: string) {
+        console.log(utilityId);
+        const { data: Utility } = await supabase
+            .from('UtilityCompany')
+            .select('isPriorAddressRequired')
+            .eq('id', utilityId)
+            .single()
+            .throwOnError();
+        const isPriorAddressRequired = Utility?.isPriorAddressRequired ?? '';
+        return isPriorAddressRequired;
+    }
+
+
     async Get_isHandledBilling_Building(ShortCode: string) {
         const { data: Building } = await supabase
             .from('Building')
@@ -149,6 +162,7 @@ export class SupabaseQueries{
 
 
     async Get_isHandledBilling_Utility(utilityId: string) {
+        console.log(utilityId);
         const { data: Utility } = await supabase
             .from('UtilityCompany')
             .select('isHandleBilling')
