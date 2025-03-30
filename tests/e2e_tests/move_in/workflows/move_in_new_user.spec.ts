@@ -39,6 +39,7 @@ test.describe('Move In New User', () => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,'COMED', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_isRegistrationComplete(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
     //add query to check if the user is added to the UtilityCredentials table

@@ -96,7 +96,7 @@ export async function COMED_New_User_TX_Address(moveInpage: any, ElectricCompany
 
     const accountNumber = await moveInpage.Get_Account_Number();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
-    await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
+    await supabaseQueries.Check_isRegistrationComplete(cottageUserId);
     return {
         accountNumber,
         cottageUserId,

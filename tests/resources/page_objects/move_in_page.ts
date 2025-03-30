@@ -216,7 +216,7 @@ export class MoveInPage{
 
         this.Move_In_Texas_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
         this.Move_In_Texas_Lenght_of_Staying_Dropdown = page.getByRole('combobox');
-        this.Move_In_Texas_Lenght_of_Staying_Selection = (selection: string) => page.getByLabel(selection).getByText(selection);
+        this.Move_In_Texas_Lenght_of_Staying_Selection = (selection: string) => page.getByText(selection, { exact: true });
         this.Move_In_Texas_Thermostat_Question = page.getByText('Do you own a smart thermostat?');
         this.Move_In_Texas_Thermostat_Yes_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "Yes")]');
         this.Move_In_Texas_Thermostat_No_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "No")]');
