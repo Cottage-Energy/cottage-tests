@@ -704,7 +704,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
         throw new Error('Invalid OTP');
     }*/
 
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","CON-EDISON");

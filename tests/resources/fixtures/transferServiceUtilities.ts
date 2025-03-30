@@ -267,7 +267,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
@@ -311,7 +311,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
@@ -355,7 +355,7 @@ export async function CON_ED_New_User_Move_In_Non_Billing(moveInpage: any) {
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -459,7 +459,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
@@ -504,7 +504,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
@@ -634,7 +634,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any) {
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     await moveInpage.Skip_Payment_Details();
@@ -701,7 +701,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, C
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -748,7 +748,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -795,7 +795,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -842,7 +842,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any) {
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -888,7 +888,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any) {
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -923,7 +923,7 @@ export async function BGE_New_User_Move_In_Non_Billing(moveInpage: any) {
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -959,7 +959,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -1006,7 +1006,7 @@ export async function BGE_CON_ED_New_User_Move_In_Non_Billing(moveInpage: any) {
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
 
@@ -1041,7 +1041,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility();
     if (PaymentPageVisibility === true) {
@@ -1084,7 +1084,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
 
     await moveInpage.Skip_Payment_Details();
@@ -1119,7 +1119,7 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, NewElectric: boole
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Texas_Questions();
+    await moveInpage.TX_DEREG_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     const accountNumber = await moveInpage.Get_Account_Number();

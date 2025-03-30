@@ -459,7 +459,7 @@ export class MoveInPage{
     }
 
 
-    async CON_ED_Questions(){
+    async CON_EDISON_Questions(){
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_CON_ED_Questions_Title).toBeVisible({timeout:30000});
         
@@ -510,7 +510,7 @@ export class MoveInPage{
     }
 
 
-    async Texas_Questions(){
+    async TX_DEREG_Questions(){
         const Q1options = [
             'Less than 6 months',
             '6 months',

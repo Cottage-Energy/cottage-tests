@@ -357,7 +357,7 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -409,7 +409,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -512,7 +512,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -565,7 +565,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -719,7 +719,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, Elec
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -791,7 +791,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, E
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
@@ -847,7 +847,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
@@ -903,7 +903,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
@@ -959,7 +959,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, E
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
@@ -1014,7 +1014,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, Electri
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    //await moveInpage.CON_ED_Questions();
+    //await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
@@ -1053,7 +1053,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     const BGEanswer = await moveInpage.BGE_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
@@ -1108,7 +1108,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -1160,7 +1160,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_ED_Questions();
+    await moveInpage.CON_EDISON_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -1198,7 +1198,7 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, ElectricCompany: s
     await moveInpage.Next_Move_In_Button();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Texas_Questions();
+    await moveInpage.TX_DEREG_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -1247,7 +1247,7 @@ export async function TX_DEREG_New_User_Move_In(moveInpage: any, ElectricCompany
     await moveInpage.Next_Move_In_Button();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Texas_Questions();
+    await moveInpage.TX_DEREG_Questions();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
