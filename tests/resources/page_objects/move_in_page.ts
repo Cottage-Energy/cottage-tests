@@ -312,7 +312,7 @@ export class MoveInPage{
 
 
     async Setup_Account(Electric_New: boolean, Gas_New: boolean){ 
-        await expect(this.Move_In_Account_Setup_Fields).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Account_Setup_Fields).toBeVisible({timeout:15000});
         if(await this.Move_In_Electric_New_Button.isVisible()){
             if(Electric_New == true){
                 await this.Move_In_Electric_New_Button.hover();
@@ -963,7 +963,7 @@ export class MoveInPage{
 
 
     async Read_ESCO_Conditions(){
-        const maxRetries = 30;
+        const maxRetries = 10;
         let retries = 0;
         let vis = false;
 

@@ -14,24 +14,82 @@ const supabaseQueries = new SupabaseQueries();
 //Create a unified code block for all the move in flows
 //Move pay through PG here with default value of true
 
-export async function COMED_New_User_Move_In(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
+    let electricQuestionsPresent;
+    let gasQuestionsPresent;
+    let addressType = MoveIndata.COMEDaddress;
+
+    if (ElectricCompany === null) {
+        try {
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            addressType = MoveIndata[`${gasCompany}address`];
+            if (!addressType) throw new Error("Address type is undefined for this Gas company");
+        } catch (error) {
+            console.log("No address type found for this Gas company");
+            addressType = MoveIndata.COMEDaddress;
+        }
+    } else {
+        try {
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            addressType = MoveIndata[`${electricCompany}address`];
+            if (!addressType) throw new Error("Address type is undefined for this Electric company");
+        } catch (error) {
+            console.log("No address type found for this Electric company");
+            addressType = MoveIndata.COMEDaddress;
+        }
+    }
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(addressType,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(NewElectric, NewGas);
+
+    try{
+        await moveInpage.Setup_Account(NewElectric, NewGas);
+    } catch (error) {
+        console.log("TX-DEREG Service Zip Agreenment");
+        await moveInpage.Texas_Service_Agreement();
+    }
+    
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
+
+    try{
+        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+        await moveInpage[`${electricCompany}_Questions`]();
+        electricQuestionsPresent = true;
+    }
+    catch(error){
+        console.log("No questions to answer for this Electric company");
+        electricQuestionsPresent = false;
+    }
+
+    try{
+        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+        await moveInpage[`${gasCompany}_Questions`]();
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log("No questions to answer for this Gas company")
+        gasQuestionsPresent = false;
+    }
+
+    if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
+        await moveInpage.Next_Move_In_Button();
+    }
+
+
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
     await moveInpage.Next_Move_In_Button();
+    
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     if (PaymentPageVisibility === true && PayThroughPG === true) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -69,7 +127,7 @@ export async function COMED_New_User_TX_Address(moveInpage: any, ElectricCompany
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.TEXASaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.TX_DEREGaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -348,17 +406,44 @@ export async function CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage: any
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
+    let electricQuestionsPresent;
+    let gasQuestionsPresent;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.CON_EDISON_Questions();
-    await moveInpage.Next_Move_In_Button();
+
+    try{
+        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+        await moveInpage[`${electricCompany}_Questions`]();
+        electricQuestionsPresent = true;
+    }
+    catch(error){
+        console.log("No questions to answer for this Electric company");
+        electricQuestionsPresent = false;
+    }
+
+    try{
+        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+        await moveInpage[`${gasCompany}_Questions`]();
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log("No questions to answer for this Gas company")
+        gasQuestionsPresent = false;
+    }
+
+    if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
+        await moveInpage.Next_Move_In_Button();
+    }
+
+    //await moveInpage.CON_EDISON_Questions();
+    //await moveInpage.Next_Move_In_Button();
     await moveInpage.CON_ED_Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
     await moveInpage.Next_Move_In_Button();
@@ -402,7 +487,7 @@ export async function CON_ED_New_User_Move_In_Bank_Account_Added(moveInpage: any
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -505,7 +590,7 @@ export async function CON_ED_New_User_Move_In_Manual_Payment_Added(moveInpage: a
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -558,7 +643,7 @@ export async function CON_ED_New_User_Move_In_Manual_Bank_Payment_Added(moveInpa
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -712,7 +797,7 @@ export async function CON_ED_New_User_Move_In_Skip_Payment(moveInpage: any, Elec
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -784,7 +869,7 @@ export async function BGE_New_User_Move_In_Auto_Payment_Added(moveInpage: any, E
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -840,7 +925,7 @@ export async function BGE_New_User_Move_In_Manual_Payment_Added(moveInpage: any,
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -896,7 +981,7 @@ export async function BGE_New_User_Move_In_Manual_Bank_Payment_Added(moveInpage:
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -952,7 +1037,7 @@ export async function BGE_New_User_Move_In_Bank_Account_Added(moveInpage: any, E
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -1007,7 +1092,7 @@ export async function BGE_New_User_Move_In_Skip_Payment(moveInpage: any, Electri
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -1046,7 +1131,7 @@ export async function BGE_CON_ED_New_User_Move_In_Auto_Payment_Added(moveInpage:
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -1101,7 +1186,7 @@ export async function CON_ED_COMED_New_User_Move_In_Bank_Account_Added(moveInpag
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -1153,7 +1238,7 @@ export async function CON_ED_COMED_New_User_Move_In_Skip_Payment(moveInpage: any
     const PGUserEmail = PGuser.Email;
 
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -1191,7 +1276,7 @@ export async function TEXAS_New_User_Move_In(moveInpage: any, ElectricCompany: s
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.TEXASaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.TX_DEREGaddress,PGuser.UnitNumber);
     //await moveInpage.Enter_Address(MoveIndata.COSERVaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Texas_Service_Agreement();
@@ -1241,7 +1326,7 @@ export async function TX_DEREG_New_User_Move_In(moveInpage: any, ElectricCompany
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.TEXASaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.TX_DEREGaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(NewElectric, NewGas);
     await moveInpage.Next_Move_In_Button();
@@ -1351,7 +1436,7 @@ export async function Move_In_Existing_Utility_Account(moveInpage: any, NewElect
 
 export const MoveInTestUtilities = {
     //COMED Block can be used for DTE
-    COMED_New_User_Move_In,
+    New_User_Move_In_Auto_Payment_Added,
     COMED_New_User_TX_Address,
     COMED_New_User_Move_In_Skip_Payment,
     COMED_New_User_Move_In_Auto_Payment_Added,

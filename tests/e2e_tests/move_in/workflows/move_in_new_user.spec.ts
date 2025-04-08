@@ -37,7 +37,7 @@ test.describe('Move In New User', () => {
 
   test('COMED New User', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
     test.setTimeout(180000);
-    MoveIn = await MoveInTestUtilities.COMED_New_User_Move_In(moveInpage,'COMED', null, true,true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage,'COMED', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_isRegistrationComplete(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -205,7 +205,7 @@ test.describe('Move In New User', () => {
 
   test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
     test.setTimeout(300000);
-    MoveIn = await MoveInTestUtilities.TEXAS_New_User_Move_In(moveInpage,'TX-DEREG', null, true,true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage,'TX-DEREG', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);

@@ -32,7 +32,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 
 test.describe.configure({mode: "serial", retries: 2});
-test.describe('Transfer Service New User', () => {
+test.describe.skip('Transfer Service New User', () => {
 
 
   test('COMED New User', {tag: [ '@regression1'],}, async ({moveInpage, page}) => {

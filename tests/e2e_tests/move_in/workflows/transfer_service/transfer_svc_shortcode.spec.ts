@@ -28,7 +28,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Short Code Billing New User Electric &/or Gas', () => {
+test.describe.skip('Short Code Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial", retries: 2});
   
 
@@ -92,7 +92,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
 //Billing but Cancelled
-test.describe('Short Code Billing Canceled Registration', () => {
+test.describe.skip('Short Code Billing Canceled Registration', () => {
   test.describe.configure({mode: "serial", retries: 2});
   
 

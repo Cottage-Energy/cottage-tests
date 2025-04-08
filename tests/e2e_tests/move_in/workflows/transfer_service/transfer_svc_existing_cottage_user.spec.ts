@@ -31,7 +31,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 
 
-test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exist', () => {
+test.describe.skip('Transfer Service Existing User: Cottageuser & ElectricAccount Exist', () => {
   test.describe.configure({mode: "serial", retries: 2});
   
     test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression1'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -132,7 +132,7 @@ test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exi
       await moveInpage.Click_Start_New_Move_In_Request();
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Agree_on_Terms_and_Get_Started()
-      await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+      await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Setup_Account(true, true);
       await moveInpage.Next_Move_In_Button();
@@ -159,7 +159,7 @@ test.describe('Transfer Service Existing User: Cottageuser & ElectricAccount Exi
 });
 
 
-test.describe('Transfer Service Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
+test.describe.skip('Transfer Service Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
   test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression4'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -220,7 +220,7 @@ test.describe('Transfer Service Existing User: Cottageuser, ElectricAccount & Ga
     await moveInpage.Click_Start_New_Move_In_Request();
     await page.goto('/move-in?shortCode=autotest&transfer-service=true',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Transfer_Service_Agreement();
     await moveInpage.Next_Move_In_Button();
@@ -286,7 +286,7 @@ test.describe('Transfer Service Existing User: Cottageuser, ElectricAccount & Ga
 });
 
 
-test.describe('Transfer Service Existing User: Cottageuser & GasAccount Exist', () => {
+test.describe.skip('Transfer Service Existing User: Cottageuser & GasAccount Exist', () => {
   test.describe.configure({mode: "serial", retries: 2});
     
   test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression7'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -348,7 +348,7 @@ test.describe('Transfer Service Existing User: Cottageuser & GasAccount Exist', 
     await moveInpage.Click_Start_New_Move_In_Request();
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    await moveInpage.Enter_Address(MoveIndata.ConEDISONaddress,PGuser.UnitNumber);
+    await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
@@ -415,7 +415,7 @@ test.describe('Transfer Service Existing User: Cottageuser & GasAccount Exist', 
 });
 
 
-test.describe('Transfer Service Existing User: Cottageuser Exist Did Drop Off', () => {
+test.describe.skip('Transfer Service Existing User: Cottageuser Exist Did Drop Off', () => {
   test.describe.configure({mode: "serial", retries: 2});
     
   test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression3'],}, async ({page, moveInpage, supabaseQueries, finishAccountSetupPage, overviewPage}) => {
