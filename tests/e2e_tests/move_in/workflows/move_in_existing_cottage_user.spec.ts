@@ -580,7 +580,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
-    let PayThroughPG: boolean = false;
+    let PayThroughPG: boolean = true;
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
@@ -663,7 +663,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
-    let PayThroughPG: boolean = false;
+    let PayThroughPG: boolean = true;
 
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
