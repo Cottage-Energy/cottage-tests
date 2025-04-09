@@ -211,11 +211,11 @@ export class MoveInPage{
         this.Move_In_CON_ED_62_years_No_Button = page.locator('//p[contains(text(),"62 years")]//parent::div//div//label[contains(@for, "No")]');
 
         this.Move_In_BGE_Employment_Status_Title = page.getByText('Employment Status');
-        this.Move_In_BGE_Employment_Status_Dropdown = page.getByRole('combobox');
+        this.Move_In_BGE_Employment_Status_Dropdown = page.locator('//p[contains(text(),"Employment Status")]//parent::div//button');
         this.Move_In_BGE_Employment_Selection = (selection: string) => page.locator(`//span[contains(text(),"${selection}")]`);
 
         this.Move_In_Texas_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
-        this.Move_In_Texas_Lenght_of_Staying_Dropdown = page.getByRole('combobox');
+        this.Move_In_Texas_Lenght_of_Staying_Dropdown = page.locator('//p[contains(text(),"How long are you planning on staying at your current address?")]//parent::div//button');
         this.Move_In_Texas_Lenght_of_Staying_Selection = (selection: string) => page.getByText(selection, { exact: true });
         this.Move_In_Texas_Thermostat_Question = page.getByText('Do you own a smart thermostat?');
         this.Move_In_Texas_Thermostat_Yes_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "Yes")]');
