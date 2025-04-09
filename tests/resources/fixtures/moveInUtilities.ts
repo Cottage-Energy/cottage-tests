@@ -91,6 +91,7 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     await moveInpage.Next_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+    const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
     //check also is billing required, if true set PayThroughPG to true
     if (PaymentPageVisibility === true && PayThroughPG === true) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -198,6 +199,7 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     await moveInpage.Next_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+    const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
     //check also is billing required, if true set PayThroughPG to true
     if (PaymentPageVisibility === true && PayThroughPG === true) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -306,6 +308,7 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
     await moveInpage.Next_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
+    const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
     if (PaymentPageVisibility === true) {
         await moveInpage.Skip_Payment_Details();
         await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()

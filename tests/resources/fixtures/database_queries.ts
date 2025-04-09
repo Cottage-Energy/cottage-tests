@@ -169,7 +169,7 @@ export class SupabaseQueries{
             .single()
             .throwOnError();
         const isHandledBilling = Building?.isHandleBilling ?? '';
-        console.log(isHandledBilling);
+        console.log("isHandledBilling:",isHandledBilling);
         return isHandledBilling;
     }
 
@@ -183,7 +183,7 @@ export class SupabaseQueries{
             .single()
             .throwOnError();
         const isHandledBilling = Utility?.isHandleBilling ?? '';
-        console.log(isHandledBilling);
+        console.log("isHandledBilling:",isHandledBilling);
         return isHandledBilling;
     }
 
@@ -196,7 +196,7 @@ export class SupabaseQueries{
             .single()
             .throwOnError();
         const isBillingRequired = Utility?.isBillingRequired ?? '';
-        console.log(isBillingRequired);
+        console.log("isBillingRequired:",isBillingRequired);
         return isBillingRequired;
     }
 

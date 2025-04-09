@@ -630,6 +630,28 @@ export class MoveInPage{
         return isVisible;
     }
 
+    async Check_PayThroughPG_Visibility(ElectricCompany?: string | null, GasCompany?: string | null){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('load');
+
+        let isVisible;
+        
+        if(ElectricCompany === null){
+            isVisible = await supabaseQueries.Get_isBillingRequired_Utility(GasCompany || '');
+        }
+        else if(GasCompany === null){
+            isVisible = await supabaseQueries.Get_isBillingRequired_Utility(ElectricCompany || '');
+        }
+        else{
+            const vis1 = await supabaseQueries.Get_isBillingRequired_Utility(ElectricCompany || '');
+            const vis2 = await supabaseQueries.Get_isBillingRequired_Utility(GasCompany || '');
+            isVisible = vis1 || vis2;
+        }
+        
+
+        console.log('payThroughIsVisible:', !isVisible);
+        return !isVisible;
+    }
 
     async Enter_Card_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
@@ -658,7 +680,6 @@ export class MoveInPage{
         }
         
     }
-
 
     async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
