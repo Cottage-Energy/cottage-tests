@@ -281,7 +281,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
   test('Move In Parameter  Utility TX Dereg Address', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
     test.setTimeout(180000);
     await page.goto('/move-in??electricCompany=PECO&gasCompany=PEPCO',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.COMED_New_User_TX_Address(moveInpage, "PECO", "PEPCO",true,true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Fix_TX_DEREG_Address(moveInpage, "PECO", "PEPCO",true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

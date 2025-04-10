@@ -19,7 +19,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 
@@ -232,7 +232,7 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", "DTE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.COMED_New_User_TX_Address(moveInpage, "PSEG", "DTE",true,true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Fix_TX_DEREG_Address(moveInpage, "PSEG", "DTE",true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
