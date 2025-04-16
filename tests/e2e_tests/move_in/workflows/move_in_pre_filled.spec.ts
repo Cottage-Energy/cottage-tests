@@ -37,6 +37,7 @@ test.describe('Move In Address Parameters New User Electric &/or Gas', () => {
     test.setTimeout(240000);
     await page.goto('/move-in?streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage, 'CON-EDISON', null, true, true);
+    
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

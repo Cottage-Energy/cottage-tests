@@ -99,6 +99,8 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -110,8 +112,6 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -207,6 +207,8 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -218,8 +220,6 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -412,6 +412,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -423,8 +425,6 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -519,6 +519,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -530,8 +532,6 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -625,6 +625,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -636,8 +638,6 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -732,6 +732,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -743,8 +745,6 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -820,6 +820,8 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -831,8 +833,6 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
@@ -855,7 +855,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     let gasQuestionsPresent;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    //await moveInpage.Enter_Address(addressType,PGuser.UnitNumber); CHANGE TO FILL UNIT ONLY
+    //await moveInpage.Enter_Address(addressType,PGuser.UnitNumber); CHANGE TO FILL UNIT ONLY//
     await moveInpage.Next_Move_In_Button();
 
     try{
@@ -908,6 +908,8 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
+        await moveInpage.Click_Dashboard_Link();
+        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -919,8 +921,6 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await moveInpage.Click_Dashboard_Link();
-    await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
