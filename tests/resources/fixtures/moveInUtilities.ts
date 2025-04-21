@@ -855,7 +855,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     let gasQuestionsPresent;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
-    //await moveInpage.Enter_Address(addressType,PGuser.UnitNumber); CHANGE TO FILL UNIT ONLY//
+    await moveInpage.Enter_Unit(PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
 
     try{

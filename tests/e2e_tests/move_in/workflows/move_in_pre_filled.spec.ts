@@ -33,11 +33,10 @@ test.describe('Move In Address Parameters New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for CON-EDISON Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page}) => {
+  test('New User for CON-EDISON Service Zip Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page}) => {
     test.setTimeout(240000);
     await page.goto('/move-in?streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage, 'CON-EDISON', null, true, true);
-    
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -46,16 +45,43 @@ test.describe('Move In Address Parameters New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for TX-DEREG Electric Only', {tag: [ '@regression1'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
+  test('New User for POTOMAC-EDISON Nove-in Parameters for Electric Only', {tag: [ '@regression1'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
     test.setTimeout(240000);
-    await page.goto('/move-in?gasCompany=EVERGY',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, 'EVERGY', true, true);
+    await page.goto('/move-in?electricCompany=POTOMAC-EDISON&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage,'POTOMAC-EDISON', null, true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "POTOMAC-EDISON", null);
+  });
+
+
+  test('New User for LA-DWP Nove-in Parameters for Gas Only', {tag: [ '@regression1'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
+    test.setTimeout(240000);
+    await page.goto('/move-in?gasCompany=LA-DWP&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage, null, 'LA-DWP', true, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "EVERGY");
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "LA-DWP");
   });
+
+
+  test('New User for PSE Nove-in Parameters for Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage, page}) => { // Use BGE and NGMA
+    test.setTimeout(240000);
+    await page.goto('/move-in?electricCompany=PSE&gasCompany=PSE&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage,'PSE', 'PSE', true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PSE", 'PSE');
+  });
+
+
+
 
 });
 

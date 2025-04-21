@@ -311,6 +311,21 @@ export class MoveInPage{
     }
 
 
+    async Enter_Unit(unit:string) {
+        await this.page.waitForLoadState('domcontentloaded');
+        try{
+            await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:3000});
+        }
+        catch{
+            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
+        }
+        await this.page.waitForTimeout(1000);
+        await this.Move_In_Unit_Field.click();
+        await this.Move_In_Unit_Field.fill(unit);
+        await this.page.waitForTimeout(1000);
+    }
+
+
     async Setup_Account(Electric_New: boolean, Gas_New: boolean){ 
         await expect(this.Move_In_Account_Setup_Fields).toBeVisible({timeout:15000});
         if(await this.Move_In_Electric_New_Button.isVisible()){
