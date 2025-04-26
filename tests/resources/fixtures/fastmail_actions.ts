@@ -67,6 +67,26 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
 }
 
 
+export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
+    const maxRetries = 4;
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    let content: any[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `Welcome to Public Grid: Let’s Get Started!`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
+        if (content && content.length > 0) {
+            break;
+        }
+        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
+        await delay(30000); // delay
+    }
+    if (!content || content.length === 0) {
+        throw new Error("Failed to fetch Start Service Confirmation email after multiple attempts.");
+    }
+    const email_body = content[0].bodyValues[1].value;
+    await expect(content.length).toEqual(1);
+}
+
+
 export async function Check_Start_Service_Confirmation_Not_Present(Email: string) {
     let content: any[] = [];
     content = await fastMail.fetchEmails({to: Email, subject: `Start Service Confirmation`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
@@ -320,6 +340,7 @@ export async function Check_Failed_Payment_Email(Email: string, ElectricBillTota
 export const FastmailActions = {
     Get_OTP,
     Check_Start_Service_Confirmation,
+    Check_Welcome_to_PG_Lets_Get_Started,
     Check_Start_Service_Confirmation_Not_Present,
     Check_Need_Payment_Method_to_Start_Electricity_Service,
     Check_Need_Payment_Method_to_Start_Gas_Service,
