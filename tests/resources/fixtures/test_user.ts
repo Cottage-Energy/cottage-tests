@@ -56,7 +56,7 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     const userData: TestUser = {
       FirstName: firstname,
       LastName: lastname,
-      PhoneNumber: faker.phone.number(),
+      PhoneNumber: "111-111-1111",
       Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname, provider: 'joinpublicgrid.com'}),
       UnitNumber: faker.location.buildingNumber() + faker.string.alpha({ length: 1 }),
       Today: today.getDate().toString(),
