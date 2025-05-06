@@ -110,7 +110,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
         throw new Error("Failed to fetch email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
-    await expect(content.length).toEqual(1);
+    await expect(content.length).toEqual(2);
 }
 
 
@@ -130,7 +130,7 @@ export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: stri
         throw new Error("Failed to fetch email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
-    await expect(content.length).toEqual(1);
+    await expect(content.length).toEqual(2);
 }
 
 
@@ -150,7 +150,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
         throw new Error("Failed to fetch email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
-    await expect(content.length).toEqual(1);
+    await expect(content.length).toEqual(2);
 }
 
 
