@@ -9,6 +9,8 @@ interface TestUser {
     UnitNumber: string;
     Today: string;
     Tomorrow: string;
+    FourDaysFromNow: string;
+    TwoDaysAgo: string;
     BirthDate: string;
     SSN: string;
     CardExpiry: string;
@@ -34,6 +36,8 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     
     const today = new Date();
     const tomorrow = today.getDate() + 1;
+    const fourDaysFromNow = today.getDate() + 4;
+    const twoDaysAgo = today.getDate() - 2;
 
     const futureDate = faker.date.future({ years: 5 }).toISOString().split('T')[0]; // "YYYY-MM-DD"
     const yearMonth = futureDate.slice(0, 7).split('-'); // ["YYYY", "MM"]
@@ -61,6 +65,8 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       UnitNumber: faker.location.buildingNumber() + faker.string.alpha({ length: 1 }),
       Today: today.getDate().toString(),
       Tomorrow: tomorrow.toString(),
+      FourDaysFromNow: fourDaysFromNow.toString(),
+      TwoDaysAgo: twoDaysAgo.toString(),
       BirthDate: faker.date.birthdate({ min: 18, max: 99, mode: 'age' }).toISOString().split('T')[0],
       SSN: faker.string.numeric({ length: 9 }),
       CardExpiry: cardExpiry,

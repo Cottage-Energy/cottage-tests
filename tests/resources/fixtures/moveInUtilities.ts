@@ -275,7 +275,7 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
     
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
-    const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
+    const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.FourDaysFromNow);
     await moveInpage.Next_Move_In_Button();
 
     try{
