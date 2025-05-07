@@ -40,6 +40,8 @@ export class OverviewPage {
     readonly Overview_New_Terms_Modal_Agree_Checkbox: Locator
     readonly Overview_New_Terms_Modal_Accept_Button: Locator
 
+    readonly Overview_Inactive_Account_Alert: Locator
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -75,6 +77,8 @@ export class OverviewPage {
         this.Overview_New_Terms_Modal_Content = page.getByText('We have expanded our services');
         this.Overview_New_Terms_Modal_Agree_Checkbox = page.locator('//p[contains(text(),"I agree to the updated Terms of Service")]//preceding::button[@role="checkbox"]')
         this.Overview_New_Terms_Modal_Accept_Button = page.getByRole('button', { name: 'Accept' })
+
+        this.Overview_Inactive_Account_Alert = page.getByText('Inactive Account: Service at');
     }
 
     //methods
@@ -672,6 +676,10 @@ export class OverviewPage {
 
     async Check_Get_Started_Widget_Visible() {
         await expect(this.Overview_Get_Started_Widget).toBeVisible();
+    }
+
+    async Check_Inactive_Account_Alert_Visible() {
+        await expect(this.Overview_Inactive_Account_Alert).toBeVisible({timeout:30000});
     }
 
 }
