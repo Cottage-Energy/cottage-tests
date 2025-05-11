@@ -200,7 +200,29 @@ export class SupabaseQueries{
         return isBillingRequired;
     }
 
-    
+
+    async Get_Electric_Plane_Ticket_Id(cottageUserId: string) {
+        const { data: ElectricTicket } = await supabase
+            .from('ElectricAccount')
+            .select('planeTicketID')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+        const ElectricPlaneTicketId = ElectricTicket?.planeTicketID ?? '';
+        console.log("Plane Ticket Electric: ",ElectricPlaneTicketId.toString());
+        return ElectricPlaneTicketId.toString();
+    }
+
+
+    async Get_Gas_Plane_Ticket_Id(cottageUserId: string) {
+        const { data: GasTicket } = await supabase
+            .from('GasAccount')
+            .select('planeTicketID')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+        const GasPlaneTicketId = GasTicket?.planeTicketID ?? '';
+        console.log("Plane Ticket Gas: ",GasPlaneTicketId.toString());
+        return GasPlaneTicketId.toString();
+    }
 
 
 
