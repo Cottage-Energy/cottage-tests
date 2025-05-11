@@ -5,20 +5,17 @@ export default{
     },
     dev:{
         admin_api:'https://ojaryxuxdh.execute-api.us-east-1.amazonaws.com',
-        bots_api:'https://dev-core.onepublicgrid.dev',
-        connect_api:'https://dev.onepublicgrid.dev',
         home:'https://dev.publicgrid.energy',
+        pa_admin:'https://dev.publicgrid.co'
     },
     staging:{
         admin_api:'',
-        bots_api:'https://staging-core.onepublicgrid.dev',
-        connect_api:'https://staging.onepublicgrid.dev',
         home:'https://staging.publicgrid.energy',
+        pa_admin:'https://staging.publicgrid.co'
     },
     production:{
         admin_api:'https://perzebrgr8.execute-api.us-east-1.amazonaws.com',
-        bots_api:'https://core.onepublicgrid.dev',
-        connect_api:'https://onepublicgrid.dev',
         home:'https://publicgrid.energy',
+        pa_admin:'https://publicgrid.co'
     },
 };

@@ -200,6 +200,8 @@ export class SupabaseQueries{
         return isBillingRequired;
     }
 
+    
+
 
 
     //////////// Bill Queries ////////////

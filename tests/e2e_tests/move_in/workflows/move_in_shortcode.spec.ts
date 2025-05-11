@@ -1,8 +1,8 @@
 import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
-import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import { LinearActions } from '../../../resources/fixtures/linear_actions';
+import { planeClient } from '../../../resources/utils/plane';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
@@ -42,6 +42,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await planeClient.getIssueWithState("259283da-c957-40a5-88b9-0aa8d951a7b4", "PG-1");
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
   });
 
