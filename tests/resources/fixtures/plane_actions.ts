@@ -47,7 +47,7 @@ export class PlaneActions{
 
 
     async DeleteTickets(Email: string) {
-        const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(Email);
+        const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(Email);
         
         try{
             const electricPlaneTicketID = await supabaseQueries.Get_Electric_Plane_Ticket_Id(cottageUserId);

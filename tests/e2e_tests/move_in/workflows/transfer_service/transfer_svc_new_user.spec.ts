@@ -1,6 +1,5 @@
 import { test,expect } from '../../../../resources/fixtures/pg_pages_fixture';
 import { TransferServiceTestUtilities } from '../../../../resources/fixtures/transferServiceUtilities';
-import { LinearActions } from '../../../../resources/fixtures/linear_actions';
 import { generateTestUserData } from '../../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../../resources/fixtures/database_queries';
 import { CleanUp } from '../../../../resources/fixtures/userCleanUp';
@@ -8,7 +7,6 @@ import { FastmailActions } from '../../../../resources/fixtures/fastmail_actions
 import * as PaymentData from '../../../../resources/data/payment-data.json';
 
 const supabaseQueries = new SupabaseQueries();
-const linearActions = new LinearActions();
 let MoveIn: any;
 
 
