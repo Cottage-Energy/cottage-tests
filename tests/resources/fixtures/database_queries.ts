@@ -3,7 +3,7 @@ import {supabase} from '../../resources/utils/supabase';
 
 export class SupabaseQueries{
 
-    async Get_Cottage_User_Id(Email: string, TextConsent?: boolean) {
+    async Check_Cottage_User_Id(Email: string, TextConsent?: boolean) {
         const email = Email.toLowerCase();
         console.log(email);
         const { data: cottageUser } = await supabase
@@ -29,6 +29,19 @@ export class SupabaseQueries{
             await expect(isAbleToSendText).toBe(false);
         }
 
+        return cottageUserId;
+    }
+
+    async Get_Cottage_User_Id(Email: string) {
+        const email = Email.toLowerCase();
+        console.log(email);
+        const { data: cottageUser } = await supabase
+            .from('CottageUsers')
+            .select('*')
+            .eq('email', email)
+            .single()
+        const cottageUserId = cottageUser?.id ?? '';
+        console.log(cottageUserId);
         return cottageUserId;
     }
 

@@ -112,7 +112,7 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -220,7 +220,7 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -319,7 +319,7 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
     }
 
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     const accountNumber = await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -425,7 +425,7 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -532,7 +532,7 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -638,7 +638,7 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -745,7 +745,7 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -833,7 +833,7 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -921,7 +921,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -1029,7 +1029,7 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,
@@ -1137,7 +1137,7 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email, SMS);
+    const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email, SMS);
     await supabaseQueries.Check_Cottage_User_Account_Number(PGUserEmail);
     return {
         accountNumber,

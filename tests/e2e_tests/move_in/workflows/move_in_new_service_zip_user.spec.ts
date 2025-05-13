@@ -1,14 +1,10 @@
 import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
-import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
-import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
-const supabaseQueries = new SupabaseQueries();
-const linearActions = new LinearActions();
 let MoveIn: any;
 
 
@@ -35,13 +31,13 @@ test.describe.configure({mode: "serial"});
 test.describe('Move In New Service Zip User', () => {
 
 
-  test('COMED New User', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
+  test('COMED New User', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage,'COMED', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_isRegistrationComplete(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED");
@@ -49,12 +45,12 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('COSERV New User', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
+  test('COSERV New User', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'COSERV', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COSERV");
@@ -62,12 +58,12 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression2'],}, async ({moveInpage, page}) => {
+  test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression2'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'CON-EDISON', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
@@ -76,12 +72,12 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
+  test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression3'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage,'EVERSOURCE', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
@@ -89,12 +85,12 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression4'],}, async ({moveInpage, page}) => {
+  test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression4'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(moveInpage, 'CON-EDISON', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
@@ -103,12 +99,12 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page}) => {
+  test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(180000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(moveInpage, 'EVERSOURCE', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
@@ -116,12 +112,12 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression6'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression6'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions, page}) => {
     test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage, 'CON-EDISON', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -130,13 +126,13 @@ test.describe('Move In New Service Zip User', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "CON-EDISON");
     //check Account Status
   });
 
 
-  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression7'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression7'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions, page}) => {
 
     const PGuserUsage = await generateTestUserData();
 
@@ -144,7 +140,7 @@ test.describe('Move In New Service Zip User', () => {
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage, 'EVERSOURCE', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //check no email
@@ -154,18 +150,18 @@ test.describe('Move In New Service Zip User', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "EVERSOURCE");
     //check Account Status
   });
 
 
-  test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions, page}) => {
     test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,'CON-EDISON', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
@@ -173,13 +169,13 @@ test.describe('Move In New Service Zip User', () => {
     await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
-    //No service confirmation email
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
     //check Account Status
   });
 
 
-  test('EVERSOURCE New User Skip And Cancel Registration', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('EVERSOURCE New User Skip And Cancel Registration', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions, page}) => {
 
     const PGuserUsage = await generateTestUserData();
 
@@ -187,7 +183,7 @@ test.describe('Move In New Service Zip User', () => {
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,'EVERSOURCE', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
     await page.goto('/sign-in');
     //check no email
@@ -195,18 +191,18 @@ test.describe('Move In New Service Zip User', () => {
     await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
-    //No service confirmation email
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
     //check Account Status
   });
 
 
-  test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
+  test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(300000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage,'TX-DEREG', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    await page.waitForTimeout(30000);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await page.waitForTimeout(10000);

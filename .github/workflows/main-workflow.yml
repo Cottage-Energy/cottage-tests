@@ -90,9 +90,9 @@ jobs:
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression3" ]; then
           npx playwright test --grep /@regression3/ --project=Safari
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression4" ]; then
-          npx playwright test --grep /@regression4/ --project=Chromium
+          npx playwright test --grep /@regression4/ --project=Mobile_Chrome
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression5" ]; then
-          npx playwright test --grep /@regression5/ --project=Chromium
+          npx playwright test --grep /@regression5/ --project=Mobile_Safari
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression6" ]; then
           npx playwright test --grep /@regression6/ --project=Chromium
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression7" ]; then
