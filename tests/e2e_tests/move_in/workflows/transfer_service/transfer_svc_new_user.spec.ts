@@ -1,4 +1,4 @@
-import { test,expect } from '../../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../../resources/page_objects/base/pg_page_base';
 import { TransferServiceTestUtilities } from '../../../../resources/fixtures/transferServiceUtilities';
 import { generateTestUserData } from '../../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../../resources/fixtures/database_queries';

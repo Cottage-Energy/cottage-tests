@@ -1,4 +1,4 @@
-import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';

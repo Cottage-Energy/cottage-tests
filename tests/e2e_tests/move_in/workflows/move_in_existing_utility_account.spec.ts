@@ -1,4 +1,4 @@
-import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';

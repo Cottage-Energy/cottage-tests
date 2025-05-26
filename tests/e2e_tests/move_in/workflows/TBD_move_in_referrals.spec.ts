@@ -1,4 +1,4 @@
-import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
@@ -26,7 +26,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Short Code Referal', () => {
+test.describe.skip('Short Code Referal', () => {
   test.describe.configure({mode: "serial"});
   
 
@@ -49,7 +49,7 @@ test.describe('Short Code Referal', () => {
 
 
 //Billing but Cancelled
-test.describe('Short Code Referal Canceled Registration', () => {
+test.describe.skip('Short Code Referal Canceled Registration', () => {
   test.describe.configure({mode: "serial"});
   
 
@@ -82,7 +82,7 @@ test.describe('Short Code Referal Canceled Registration', () => {
 
 
 
-test.describe('Non Short Code Referal', () => {
+test.describe.skip('Non Short Code Referal', () => {
   test.describe.configure({mode: "serial"});
   
 

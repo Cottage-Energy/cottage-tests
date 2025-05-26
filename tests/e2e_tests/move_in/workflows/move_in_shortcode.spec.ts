@@ -1,4 +1,4 @@
-import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
@@ -14,7 +14,7 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   //await page.close();
 });
 

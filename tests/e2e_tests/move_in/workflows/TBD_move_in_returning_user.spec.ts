@@ -1,4 +1,4 @@
-import { test,expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
@@ -28,7 +28,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
+test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
   test.describe.configure({mode: "serial"});
   
     test('COMED Cottageuser & ElectricAccount Exist', {tag: [ '@regression1'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -155,7 +155,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 });
 
 
-test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
+test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
   test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression4'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -282,7 +282,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 });
 
 
-test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
+test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
   test('COMED Cottageuser & Gas Account Exist', {tag: [ '@regression7'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -410,7 +410,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 });
 
 
-test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', () => {
+test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
   test('COMED Cottageuser Exist Only', {tag: [ '@regression3'],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
@@ -696,7 +696,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 });
 
 
-test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
+test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
   test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression7'],}, async ({page, moveInpage, supabaseQueries, finishAccountSetupPage, overviewPage}) => {

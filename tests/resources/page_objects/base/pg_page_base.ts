@@ -1,14 +1,14 @@
 import { test as base } from '@playwright/test';
-import { MoveInPage }  from '../page_objects/move_in_page';
-import { FinishAccountSetupPage } from '../page_objects/finish_account_setup_page';
-import { HomePage } from '../page_objects/homepage';
-import { SidebarChat } from '../page_objects/sidebar_chat';
-import { OverviewPage } from '../page_objects/overview_dashboard_page';
-import { BillingPage } from '../page_objects/billing_page';
-import { ServicesPage } from '../page_objects/services_page';
-import { ProfilePage } from '../page_objects/account_profile_page';
-import { SupabaseQueries } from '../fixtures/database_queries';
-import { PlaneActions } from '../fixtures/plane_actions';
+import { MoveInPage }  from '../move_in_page';
+import { FinishAccountSetupPage } from '../finish_account_setup_page';
+import { HomePage } from '../homepage';
+import { SidebarChat } from '../sidebar_chat';
+import { OverviewPage } from '../overview_dashboard_page';
+import { BillingPage } from '../billing_page';
+import { ServicesPage } from '../services_page';
+import { ProfilePage } from '../account_profile_page';
+import { SupabaseQueries } from '../../fixtures/database_queries';
+import { PlaneActions } from '../../fixtures/plane_actions';
 
 
 type pages = {

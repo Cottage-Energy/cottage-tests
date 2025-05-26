@@ -1,5 +1,5 @@
 import { APIRequestContext } from '@playwright/test';
-import { test, expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test, expect } from '../../../resources/page_objects/base/pg_page_base';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
