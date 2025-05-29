@@ -1,5 +1,6 @@
 import { generateTestUserData } from '../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+//import { MoveInPage } from '../../resources/page_objects/move_in_page';
 import * as MoveIndata from '../../resources/data/move_in-data.json';
 import * as PaymentData from '../../resources/data/payment-data.json';
 import { TIMEOUT } from 'dns';
