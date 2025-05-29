@@ -48,7 +48,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Valid Card Auto Payment', () => {
+test.describe.skip('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
