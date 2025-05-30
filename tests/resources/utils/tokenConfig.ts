@@ -11,7 +11,7 @@ interface TokenConfig {
     staging: {
       admin: process.env.STAGING_ADMIN_TOKEN || '',
     },
-    production: {
+    prod: {
       admin: process.env.PRODUCTION_ADMIN_TOKEN || '',
     },
   };

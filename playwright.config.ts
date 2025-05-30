@@ -23,7 +23,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.ENV === 'production' 
-    ? baseEnvUrl.production.home
+    ? baseEnvUrl.prod.home
     : process.env.ENV === 'staging' 
       ? baseEnvUrl.staging.home
       : baseEnvUrl.dev.home

@@ -13,7 +13,7 @@ export default{
         home:'https://staging.publicgrid.energy',
         pa_admin:'https://staging.publicgrid.co'
     },
-    production:{
+    prod:{
         admin_api:'https://perzebrgr8.execute-api.us-east-1.amazonaws.com',
         home:'https://publicgrid.energy',
         pa_admin:'https://publicgrid.co'
