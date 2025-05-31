@@ -58,7 +58,7 @@ on:
 jobs:
   PG_Test_Run:
     runs-on: ubuntu-latest
-
+    environment: ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -94,7 +94,9 @@ jobs:
         FASTMAIL_API_KEY: ${{ secrets.FASTMAIL_API_KEY }}
         PLANE_MOVE_IN_PROJECT_ID: ${{ secrets.PLANE_MOVE_IN_PROJECT_ID }}
         PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
+
 
       run: |
         if [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Smoke" ]; then
