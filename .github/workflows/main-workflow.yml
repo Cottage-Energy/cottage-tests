@@ -84,7 +84,6 @@ jobs:
         FASTMAIL_API_KEY: ${{ secrets.FASTMAIL_API_KEY }}
         PLANE_MOVE_IN_PROJECT_ID: ${{ secrets.PLANE_MOVE_IN_PROJECT_ID }}
         PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
 
       run: |
