@@ -27,7 +27,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@smoke','@regression2'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
     test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);

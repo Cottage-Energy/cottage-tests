@@ -156,7 +156,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@regression4'],}, async ({page, moveInpage, servicesPage, supabaseQueries, planeActions}) => {
+  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: ['@smoke','@regression4'],}, async ({page, moveInpage, servicesPage, supabaseQueries, planeActions}) => {
     test.setTimeout(350000);
 
     const PGuser = await generateTestUserData();
@@ -869,7 +869,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@regression3'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@smoke','@regression3'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();

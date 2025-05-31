@@ -40,7 +40,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for EVERGY Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
+  test('New User for EVERGY Gas Only', {tag: [ '@smoke','@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
     test.setTimeout(240000);
     await page.goto('/move-in?gasCompany=EVERGY',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, 'EVERGY', true, true);
