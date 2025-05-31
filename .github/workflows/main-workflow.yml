@@ -79,6 +79,16 @@ jobs:
       run: |
         echo "LOG_LEVEL=${{ github.event.inputs.logLevel || github.event.client_payload.logLevel || inputs.logLevel }}" >> $GITHUB_ENV
 
+    - name: Debug secrets access
+      run: |
+        echo "Checking secret availability..."
+        echo "FASTMAIL_API_KEY exists: ${{ secrets.FASTMAIL_API_KEY != '' }}"
+        echo "PLANE_MOVE_IN_PROJECT_ID exists: ${{ secrets.PLANE_MOVE_IN_PROJECT_ID != '' }}"
+        echo "PLANE_API_KEY exists: ${{ secrets.PLANE_API_KEY != '' }}"
+        echo "SUPABASE_API_KEY exists: ${{ secrets.SUPABASE_API_KEY != '' }}"
+        echo "Repository: ${{ github.repository }}"
+        echo "Workflow trigger: ${{ github.event_name }}"
+
     - name: Run Playwright tests
       env:
         FASTMAIL_API_KEY: ${{ secrets.FASTMAIL_API_KEY }}
