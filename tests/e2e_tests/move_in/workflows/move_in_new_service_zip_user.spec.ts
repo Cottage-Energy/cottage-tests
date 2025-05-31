@@ -112,7 +112,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', {tag: [ '@regression6'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions, page}) => {
+  test('CON-EDISON New User Skip Add Payment', {tag: [ '@smoke','@regression6'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, planeActions, page}) => {
     test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage, 'CON-EDISON', null, true,true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
