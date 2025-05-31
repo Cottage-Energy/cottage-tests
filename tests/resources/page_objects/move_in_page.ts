@@ -476,6 +476,7 @@ export class MoveInPage{
         await this.Move_In_Email_Field.fill(email);
         await this.Move_In_Date_Field.click({timeout:10000});
 
+
         if (await this.Move_In_Date_Selector(day).isVisible()){
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);

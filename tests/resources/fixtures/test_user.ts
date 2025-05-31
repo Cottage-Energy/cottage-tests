@@ -35,9 +35,12 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     const lastname = faker.person.lastName();
     
     const today = new Date();
-    const tomorrow = today.getDate() + 1;
-    const fourDaysFromNow = today.getDate() + 4;
-    const twoDaysAgo = today.getDate() - 2;
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const fourDaysFromNow = new Date(today);
+    fourDaysFromNow.setDate(today.getDate() + 4);
+    const twoDaysAgo = new Date(today);
+    twoDaysAgo.setDate(today.getDate() - 2);
 
     const futureDate = faker.date.future({ years: 5 }).toISOString().split('T')[0]; // "YYYY-MM-DD"
     const yearMonth = futureDate.slice(0, 7).split('-'); // ["YYYY", "MM"]
@@ -64,9 +67,9 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname, provider: 'joinpublicgrid.com'}),
       UnitNumber: faker.location.buildingNumber() + faker.string.alpha({ length: 1 }),
       Today: today.getDate().toString(),
-      Tomorrow: tomorrow.toString(),
-      FourDaysFromNow: fourDaysFromNow.toString(),
-      TwoDaysAgo: twoDaysAgo.toString(),
+      Tomorrow: tomorrow.getDate().toString(),
+      FourDaysFromNow: fourDaysFromNow.getDate().toString(),
+      TwoDaysAgo: twoDaysAgo.getDate().toString(),
       BirthDate: faker.date.birthdate({ min: 18, max: 99, mode: 'age' }).toISOString().split('T')[0],
       SSN: faker.string.numeric({ length: 9 }),
       CardExpiry: cardExpiry,
