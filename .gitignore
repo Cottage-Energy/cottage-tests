@@ -6,6 +6,7 @@
 /test-results
 /playwright-report
 /reports
+.auth/
 
 # Environment variables
 .env
