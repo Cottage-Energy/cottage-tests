@@ -5,4 +5,5 @@ import environmentBaseUrl from './environmentBaseUrl';
 
 const env = process.env.ENV || 'dev';
 const supabaseUrl = environmentBaseUrl[env].supabse_url;
-export const supabase = new SupabaseClient<Database>(supabaseUrl, process.env.SUPABASE_API_KEY!);
+const supabaseApiKey = process.env.SUPABASE_API_KEY;
+export const supabase = new SupabaseClient<Database>(supabaseUrl, supabaseApiKey!);
