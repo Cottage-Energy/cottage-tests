@@ -1,14 +1,12 @@
-import { test,expect } from '../../../../resources/fixtures/pg_pages_fixture';
+import { test,expect } from '../../../../resources/page_objects/base/pg_page_base';
 import { generateTestUserData } from '../../../../resources/fixtures/test_user';
 import { TransferServiceTestUtilities } from '../../../../resources/fixtures/transferServiceUtilities';
 import { FastmailActions } from '../../../../resources/fixtures/fastmail_actions';
-import { LinearActions } from '../../../../resources/fixtures/linear_actions';
 import * as MoveIndata from '../../../../resources/data/move_in-data.json';
 import * as PaymentData from '../../../../resources/data/payment-data.json';
 import { CleanUp } from '../../../../resources/fixtures/userCleanUp';
 
 //const supabaseQueries = new SupabaseQueries();
-const linearActions = new LinearActions();
 let MoveIn: any;
 
 
@@ -433,7 +431,7 @@ test.describe.skip('Transfer Service Existing User: Cottageuser Exist Did Drop O
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
     await page.waitForTimeout(10000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -475,7 +473,7 @@ test.describe.skip('Transfer Service Existing User: Cottageuser Exist Did Drop O
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(cottageUserID);
 
@@ -518,7 +516,7 @@ test.describe.skip('Transfer Service Existing User: Cottageuser Exist Did Drop O
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Get_Gas_Account_Id(cottageUserID);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
 
@@ -562,7 +560,7 @@ test.describe.skip('Transfer Service Existing User: Cottageuser Exist Did Drop O
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Get_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Get_Gas_Account_Id(cottageUserID);
     await supabaseQueries.Get_Electric_Account_Id(cottageUserID);
 

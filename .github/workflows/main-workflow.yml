@@ -36,7 +36,7 @@ on:
         options:
         - dev
         - staging
-        - production
+        - prod
       scope:
         description: 'Test Scope'
         required: true
@@ -80,6 +80,13 @@ jobs:
         echo "LOG_LEVEL=${{ github.event.inputs.logLevel || github.event.client_payload.logLevel || inputs.logLevel }}" >> $GITHUB_ENV
 
     - name: Run Playwright tests
+      env:
+        FASTMAIL_API_KEY: ${{ secrets.FASTMAIL_API_KEY }}
+        PLANE_MOVE_IN_PROJECT_ID: ${{ secrets.PLANE_MOVE_IN_PROJECT_ID }}
+        PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
+
       run: |
         if [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Smoke" ]; then
           npx playwright test --grep /@smoke/ --project=Chromium
@@ -90,13 +97,13 @@ jobs:
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression3" ]; then
           npx playwright test --grep /@regression3/ --project=Safari
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression4" ]; then
-          npx playwright test --grep /@regression4/ --project=Chromium
+          npx playwright test --grep /@regression4/ --project=Mobile_Chrome
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression5" ]; then
-          npx playwright test --grep /@regression5/ --project=Chromium
+          npx playwright test --grep /@regression5/ --project=Mobile_Safari
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression6" ]; then
-          npx playwright test --grep /@regression6/ --project=Chromium
+          npx playwright test --grep /@regression6/ --project=Mobile_Chrome
         elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression7" ]; then
-          npx playwright test --grep /@regression7/ --project=Chromium
+          npx playwright test --grep /@regression7/ --project=Mobile_Safari
         fi
 
     - name: Test Report Generation

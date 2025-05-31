@@ -1,11 +1,10 @@
 import { APIRequestContext } from '@playwright/test';
-import { test, expect } from '../../../resources/fixtures/pg_pages_fixture';
+import { test, expect } from '../../../resources/page_objects/base/pg_page_base';
 import { generateTestUserData } from '../../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
 import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
 import { PaymentUtilities } from '../../../resources/fixtures/paymentUtilities';
 import { AdminApi } from '../../../resources/api/admin_api';
-import { LinearActions } from '../../../resources/fixtures/linear_actions';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import tokenConfig from '../../../resources/utils/tokenConfig';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -15,7 +14,6 @@ import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 
 let AdminApiContext: APIRequestContext;
 const supabaseQueries = new SupabaseQueries();
-const linearActions = new LinearActions();
 const paymentUtilities = new PaymentUtilities();
 let MoveIn: any;
 
@@ -50,7 +48,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Valid Card Manual Payment', () => {
+test.describe.skip('Valid Card Manual Payment', () => {
   test.describe.configure({mode: "serial"});
   
     

@@ -89,8 +89,8 @@ class PlaneClient {
     }
   
   
-  }
+}
   
-  const planeClient = new PlaneClient(BASE_URL, API_KEY);
+const planeClient = new PlaneClient(BASE_URL, API_KEY);
   
-  export { planeClient };
+export { planeClient };

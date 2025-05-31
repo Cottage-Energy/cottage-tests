@@ -4,4589 +4,6248 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   public: {
     Tables: {
       Address: {
         Row: {
-          city: string | null
-          createdAt: string | null
-          googlePlaceID: string | null
-          id: string
-          state: string | null
-          street: string | null
-          utilityFriendlyAddress: string | null
-          zip: string | null
-        }
+          city: string | null;
+          createdAt: string | null;
+          googlePlaceID: string | null;
+          id: string;
+          state: string | null;
+          street: string | null;
+          utilityFriendlyAddress: string | null;
+          zip: string | null;
+        };
         Insert: {
-          city?: string | null
-          createdAt?: string | null
-          googlePlaceID?: string | null
-          id?: string
-          state?: string | null
-          street?: string | null
-          utilityFriendlyAddress?: string | null
-          zip?: string | null
-        }
+          city?: string | null;
+          createdAt?: string | null;
+          googlePlaceID?: string | null;
+          id?: string;
+          state?: string | null;
+          street?: string | null;
+          utilityFriendlyAddress?: string | null;
+          zip?: string | null;
+        };
         Update: {
-          city?: string | null
-          createdAt?: string | null
-          googlePlaceID?: string | null
-          id?: string
-          state?: string | null
-          street?: string | null
-          utilityFriendlyAddress?: string | null
-          zip?: string | null
-        }
-        Relationships: []
-      }
+          city?: string | null;
+          createdAt?: string | null;
+          googlePlaceID?: string | null;
+          id?: string;
+          state?: string | null;
+          street?: string | null;
+          utilityFriendlyAddress?: string | null;
+          zip?: string | null;
+        };
+        Relationships: [];
+      };
       ApiKey: {
         Row: {
-          cottageUserID: string | null
-          createdAt: string | null
-          id: string
-          invalidatedAt: string | null
-          isValid: boolean | null
-          lastFive: string | null
-          nickname: string | null
-        }
+          cottageUserID: string | null;
+          createdAt: string | null;
+          id: string;
+          invalidatedAt: string | null;
+          isValid: boolean | null;
+          lastFive: string | null;
+          nickname: string | null;
+        };
         Insert: {
-          cottageUserID?: string | null
-          createdAt?: string | null
-          id?: string
-          invalidatedAt?: string | null
-          isValid?: boolean | null
-          lastFive?: string | null
-          nickname?: string | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          id?: string;
+          invalidatedAt?: string | null;
+          isValid?: boolean | null;
+          lastFive?: string | null;
+          nickname?: string | null;
+        };
         Update: {
-          cottageUserID?: string | null
-          createdAt?: string | null
-          id?: string
-          invalidatedAt?: string | null
-          isValid?: boolean | null
-          lastFive?: string | null
-          nickname?: string | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          id?: string;
+          invalidatedAt?: string | null;
+          isValid?: boolean | null;
+          lastFive?: string | null;
+          nickname?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_ApiKey_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ApiKey_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ApiKey_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'public_ApiKey_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "public_ApiKey_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ApiKey_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'public_ApiKey_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      BillHistory: {
+        Row: {
+          action: string;
+          billId: number;
+          billType: string;
+          changes: Json | null;
+          createdAt: string;
+          entityType: string;
+          id: string;
+          metadata: Json | null;
+          previousValues: Json | null;
+          updatedByUserID: string | null;
+        };
+        Insert: {
+          action: string;
+          billId: number;
+          billType: string;
+          changes?: Json | null;
+          createdAt?: string;
+          entityType: string;
+          id?: string;
+          metadata?: Json | null;
+          previousValues?: Json | null;
+          updatedByUserID?: string | null;
+        };
+        Update: {
+          action?: string;
+          billId?: number;
+          billType?: string;
+          changes?: Json | null;
+          createdAt?: string;
+          entityType?: string;
+          id?: string;
+          metadata?: Json | null;
+          previousValues?: Json | null;
+          updatedByUserID?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'BillHistory_updatedByUserID_fkey';
+            columns: ['updatedByUserID'];
+            isOneToOne: false;
+            referencedRelation: 'PGAdminUsers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Building: {
         Row: {
-          addressID: string | null
-          electricCompanyID: string | null
-          gasCompanyID: string | null
-          id: string
-          isHandleBilling: boolean | null
-          moveInPartnerID: string | null
-          name: string | null
-          shortCode: string | null
-          showPGAccountNumber: boolean
-          utilityFriendlyAddress: string | null
-        }
+          addressID: string | null;
+          electricCompanyID: string | null;
+          gasCompanyID: string | null;
+          id: string;
+          isHandleBilling: boolean | null;
+          moveInPartnerID: string | null;
+          name: string | null;
+          needsAddressVerification: boolean | null;
+          prefillAddress: boolean;
+          prefillUnit: boolean;
+          redirectToUtility: boolean;
+          shortCode: string | null;
+          showPGAccountNumber: boolean;
+          utilityCity: string | null;
+          utilityFriendlyAddress: string | null;
+          utilityState: string | null;
+          utilityStreet: string | null;
+          utilityZip: string | null;
+        };
         Insert: {
-          addressID?: string | null
-          electricCompanyID?: string | null
-          gasCompanyID?: string | null
-          id?: string
-          isHandleBilling?: boolean | null
-          moveInPartnerID?: string | null
-          name?: string | null
-          shortCode?: string | null
-          showPGAccountNumber?: boolean
-          utilityFriendlyAddress?: string | null
-        }
+          addressID?: string | null;
+          electricCompanyID?: string | null;
+          gasCompanyID?: string | null;
+          id?: string;
+          isHandleBilling?: boolean | null;
+          moveInPartnerID?: string | null;
+          name?: string | null;
+          needsAddressVerification?: boolean | null;
+          prefillAddress?: boolean;
+          prefillUnit?: boolean;
+          redirectToUtility?: boolean;
+          shortCode?: string | null;
+          showPGAccountNumber?: boolean;
+          utilityCity?: string | null;
+          utilityFriendlyAddress?: string | null;
+          utilityState?: string | null;
+          utilityStreet?: string | null;
+          utilityZip?: string | null;
+        };
         Update: {
-          addressID?: string | null
-          electricCompanyID?: string | null
-          gasCompanyID?: string | null
-          id?: string
-          isHandleBilling?: boolean | null
-          moveInPartnerID?: string | null
-          name?: string | null
-          shortCode?: string | null
-          showPGAccountNumber?: boolean
-          utilityFriendlyAddress?: string | null
-        }
+          addressID?: string | null;
+          electricCompanyID?: string | null;
+          gasCompanyID?: string | null;
+          id?: string;
+          isHandleBilling?: boolean | null;
+          moveInPartnerID?: string | null;
+          name?: string | null;
+          needsAddressVerification?: boolean | null;
+          prefillAddress?: boolean;
+          prefillUnit?: boolean;
+          redirectToUtility?: boolean;
+          shortCode?: string | null;
+          showPGAccountNumber?: boolean;
+          utilityCity?: string | null;
+          utilityFriendlyAddress?: string | null;
+          utilityState?: string | null;
+          utilityStreet?: string | null;
+          utilityZip?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Building_addressID_fkey"
-            columns: ["addressID"]
-            isOneToOne: false
-            referencedRelation: "Address"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_addressID_fkey';
+            columns: ['addressID'];
+            isOneToOne: false;
+            referencedRelation: 'Address';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Building_gasCompanyID_fkey"
-            columns: ["gasCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_gasCompanyID_fkey';
+            columns: ['gasCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Building_moveInPartnerID_fkey"
-            columns: ["moveInPartnerID"]
-            isOneToOne: false
-            referencedRelation: "MoveInPartner"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_moveInPartnerID_fkey';
+            columns: ['moveInPartnerID'];
+            isOneToOne: false;
+            referencedRelation: 'MoveInPartner';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Building_moveInPartnerID_fkey"
-            columns: ["moveInPartnerID"]
-            isOneToOne: false
-            referencedRelation: "ViewMoveInPartnerReferral"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_moveInPartnerID_fkey';
+            columns: ['moveInPartnerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewMoveInPartnerReferral';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Building_utilityCompanyID_fkey"
-            columns: ["electricCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_utilityCompanyID_fkey';
+            columns: ['electricCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       Building_BuildingManager: {
         Row: {
-          buildingID: string
-          buildingManagerID: string
-          isActive: boolean | null
-        }
+          buildingID: string;
+          buildingManagerID: string;
+          isActive: boolean | null;
+        };
         Insert: {
-          buildingID: string
-          buildingManagerID: string
-          isActive?: boolean | null
-        }
+          buildingID: string;
+          buildingManagerID: string;
+          isActive?: boolean | null;
+        };
         Update: {
-          buildingID?: string
-          buildingManagerID?: string
-          isActive?: boolean | null
-        }
+          buildingID?: string;
+          buildingManagerID?: string;
+          isActive?: boolean | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Building_BuildingManager_buildingID_fkey"
-            columns: ["buildingID"]
-            isOneToOne: false
-            referencedRelation: "Building"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_BuildingManager_buildingID_fkey';
+            columns: ['buildingID'];
+            isOneToOne: false;
+            referencedRelation: 'Building';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Building_BuildingManager_buildingManagerID_fkey"
-            columns: ["buildingManagerID"]
-            isOneToOne: false
-            referencedRelation: "BuildingManager"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_BuildingManager_buildingManagerID_fkey';
+            columns: ['buildingManagerID'];
+            isOneToOne: false;
+            referencedRelation: 'BuildingManager';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       Building_ServiceAccounts: {
         Row: {
-          active: boolean | null
-          buildingID: string
-          created_at: string
-          serviceAccount: string
-        }
+          active: boolean | null;
+          buildingID: string;
+          created_at: string;
+          serviceAccount: string;
+        };
         Insert: {
-          active?: boolean | null
-          buildingID: string
-          created_at?: string
-          serviceAccount: string
-        }
+          active?: boolean | null;
+          buildingID: string;
+          created_at?: string;
+          serviceAccount: string;
+        };
         Update: {
-          active?: boolean | null
-          buildingID?: string
-          created_at?: string
-          serviceAccount?: string
-        }
+          active?: boolean | null;
+          buildingID?: string;
+          created_at?: string;
+          serviceAccount?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Building_ServiceAccounts_id_fkey"
-            columns: ["buildingID"]
-            isOneToOne: false
-            referencedRelation: "Building"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Building_ServiceAccounts_id_fkey';
+            columns: ['buildingID'];
+            isOneToOne: false;
+            referencedRelation: 'Building';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_Building_ServiceAccounts_serviceAccount_fkey"
-            columns: ["serviceAccount"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_Building_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_Building_ServiceAccounts_serviceAccount_fkey"
-            columns: ["serviceAccount"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'public_Building_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "public_Building_ServiceAccounts_serviceAccount_fkey"
-            columns: ["serviceAccount"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_Building_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'public_Building_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       BuildingManager: {
         Row: {
-          firstName: string | null
-          id: string
-          lastName: string | null
-        }
+          firstName: string | null;
+          id: string;
+          lastName: string | null;
+        };
         Insert: {
-          firstName?: string | null
-          id: string
-          lastName?: string | null
-        }
+          firstName?: string | null;
+          id: string;
+          lastName?: string | null;
+        };
         Update: {
-          firstName?: string | null
-          id?: string
-          lastName?: string | null
-        }
+          firstName?: string | null;
+          id?: string;
+          lastName?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "BuildingManager_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'BuildingManager_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "BuildingManager_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'BuildingManager_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "BuildingManager_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'BuildingManager_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'BuildingManager_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Charges: {
         Row: {
-          approvedOn: string | null
-          closeBy: string | null
-          closedAt: string | null
-          id: string
-          isBillCreated: boolean
-          issueID: string | null
-          isVisible: boolean
-          ownedBy: string | null
-        }
+          approvedOn: string | null;
+          closeBy: string | null;
+          closedAt: string | null;
+          created_at: string | null;
+          id: string;
+          isBillCreated: boolean;
+          isVisible: boolean;
+          ownedBy: string | null;
+        };
         Insert: {
-          approvedOn?: string | null
-          closeBy?: string | null
-          closedAt?: string | null
-          id?: string
-          isBillCreated?: boolean
-          issueID?: string | null
-          isVisible?: boolean
-          ownedBy?: string | null
-        }
+          approvedOn?: string | null;
+          closeBy?: string | null;
+          closedAt?: string | null;
+          created_at?: string | null;
+          id?: string;
+          isBillCreated?: boolean;
+          isVisible?: boolean;
+          ownedBy?: string | null;
+        };
         Update: {
-          approvedOn?: string | null
-          closeBy?: string | null
-          closedAt?: string | null
-          id?: string
-          isBillCreated?: boolean
-          issueID?: string | null
-          isVisible?: boolean
-          ownedBy?: string | null
-        }
+          approvedOn?: string | null;
+          closeBy?: string | null;
+          closedAt?: string | null;
+          created_at?: string | null;
+          id?: string;
+          isBillCreated?: boolean;
+          isVisible?: boolean;
+          ownedBy?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Charges_ownedBy_fkey"
-            columns: ["ownedBy"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Charges_ownedBy_fkey';
+            columns: ['ownedBy'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Charges_ownedBy_fkey"
-            columns: ["ownedBy"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Charges_ownedBy_fkey';
+            columns: ['ownedBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Charges_ownedBy_fkey"
-            columns: ["ownedBy"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Charges_ownedBy_fkey';
+            columns: ['ownedBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Charges_ownedBy_fkey';
+            columns: ['ownedBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      CommunitySolarBill: {
+        Row: {
+          amountDue: number;
+          dueDate: string;
+          electricBill: number | null;
+          id: string;
+          netMeterCredit: number;
+          savings: number;
+          savingsShare: number;
+          usage: number;
+        };
+        Insert: {
+          amountDue: number;
+          dueDate: string;
+          electricBill?: number | null;
+          id?: string;
+          netMeterCredit: number;
+          savings: number;
+          savingsShare: number;
+          usage: number;
+        };
+        Update: {
+          amountDue?: number;
+          dueDate?: string;
+          electricBill?: number | null;
+          id?: string;
+          netMeterCredit?: number;
+          savings?: number;
+          savingsShare?: number;
+          usage?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'CommunitySolarBill_electricBill_fkey';
+            columns: ['electricBill'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBill';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'CommunitySolarBill_electricBill_fkey';
+            columns: ['electricBill'];
+            isOneToOne: false;
+            referencedRelation: 'ViewRemittanceReview';
+            referencedColumns: ['electric_bill_id'];
+          },
+        ];
+      };
+      CommunitySolarBillCharge: {
+        Row: {
+          billId: string;
+          chargeId: string;
+          created_at: string;
+          id: string;
+          isValid: boolean;
+        };
+        Insert: {
+          billId: string;
+          chargeId: string;
+          created_at?: string;
+          id?: string;
+          isValid?: boolean;
+        };
+        Update: {
+          billId?: string;
+          chargeId?: string;
+          created_at?: string;
+          id?: string;
+          isValid?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'CommunitySolarBillCharge_billId_fkey';
+            columns: ['billId'];
+            isOneToOne: false;
+            referencedRelation: 'CommunitySolarBill';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'CommunitySolarBillCharge_chargeId_fkey';
+            columns: ['chargeId'];
+            isOneToOne: false;
+            referencedRelation: 'Charges';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      CommunitySolarBillingConfig: {
+        Row: {
+          created_at: string;
+          fixed: number;
+          id: string;
+          percentage: number;
+        };
+        Insert: {
+          created_at?: string;
+          fixed: number;
+          id?: string;
+          percentage: number;
+        };
+        Update: {
+          created_at?: string;
+          fixed?: number;
+          id?: string;
+          percentage?: number;
+        };
+        Relationships: [];
+      };
       CommunitySolarProvider: {
         Row: {
-          capacity: number | null
-          companyName: string | null
-          coverageServiceGroupID: string | null
-          enrollment: number | null
-          id: number
-          savingsPercent: string | null
-        }
+          capacity: number | null;
+          companyName: string | null;
+          coverageServiceGroupID: string | null;
+          enrollment: number | null;
+          id: number;
+          savingsPercent: string | null;
+        };
         Insert: {
-          capacity?: number | null
-          companyName?: string | null
-          coverageServiceGroupID?: string | null
-          enrollment?: number | null
-          id?: number
-          savingsPercent?: string | null
-        }
+          capacity?: number | null;
+          companyName?: string | null;
+          coverageServiceGroupID?: string | null;
+          enrollment?: number | null;
+          id?: number;
+          savingsPercent?: string | null;
+        };
         Update: {
-          capacity?: number | null
-          companyName?: string | null
-          coverageServiceGroupID?: string | null
-          enrollment?: number | null
-          id?: number
-          savingsPercent?: string | null
-        }
+          capacity?: number | null;
+          companyName?: string | null;
+          coverageServiceGroupID?: string | null;
+          enrollment?: number | null;
+          id?: number;
+          savingsPercent?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "CommunitySolarProvider_coverageServiceGroupID_fkey"
-            columns: ["coverageServiceGroupID"]
-            isOneToOne: false
-            referencedRelation: "ServiceGroup"
-            referencedColumns: ["id"]
+            foreignKeyName: 'CommunitySolarProvider_coverageServiceGroupID_fkey';
+            columns: ['coverageServiceGroupID'];
+            isOneToOne: false;
+            referencedRelation: 'ServiceGroup';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       ConnectCache: {
         Row: {
-          created: string | null
-          identifier: string
-          method: string | null
-          owner: string | null
-          payload: Json
-          updated_at: string | null
-        }
+          created: string | null;
+          identifier: string;
+          method: string | null;
+          owner: string | null;
+          payload: Json;
+          updated_at: string | null;
+        };
         Insert: {
-          created?: string | null
-          identifier: string
-          method?: string | null
-          owner?: string | null
-          payload: Json
-          updated_at?: string | null
-        }
+          created?: string | null;
+          identifier: string;
+          method?: string | null;
+          owner?: string | null;
+          payload: Json;
+          updated_at?: string | null;
+        };
         Update: {
-          created?: string | null
-          identifier?: string
-          method?: string | null
-          owner?: string | null
-          payload?: Json
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+          created?: string | null;
+          identifier?: string;
+          method?: string | null;
+          owner?: string | null;
+          payload?: Json;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       ConnectRequest: {
         Row: {
-          canceled: boolean | null
-          completed: boolean | null
-          createdAt: string | null
-          expiresAt: string | null
-          grantedAt: string | null
-          id: string
-          permissions: string[] | null
-          redirectUrl: string | null
-          requestedFromId: string | null
-          requestorId: string | null
-          revoked: boolean | null
-          revokedAt: string | null
-        }
+          canceled: boolean | null;
+          completed: boolean | null;
+          createdAt: string | null;
+          expiresAt: string | null;
+          grantedAt: string | null;
+          id: string;
+          permissions: string[] | null;
+          redirectUrl: string | null;
+          requestedFromId: string | null;
+          requestorId: string | null;
+          revoked: boolean | null;
+          revokedAt: string | null;
+        };
         Insert: {
-          canceled?: boolean | null
-          completed?: boolean | null
-          createdAt?: string | null
-          expiresAt?: string | null
-          grantedAt?: string | null
-          id?: string
-          permissions?: string[] | null
-          redirectUrl?: string | null
-          requestedFromId?: string | null
-          requestorId?: string | null
-          revoked?: boolean | null
-          revokedAt?: string | null
-        }
+          canceled?: boolean | null;
+          completed?: boolean | null;
+          createdAt?: string | null;
+          expiresAt?: string | null;
+          grantedAt?: string | null;
+          id?: string;
+          permissions?: string[] | null;
+          redirectUrl?: string | null;
+          requestedFromId?: string | null;
+          requestorId?: string | null;
+          revoked?: boolean | null;
+          revokedAt?: string | null;
+        };
         Update: {
-          canceled?: boolean | null
-          completed?: boolean | null
-          createdAt?: string | null
-          expiresAt?: string | null
-          grantedAt?: string | null
-          id?: string
-          permissions?: string[] | null
-          redirectUrl?: string | null
-          requestedFromId?: string | null
-          requestorId?: string | null
-          revoked?: boolean | null
-          revokedAt?: string | null
-        }
+          canceled?: boolean | null;
+          completed?: boolean | null;
+          createdAt?: string | null;
+          expiresAt?: string | null;
+          grantedAt?: string | null;
+          id?: string;
+          permissions?: string[] | null;
+          redirectUrl?: string | null;
+          requestedFromId?: string | null;
+          requestorId?: string | null;
+          revoked?: boolean | null;
+          revokedAt?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["requestedFromId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['requestedFromId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["requestedFromId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['requestedFromId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["requestedFromId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['requestedFromId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["requestorId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['requestedFromId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["requestorId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['requestorId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["requestorId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['requestorId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['requestorId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['requestorId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      CottageUserHistory: {
+        Row: {
+          action: string;
+          changes: Json | null;
+          cottageUserID: string;
+          createdAt: string;
+          entityID: string | null;
+          entityType: string;
+          id: string;
+          metadata: Json | null;
+          previousValues: Json | null;
+          updatedByUserID: string | null;
+        };
+        Insert: {
+          action: string;
+          changes?: Json | null;
+          cottageUserID: string;
+          createdAt?: string;
+          entityID?: string | null;
+          entityType: string;
+          id?: string;
+          metadata?: Json | null;
+          previousValues?: Json | null;
+          updatedByUserID?: string | null;
+        };
+        Update: {
+          action?: string;
+          changes?: Json | null;
+          cottageUserID?: string;
+          createdAt?: string;
+          entityID?: string | null;
+          entityType?: string;
+          id?: string;
+          metadata?: Json | null;
+          previousValues?: Json | null;
+          updatedByUserID?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'CottageUserHistory_updatedByUserID_fkey';
+            columns: ['updatedByUserID'];
+            isOneToOne: false;
+            referencedRelation: 'PGAdminUsers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       CottageUsers: {
         Row: {
-          accountNumber: number
-          auditTicketId: string | null
+          _audit: Json | null;
+          accountNumber: number;
+          auditTicketId: string | null;
           cottageConnectUserType:
-            | Database["public"]["Enums"]["enum_CottageUsers_cottageConnectUserType"]
-            | null
-          createdAt: string | null
-          dateOfESCOConsent: string | null
-          dateOfTextMessageConsent: string | null
-          didDropOff: boolean | null
-          email: string | null
-          fee_structure: number | null
-          id: string
-          isAbleToSendTextMessages: boolean
-          isAutoPaymentEnabled: boolean | null
-          isReceivingSetupReminders: boolean
-          moveInIdentifier: string | null
+            | Database['public']['Enums']['enum_CottageUsers_cottageConnectUserType']
+            | null;
+          createdAt: string | null;
+          dateOfESCOConsent: string | null;
+          dateOfTextMessageConsent: string | null;
+          didDropOff: boolean | null;
+          email: string | null;
+          fee_structure: number | null;
+          id: string;
+          intercomID: string | null;
+          isAbleToSendTextMessages: boolean;
+          isAutoPaymentEnabled: boolean | null;
+          isReceivingSetupReminders: boolean;
+          moveInIdentifier: string | null;
           paymentMethodStatus:
-            | Database["public"]["Enums"]["paymentmethodstatus"]
-            | null
-          referralCode: string | null
-          requiresMicroDepositVerification: boolean
-          stripeCustomerID: string | null
-          stripePaymentMethodID: string | null
+            | Database['public']['Enums']['paymentmethodstatus']
+            | null;
+          pgEmail: string | null;
+          referralCode: string | null;
+          requiresMicroDepositVerification: boolean;
+          stripeCustomerID: string | null;
+          stripePaymentMethodID: string | null;
           stripePaymentMethodType:
-            | Database["public"]["Enums"]["enum_CottageUsers_stripePaymentMethodType"]
-            | null
-          termsAndConditionsDate: string | null
-        }
+            | Database['public']['Enums']['enum_CottageUsers_stripePaymentMethodType']
+            | null;
+          termsAndConditionsDate: string | null;
+        };
         Insert: {
-          accountNumber?: number
-          auditTicketId?: string | null
+          _audit?: Json | null;
+          accountNumber?: number;
+          auditTicketId?: string | null;
           cottageConnectUserType?:
-            | Database["public"]["Enums"]["enum_CottageUsers_cottageConnectUserType"]
-            | null
-          createdAt?: string | null
-          dateOfESCOConsent?: string | null
-          dateOfTextMessageConsent?: string | null
-          didDropOff?: boolean | null
-          email?: string | null
-          fee_structure?: number | null
-          id: string
-          isAbleToSendTextMessages?: boolean
-          isAutoPaymentEnabled?: boolean | null
-          isReceivingSetupReminders?: boolean
-          moveInIdentifier?: string | null
+            | Database['public']['Enums']['enum_CottageUsers_cottageConnectUserType']
+            | null;
+          createdAt?: string | null;
+          dateOfESCOConsent?: string | null;
+          dateOfTextMessageConsent?: string | null;
+          didDropOff?: boolean | null;
+          email?: string | null;
+          fee_structure?: number | null;
+          id: string;
+          intercomID?: string | null;
+          isAbleToSendTextMessages?: boolean;
+          isAutoPaymentEnabled?: boolean | null;
+          isReceivingSetupReminders?: boolean;
+          moveInIdentifier?: string | null;
           paymentMethodStatus?:
-            | Database["public"]["Enums"]["paymentmethodstatus"]
-            | null
-          referralCode?: string | null
-          requiresMicroDepositVerification?: boolean
-          stripeCustomerID?: string | null
-          stripePaymentMethodID?: string | null
+            | Database['public']['Enums']['paymentmethodstatus']
+            | null;
+          pgEmail?: string | null;
+          referralCode?: string | null;
+          requiresMicroDepositVerification?: boolean;
+          stripeCustomerID?: string | null;
+          stripePaymentMethodID?: string | null;
           stripePaymentMethodType?:
-            | Database["public"]["Enums"]["enum_CottageUsers_stripePaymentMethodType"]
-            | null
-          termsAndConditionsDate?: string | null
-        }
+            | Database['public']['Enums']['enum_CottageUsers_stripePaymentMethodType']
+            | null;
+          termsAndConditionsDate?: string | null;
+        };
         Update: {
-          accountNumber?: number
-          auditTicketId?: string | null
+          _audit?: Json | null;
+          accountNumber?: number;
+          auditTicketId?: string | null;
           cottageConnectUserType?:
-            | Database["public"]["Enums"]["enum_CottageUsers_cottageConnectUserType"]
-            | null
-          createdAt?: string | null
-          dateOfESCOConsent?: string | null
-          dateOfTextMessageConsent?: string | null
-          didDropOff?: boolean | null
-          email?: string | null
-          fee_structure?: number | null
-          id?: string
-          isAbleToSendTextMessages?: boolean
-          isAutoPaymentEnabled?: boolean | null
-          isReceivingSetupReminders?: boolean
-          moveInIdentifier?: string | null
+            | Database['public']['Enums']['enum_CottageUsers_cottageConnectUserType']
+            | null;
+          createdAt?: string | null;
+          dateOfESCOConsent?: string | null;
+          dateOfTextMessageConsent?: string | null;
+          didDropOff?: boolean | null;
+          email?: string | null;
+          fee_structure?: number | null;
+          id?: string;
+          intercomID?: string | null;
+          isAbleToSendTextMessages?: boolean;
+          isAutoPaymentEnabled?: boolean | null;
+          isReceivingSetupReminders?: boolean;
+          moveInIdentifier?: string | null;
           paymentMethodStatus?:
-            | Database["public"]["Enums"]["paymentmethodstatus"]
-            | null
-          referralCode?: string | null
-          requiresMicroDepositVerification?: boolean
-          stripeCustomerID?: string | null
-          stripePaymentMethodID?: string | null
+            | Database['public']['Enums']['paymentmethodstatus']
+            | null;
+          pgEmail?: string | null;
+          referralCode?: string | null;
+          requiresMicroDepositVerification?: boolean;
+          stripeCustomerID?: string | null;
+          stripePaymentMethodID?: string | null;
           stripePaymentMethodType?:
-            | Database["public"]["Enums"]["enum_CottageUsers_stripePaymentMethodType"]
-            | null
-          termsAndConditionsDate?: string | null
-        }
+            | Database['public']['Enums']['enum_CottageUsers_stripePaymentMethodType']
+            | null;
+          termsAndConditionsDate?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "CottageUsers_fee_structure_fkey"
-            columns: ["fee_structure"]
-            isOneToOne: false
-            referencedRelation: "FeeStructure"
-            referencedColumns: ["id"]
+            foreignKeyName: 'CottageUsers_fee_structure_fkey';
+            columns: ['fee_structure'];
+            isOneToOne: false;
+            referencedRelation: 'FeeStructure';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       Documents: {
         Row: {
-          cottageUserID: string | null
-          createdAt: string
-          fileName: string | null
-          id: number
-          propertyID: number | null
-          storageName: string | null
-          type: string | null
-          updatedAt: string | null
-        }
+          cottageUserID: string | null;
+          createdAt: string;
+          fileName: string | null;
+          id: number;
+          propertyID: number | null;
+          storageName: string | null;
+          type: string | null;
+          updatedAt: string | null;
+        };
         Insert: {
-          cottageUserID?: string | null
-          createdAt?: string
-          fileName?: string | null
-          id?: number
-          propertyID?: number | null
-          storageName?: string | null
-          type?: string | null
-          updatedAt?: string | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string;
+          fileName?: string | null;
+          id?: number;
+          propertyID?: number | null;
+          storageName?: string | null;
+          type?: string | null;
+          updatedAt?: string | null;
+        };
         Update: {
-          cottageUserID?: string | null
-          createdAt?: string
-          fileName?: string | null
-          id?: number
-          propertyID?: number | null
-          storageName?: string | null
-          type?: string | null
-          updatedAt?: string | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string;
+          fileName?: string | null;
+          id?: number;
+          propertyID?: number | null;
+          storageName?: string | null;
+          type?: string | null;
+          updatedAt?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Documents_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Documents_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Documents_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Documents_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Documents_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Documents_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Documents_propertyID_fkey"
-            columns: ["propertyID"]
-            isOneToOne: false
-            referencedRelation: "Property"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Documents_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Documents_propertyID_fkey';
+            columns: ['propertyID'];
+            isOneToOne: false;
+            referencedRelation: 'Property';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ElectricAccount: {
         Row: {
-          accountNumber: string | null
-          accountType: string | null
-          balanceAt: string | null
-          communitySolarProviderID: number | null
+          _audit: Json | null;
+          accountIdentifiers: Json | null;
+          accountNumber: string | null;
+          accountType: string | null;
+          auditTicketId: string | null;
+          balanceAt: string | null;
+          communitySolarProviderID: number | null;
+          communitySolarSavingsConfig: string | null;
           communitySolarStatus:
-            | Database["public"]["Enums"]["enum_ElectricAccount_communitySolarStatus"]
-            | null
-          confirmationNumber: number | null
-          cottageUserID: string | null
-          createdAt: string | null
-          defaultBillFeeStructure: number | null
-          didSendAccountNumber: boolean | null
-          electricGeneratingEquipment: string | null
-          electricSupplyPlanID: number | null
-          endDate: string | null
-          hasElectricVehicle: boolean | null
-          hasOverdueBalance: boolean
-          id: number
-          isAccountLinkedWithUtility: boolean | null
-          isActive: boolean | null
-          isEnrolledInUtilityAutoPay: boolean | null
-          isUnderCottageEIN: boolean | null
-          lastAuditDate: string | null
-          lastAuditLog: string | null
-          lastSync: string | null
-          lastUtilityPaymentDate: string | null
-          linearTicketId: string | null
-          maintainedFor: string | null
-          nextUtilityPaymentDate: string | null
-          onlineAccountMetadata: Json | null
-          propertyID: number | null
-          retries: number
-          startDate: string | null
+            | Database['public']['Enums']['enum_ElectricAccount_communitySolarStatus']
+            | null;
+          confirmationNumber: number | null;
+          cottageUserID: string | null;
+          createdAt: string | null;
+          customerNumber: string | null;
+          defaultBillFeeStructure: number | null;
+          depositAmount: number | null;
+          depositInstallments: number | null;
+          didSendAccountNumber: boolean | null;
+          electricChoiceID: string | null;
+          electricGeneratingEquipment: string | null;
+          electricSupplyPlanID: number | null;
+          endDate: string | null;
+          hasDeposit: boolean;
+          hasElectricVehicle: boolean | null;
+          hasOverdueBalance: boolean;
+          id: number;
+          inactiveReason: string | null;
+          isAccountLinkedWithUtility: boolean | null;
+          isActive: boolean | null;
+          isEnrolledInCCA: boolean | null;
+          isEnrolledInUtilityAutoPay: boolean | null;
+          isUnderCottageEIN: boolean | null;
+          lastAuditAttempt: string | null;
+          lastAuditDate: string | null;
+          lastAuditLog: string | null;
+          lastSuccessfulAudit: string | null;
+          lastSync: string | null;
+          lastUtilityPaymentDate: string | null;
+          linearTicketId: string | null;
+          maintainedFor: string | null;
+          nextUtilityPaymentDate: string | null;
+          nonManagedAccountVerificationDate: string | null;
+          onlineAccountMetadata: Json | null;
+          planeTicketID: string | null;
+          podID: string | null;
+          propertyID: number | null;
+          registrationDocumentsStatus:
+            | Database['public']['Enums']['registrationDocumentsStatus']
+            | null;
+          retries: number;
+          sentAccountNumberDate: string | null;
+          serviceNumber: string | null;
+          startDate: string | null;
           status:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          statusUpdatedAt: string;
           supplyStatus:
-            | Database["public"]["Enums"]["enum_ElectricAccount_supplyStatus"]
-            | null
-          tmpPassword: string | null
-          totalOutstandingBalance: number | null
-          uniqueIdentifier: string | null
-          updatedAt: string
-          utilityCompanyID: string | null
-          vehicleMakeModel: string | null
-        }
+            | Database['public']['Enums']['enum_ElectricSupplyPlan_supplyStatus']
+            | null;
+          timestamp: string | null;
+          tmpPassword: string | null;
+          totalOutstandingBalance: number | null;
+          uniqueIdentifier: string | null;
+          updatedAt: string;
+          utilityCompanyID: string | null;
+          vehicleMakeModel: string | null;
+        };
         Insert: {
-          accountNumber?: string | null
-          accountType?: string | null
-          balanceAt?: string | null
-          communitySolarProviderID?: number | null
+          _audit?: Json | null;
+          accountIdentifiers?: Json | null;
+          accountNumber?: string | null;
+          accountType?: string | null;
+          auditTicketId?: string | null;
+          balanceAt?: string | null;
+          communitySolarProviderID?: number | null;
+          communitySolarSavingsConfig?: string | null;
           communitySolarStatus?:
-            | Database["public"]["Enums"]["enum_ElectricAccount_communitySolarStatus"]
-            | null
-          confirmationNumber?: number | null
-          cottageUserID?: string | null
-          createdAt?: string | null
-          defaultBillFeeStructure?: number | null
-          didSendAccountNumber?: boolean | null
-          electricGeneratingEquipment?: string | null
-          electricSupplyPlanID?: number | null
-          endDate?: string | null
-          hasElectricVehicle?: boolean | null
-          hasOverdueBalance?: boolean
-          id?: number
-          isAccountLinkedWithUtility?: boolean | null
-          isActive?: boolean | null
-          isEnrolledInUtilityAutoPay?: boolean | null
-          isUnderCottageEIN?: boolean | null
-          lastAuditDate?: string | null
-          lastAuditLog?: string | null
-          lastSync?: string | null
-          lastUtilityPaymentDate?: string | null
-          linearTicketId?: string | null
-          maintainedFor?: string | null
-          nextUtilityPaymentDate?: string | null
-          onlineAccountMetadata?: Json | null
-          propertyID?: number | null
-          retries?: number
-          startDate?: string | null
+            | Database['public']['Enums']['enum_ElectricAccount_communitySolarStatus']
+            | null;
+          confirmationNumber?: number | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          customerNumber?: string | null;
+          defaultBillFeeStructure?: number | null;
+          depositAmount?: number | null;
+          depositInstallments?: number | null;
+          didSendAccountNumber?: boolean | null;
+          electricChoiceID?: string | null;
+          electricGeneratingEquipment?: string | null;
+          electricSupplyPlanID?: number | null;
+          endDate?: string | null;
+          hasDeposit?: boolean;
+          hasElectricVehicle?: boolean | null;
+          hasOverdueBalance?: boolean;
+          id?: number;
+          inactiveReason?: string | null;
+          isAccountLinkedWithUtility?: boolean | null;
+          isActive?: boolean | null;
+          isEnrolledInCCA?: boolean | null;
+          isEnrolledInUtilityAutoPay?: boolean | null;
+          isUnderCottageEIN?: boolean | null;
+          lastAuditAttempt?: string | null;
+          lastAuditDate?: string | null;
+          lastAuditLog?: string | null;
+          lastSuccessfulAudit?: string | null;
+          lastSync?: string | null;
+          lastUtilityPaymentDate?: string | null;
+          linearTicketId?: string | null;
+          maintainedFor?: string | null;
+          nextUtilityPaymentDate?: string | null;
+          nonManagedAccountVerificationDate?: string | null;
+          onlineAccountMetadata?: Json | null;
+          planeTicketID?: string | null;
+          podID?: string | null;
+          propertyID?: number | null;
+          registrationDocumentsStatus?:
+            | Database['public']['Enums']['registrationDocumentsStatus']
+            | null;
+          retries?: number;
+          sentAccountNumberDate?: string | null;
+          serviceNumber?: string | null;
+          startDate?: string | null;
           status?:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          statusUpdatedAt?: string;
           supplyStatus?:
-            | Database["public"]["Enums"]["enum_ElectricAccount_supplyStatus"]
-            | null
-          tmpPassword?: string | null
-          totalOutstandingBalance?: number | null
-          uniqueIdentifier?: string | null
-          updatedAt?: string
-          utilityCompanyID?: string | null
-          vehicleMakeModel?: string | null
-        }
+            | Database['public']['Enums']['enum_ElectricSupplyPlan_supplyStatus']
+            | null;
+          timestamp?: string | null;
+          tmpPassword?: string | null;
+          totalOutstandingBalance?: number | null;
+          uniqueIdentifier?: string | null;
+          updatedAt?: string;
+          utilityCompanyID?: string | null;
+          vehicleMakeModel?: string | null;
+        };
         Update: {
-          accountNumber?: string | null
-          accountType?: string | null
-          balanceAt?: string | null
-          communitySolarProviderID?: number | null
+          _audit?: Json | null;
+          accountIdentifiers?: Json | null;
+          accountNumber?: string | null;
+          accountType?: string | null;
+          auditTicketId?: string | null;
+          balanceAt?: string | null;
+          communitySolarProviderID?: number | null;
+          communitySolarSavingsConfig?: string | null;
           communitySolarStatus?:
-            | Database["public"]["Enums"]["enum_ElectricAccount_communitySolarStatus"]
-            | null
-          confirmationNumber?: number | null
-          cottageUserID?: string | null
-          createdAt?: string | null
-          defaultBillFeeStructure?: number | null
-          didSendAccountNumber?: boolean | null
-          electricGeneratingEquipment?: string | null
-          electricSupplyPlanID?: number | null
-          endDate?: string | null
-          hasElectricVehicle?: boolean | null
-          hasOverdueBalance?: boolean
-          id?: number
-          isAccountLinkedWithUtility?: boolean | null
-          isActive?: boolean | null
-          isEnrolledInUtilityAutoPay?: boolean | null
-          isUnderCottageEIN?: boolean | null
-          lastAuditDate?: string | null
-          lastAuditLog?: string | null
-          lastSync?: string | null
-          lastUtilityPaymentDate?: string | null
-          linearTicketId?: string | null
-          maintainedFor?: string | null
-          nextUtilityPaymentDate?: string | null
-          onlineAccountMetadata?: Json | null
-          propertyID?: number | null
-          retries?: number
-          startDate?: string | null
+            | Database['public']['Enums']['enum_ElectricAccount_communitySolarStatus']
+            | null;
+          confirmationNumber?: number | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          customerNumber?: string | null;
+          defaultBillFeeStructure?: number | null;
+          depositAmount?: number | null;
+          depositInstallments?: number | null;
+          didSendAccountNumber?: boolean | null;
+          electricChoiceID?: string | null;
+          electricGeneratingEquipment?: string | null;
+          electricSupplyPlanID?: number | null;
+          endDate?: string | null;
+          hasDeposit?: boolean;
+          hasElectricVehicle?: boolean | null;
+          hasOverdueBalance?: boolean;
+          id?: number;
+          inactiveReason?: string | null;
+          isAccountLinkedWithUtility?: boolean | null;
+          isActive?: boolean | null;
+          isEnrolledInCCA?: boolean | null;
+          isEnrolledInUtilityAutoPay?: boolean | null;
+          isUnderCottageEIN?: boolean | null;
+          lastAuditAttempt?: string | null;
+          lastAuditDate?: string | null;
+          lastAuditLog?: string | null;
+          lastSuccessfulAudit?: string | null;
+          lastSync?: string | null;
+          lastUtilityPaymentDate?: string | null;
+          linearTicketId?: string | null;
+          maintainedFor?: string | null;
+          nextUtilityPaymentDate?: string | null;
+          nonManagedAccountVerificationDate?: string | null;
+          onlineAccountMetadata?: Json | null;
+          planeTicketID?: string | null;
+          podID?: string | null;
+          propertyID?: number | null;
+          registrationDocumentsStatus?:
+            | Database['public']['Enums']['registrationDocumentsStatus']
+            | null;
+          retries?: number;
+          sentAccountNumberDate?: string | null;
+          serviceNumber?: string | null;
+          startDate?: string | null;
           status?:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          statusUpdatedAt?: string;
           supplyStatus?:
-            | Database["public"]["Enums"]["enum_ElectricAccount_supplyStatus"]
-            | null
-          tmpPassword?: string | null
-          totalOutstandingBalance?: number | null
-          uniqueIdentifier?: string | null
-          updatedAt?: string
-          utilityCompanyID?: string | null
-          vehicleMakeModel?: string | null
-        }
+            | Database['public']['Enums']['enum_ElectricSupplyPlan_supplyStatus']
+            | null;
+          timestamp?: string | null;
+          tmpPassword?: string | null;
+          totalOutstandingBalance?: number | null;
+          uniqueIdentifier?: string | null;
+          updatedAt?: string;
+          utilityCompanyID?: string | null;
+          vehicleMakeModel?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ElectricAccount_communitySolarProviderID_fkey"
-            columns: ["communitySolarProviderID"]
-            isOneToOne: false
-            referencedRelation: "CommunitySolarProvider"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_communitySolarProviderID_fkey';
+            columns: ['communitySolarProviderID'];
+            isOneToOne: false;
+            referencedRelation: 'CommunitySolarProvider';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricAccount_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_communitySolarSavingsConfig_fkey';
+            columns: ['communitySolarSavingsConfig'];
+            isOneToOne: false;
+            referencedRelation: 'CommunitySolarBillingConfig';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricAccount_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ElectricAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricAccount_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ElectricAccount_defaultBillFeeStructure_fkey"
-            columns: ["defaultBillFeeStructure"]
-            isOneToOne: false
-            referencedRelation: "FeeStructure"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricAccount_electricSupplyPlanID_fkey"
-            columns: ["electricSupplyPlanID"]
-            isOneToOne: false
-            referencedRelation: "ElectricSupplyPlan"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricAccount_residenceID_fkey"
-            columns: ["propertyID"]
-            isOneToOne: false
-            referencedRelation: "Property"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_defaultBillFeeStructure_fkey';
+            columns: ['defaultBillFeeStructure'];
+            isOneToOne: false;
+            referencedRelation: 'FeeStructure';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricAccount_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_electricSupplyPlanID_fkey';
+            columns: ['electricSupplyPlanID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricSupplyPlan';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ElectricAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_residenceID_fkey';
+            columns: ['propertyID'];
+            isOneToOne: false;
+            referencedRelation: 'Property';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ElectricAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ElectricAccount_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ElectricAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ElectricAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'public_ElectricAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
+          },
+          {
+            foreignKeyName: 'public_ElectricAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'public_ElectricAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ElectricBill: {
         Row: {
-          approvedDate: string | null
-          createdAt: string | null
-          deliveryCharge: number | null
-          dueDate: string | null
-          electricAccountID: number
-          endDate: string
-          feeStructure: number | null
-          id: number
-          isPaidUtilityCompany: boolean | null
-          isSendReminder: boolean | null
-          lastPaymentAttemptDate: string | null
-          manual: boolean | null
-          otherCharges: number | null
-          paidByUser: string | null
-          paidNotificationSent: boolean | null
-          paymentDate: string | null
-          paymentStatus: Database["public"]["Enums"]["paymentstatus"] | null
-          startDate: string
-          statementDate: string
-          stripePaymentId: string | null
-          supplierCharge: number | null
-          ticketID: string | null
-          totalAmountDue: number
-          totalUsage: number
-          transactionFee: number | null
-          updatedAt: string | null
-          utilityCompanyPaidAt: string | null
-          visible: boolean
-        }
+          _audit: Json | null;
+          approvedBy: string | null;
+          approvedDate: string | null;
+          communitySolarBill: string | null;
+          createdAt: string | null;
+          deliveryCharge: number | null;
+          dueDate: string | null;
+          electricAccountID: number;
+          endDate: string;
+          feeStructure: number | null;
+          id: number;
+          isDepositOnlyBill: boolean;
+          isIncomplete: boolean;
+          isPaidUtilityCompany: boolean | null;
+          isSendReminder: boolean | null;
+          lastPaymentAttemptDate: string | null;
+          manual: boolean | null;
+          otherCharges: number | null;
+          paidByUser: string | null;
+          paidNotificationSent: boolean | null;
+          paymentDate: string | null;
+          paymentStatus: Database['public']['Enums']['paymentstatus'] | null;
+          startDate: string;
+          statementDate: string;
+          stripePaymentId: string | null;
+          supplierCharge: number | null;
+          ticketID: string | null;
+          totalAmountDue: number;
+          totalUsage: number;
+          transactionFee: number | null;
+          updatedAt: string | null;
+          utilityCompanyPaidAt: string | null;
+          visible: boolean;
+        };
         Insert: {
-          approvedDate?: string | null
-          createdAt?: string | null
-          deliveryCharge?: number | null
-          dueDate?: string | null
-          electricAccountID: number
-          endDate: string
-          feeStructure?: number | null
-          id?: number
-          isPaidUtilityCompany?: boolean | null
-          isSendReminder?: boolean | null
-          lastPaymentAttemptDate?: string | null
-          manual?: boolean | null
-          otherCharges?: number | null
-          paidByUser?: string | null
-          paidNotificationSent?: boolean | null
-          paymentDate?: string | null
-          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null
-          startDate: string
-          statementDate: string
-          stripePaymentId?: string | null
-          supplierCharge?: number | null
-          ticketID?: string | null
-          totalAmountDue: number
-          totalUsage: number
-          transactionFee?: number | null
-          updatedAt?: string | null
-          utilityCompanyPaidAt?: string | null
-          visible?: boolean
-        }
+          _audit?: Json | null;
+          approvedBy?: string | null;
+          approvedDate?: string | null;
+          communitySolarBill?: string | null;
+          createdAt?: string | null;
+          deliveryCharge?: number | null;
+          dueDate?: string | null;
+          electricAccountID: number;
+          endDate: string;
+          feeStructure?: number | null;
+          id?: number;
+          isDepositOnlyBill?: boolean;
+          isIncomplete?: boolean;
+          isPaidUtilityCompany?: boolean | null;
+          isSendReminder?: boolean | null;
+          lastPaymentAttemptDate?: string | null;
+          manual?: boolean | null;
+          otherCharges?: number | null;
+          paidByUser?: string | null;
+          paidNotificationSent?: boolean | null;
+          paymentDate?: string | null;
+          paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
+          startDate: string;
+          statementDate: string;
+          stripePaymentId?: string | null;
+          supplierCharge?: number | null;
+          ticketID?: string | null;
+          totalAmountDue: number;
+          totalUsage: number;
+          transactionFee?: number | null;
+          updatedAt?: string | null;
+          utilityCompanyPaidAt?: string | null;
+          visible?: boolean;
+        };
         Update: {
-          approvedDate?: string | null
-          createdAt?: string | null
-          deliveryCharge?: number | null
-          dueDate?: string | null
-          electricAccountID?: number
-          endDate?: string
-          feeStructure?: number | null
-          id?: number
-          isPaidUtilityCompany?: boolean | null
-          isSendReminder?: boolean | null
-          lastPaymentAttemptDate?: string | null
-          manual?: boolean | null
-          otherCharges?: number | null
-          paidByUser?: string | null
-          paidNotificationSent?: boolean | null
-          paymentDate?: string | null
-          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null
-          startDate?: string
-          statementDate?: string
-          stripePaymentId?: string | null
-          supplierCharge?: number | null
-          ticketID?: string | null
-          totalAmountDue?: number
-          totalUsage?: number
-          transactionFee?: number | null
-          updatedAt?: string | null
-          utilityCompanyPaidAt?: string | null
-          visible?: boolean
-        }
+          _audit?: Json | null;
+          approvedBy?: string | null;
+          approvedDate?: string | null;
+          communitySolarBill?: string | null;
+          createdAt?: string | null;
+          deliveryCharge?: number | null;
+          dueDate?: string | null;
+          electricAccountID?: number;
+          endDate?: string;
+          feeStructure?: number | null;
+          id?: number;
+          isDepositOnlyBill?: boolean;
+          isIncomplete?: boolean;
+          isPaidUtilityCompany?: boolean | null;
+          isSendReminder?: boolean | null;
+          lastPaymentAttemptDate?: string | null;
+          manual?: boolean | null;
+          otherCharges?: number | null;
+          paidByUser?: string | null;
+          paidNotificationSent?: boolean | null;
+          paymentDate?: string | null;
+          paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
+          startDate?: string;
+          statementDate?: string;
+          stripePaymentId?: string | null;
+          supplierCharge?: number | null;
+          ticketID?: string | null;
+          totalAmountDue?: number;
+          totalUsage?: number;
+          transactionFee?: number | null;
+          updatedAt?: string | null;
+          utilityCompanyPaidAt?: string | null;
+          visible?: boolean;
+        };
         Relationships: [
           {
-            foreignKeyName: "ElectricBill_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ADMIN_ElectricAccountsAudit"
-            referencedColumns: ["electricAccountID"]
+            foreignKeyName: 'ElectricBill_approvedBy_fkey';
+            columns: ['approvedBy'];
+            isOneToOne: false;
+            referencedRelation: 'PGAdminUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricBill_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ElectricAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBill_communitySolarBill_fkey';
+            columns: ['communitySolarBill'];
+            isOneToOne: false;
+            referencedRelation: 'CommunitySolarBill';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricBill_feeStructure_fkey"
-            columns: ["feeStructure"]
-            isOneToOne: false
-            referencedRelation: "FeeStructure"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBill_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricBill_paidByUser_fkey"
-            columns: ["paidByUser"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBill_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
           },
           {
-            foreignKeyName: "ElectricBill_paidByUser_fkey"
-            columns: ["paidByUser"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ElectricBill_feeStructure_fkey';
+            columns: ['feeStructure'];
+            isOneToOne: false;
+            referencedRelation: 'FeeStructure';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricBill_paidByUser_fkey"
-            columns: ["paidByUser"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'ElectricBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
+          },
+          {
+            foreignKeyName: 'ElectricBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'ElectricBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ElectricBillCharge: {
         Row: {
-          chargeId: string
-          electricBillId: number
-          isValid: boolean
-        }
+          chargeId: string;
+          created_at: string | null;
+          electricBillId: number;
+          isValid: boolean;
+        };
         Insert: {
-          chargeId: string
-          electricBillId: number
-          isValid?: boolean
-        }
+          chargeId: string;
+          created_at?: string | null;
+          electricBillId: number;
+          isValid?: boolean;
+        };
         Update: {
-          chargeId?: string
-          electricBillId?: number
-          isValid?: boolean
-        }
+          chargeId?: string;
+          created_at?: string | null;
+          electricBillId?: number;
+          isValid?: boolean;
+        };
         Relationships: [
           {
-            foreignKeyName: "ElectricBillCharge_chargeId_fkey"
-            columns: ["chargeId"]
-            isOneToOne: false
-            referencedRelation: "Charges"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBillCharge_chargeId_fkey';
+            columns: ['chargeId'];
+            isOneToOne: false;
+            referencedRelation: 'Charges';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricBillCharge_electricBillId_fkey"
-            columns: ["electricBillId"]
-            isOneToOne: false
-            referencedRelation: "ElectricBill"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBillCharge_electricBillId_fkey';
+            columns: ['electricBillId'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBill';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'ElectricBillCharge_electricBillId_fkey';
+            columns: ['electricBillId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewRemittanceReview';
+            referencedColumns: ['electric_bill_id'];
+          },
+        ];
+      };
       ElectricBillSavings: {
         Row: {
-          createdAt: string | null
-          currentInCents: number | null
-          electricAccountID: number | null
-          hourlyInCents: number | null
-          id: number
-        }
+          createdAt: string | null;
+          currentInCents: number | null;
+          electricAccountID: number | null;
+          hourlyInCents: number | null;
+          id: number;
+        };
         Insert: {
-          createdAt?: string | null
-          currentInCents?: number | null
-          electricAccountID?: number | null
-          hourlyInCents?: number | null
-          id?: number
-        }
+          createdAt?: string | null;
+          currentInCents?: number | null;
+          electricAccountID?: number | null;
+          hourlyInCents?: number | null;
+          id?: number;
+        };
         Update: {
-          createdAt?: string | null
-          currentInCents?: number | null
-          electricAccountID?: number | null
-          hourlyInCents?: number | null
-          id?: number
-        }
+          createdAt?: string | null;
+          currentInCents?: number | null;
+          electricAccountID?: number | null;
+          hourlyInCents?: number | null;
+          id?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "ElectricBillSavings_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ADMIN_ElectricAccountsAudit"
-            referencedColumns: ["electricAccountID"]
+            foreignKeyName: 'ElectricBillSavings_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ElectricBillSavings_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ElectricAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricBillSavings_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
           },
-        ]
-      }
+        ];
+      };
       ElectricSupplyPlan: {
         Row: {
-          cancellationFee: string | null
-          contractLengthMonths: number | null
-          endDate: string | null
-          hasCancellationFees: boolean | null
-          id: number
-          rate: string | null
-          rateType:
-            | Database["public"]["Enums"]["enum_ElectricSupplyPlan_rateType"]
-            | null
-          renewablePercentage: number | null
-          startDate: string | null
-          supplierName: string | null
-          utilityCompanyID: string | null
-        }
+          contractLengthMonths: number | null;
+          endDate: string | null;
+          id: number;
+          milAdder: number | null;
+          startDate: string | null;
+          supplierName: string | null;
+          supplyStatus:
+            | Database['public']['Enums']['enum_ElectricSupplyPlan_supplyStatus']
+            | null;
+          upfrontFee: number | null;
+        };
         Insert: {
-          cancellationFee?: string | null
-          contractLengthMonths?: number | null
-          endDate?: string | null
-          hasCancellationFees?: boolean | null
-          id?: number
-          rate?: string | null
-          rateType?:
-            | Database["public"]["Enums"]["enum_ElectricSupplyPlan_rateType"]
-            | null
-          renewablePercentage?: number | null
-          startDate?: string | null
-          supplierName?: string | null
-          utilityCompanyID?: string | null
-        }
+          contractLengthMonths?: number | null;
+          endDate?: string | null;
+          id?: number;
+          milAdder?: number | null;
+          startDate?: string | null;
+          supplierName?: string | null;
+          supplyStatus?:
+            | Database['public']['Enums']['enum_ElectricSupplyPlan_supplyStatus']
+            | null;
+          upfrontFee?: number | null;
+        };
         Update: {
-          cancellationFee?: string | null
-          contractLengthMonths?: number | null
-          endDate?: string | null
-          hasCancellationFees?: boolean | null
-          id?: number
-          rate?: string | null
-          rateType?:
-            | Database["public"]["Enums"]["enum_ElectricSupplyPlan_rateType"]
-            | null
-          renewablePercentage?: number | null
-          startDate?: string | null
-          supplierName?: string | null
-          utilityCompanyID?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ElectricSupplyPlan_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+          contractLengthMonths?: number | null;
+          endDate?: string | null;
+          id?: number;
+          milAdder?: number | null;
+          startDate?: string | null;
+          supplierName?: string | null;
+          supplyStatus?:
+            | Database['public']['Enums']['enum_ElectricSupplyPlan_supplyStatus']
+            | null;
+          upfrontFee?: number | null;
+        };
+        Relationships: [];
+      };
       ElectricZone: {
         Row: {
-          activeUsers: number | null
-          created_at: string
-          electricityMapsZoneKey: string | null
-          id: string
-          name: string | null
-        }
+          activeUsers: number | null;
+          created_at: string;
+          electricityMapsZoneKey: string | null;
+          id: string;
+          name: string | null;
+        };
         Insert: {
-          activeUsers?: number | null
-          created_at?: string
-          electricityMapsZoneKey?: string | null
-          id: string
-          name?: string | null
-        }
+          activeUsers?: number | null;
+          created_at?: string;
+          electricityMapsZoneKey?: string | null;
+          id: string;
+          name?: string | null;
+        };
         Update: {
-          activeUsers?: number | null
-          created_at?: string
-          electricityMapsZoneKey?: string | null
-          id?: string
-          name?: string | null
-        }
-        Relationships: []
-      }
+          activeUsers?: number | null;
+          created_at?: string;
+          electricityMapsZoneKey?: string | null;
+          id?: string;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
       EmissionFactor: {
         Row: {
-          EmissionFactor: number
-          Resource: string
-        }
+          EmissionFactor: number;
+          Resource: string;
+        };
         Insert: {
-          EmissionFactor: number
-          Resource: string
-        }
+          EmissionFactor: number;
+          Resource: string;
+        };
         Update: {
-          EmissionFactor?: number
-          Resource?: string
-        }
-        Relationships: []
-      }
+          EmissionFactor?: number;
+          Resource?: string;
+        };
+        Relationships: [];
+      };
+      existing_property: {
+        Row: {
+          addressID: string | null;
+          buildingID: string | null;
+          createdAt: string | null;
+          id: number | null;
+          isRenewablePaidFor: boolean | null;
+          propertyGroupID: string | null;
+          type: Database['public']['Enums']['enum_Unit_residenceType'] | null;
+          unitNumber: string | null;
+        };
+        Insert: {
+          addressID?: string | null;
+          buildingID?: string | null;
+          createdAt?: string | null;
+          id?: number | null;
+          isRenewablePaidFor?: boolean | null;
+          propertyGroupID?: string | null;
+          type?: Database['public']['Enums']['enum_Unit_residenceType'] | null;
+          unitNumber?: string | null;
+        };
+        Update: {
+          addressID?: string | null;
+          buildingID?: string | null;
+          createdAt?: string | null;
+          id?: number | null;
+          isRenewablePaidFor?: boolean | null;
+          propertyGroupID?: string | null;
+          type?: Database['public']['Enums']['enum_Unit_residenceType'] | null;
+          unitNumber?: string | null;
+        };
+        Relationships: [];
+      };
       ExternalCompany: {
         Row: {
-          created_at: string | null
-          hasMoveInPermission: boolean | null
-          id: string
-          name: string | null
-          ownerCottageUserID: string | null
-          status: Database["public"]["Enums"]["ExternalCompanyStatusEnum"]
-        }
+          created_at: string | null;
+          hasMoveInPermission: boolean | null;
+          id: string;
+          name: string | null;
+          ownerCottageUserID: string | null;
+          status: Database['public']['Enums']['ExternalCompanyStatusEnum'];
+        };
         Insert: {
-          created_at?: string | null
-          hasMoveInPermission?: boolean | null
-          id?: string
-          name?: string | null
-          ownerCottageUserID?: string | null
-          status?: Database["public"]["Enums"]["ExternalCompanyStatusEnum"]
-        }
+          created_at?: string | null;
+          hasMoveInPermission?: boolean | null;
+          id?: string;
+          name?: string | null;
+          ownerCottageUserID?: string | null;
+          status?: Database['public']['Enums']['ExternalCompanyStatusEnum'];
+        };
         Update: {
-          created_at?: string | null
-          hasMoveInPermission?: boolean | null
-          id?: string
-          name?: string | null
-          ownerCottageUserID?: string | null
-          status?: Database["public"]["Enums"]["ExternalCompanyStatusEnum"]
-        }
+          created_at?: string | null;
+          hasMoveInPermission?: boolean | null;
+          id?: string;
+          name?: string | null;
+          ownerCottageUserID?: string | null;
+          status?: Database['public']['Enums']['ExternalCompanyStatusEnum'];
+        };
         Relationships: [
           {
-            foreignKeyName: "ExternalCompany_ownerCottageUserID_fkey"
-            columns: ["ownerCottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ExternalCompany_ownerCottageUserID_fkey';
+            columns: ['ownerCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ExternalCompany_ownerCottageUserID_fkey"
-            columns: ["ownerCottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ExternalCompany_ownerCottageUserID_fkey';
+            columns: ['ownerCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ExternalCompany_ownerCottageUserID_fkey"
-            columns: ["ownerCottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ExternalCompany_ownerCottageUserID_fkey';
+            columns: ['ownerCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'ExternalCompany_ownerCottageUserID_fkey';
+            columns: ['ownerCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ExternalCompanyEmployee: {
         Row: {
-          cottageUserID: string
-          externalCompanyID: string
-          firstName: string
-          id: string
-          lastName: string
-        }
+          cottageUserID: string;
+          externalCompanyID: string;
+          firstName: string;
+          id: string;
+          lastName: string;
+        };
         Insert: {
-          cottageUserID: string
-          externalCompanyID: string
-          firstName: string
-          id?: string
-          lastName: string
-        }
+          cottageUserID: string;
+          externalCompanyID: string;
+          firstName: string;
+          id?: string;
+          lastName: string;
+        };
         Update: {
-          cottageUserID?: string
-          externalCompanyID?: string
-          firstName?: string
-          id?: string
-          lastName?: string
-        }
+          cottageUserID?: string;
+          externalCompanyID?: string;
+          firstName?: string;
+          id?: string;
+          lastName?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "ExternalCompanyEmployee_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ExternalCompanyEmployee_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ExternalCompanyEmployee_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ExternalCompanyEmployee_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ExternalCompanyEmployee_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ExternalCompanyEmployee_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ExternalCompanyEmployee_externalCompanyID_fkey"
-            columns: ["externalCompanyID"]
-            isOneToOne: false
-            referencedRelation: "ExternalCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ExternalCompanyEmployee_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'ExternalCompanyEmployee_externalCompanyID_fkey';
+            columns: ['externalCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ExternalCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       FeeStructure: {
         Row: {
-          created_at: string
-          fixed: number | null
-          id: number
-          name: string | null
-          percentage: number | null
+          created_at: string;
+          fixed: number | null;
+          id: number;
+          name: string | null;
+          percentage: number | null;
           targetPaymentMethodTypes:
-            | Database["public"]["Enums"]["enum_CottageUsers_stripePaymentMethodType"][]
-            | null
-        }
+            | Database['public']['Enums']['enum_CottageUsers_stripePaymentMethodType'][]
+            | null;
+        };
         Insert: {
-          created_at?: string
-          fixed?: number | null
-          id?: number
-          name?: string | null
-          percentage?: number | null
+          created_at?: string;
+          fixed?: number | null;
+          id?: number;
+          name?: string | null;
+          percentage?: number | null;
           targetPaymentMethodTypes?:
-            | Database["public"]["Enums"]["enum_CottageUsers_stripePaymentMethodType"][]
-            | null
-        }
+            | Database['public']['Enums']['enum_CottageUsers_stripePaymentMethodType'][]
+            | null;
+        };
         Update: {
-          created_at?: string
-          fixed?: number | null
-          id?: number
-          name?: string | null
-          percentage?: number | null
+          created_at?: string;
+          fixed?: number | null;
+          id?: number;
+          name?: string | null;
+          percentage?: number | null;
           targetPaymentMethodTypes?:
-            | Database["public"]["Enums"]["enum_CottageUsers_stripePaymentMethodType"][]
-            | null
-        }
-        Relationships: []
-      }
+            | Database['public']['Enums']['enum_CottageUsers_stripePaymentMethodType'][]
+            | null;
+        };
+        Relationships: [];
+      };
       GasAccount: {
         Row: {
-          accountNumber: string | null
-          balanceAt: string | null
-          cottageUserID: string | null
-          createdAt: string | null
-          defaultBillFeeStructure: number | null
-          didSendAccountNumber: boolean | null
-          endDate: string | null
-          hasOverdueBalance: boolean
-          id: number
-          isAccountLinkedWithUtility: boolean | null
-          isActive: boolean | null
-          isEnrolledInUtilityAutoPay: boolean | null
-          isUnderCottageEIN: boolean | null
-          lastAuditDate: string | null
-          lastAuditLog: string | null
-          lastSync: string | null
-          lastUtilityPaymentDate: string | null
-          linearTicketId: string | null
-          maintainedFor: string | null
-          nextUtilityPaymentDate: string | null
-          onlineAccountMetadata: Json | null
-          propertyID: number | null
-          retries: number
-          startDate: string | null
+          _audit: Json | null;
+          accountIdentifiers: Json | null;
+          accountNumber: string | null;
+          auditTicketId: string | null;
+          balanceAt: string | null;
+          cottageUserID: string | null;
+          createdAt: string | null;
+          defaultBillFeeStructure: number | null;
+          depositAmount: number | null;
+          depositInstallments: number | null;
+          didSendAccountNumber: boolean | null;
+          endDate: string | null;
+          hasDeposit: boolean;
+          hasOverdueBalance: boolean;
+          id: number;
+          inactiveReason: string | null;
+          isAccountLinkedWithUtility: boolean | null;
+          isActive: boolean | null;
+          isEnrolledInUtilityAutoPay: boolean | null;
+          isUnderCottageEIN: boolean | null;
+          lastAuditAttempt: string | null;
+          lastAuditDate: string | null;
+          lastAuditLog: string | null;
+          lastSuccessfulAudit: string | null;
+          lastSync: string | null;
+          lastUtilityPaymentDate: string | null;
+          linearTicketId: string | null;
+          maintainedFor: string | null;
+          nextUtilityPaymentDate: string | null;
+          nonManagedAccountVerificationDate: string | null;
+          onlineAccountMetadata: Json | null;
+          planeTicketID: string | null;
+          propertyID: number | null;
+          registrationDocumentsStatus:
+            | Database['public']['Enums']['registrationDocumentsStatus']
+            | null;
+          retries: number;
+          sentAccountNumberDate: string | null;
+          startDate: string | null;
           status:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
-          totalOutstandingBalance: number | null
-          uniqueIdentifier: string | null
-          updatedAt: string
-          utilityCompanyID: string | null
-        }
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          statusUpdatedAt: string;
+          timestamp: string | null;
+          totalOutstandingBalance: number | null;
+          uniqueIdentifier: string | null;
+          updatedAt: string;
+          utilityCompanyID: string | null;
+        };
         Insert: {
-          accountNumber?: string | null
-          balanceAt?: string | null
-          cottageUserID?: string | null
-          createdAt?: string | null
-          defaultBillFeeStructure?: number | null
-          didSendAccountNumber?: boolean | null
-          endDate?: string | null
-          hasOverdueBalance?: boolean
-          id?: number
-          isAccountLinkedWithUtility?: boolean | null
-          isActive?: boolean | null
-          isEnrolledInUtilityAutoPay?: boolean | null
-          isUnderCottageEIN?: boolean | null
-          lastAuditDate?: string | null
-          lastAuditLog?: string | null
-          lastSync?: string | null
-          lastUtilityPaymentDate?: string | null
-          linearTicketId?: string | null
-          maintainedFor?: string | null
-          nextUtilityPaymentDate?: string | null
-          onlineAccountMetadata?: Json | null
-          propertyID?: number | null
-          retries?: number
-          startDate?: string | null
+          _audit?: Json | null;
+          accountIdentifiers?: Json | null;
+          accountNumber?: string | null;
+          auditTicketId?: string | null;
+          balanceAt?: string | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          defaultBillFeeStructure?: number | null;
+          depositAmount?: number | null;
+          depositInstallments?: number | null;
+          didSendAccountNumber?: boolean | null;
+          endDate?: string | null;
+          hasDeposit?: boolean;
+          hasOverdueBalance?: boolean;
+          id?: number;
+          inactiveReason?: string | null;
+          isAccountLinkedWithUtility?: boolean | null;
+          isActive?: boolean | null;
+          isEnrolledInUtilityAutoPay?: boolean | null;
+          isUnderCottageEIN?: boolean | null;
+          lastAuditAttempt?: string | null;
+          lastAuditDate?: string | null;
+          lastAuditLog?: string | null;
+          lastSuccessfulAudit?: string | null;
+          lastSync?: string | null;
+          lastUtilityPaymentDate?: string | null;
+          linearTicketId?: string | null;
+          maintainedFor?: string | null;
+          nextUtilityPaymentDate?: string | null;
+          nonManagedAccountVerificationDate?: string | null;
+          onlineAccountMetadata?: Json | null;
+          planeTicketID?: string | null;
+          propertyID?: number | null;
+          registrationDocumentsStatus?:
+            | Database['public']['Enums']['registrationDocumentsStatus']
+            | null;
+          retries?: number;
+          sentAccountNumberDate?: string | null;
+          startDate?: string | null;
           status?:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
-          totalOutstandingBalance?: number | null
-          uniqueIdentifier?: string | null
-          updatedAt?: string
-          utilityCompanyID?: string | null
-        }
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          statusUpdatedAt?: string;
+          timestamp?: string | null;
+          totalOutstandingBalance?: number | null;
+          uniqueIdentifier?: string | null;
+          updatedAt?: string;
+          utilityCompanyID?: string | null;
+        };
         Update: {
-          accountNumber?: string | null
-          balanceAt?: string | null
-          cottageUserID?: string | null
-          createdAt?: string | null
-          defaultBillFeeStructure?: number | null
-          didSendAccountNumber?: boolean | null
-          endDate?: string | null
-          hasOverdueBalance?: boolean
-          id?: number
-          isAccountLinkedWithUtility?: boolean | null
-          isActive?: boolean | null
-          isEnrolledInUtilityAutoPay?: boolean | null
-          isUnderCottageEIN?: boolean | null
-          lastAuditDate?: string | null
-          lastAuditLog?: string | null
-          lastSync?: string | null
-          lastUtilityPaymentDate?: string | null
-          linearTicketId?: string | null
-          maintainedFor?: string | null
-          nextUtilityPaymentDate?: string | null
-          onlineAccountMetadata?: Json | null
-          propertyID?: number | null
-          retries?: number
-          startDate?: string | null
+          _audit?: Json | null;
+          accountIdentifiers?: Json | null;
+          accountNumber?: string | null;
+          auditTicketId?: string | null;
+          balanceAt?: string | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          defaultBillFeeStructure?: number | null;
+          depositAmount?: number | null;
+          depositInstallments?: number | null;
+          didSendAccountNumber?: boolean | null;
+          endDate?: string | null;
+          hasDeposit?: boolean;
+          hasOverdueBalance?: boolean;
+          id?: number;
+          inactiveReason?: string | null;
+          isAccountLinkedWithUtility?: boolean | null;
+          isActive?: boolean | null;
+          isEnrolledInUtilityAutoPay?: boolean | null;
+          isUnderCottageEIN?: boolean | null;
+          lastAuditAttempt?: string | null;
+          lastAuditDate?: string | null;
+          lastAuditLog?: string | null;
+          lastSuccessfulAudit?: string | null;
+          lastSync?: string | null;
+          lastUtilityPaymentDate?: string | null;
+          linearTicketId?: string | null;
+          maintainedFor?: string | null;
+          nextUtilityPaymentDate?: string | null;
+          nonManagedAccountVerificationDate?: string | null;
+          onlineAccountMetadata?: Json | null;
+          planeTicketID?: string | null;
+          propertyID?: number | null;
+          registrationDocumentsStatus?:
+            | Database['public']['Enums']['registrationDocumentsStatus']
+            | null;
+          retries?: number;
+          sentAccountNumberDate?: string | null;
+          startDate?: string | null;
           status?:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
-          totalOutstandingBalance?: number | null
-          uniqueIdentifier?: string | null
-          updatedAt?: string
-          utilityCompanyID?: string | null
-        }
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          statusUpdatedAt?: string;
+          timestamp?: string | null;
+          totalOutstandingBalance?: number | null;
+          uniqueIdentifier?: string | null;
+          updatedAt?: string;
+          utilityCompanyID?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "GasAccount_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasAccount_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'GasAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "GasAccount_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "gasaccount_defaultbillfeestructure_fkey"
-            columns: ["defaultBillFeeStructure"]
-            isOneToOne: false
-            referencedRelation: "FeeStructure"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasAccount_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'gasaccount_defaultbillfeestructure_fkey';
+            columns: ['defaultBillFeeStructure'];
+            isOneToOne: false;
+            referencedRelation: 'FeeStructure';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'GasAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "GasAccount_propertyID_fkey"
-            columns: ["propertyID"]
-            isOneToOne: false
-            referencedRelation: "Property"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasAccount_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasAccount_maintainedFor_fkey';
+            columns: ['maintainedFor'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'GasAccount_propertyID_fkey';
+            columns: ['propertyID'];
+            isOneToOne: false;
+            referencedRelation: 'Property';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'GasAccount_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       GasBill: {
         Row: {
-          approvedDate: string | null
-          createdAt: string | null
-          deliveryCharge: number | null
-          dueDate: string | null
-          endDate: string
-          feeStructure: number | null
-          gasAccountID: number
-          id: number
-          isPaidUtilityCompany: boolean | null
-          isSendReminder: boolean | null
-          lastPaymentAttemptDate: string | null
-          manual: boolean | null
-          otherCharges: Json | null
-          paidByUser: string | null
-          paidNotificationSent: boolean | null
-          paymentDate: string | null
-          paymentStatus: Database["public"]["Enums"]["paymentstatus"] | null
-          startDate: string
-          statementDate: string
-          stripePaymentId: string | null
-          supplierCharge: number | null
-          ticketID: string | null
-          totalAmountDue: number
-          totalUsage: number
-          transactionFee: number | null
-          updatedAt: string | null
-          utilityCompanyPaidAt: string | null
-          visible: boolean
-        }
+          _audit: Json | null;
+          approvedBy: string | null;
+          approvedDate: string | null;
+          createdAt: string | null;
+          deliveryCharge: number | null;
+          dueDate: string | null;
+          endDate: string;
+          feeStructure: number | null;
+          gasAccountID: number;
+          id: number;
+          isDepositOnlyBill: boolean;
+          isIncomplete: boolean;
+          isPaidUtilityCompany: boolean | null;
+          isSendReminder: boolean | null;
+          lastPaymentAttemptDate: string | null;
+          manual: boolean | null;
+          otherCharges: Json | null;
+          paidByUser: string | null;
+          paidNotificationSent: boolean | null;
+          paymentDate: string | null;
+          paymentStatus: Database['public']['Enums']['paymentstatus'] | null;
+          startDate: string;
+          statementDate: string;
+          stripePaymentId: string | null;
+          supplierCharge: number | null;
+          ticketID: string | null;
+          totalAmountDue: number;
+          totalUsage: number;
+          transactionFee: number | null;
+          updatedAt: string | null;
+          utilityCompanyPaidAt: string | null;
+          visible: boolean;
+        };
         Insert: {
-          approvedDate?: string | null
-          createdAt?: string | null
-          deliveryCharge?: number | null
-          dueDate?: string | null
-          endDate: string
-          feeStructure?: number | null
-          gasAccountID: number
-          id?: number
-          isPaidUtilityCompany?: boolean | null
-          isSendReminder?: boolean | null
-          lastPaymentAttemptDate?: string | null
-          manual?: boolean | null
-          otherCharges?: Json | null
-          paidByUser?: string | null
-          paidNotificationSent?: boolean | null
-          paymentDate?: string | null
-          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null
-          startDate: string
-          statementDate: string
-          stripePaymentId?: string | null
-          supplierCharge?: number | null
-          ticketID?: string | null
-          totalAmountDue: number
-          totalUsage: number
-          transactionFee?: number | null
-          updatedAt?: string | null
-          utilityCompanyPaidAt?: string | null
-          visible?: boolean
-        }
+          _audit?: Json | null;
+          approvedBy?: string | null;
+          approvedDate?: string | null;
+          createdAt?: string | null;
+          deliveryCharge?: number | null;
+          dueDate?: string | null;
+          endDate: string;
+          feeStructure?: number | null;
+          gasAccountID: number;
+          id?: number;
+          isDepositOnlyBill?: boolean;
+          isIncomplete?: boolean;
+          isPaidUtilityCompany?: boolean | null;
+          isSendReminder?: boolean | null;
+          lastPaymentAttemptDate?: string | null;
+          manual?: boolean | null;
+          otherCharges?: Json | null;
+          paidByUser?: string | null;
+          paidNotificationSent?: boolean | null;
+          paymentDate?: string | null;
+          paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
+          startDate: string;
+          statementDate: string;
+          stripePaymentId?: string | null;
+          supplierCharge?: number | null;
+          ticketID?: string | null;
+          totalAmountDue: number;
+          totalUsage: number;
+          transactionFee?: number | null;
+          updatedAt?: string | null;
+          utilityCompanyPaidAt?: string | null;
+          visible?: boolean;
+        };
         Update: {
-          approvedDate?: string | null
-          createdAt?: string | null
-          deliveryCharge?: number | null
-          dueDate?: string | null
-          endDate?: string
-          feeStructure?: number | null
-          gasAccountID?: number
-          id?: number
-          isPaidUtilityCompany?: boolean | null
-          isSendReminder?: boolean | null
-          lastPaymentAttemptDate?: string | null
-          manual?: boolean | null
-          otherCharges?: Json | null
-          paidByUser?: string | null
-          paidNotificationSent?: boolean | null
-          paymentDate?: string | null
-          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null
-          startDate?: string
-          statementDate?: string
-          stripePaymentId?: string | null
-          supplierCharge?: number | null
-          ticketID?: string | null
-          totalAmountDue?: number
-          totalUsage?: number
-          transactionFee?: number | null
-          updatedAt?: string | null
-          utilityCompanyPaidAt?: string | null
-          visible?: boolean
-        }
+          _audit?: Json | null;
+          approvedBy?: string | null;
+          approvedDate?: string | null;
+          createdAt?: string | null;
+          deliveryCharge?: number | null;
+          dueDate?: string | null;
+          endDate?: string;
+          feeStructure?: number | null;
+          gasAccountID?: number;
+          id?: number;
+          isDepositOnlyBill?: boolean;
+          isIncomplete?: boolean;
+          isPaidUtilityCompany?: boolean | null;
+          isSendReminder?: boolean | null;
+          lastPaymentAttemptDate?: string | null;
+          manual?: boolean | null;
+          otherCharges?: Json | null;
+          paidByUser?: string | null;
+          paidNotificationSent?: boolean | null;
+          paymentDate?: string | null;
+          paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
+          startDate?: string;
+          statementDate?: string;
+          stripePaymentId?: string | null;
+          supplierCharge?: number | null;
+          ticketID?: string | null;
+          totalAmountDue?: number;
+          totalUsage?: number;
+          transactionFee?: number | null;
+          updatedAt?: string | null;
+          utilityCompanyPaidAt?: string | null;
+          visible?: boolean;
+        };
         Relationships: [
           {
-            foreignKeyName: "GasBill_feeStructure_fkey"
-            columns: ["feeStructure"]
-            isOneToOne: false
-            referencedRelation: "FeeStructure"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasBill_approvedBy_fkey';
+            columns: ['approvedBy'];
+            isOneToOne: false;
+            referencedRelation: 'PGAdminUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasBill_gasAccountID_fkey"
-            columns: ["gasAccountID"]
-            isOneToOne: false
-            referencedRelation: "GasAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasBill_feeStructure_fkey';
+            columns: ['feeStructure'];
+            isOneToOne: false;
+            referencedRelation: 'FeeStructure';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasBill_paidByUser_fkey"
-            columns: ["paidByUser"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasBill_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasBill_paidByUser_fkey"
-            columns: ["paidByUser"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'GasBill_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
           },
           {
-            foreignKeyName: "GasBill_paidByUser_fkey"
-            columns: ["paidByUser"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'GasBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
+          },
+          {
+            foreignKeyName: 'GasBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'GasBill_paidByUser_fkey';
+            columns: ['paidByUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       GasBillCharge: {
         Row: {
-          chargeId: string
-          gasBillId: number
-          isValid: boolean
-        }
+          chargeId: string;
+          created_at: string;
+          gasBillId: number;
+          isValid: boolean;
+        };
         Insert: {
-          chargeId: string
-          gasBillId: number
-          isValid?: boolean
-        }
+          chargeId: string;
+          created_at?: string;
+          gasBillId: number;
+          isValid?: boolean;
+        };
         Update: {
-          chargeId?: string
-          gasBillId?: number
-          isValid?: boolean
-        }
+          chargeId?: string;
+          created_at?: string;
+          gasBillId?: number;
+          isValid?: boolean;
+        };
         Relationships: [
           {
-            foreignKeyName: "GasBillCharge_chargeId_fkey"
-            columns: ["chargeId"]
-            isOneToOne: false
-            referencedRelation: "Charges"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasBillCharge_chargeId_fkey';
+            columns: ['chargeId'];
+            isOneToOne: false;
+            referencedRelation: 'Charges';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GasBillCharge_gasBillId_fkey"
-            columns: ["gasBillId"]
-            isOneToOne: false
-            referencedRelation: "GasBill"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GasBillCharge_gasBillId_fkey';
+            columns: ['gasBillId'];
+            isOneToOne: false;
+            referencedRelation: 'GasBill';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'GasBillCharge_gasBillId_fkey';
+            columns: ['gasBillId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewRemittanceReview';
+            referencedColumns: ['gas_bill_id'];
+          },
+        ];
+      };
       GreenButtonMeterReadingMetadata: {
         Row: {
-          greenButtonOAuthId: number
-          id: number
-          meterReadingId: string
-          serviceCategoryKind: number | null
-          usagePointId: string
-        }
+          greenButtonOAuthId: number;
+          id: number;
+          meterReadingId: string;
+          serviceCategoryKind: number | null;
+          usagePointId: string;
+        };
         Insert: {
-          greenButtonOAuthId: number
-          id?: number
-          meterReadingId: string
-          serviceCategoryKind?: number | null
-          usagePointId: string
-        }
+          greenButtonOAuthId: number;
+          id?: number;
+          meterReadingId: string;
+          serviceCategoryKind?: number | null;
+          usagePointId: string;
+        };
         Update: {
-          greenButtonOAuthId?: number
-          id?: number
-          meterReadingId?: string
-          serviceCategoryKind?: number | null
-          usagePointId?: string
-        }
+          greenButtonOAuthId?: number;
+          id?: number;
+          meterReadingId?: string;
+          serviceCategoryKind?: number | null;
+          usagePointId?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "GreenButtonMeterReading_greenButtonOAuthId_fkey"
-            columns: ["greenButtonOAuthId"]
-            isOneToOne: false
-            referencedRelation: "GreenButtonOAuth"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GreenButtonMeterReadingMetadata_greenButtonOAuthId_fkey';
+            columns: ['greenButtonOAuthId'];
+            isOneToOne: false;
+            referencedRelation: 'GreenButtonOAuth';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       GreenButtonOAuth: {
         Row: {
-          accessToken: string | null
-          accountNumber: string | null
-          cottageUserID: string | null
-          createdAt: string | null
-          electricAccountID: number | null
-          endDate: string | null
-          id: number
-          provider: string | null
-          refreshToken: string | null
-          scopes: string | null
-          startDate: string | null
-          subscriptionID: string
-        }
+          accessToken: string | null;
+          accountNumber: string | null;
+          cottageUserID: string | null;
+          createdAt: string | null;
+          electricAccountID: number | null;
+          endDate: string | null;
+          id: number;
+          provider: string | null;
+          refreshToken: string | null;
+          scopes: string | null;
+          startDate: string | null;
+          subscriptionID: string;
+        };
         Insert: {
-          accessToken?: string | null
-          accountNumber?: string | null
-          cottageUserID?: string | null
-          createdAt?: string | null
-          electricAccountID?: number | null
-          endDate?: string | null
-          id?: number
-          provider?: string | null
-          refreshToken?: string | null
-          scopes?: string | null
-          startDate?: string | null
-          subscriptionID: string
-        }
+          accessToken?: string | null;
+          accountNumber?: string | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          electricAccountID?: number | null;
+          endDate?: string | null;
+          id?: number;
+          provider?: string | null;
+          refreshToken?: string | null;
+          scopes?: string | null;
+          startDate?: string | null;
+          subscriptionID: string;
+        };
         Update: {
-          accessToken?: string | null
-          accountNumber?: string | null
-          cottageUserID?: string | null
-          createdAt?: string | null
-          electricAccountID?: number | null
-          endDate?: string | null
-          id?: number
-          provider?: string | null
-          refreshToken?: string | null
-          scopes?: string | null
-          startDate?: string | null
-          subscriptionID?: string
-        }
+          accessToken?: string | null;
+          accountNumber?: string | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          electricAccountID?: number | null;
+          endDate?: string | null;
+          id?: number;
+          provider?: string | null;
+          refreshToken?: string | null;
+          scopes?: string | null;
+          startDate?: string | null;
+          subscriptionID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "GreenButtonOAuth_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GreenButtonOAuth_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GreenButtonOAuth_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'GreenButtonOAuth_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "GreenButtonOAuth_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GreenButtonOAuth_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GreenButtonOAuth_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ADMIN_ElectricAccountsAudit"
-            referencedColumns: ["electricAccountID"]
+            foreignKeyName: 'GreenButtonOAuth_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GreenButtonOAuth_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ElectricAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GreenButtonOAuth_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "GreenButtonOAuth_provider_fkey"
-            columns: ["provider"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'GreenButtonOAuth_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'GreenButtonOAuth_provider_fkey';
+            columns: ['provider'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       InngestLog: {
         Row: {
-          createdAt: string | null
-          eventName: string | null
-          functionName: string | null
-          id: number
-          JSON: Json | null
-          level: string | null
-          message: string | null
-          runID: string | null
-          stack: string | null
-        }
+          createdAt: string | null;
+          eventName: string | null;
+          functionName: string | null;
+          id: number;
+          JSON: Json | null;
+          level: string | null;
+          message: string | null;
+          runID: string | null;
+          stack: string | null;
+        };
         Insert: {
-          createdAt?: string | null
-          eventName?: string | null
-          functionName?: string | null
-          id?: number
-          JSON?: Json | null
-          level?: string | null
-          message?: string | null
-          runID?: string | null
-          stack?: string | null
-        }
+          createdAt?: string | null;
+          eventName?: string | null;
+          functionName?: string | null;
+          id?: number;
+          JSON?: Json | null;
+          level?: string | null;
+          message?: string | null;
+          runID?: string | null;
+          stack?: string | null;
+        };
         Update: {
-          createdAt?: string | null
-          eventName?: string | null
-          functionName?: string | null
-          id?: number
-          JSON?: Json | null
-          level?: string | null
-          message?: string | null
-          runID?: string | null
-          stack?: string | null
-        }
-        Relationships: []
-      }
+          createdAt?: string | null;
+          eventName?: string | null;
+          functionName?: string | null;
+          id?: number;
+          JSON?: Json | null;
+          level?: string | null;
+          message?: string | null;
+          runID?: string | null;
+          stack?: string | null;
+        };
+        Relationships: [];
+      };
       LinkAccountJob: {
         Row: {
-          connectRequestId: string | null
-          createdAt: string | null
-          externalCompanyId: string
-          id: string
-          message: string | null
-          status: Database["public"]["Enums"]["enum_LinkAccountJob_status"]
-          updatedAt: string | null
-        }
+          connectRequestId: string | null;
+          createdAt: string | null;
+          externalCompanyId: string;
+          id: string;
+          message: string | null;
+          status: Database['public']['Enums']['enum_LinkAccountJob_status'];
+          updatedAt: string | null;
+        };
         Insert: {
-          connectRequestId?: string | null
-          createdAt?: string | null
-          externalCompanyId: string
-          id?: string
-          message?: string | null
-          status: Database["public"]["Enums"]["enum_LinkAccountJob_status"]
-          updatedAt?: string | null
-        }
+          connectRequestId?: string | null;
+          createdAt?: string | null;
+          externalCompanyId: string;
+          id?: string;
+          message?: string | null;
+          status: Database['public']['Enums']['enum_LinkAccountJob_status'];
+          updatedAt?: string | null;
+        };
         Update: {
-          connectRequestId?: string | null
-          createdAt?: string | null
-          externalCompanyId?: string
-          id?: string
-          message?: string | null
-          status?: Database["public"]["Enums"]["enum_LinkAccountJob_status"]
-          updatedAt?: string | null
-        }
+          connectRequestId?: string | null;
+          createdAt?: string | null;
+          externalCompanyId?: string;
+          id?: string;
+          message?: string | null;
+          status?: Database['public']['Enums']['enum_LinkAccountJob_status'];
+          updatedAt?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "LinkAccountJob_externalCompanyId_fkey"
-            columns: ["externalCompanyId"]
-            isOneToOne: false
-            referencedRelation: "ExternalCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'LinkAccountJob_externalCompanyId_fkey';
+            columns: ['externalCompanyId'];
+            isOneToOne: false;
+            referencedRelation: 'ExternalCompany';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_LinkAccountJob_connectRequestId_fkey"
-            columns: ["connectRequestId"]
-            isOneToOne: false
-            referencedRelation: "ConnectRequest"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_LinkAccountJob_connectRequestId_fkey';
+            columns: ['connectRequestId'];
+            isOneToOne: false;
+            referencedRelation: 'ConnectRequest';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
+      ManualRemittances: {
+        Row: {
+          amount: number | null;
+          created_at: string;
+          electricAccountId: number | null;
+          errorMessage: string | null;
+          gasAccountId: number | null;
+          id: number;
+          remarks: string | null;
+          remittanceIds: Json | null;
+          status: string | null;
+          triggeredBy: string | null;
+        };
+        Insert: {
+          amount?: number | null;
+          created_at?: string;
+          electricAccountId?: number | null;
+          errorMessage?: string | null;
+          gasAccountId?: number | null;
+          id?: number;
+          remarks?: string | null;
+          remittanceIds?: Json | null;
+          status?: string | null;
+          triggeredBy?: string | null;
+        };
+        Update: {
+          amount?: number | null;
+          created_at?: string;
+          electricAccountId?: number | null;
+          errorMessage?: string | null;
+          gasAccountId?: number | null;
+          id?: number;
+          remarks?: string | null;
+          remittanceIds?: Json | null;
+          status?: string | null;
+          triggeredBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'ManualRemittances_electricAccountId_fkey';
+            columns: ['electricAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'ManualRemittances_electricAccountId_fkey';
+            columns: ['electricAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'ManualRemittances_gasAccountId_fkey';
+            columns: ['gasAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'ManualRemittances_gasAccountId_fkey';
+            columns: ['gasAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+          {
+            foreignKeyName: 'ManualRemittances_triggeredBy_fkey';
+            columns: ['triggeredBy'];
+            isOneToOne: false;
+            referencedRelation: 'PGAdminUsers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       MeterReadings: {
         Row: {
-          created_at: string | null
-          duration: number | null
-          electricAccountID: number | null
-          gasAccountID: number | null
-          propertyID: number | null
-          reading: number | null
-          readingAt: string
-        }
+          created_at: string | null;
+          duration: number | null;
+          electricAccountID: number | null;
+          gasAccountID: number | null;
+          propertyID: number | null;
+          reading: number | null;
+          readingAt: string;
+        };
         Insert: {
-          created_at?: string | null
-          duration?: number | null
-          electricAccountID?: number | null
-          gasAccountID?: number | null
-          propertyID?: number | null
-          reading?: number | null
-          readingAt: string
-        }
+          created_at?: string | null;
+          duration?: number | null;
+          electricAccountID?: number | null;
+          gasAccountID?: number | null;
+          propertyID?: number | null;
+          reading?: number | null;
+          readingAt: string;
+        };
         Update: {
-          created_at?: string | null
-          duration?: number | null
-          electricAccountID?: number | null
-          gasAccountID?: number | null
-          propertyID?: number | null
-          reading?: number | null
-          readingAt?: string
-        }
+          created_at?: string | null;
+          duration?: number | null;
+          electricAccountID?: number | null;
+          gasAccountID?: number | null;
+          propertyID?: number | null;
+          reading?: number | null;
+          readingAt?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "MeterReadings_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ADMIN_ElectricAccountsAudit"
-            referencedColumns: ["electricAccountID"]
+            foreignKeyName: 'MeterReadings_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "MeterReadings_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ElectricAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MeterReadings_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
           },
           {
-            foreignKeyName: "MeterReadings_gasAccountID_fkey"
-            columns: ["gasAccountID"]
-            isOneToOne: false
-            referencedRelation: "GasAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MeterReadings_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'MeterReadings_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+        ];
+      };
       MoveInPartner: {
         Row: {
-          bccEmail: string | null
-          id: string
-          imgURL: string | null
-          isThemed: boolean
-          name: string | null
-          shouldSkipSuccessScreen: boolean
-          themeID: string | null
-        }
+          bccEmail: string | null;
+          id: string;
+          imgURL: string | null;
+          isThemed: boolean;
+          name: string | null;
+          shouldSkipSuccessScreen: boolean;
+          themeID: string | null;
+        };
         Insert: {
-          bccEmail?: string | null
-          id: string
-          imgURL?: string | null
-          isThemed?: boolean
-          name?: string | null
-          shouldSkipSuccessScreen?: boolean
-          themeID?: string | null
-        }
+          bccEmail?: string | null;
+          id: string;
+          imgURL?: string | null;
+          isThemed?: boolean;
+          name?: string | null;
+          shouldSkipSuccessScreen?: boolean;
+          themeID?: string | null;
+        };
         Update: {
-          bccEmail?: string | null
-          id?: string
-          imgURL?: string | null
-          isThemed?: boolean
-          name?: string | null
-          shouldSkipSuccessScreen?: boolean
-          themeID?: string | null
-        }
+          bccEmail?: string | null;
+          id?: string;
+          imgURL?: string | null;
+          isThemed?: boolean;
+          name?: string | null;
+          shouldSkipSuccessScreen?: boolean;
+          themeID?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "MoveInPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "MoveInPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "MoveInPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       MoveInSessionTracker: {
         Row: {
-          createdAt: string | null
-          didAddPaymentInformation: boolean
-          didCompleteUserCreationStep: boolean
-          didDropOff: boolean
-          email: string | null
-          flowCompleted: boolean
-          haveUtilitiesSignedUp: boolean
-          id: string
-          moveInPartnerID: string
-          shortCode: string
-        }
+          createdAt: string | null;
+          didAddPaymentInformation: boolean;
+          didCompleteUserCreationStep: boolean;
+          didDropOff: boolean;
+          email: string | null;
+          flowCompleted: boolean;
+          haveUtilitiesSignedUp: boolean;
+          id: string;
+          moveInPartnerID: string;
+          shortCode: string;
+        };
         Insert: {
-          createdAt?: string | null
-          didAddPaymentInformation?: boolean
-          didCompleteUserCreationStep?: boolean
-          didDropOff?: boolean
-          email?: string | null
-          flowCompleted?: boolean
-          haveUtilitiesSignedUp?: boolean
-          id?: string
-          moveInPartnerID: string
-          shortCode: string
-        }
+          createdAt?: string | null;
+          didAddPaymentInformation?: boolean;
+          didCompleteUserCreationStep?: boolean;
+          didDropOff?: boolean;
+          email?: string | null;
+          flowCompleted?: boolean;
+          haveUtilitiesSignedUp?: boolean;
+          id?: string;
+          moveInPartnerID: string;
+          shortCode: string;
+        };
         Update: {
-          createdAt?: string | null
-          didAddPaymentInformation?: boolean
-          didCompleteUserCreationStep?: boolean
-          didDropOff?: boolean
-          email?: string | null
-          flowCompleted?: boolean
-          haveUtilitiesSignedUp?: boolean
-          id?: string
-          moveInPartnerID?: string
-          shortCode?: string
-        }
+          createdAt?: string | null;
+          didAddPaymentInformation?: boolean;
+          didCompleteUserCreationStep?: boolean;
+          didDropOff?: boolean;
+          email?: string | null;
+          flowCompleted?: boolean;
+          haveUtilitiesSignedUp?: boolean;
+          id?: string;
+          moveInPartnerID?: string;
+          shortCode?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "MoveInSessionTracker_moveInPartnerID_fkey"
-            columns: ["moveInPartnerID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MoveInSessionTracker_moveInPartnerID_fkey';
+            columns: ['moveInPartnerID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "MoveInSessionTracker_moveInPartnerID_fkey"
-            columns: ["moveInPartnerID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'MoveInSessionTracker_moveInPartnerID_fkey';
+            columns: ['moveInPartnerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "MoveInSessionTracker_moveInPartnerID_fkey"
-            columns: ["moveInPartnerID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MoveInSessionTracker_moveInPartnerID_fkey';
+            columns: ['moveInPartnerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'MoveInSessionTracker_moveInPartnerID_fkey';
+            columns: ['moveInPartnerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       OCR_Output: {
         Row: {
-          account: string
-          accountNumber: string | null
-          created_at: string
-          deliveryChargesElectric: number | null
-          deliveryChargesGas: number | null
-          dueByDate: string | null
-          endDate: string | null
-          file: string
-          id: number
-          output: Json
-          pastDueCharges: number | null
-          provider: string
-          serviceAddress: string | null
-          startDate: string | null
-          statementDate: string | null
-          supplyChargesElectric: number | null
-          supplyChargesGas: number | null
-          totalAmountDue: number | null
-          totalAmountDueElectric: number | null
-          totalAmountDueGas: number | null
-          totalChargesForPeriod: number | null
-          totalUsageKwh: number | null
-          totalUsageTherms: number | null
-          user: string
-        }
+          account: string;
+          accountNumber: string | null;
+          created_at: string;
+          deliveryChargesElectric: number | null;
+          deliveryChargesGas: number | null;
+          dueByDate: string | null;
+          endDate: string | null;
+          file: string;
+          id: number;
+          output: Json;
+          pastDueCharges: number | null;
+          provider: string;
+          serviceAddress: string | null;
+          startDate: string | null;
+          statementDate: string | null;
+          supplyChargesElectric: number | null;
+          supplyChargesGas: number | null;
+          totalAmountDue: number | null;
+          totalAmountDueElectric: number | null;
+          totalAmountDueGas: number | null;
+          totalChargesForPeriod: number | null;
+          totalUsageKwh: number | null;
+          totalUsageTherms: number | null;
+          user: string;
+        };
         Insert: {
-          account: string
-          accountNumber?: string | null
-          created_at?: string
-          deliveryChargesElectric?: number | null
-          deliveryChargesGas?: number | null
-          dueByDate?: string | null
-          endDate?: string | null
-          file: string
-          id?: number
-          output: Json
-          pastDueCharges?: number | null
-          provider: string
-          serviceAddress?: string | null
-          startDate?: string | null
-          statementDate?: string | null
-          supplyChargesElectric?: number | null
-          supplyChargesGas?: number | null
-          totalAmountDue?: number | null
-          totalAmountDueElectric?: number | null
-          totalAmountDueGas?: number | null
-          totalChargesForPeriod?: number | null
-          totalUsageKwh?: number | null
-          totalUsageTherms?: number | null
-          user: string
-        }
+          account: string;
+          accountNumber?: string | null;
+          created_at?: string;
+          deliveryChargesElectric?: number | null;
+          deliveryChargesGas?: number | null;
+          dueByDate?: string | null;
+          endDate?: string | null;
+          file: string;
+          id?: number;
+          output: Json;
+          pastDueCharges?: number | null;
+          provider: string;
+          serviceAddress?: string | null;
+          startDate?: string | null;
+          statementDate?: string | null;
+          supplyChargesElectric?: number | null;
+          supplyChargesGas?: number | null;
+          totalAmountDue?: number | null;
+          totalAmountDueElectric?: number | null;
+          totalAmountDueGas?: number | null;
+          totalChargesForPeriod?: number | null;
+          totalUsageKwh?: number | null;
+          totalUsageTherms?: number | null;
+          user: string;
+        };
         Update: {
-          account?: string
-          accountNumber?: string | null
-          created_at?: string
-          deliveryChargesElectric?: number | null
-          deliveryChargesGas?: number | null
-          dueByDate?: string | null
-          endDate?: string | null
-          file?: string
-          id?: number
-          output?: Json
-          pastDueCharges?: number | null
-          provider?: string
-          serviceAddress?: string | null
-          startDate?: string | null
-          statementDate?: string | null
-          supplyChargesElectric?: number | null
-          supplyChargesGas?: number | null
-          totalAmountDue?: number | null
-          totalAmountDueElectric?: number | null
-          totalAmountDueGas?: number | null
-          totalChargesForPeriod?: number | null
-          totalUsageKwh?: number | null
-          totalUsageTherms?: number | null
-          user?: string
-        }
+          account?: string;
+          accountNumber?: string | null;
+          created_at?: string;
+          deliveryChargesElectric?: number | null;
+          deliveryChargesGas?: number | null;
+          dueByDate?: string | null;
+          endDate?: string | null;
+          file?: string;
+          id?: number;
+          output?: Json;
+          pastDueCharges?: number | null;
+          provider?: string;
+          serviceAddress?: string | null;
+          startDate?: string | null;
+          statementDate?: string | null;
+          supplyChargesElectric?: number | null;
+          supplyChargesGas?: number | null;
+          totalAmountDue?: number | null;
+          totalAmountDueElectric?: number | null;
+          totalAmountDueGas?: number | null;
+          totalChargesForPeriod?: number | null;
+          totalUsageKwh?: number | null;
+          totalUsageTherms?: number | null;
+          user?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "OCR_Output_provider_fkey"
-            columns: ["provider"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'OCR_Output_provider_fkey';
+            columns: ['provider'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "OCR_Output_user_fkey"
-            columns: ["user"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'OCR_Output_user_fkey';
+            columns: ['user'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "OCR_Output_user_fkey"
-            columns: ["user"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'OCR_Output_user_fkey';
+            columns: ['user'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "OCR_Output_user_fkey"
-            columns: ["user"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'OCR_Output_user_fkey';
+            columns: ['user'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'OCR_Output_user_fkey';
+            columns: ['user'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Payments: {
         Row: {
-          amountDue: number
-          chargeId: string
-          created_at: string | null
-          dueBy: string | null
-          feeStructure: number | null
-          id: string
-          paidBy: string
-          paidNotificationSent: boolean
-          paymentStatus: Database["public"]["Enums"]["paymentstatus"] | null
-          shouldSendReminders: boolean | null
-          stripePaymentID: string | null
-          transactionFee: number
-        }
+          amountDue: number;
+          chargeId: string;
+          created_at: string | null;
+          dueBy: string | null;
+          feeStructure: number | null;
+          id: string;
+          paidBy: string;
+          paidNotificationSent: boolean;
+          paymentStatus: Database['public']['Enums']['paymentstatus'] | null;
+          shouldSendReminders: boolean | null;
+          stripePaymentID: string | null;
+          transactionFee: number;
+        };
         Insert: {
-          amountDue: number
-          chargeId: string
-          created_at?: string | null
-          dueBy?: string | null
-          feeStructure?: number | null
-          id?: string
-          paidBy: string
-          paidNotificationSent?: boolean
-          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null
-          shouldSendReminders?: boolean | null
-          stripePaymentID?: string | null
-          transactionFee?: number
-        }
+          amountDue: number;
+          chargeId: string;
+          created_at?: string | null;
+          dueBy?: string | null;
+          feeStructure?: number | null;
+          id?: string;
+          paidBy: string;
+          paidNotificationSent?: boolean;
+          paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
+          shouldSendReminders?: boolean | null;
+          stripePaymentID?: string | null;
+          transactionFee?: number;
+        };
         Update: {
-          amountDue?: number
-          chargeId?: string
-          created_at?: string | null
-          dueBy?: string | null
-          feeStructure?: number | null
-          id?: string
-          paidBy?: string
-          paidNotificationSent?: boolean
-          paymentStatus?: Database["public"]["Enums"]["paymentstatus"] | null
-          shouldSendReminders?: boolean | null
-          stripePaymentID?: string | null
-          transactionFee?: number
-        }
+          amountDue?: number;
+          chargeId?: string;
+          created_at?: string | null;
+          dueBy?: string | null;
+          feeStructure?: number | null;
+          id?: string;
+          paidBy?: string;
+          paidNotificationSent?: boolean;
+          paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
+          shouldSendReminders?: boolean | null;
+          stripePaymentID?: string | null;
+          transactionFee?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "Payments_chargeId_fkey"
-            columns: ["chargeId"]
-            isOneToOne: false
-            referencedRelation: "Charges"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Payments_chargeId_fkey';
+            columns: ['chargeId'];
+            isOneToOne: false;
+            referencedRelation: 'Charges';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Payments_feeStructure_fkey"
-            columns: ["feeStructure"]
-            isOneToOne: false
-            referencedRelation: "FeeStructure"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Payments_feeStructure_fkey';
+            columns: ['feeStructure'];
+            isOneToOne: false;
+            referencedRelation: 'FeeStructure';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Payments_paidBy_fkey"
-            columns: ["paidBy"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['paidBy'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Payments_paidBy_fkey"
-            columns: ["paidBy"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['paidBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Payments_paidBy_fkey"
-            columns: ["paidBy"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['paidBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['paidBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      Permissions: {
+        Row: {
+          description: string | null;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          description?: string | null;
+          id?: number;
+          name: string;
+        };
+        Update: {
+          description?: string | null;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      PGAdminUsers: {
+        Row: {
+          acceptedIPs: string[] | null;
+          canViewSensitiveInformation: boolean | null;
+          createdAt: string;
+          id: string;
+          intercomID: number | null;
+          isActive: boolean | null;
+          name: string | null;
+        };
+        Insert: {
+          acceptedIPs?: string[] | null;
+          canViewSensitiveInformation?: boolean | null;
+          createdAt?: string;
+          id?: string;
+          intercomID?: number | null;
+          isActive?: boolean | null;
+          name?: string | null;
+        };
+        Update: {
+          acceptedIPs?: string[] | null;
+          canViewSensitiveInformation?: boolean | null;
+          createdAt?: string;
+          id?: string;
+          intercomID?: number | null;
+          isActive?: boolean | null;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
       Property: {
         Row: {
-          addressID: string | null
-          buildingID: string | null
-          createdAt: string | null
-          id: number
-          isRenewablePaidFor: boolean | null
-          type: Database["public"]["Enums"]["enum_Unit_residenceType"] | null
-          unitNumber: string | null
-        }
+          _audit: Json | null;
+          addressID: string | null;
+          buildingID: string | null;
+          createdAt: string | null;
+          id: number;
+          isRenewablePaidFor: boolean | null;
+          propertyGroupID: string | null;
+          type: Database['public']['Enums']['enum_Unit_residenceType'] | null;
+          unitNumber: string | null;
+        };
         Insert: {
-          addressID?: string | null
-          buildingID?: string | null
-          createdAt?: string | null
-          id?: number
-          isRenewablePaidFor?: boolean | null
-          type?: Database["public"]["Enums"]["enum_Unit_residenceType"] | null
-          unitNumber?: string | null
-        }
+          _audit?: Json | null;
+          addressID?: string | null;
+          buildingID?: string | null;
+          createdAt?: string | null;
+          id?: number;
+          isRenewablePaidFor?: boolean | null;
+          propertyGroupID?: string | null;
+          type?: Database['public']['Enums']['enum_Unit_residenceType'] | null;
+          unitNumber?: string | null;
+        };
         Update: {
-          addressID?: string | null
-          buildingID?: string | null
-          createdAt?: string | null
-          id?: number
-          isRenewablePaidFor?: boolean | null
-          type?: Database["public"]["Enums"]["enum_Unit_residenceType"] | null
-          unitNumber?: string | null
-        }
+          _audit?: Json | null;
+          addressID?: string | null;
+          buildingID?: string | null;
+          createdAt?: string | null;
+          id?: number;
+          isRenewablePaidFor?: boolean | null;
+          propertyGroupID?: string | null;
+          type?: Database['public']['Enums']['enum_Unit_residenceType'] | null;
+          unitNumber?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Property_addressID_fkey"
-            columns: ["addressID"]
-            isOneToOne: false
-            referencedRelation: "Address"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Property_addressID_fkey';
+            columns: ['addressID'];
+            isOneToOne: false;
+            referencedRelation: 'Address';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Property_buildingID_fkey"
-            columns: ["buildingID"]
-            isOneToOne: false
-            referencedRelation: "Building"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Property_buildingID_fkey';
+            columns: ['buildingID'];
+            isOneToOne: false;
+            referencedRelation: 'Building';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Property_propertyGroupID_fkey';
+            columns: ['propertyGroupID'];
+            isOneToOne: true;
+            referencedRelation: 'PropertyGroup';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       PropertyGroup: {
         Row: {
-          id: string
-          name: string | null
-          ownerID: string
-        }
+          id: string;
+          ownerID: string;
+        };
         Insert: {
-          id: string
-          name?: string | null
-          ownerID: string
-        }
+          id?: string;
+          ownerID: string;
+        };
         Update: {
-          id?: string
-          name?: string | null
-          ownerID?: string
-        }
+          id?: string;
+          ownerID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "PropertyGroup_ownerID_fkey"
-            columns: ["ownerID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'PropertyGroup_ownerID_fkey';
+            columns: ['ownerID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "PropertyGroup_ownerID_fkey"
-            columns: ["ownerID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'PropertyGroup_ownerID_fkey';
+            columns: ['ownerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "PropertyGroup_ownerID_fkey"
-            columns: ["ownerID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'PropertyGroup_ownerID_fkey';
+            columns: ['ownerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
-      PropertyGroupTenant: {
+          {
+            foreignKeyName: 'PropertyGroup_ownerID_fkey';
+            columns: ['ownerID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      PropertyGroupResident: {
         Row: {
-          cottageUserID: string
-          id: string
-          inviteCode: string | null
-          propertyGroupID: string
-          status: Database["public"]["Enums"]["enum_PropertyGroupTenant_inviteStatus"]
-        }
+          cottageUserID: string | null;
+          email: string;
+          id: string;
+          inviteCode: string | null;
+          invited_at: string | null;
+          propertyGroupID: string | null;
+          status:
+            | Database['public']['Enums']['enum_PropertyGroupResident_inviteStatus']
+            | null;
+        };
         Insert: {
-          cottageUserID: string
-          id: string
-          inviteCode?: string | null
-          propertyGroupID: string
-          status: Database["public"]["Enums"]["enum_PropertyGroupTenant_inviteStatus"]
-        }
+          cottageUserID?: string | null;
+          email: string;
+          id?: string;
+          inviteCode?: string | null;
+          invited_at?: string | null;
+          propertyGroupID?: string | null;
+          status?:
+            | Database['public']['Enums']['enum_PropertyGroupResident_inviteStatus']
+            | null;
+        };
         Update: {
-          cottageUserID?: string
-          id?: string
-          inviteCode?: string | null
-          propertyGroupID?: string
-          status?: Database["public"]["Enums"]["enum_PropertyGroupTenant_inviteStatus"]
-        }
+          cottageUserID?: string | null;
+          email?: string;
+          id?: string;
+          inviteCode?: string | null;
+          invited_at?: string | null;
+          propertyGroupID?: string | null;
+          status?:
+            | Database['public']['Enums']['enum_PropertyGroupResident_inviteStatus']
+            | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "PropertyGroupTenant_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'fk_cottageUserID';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "PropertyGroupTenant_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'fk_cottageUserID';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "PropertyGroupTenant_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'fk_cottageUserID';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "PropertyGroupTenant_propertyGroupID_fkey"
-            columns: ["propertyGroupID"]
-            isOneToOne: false
-            referencedRelation: "PropertyGroup"
-            referencedColumns: ["id"]
+            foreignKeyName: 'fk_cottageUserID';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'fk_propertyGroupID';
+            columns: ['propertyGroupID'];
+            isOneToOne: false;
+            referencedRelation: 'PropertyGroup';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ProviderStatus: {
         Row: {
-          availability: number
-          created_at: string
-          failCount: number
-          failList: string[]
-          id: number
-          jobName: string
-          permanentFail: number
-          provider: string
-          providerStatus: Database["public"]["Enums"]["providerStatus"]
-          retriable: boolean
-          targets: string[]
-          total: number
-        }
+          availability: number;
+          created_at: string;
+          failCount: number;
+          failList: string[];
+          id: number;
+          jobName: string;
+          permanentFail: number;
+          provider: string;
+          providerStatus: Database['public']['Enums']['providerStatus'];
+          retriable: boolean;
+          targets: string[];
+          total: number;
+        };
         Insert: {
-          availability?: number
-          created_at?: string
-          failCount: number
-          failList: string[]
-          id?: number
-          jobName: string
-          permanentFail?: number
-          provider: string
-          providerStatus?: Database["public"]["Enums"]["providerStatus"]
-          retriable?: boolean
-          targets: string[]
-          total: number
-        }
+          availability?: number;
+          created_at?: string;
+          failCount: number;
+          failList: string[];
+          id?: number;
+          jobName: string;
+          permanentFail?: number;
+          provider: string;
+          providerStatus?: Database['public']['Enums']['providerStatus'];
+          retriable?: boolean;
+          targets: string[];
+          total: number;
+        };
         Update: {
-          availability?: number
-          created_at?: string
-          failCount?: number
-          failList?: string[]
-          id?: number
-          jobName?: string
-          permanentFail?: number
-          provider?: string
-          providerStatus?: Database["public"]["Enums"]["providerStatus"]
-          retriable?: boolean
-          targets?: string[]
-          total?: number
-        }
-        Relationships: []
-      }
+          availability?: number;
+          created_at?: string;
+          failCount?: number;
+          failList?: string[];
+          id?: number;
+          jobName?: string;
+          permanentFail?: number;
+          provider?: string;
+          providerStatus?: Database['public']['Enums']['providerStatus'];
+          retriable?: boolean;
+          targets?: string[];
+          total?: number;
+        };
+        Relationships: [];
+      };
       Ratings: {
         Row: {
-          cottageUserID: string | null
-          createdAt: string
-          flow: string | null
-          flowVersion: string | null
-          id: number
-          rating: number | null
-        }
+          cottageUserID: string | null;
+          createdAt: string;
+          flow: string | null;
+          flowVersion: string | null;
+          id: number;
+          rating: number | null;
+        };
         Insert: {
-          cottageUserID?: string | null
-          createdAt?: string
-          flow?: string | null
-          flowVersion?: string | null
-          id?: number
-          rating?: number | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string;
+          flow?: string | null;
+          flowVersion?: string | null;
+          id?: number;
+          rating?: number | null;
+        };
         Update: {
-          cottageUserID?: string | null
-          createdAt?: string
-          flow?: string | null
-          flowVersion?: string | null
-          id?: number
-          rating?: number | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string;
+          flow?: string | null;
+          flowVersion?: string | null;
+          id?: number;
+          rating?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Ratings_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Ratings_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Ratings_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Ratings_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Ratings_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Ratings_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Ratings_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ReferralPartner: {
         Row: {
-          code: string | null
-          id: string
-          imgURL: string | null
-          name: string | null
-        }
+          code: string | null;
+          id: string;
+          imgURL: string | null;
+          name: string | null;
+        };
         Insert: {
-          code?: string | null
-          id: string
-          imgURL?: string | null
-          name?: string | null
-        }
+          code?: string | null;
+          id: string;
+          imgURL?: string | null;
+          name?: string | null;
+        };
         Update: {
-          code?: string | null
-          id?: string
-          imgURL?: string | null
-          name?: string | null
-        }
+          code?: string | null;
+          id?: string;
+          imgURL?: string | null;
+          name?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ReferralPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ReferralPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ReferralPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ReferralPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ReferralPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ReferralPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'ReferralPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Referrals: {
         Row: {
-          createdAt: string | null
-          id: string
-          referralStatus: Database["public"]["Enums"]["referral_status"]
-          referred: string | null
-          referredBy: string
-        }
+          createdAt: string | null;
+          id: string;
+          referralStatus: Database['public']['Enums']['referral_status'];
+          referred: string | null;
+          referredBy: string;
+        };
         Insert: {
-          createdAt?: string | null
-          id?: string
-          referralStatus?: Database["public"]["Enums"]["referral_status"]
-          referred?: string | null
-          referredBy: string
-        }
+          createdAt?: string | null;
+          id?: string;
+          referralStatus?: Database['public']['Enums']['referral_status'];
+          referred?: string | null;
+          referredBy: string;
+        };
         Update: {
-          createdAt?: string | null
-          id?: string
-          referralStatus?: Database["public"]["Enums"]["referral_status"]
-          referred?: string | null
-          referredBy?: string
-        }
+          createdAt?: string | null;
+          id?: string;
+          referralStatus?: Database['public']['Enums']['referral_status'];
+          referred?: string | null;
+          referredBy?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Referrals_referred_fkey"
-            columns: ["referred"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referred_fkey"
-            columns: ["referred"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Referrals_referred_fkey"
-            columns: ["referred"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referredBy_fkey"
-            columns: ["referredBy"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referredBy_fkey"
-            columns: ["referredBy"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referredBy_fkey"
-            columns: ["referredBy"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       RegistrationJob: {
         Row: {
-          createdAt: string
-          endTime: string | null
-          forCottageUserID: string
-          id: string
-          lastStep: string | null
-          startTime: string
-          status: Database["public"]["Enums"]["enum_RegistrationJob_status"]
-          statusMessage: string | null
-          updatedAt: string | null
-          utilityCompanyID: string
-        }
+          createdAt: string;
+          endTime: string | null;
+          forCottageUserID: string;
+          id: string;
+          lastStep: string | null;
+          startTime: string;
+          status: Database['public']['Enums']['enum_RegistrationJob_status'];
+          statusMessage: string | null;
+          updatedAt: string | null;
+          utilityCompanyID: string;
+        };
         Insert: {
-          createdAt?: string
-          endTime?: string | null
-          forCottageUserID?: string
-          id?: string
-          lastStep?: string | null
-          startTime?: string
-          status?: Database["public"]["Enums"]["enum_RegistrationJob_status"]
-          statusMessage?: string | null
-          updatedAt?: string | null
-          utilityCompanyID: string
-        }
+          createdAt?: string;
+          endTime?: string | null;
+          forCottageUserID?: string;
+          id?: string;
+          lastStep?: string | null;
+          startTime?: string;
+          status?: Database['public']['Enums']['enum_RegistrationJob_status'];
+          statusMessage?: string | null;
+          updatedAt?: string | null;
+          utilityCompanyID: string;
+        };
         Update: {
-          createdAt?: string
-          endTime?: string | null
-          forCottageUserID?: string
-          id?: string
-          lastStep?: string | null
-          startTime?: string
-          status?: Database["public"]["Enums"]["enum_RegistrationJob_status"]
-          statusMessage?: string | null
-          updatedAt?: string | null
-          utilityCompanyID?: string
-        }
+          createdAt?: string;
+          endTime?: string | null;
+          forCottageUserID?: string;
+          id?: string;
+          lastStep?: string | null;
+          startTime?: string;
+          status?: Database['public']['Enums']['enum_RegistrationJob_status'];
+          statusMessage?: string | null;
+          updatedAt?: string | null;
+          utilityCompanyID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_RegistrationJob_forCottageUserID_fkey"
-            columns: ["forCottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_RegistrationJob_forCottageUserID_fkey';
+            columns: ['forCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_RegistrationJob_forCottageUserID_fkey"
-            columns: ["forCottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'public_RegistrationJob_forCottageUserID_fkey';
+            columns: ['forCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "public_RegistrationJob_forCottageUserID_fkey"
-            columns: ["forCottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_RegistrationJob_forCottageUserID_fkey';
+            columns: ['forCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "RegistrationJob_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_RegistrationJob_forCottageUserID_fkey';
+            columns: ['forCottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'RegistrationJob_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       RenewableSubscriptionPayments: {
         Row: {
-          amount: number | null
-          id: number
-          isProcessed: boolean | null
-          payerID: string | null
-          paymentDate: string | null
-          renewableSubscription: number | null
-          status: Database["public"]["Enums"]["stripepaymentstatus"] | null
-          stripePaymentID: string | null
-        }
+          amount: number | null;
+          id: number;
+          isProcessed: boolean | null;
+          payerID: string | null;
+          paymentDate: string | null;
+          renewableSubscription: number | null;
+          status: Database['public']['Enums']['stripepaymentstatus'] | null;
+          stripePaymentID: string | null;
+        };
         Insert: {
-          amount?: number | null
-          id?: number
-          isProcessed?: boolean | null
-          payerID?: string | null
-          paymentDate?: string | null
-          renewableSubscription?: number | null
-          status?: Database["public"]["Enums"]["stripepaymentstatus"] | null
-          stripePaymentID?: string | null
-        }
+          amount?: number | null;
+          id?: number;
+          isProcessed?: boolean | null;
+          payerID?: string | null;
+          paymentDate?: string | null;
+          renewableSubscription?: number | null;
+          status?: Database['public']['Enums']['stripepaymentstatus'] | null;
+          stripePaymentID?: string | null;
+        };
         Update: {
-          amount?: number | null
-          id?: number
-          isProcessed?: boolean | null
-          payerID?: string | null
-          paymentDate?: string | null
-          renewableSubscription?: number | null
-          status?: Database["public"]["Enums"]["stripepaymentstatus"] | null
-          stripePaymentID?: string | null
-        }
+          amount?: number | null;
+          id?: number;
+          isProcessed?: boolean | null;
+          payerID?: string | null;
+          paymentDate?: string | null;
+          renewableSubscription?: number | null;
+          status?: Database['public']['Enums']['stripepaymentstatus'] | null;
+          stripePaymentID?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "RenewableSubscriptionPayments_renewableSubscription_fkey"
-            columns: ["renewableSubscription"]
-            isOneToOne: false
-            referencedRelation: "RenewableSubscriptions"
-            referencedColumns: ["id"]
+            foreignKeyName: 'RenewableSubscriptionPayments_renewableSubscription_fkey';
+            columns: ['renewableSubscription'];
+            isOneToOne: false;
+            referencedRelation: 'RenewableSubscriptions';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       RenewableSubscriptionPlan: {
         Row: {
-          costPerMonth: number | null
-          id: number
-        }
+          costPerMonth: number | null;
+          id: number;
+        };
         Insert: {
-          costPerMonth?: number | null
-          id?: number
-        }
+          costPerMonth?: number | null;
+          id?: number;
+        };
         Update: {
-          costPerMonth?: number | null
-          id?: number
-        }
-        Relationships: []
-      }
+          costPerMonth?: number | null;
+          id?: number;
+        };
+        Relationships: [];
+      };
       RenewableSubscriptions: {
         Row: {
-          cottageUserId: string | null
-          createdAt: string | null
-          endDate: string | null
-          id: number
-          propertyID: number | null
-          renewableSubscriptionPlan: number | null
-          startDate: string | null
-        }
+          cottageUserId: string | null;
+          createdAt: string | null;
+          endDate: string | null;
+          id: number;
+          propertyID: number | null;
+          renewableSubscriptionPlan: number | null;
+          startDate: string | null;
+        };
         Insert: {
-          cottageUserId?: string | null
-          createdAt?: string | null
-          endDate?: string | null
-          id?: number
-          propertyID?: number | null
-          renewableSubscriptionPlan?: number | null
-          startDate?: string | null
-        }
+          cottageUserId?: string | null;
+          createdAt?: string | null;
+          endDate?: string | null;
+          id?: number;
+          propertyID?: number | null;
+          renewableSubscriptionPlan?: number | null;
+          startDate?: string | null;
+        };
         Update: {
-          cottageUserId?: string | null
-          createdAt?: string | null
-          endDate?: string | null
-          id?: number
-          propertyID?: number | null
-          renewableSubscriptionPlan?: number | null
-          startDate?: string | null
-        }
+          cottageUserId?: string | null;
+          createdAt?: string | null;
+          endDate?: string | null;
+          id?: number;
+          propertyID?: number | null;
+          renewableSubscriptionPlan?: number | null;
+          startDate?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "RenewableSubscriptions_cottageUserId_fkey"
-            columns: ["cottageUserId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'RenewableSubscriptions_cottageUserId_fkey';
+            columns: ['cottageUserId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "RenewableSubscriptions_cottageUserId_fkey"
-            columns: ["cottageUserId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'RenewableSubscriptions_cottageUserId_fkey';
+            columns: ['cottageUserId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "RenewableSubscriptions_cottageUserId_fkey"
-            columns: ["cottageUserId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'RenewableSubscriptions_cottageUserId_fkey';
+            columns: ['cottageUserId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "RenewableSubscriptions_renewableSubscriptionPlan_fkey"
-            columns: ["renewableSubscriptionPlan"]
-            isOneToOne: false
-            referencedRelation: "RenewableSubscriptionPlan"
-            referencedColumns: ["id"]
+            foreignKeyName: 'RenewableSubscriptions_cottageUserId_fkey';
+            columns: ['cottageUserId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "RenewableSubscriptions_unit_fkey"
-            columns: ["propertyID"]
-            isOneToOne: false
-            referencedRelation: "Property"
-            referencedColumns: ["id"]
+            foreignKeyName: 'RenewableSubscriptions_renewableSubscriptionPlan_fkey';
+            columns: ['renewableSubscriptionPlan'];
+            isOneToOne: false;
+            referencedRelation: 'RenewableSubscriptionPlan';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'RenewableSubscriptions_unit_fkey';
+            columns: ['propertyID'];
+            isOneToOne: false;
+            referencedRelation: 'Property';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Resident: {
         Row: {
-          cottageUserID: string | null
-          createdAt: string | null
-          firstName: string | null
-          hasCompleteDetails: boolean | null
-          id: number
-          isRegistrationComplete: boolean | null
-          lastName: string | null
-          phone: string | null
-          startServiceDate: string | null
-        }
+          _audit: Json | null;
+          cottageUserID: string | null;
+          createdAt: string | null;
+          firstName: string | null;
+          hasCompleteDetails: boolean | null;
+          id: number;
+          isRegistrationComplete: boolean | null;
+          lastName: string | null;
+          phone: string | null;
+          startServiceDate: string | null;
+        };
         Insert: {
-          cottageUserID?: string | null
-          createdAt?: string | null
-          firstName?: string | null
-          hasCompleteDetails?: boolean | null
-          id?: number
-          isRegistrationComplete?: boolean | null
-          lastName?: string | null
-          phone?: string | null
-          startServiceDate?: string | null
-        }
+          _audit?: Json | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          firstName?: string | null;
+          hasCompleteDetails?: boolean | null;
+          id?: number;
+          isRegistrationComplete?: boolean | null;
+          lastName?: string | null;
+          phone?: string | null;
+          startServiceDate?: string | null;
+        };
         Update: {
-          cottageUserID?: string | null
-          createdAt?: string | null
-          firstName?: string | null
-          hasCompleteDetails?: boolean | null
-          id?: number
-          isRegistrationComplete?: boolean | null
-          lastName?: string | null
-          phone?: string | null
-          startServiceDate?: string | null
-        }
+          _audit?: Json | null;
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          firstName?: string | null;
+          hasCompleteDetails?: boolean | null;
+          id?: number;
+          isRegistrationComplete?: boolean | null;
+          lastName?: string | null;
+          phone?: string | null;
+          startServiceDate?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Resident_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: true
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Resident_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Resident_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: true
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Resident_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Resident_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: true
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Resident_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Resident_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ResidentIdentity: {
         Row: {
-          cottageUserID: string | null
-          createdAt: string | null
-          dateOfBirth: string | null
-          id: number
-          identificationCipherIv: string | null
-          identificationNumber: string | null
-          identificationOther: string | null
-          identificationType: string | null
-          last4identificationNumber: string | null
-          last4identificationNumberIv: string | null
-          priorAddressID: string | null
-        }
+          cottageUserID: string | null;
+          createdAt: string | null;
+          dateOfBirth: string | null;
+          id: number;
+          identificationCipherIv: string | null;
+          identificationNumber: string | null;
+          identificationOther: string | null;
+          identificationType: string | null;
+          last4identificationNumber: string | null;
+          last4identificationNumberIv: string | null;
+          priorAddressID: string | null;
+        };
         Insert: {
-          cottageUserID?: string | null
-          createdAt?: string | null
-          dateOfBirth?: string | null
-          id?: number
-          identificationCipherIv?: string | null
-          identificationNumber?: string | null
-          identificationOther?: string | null
-          identificationType?: string | null
-          last4identificationNumber?: string | null
-          last4identificationNumberIv?: string | null
-          priorAddressID?: string | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          dateOfBirth?: string | null;
+          id?: number;
+          identificationCipherIv?: string | null;
+          identificationNumber?: string | null;
+          identificationOther?: string | null;
+          identificationType?: string | null;
+          last4identificationNumber?: string | null;
+          last4identificationNumberIv?: string | null;
+          priorAddressID?: string | null;
+        };
         Update: {
-          cottageUserID?: string | null
-          createdAt?: string | null
-          dateOfBirth?: string | null
-          id?: number
-          identificationCipherIv?: string | null
-          identificationNumber?: string | null
-          identificationOther?: string | null
-          identificationType?: string | null
-          last4identificationNumber?: string | null
-          last4identificationNumberIv?: string | null
-          priorAddressID?: string | null
-        }
+          cottageUserID?: string | null;
+          createdAt?: string | null;
+          dateOfBirth?: string | null;
+          id?: number;
+          identificationCipherIv?: string | null;
+          identificationNumber?: string | null;
+          identificationOther?: string | null;
+          identificationType?: string | null;
+          last4identificationNumber?: string | null;
+          last4identificationNumberIv?: string | null;
+          priorAddressID?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ResidentIdentity_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: true
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ResidentIdentity_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ResidentIdentity_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: true
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ResidentIdentity_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ResidentIdentity_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: true
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ResidentIdentity_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ResidentIdentity_priorAddressID_fkey"
-            columns: ["priorAddressID"]
-            isOneToOne: false
-            referencedRelation: "Address"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ResidentIdentity_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: true;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'ResidentIdentity_priorAddressID_fkey';
+            columns: ['priorAddressID'];
+            isOneToOne: false;
+            referencedRelation: 'Address';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      ResidentPermissions: {
+        Row: {
+          permissionID: number;
+          residentID: string;
+        };
+        Insert: {
+          permissionID: number;
+          residentID: string;
+        };
+        Update: {
+          permissionID?: number;
+          residentID?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'ResidentPermissions_permissionID_fkey';
+            columns: ['permissionID'];
+            isOneToOne: false;
+            referencedRelation: 'Permissions';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'ResidentPermissions_residentID_fkey';
+            columns: ['residentID'];
+            isOneToOne: false;
+            referencedRelation: 'PropertyGroupResident';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ResourceMix: {
         Row: {
-          BeginDate: string
-          Coal: number | null
-          "Dual Fuel": number | null
-          electricZone: string
-          Hydro: number | null
-          LandfillGas: number | null
-          "Multiple Fuels": number | null
-          NaturalGas: number | null
-          NetImports: number | null
-          Nuclear: number | null
-          Oil: number | null
-          Other: number | null
-          "Other Fossil Fuels": number | null
-          "Other Renewables": number | null
-          Refuse: number | null
-          Renewables: number | null
-          Solar: number | null
-          Storage: number | null
-          Wind: number | null
-          Wood: number | null
-        }
+          BeginDate: string;
+          Coal: number | null;
+          DualFuel: number | null;
+          electricZone: string;
+          Hydro: number | null;
+          LandfillGas: number | null;
+          MultipleFuels: number | null;
+          NaturalGas: number | null;
+          NetImports: number | null;
+          Nuclear: number | null;
+          Oil: number | null;
+          Other: number | null;
+          OtherFossilFuels: number | null;
+          OtherRenewables: number | null;
+          Refuse: number | null;
+          Renewables: number | null;
+          Solar: number | null;
+          Storage: number | null;
+          Wind: number | null;
+          Wood: number | null;
+        };
         Insert: {
-          BeginDate: string
-          Coal?: number | null
-          "Dual Fuel"?: number | null
-          electricZone: string
-          Hydro?: number | null
-          LandfillGas?: number | null
-          "Multiple Fuels"?: number | null
-          NaturalGas?: number | null
-          NetImports?: number | null
-          Nuclear?: number | null
-          Oil?: number | null
-          Other?: number | null
-          "Other Fossil Fuels"?: number | null
-          "Other Renewables"?: number | null
-          Refuse?: number | null
-          Renewables?: number | null
-          Solar?: number | null
-          Storage?: number | null
-          Wind?: number | null
-          Wood?: number | null
-        }
+          BeginDate: string;
+          Coal?: number | null;
+          DualFuel?: number | null;
+          electricZone: string;
+          Hydro?: number | null;
+          LandfillGas?: number | null;
+          MultipleFuels?: number | null;
+          NaturalGas?: number | null;
+          NetImports?: number | null;
+          Nuclear?: number | null;
+          Oil?: number | null;
+          Other?: number | null;
+          OtherFossilFuels?: number | null;
+          OtherRenewables?: number | null;
+          Refuse?: number | null;
+          Renewables?: number | null;
+          Solar?: number | null;
+          Storage?: number | null;
+          Wind?: number | null;
+          Wood?: number | null;
+        };
         Update: {
-          BeginDate?: string
-          Coal?: number | null
-          "Dual Fuel"?: number | null
-          electricZone?: string
-          Hydro?: number | null
-          LandfillGas?: number | null
-          "Multiple Fuels"?: number | null
-          NaturalGas?: number | null
-          NetImports?: number | null
-          Nuclear?: number | null
-          Oil?: number | null
-          Other?: number | null
-          "Other Fossil Fuels"?: number | null
-          "Other Renewables"?: number | null
-          Refuse?: number | null
-          Renewables?: number | null
-          Solar?: number | null
-          Storage?: number | null
-          Wind?: number | null
-          Wood?: number | null
-        }
+          BeginDate?: string;
+          Coal?: number | null;
+          DualFuel?: number | null;
+          electricZone?: string;
+          Hydro?: number | null;
+          LandfillGas?: number | null;
+          MultipleFuels?: number | null;
+          NaturalGas?: number | null;
+          NetImports?: number | null;
+          Nuclear?: number | null;
+          Oil?: number | null;
+          Other?: number | null;
+          OtherFossilFuels?: number | null;
+          OtherRenewables?: number | null;
+          Refuse?: number | null;
+          Renewables?: number | null;
+          Solar?: number | null;
+          Storage?: number | null;
+          Wind?: number | null;
+          Wood?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_ResourceMix_electricZone_fkey"
-            columns: ["electricZone"]
-            isOneToOne: false
-            referencedRelation: "ElectricZone"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ResourceMix_electricZone_fkey';
+            columns: ['electricZone'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricZone';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       SequelizeMeta: {
         Row: {
-          name: string
-        }
+          name: string;
+        };
         Insert: {
-          name: string
-        }
+          name: string;
+        };
         Update: {
-          name?: string
-        }
-        Relationships: []
-      }
+          name?: string;
+        };
+        Relationships: [];
+      };
       ServiceGroup: {
         Row: {
-          activeSupplyPlanID: number | null
+          activeSupplyPlanID: number | null;
           communitySolarAvailability:
-            | Database["public"]["Enums"]["serviceGroupCommunitySolarAvailability"]
-            | null
-          id: string
-          isActiveReferralProgram: boolean | null
-          referralProgramAmount: number | null
-          renewableSubscriptionPlanID: number | null
-          status: Database["public"]["Enums"]["serviceGroupStatus"] | null
-          utilityCompanyID: string | null
-        }
+            | Database['public']['Enums']['serviceGroupCommunitySolarAvailability']
+            | null;
+          id: string;
+          isActiveReferralProgram: boolean | null;
+          referralProgramAmount: number | null;
+          renewableSubscriptionPlanID: number | null;
+          status: Database['public']['Enums']['serviceGroupStatus'] | null;
+          utilityCompanyID: string | null;
+        };
         Insert: {
-          activeSupplyPlanID?: number | null
+          activeSupplyPlanID?: number | null;
           communitySolarAvailability?:
-            | Database["public"]["Enums"]["serviceGroupCommunitySolarAvailability"]
-            | null
-          id: string
-          isActiveReferralProgram?: boolean | null
-          referralProgramAmount?: number | null
-          renewableSubscriptionPlanID?: number | null
-          status?: Database["public"]["Enums"]["serviceGroupStatus"] | null
-          utilityCompanyID?: string | null
-        }
+            | Database['public']['Enums']['serviceGroupCommunitySolarAvailability']
+            | null;
+          id: string;
+          isActiveReferralProgram?: boolean | null;
+          referralProgramAmount?: number | null;
+          renewableSubscriptionPlanID?: number | null;
+          status?: Database['public']['Enums']['serviceGroupStatus'] | null;
+          utilityCompanyID?: string | null;
+        };
         Update: {
-          activeSupplyPlanID?: number | null
+          activeSupplyPlanID?: number | null;
           communitySolarAvailability?:
-            | Database["public"]["Enums"]["serviceGroupCommunitySolarAvailability"]
-            | null
-          id?: string
-          isActiveReferralProgram?: boolean | null
-          referralProgramAmount?: number | null
-          renewableSubscriptionPlanID?: number | null
-          status?: Database["public"]["Enums"]["serviceGroupStatus"] | null
-          utilityCompanyID?: string | null
-        }
+            | Database['public']['Enums']['serviceGroupCommunitySolarAvailability']
+            | null;
+          id?: string;
+          isActiveReferralProgram?: boolean | null;
+          referralProgramAmount?: number | null;
+          renewableSubscriptionPlanID?: number | null;
+          status?: Database['public']['Enums']['serviceGroupStatus'] | null;
+          utilityCompanyID?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ServiceGroup_activeSupplyPlanID_fkey"
-            columns: ["activeSupplyPlanID"]
-            isOneToOne: false
-            referencedRelation: "ElectricSupplyPlan"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ServiceGroup_activeSupplyPlanID_fkey';
+            columns: ['activeSupplyPlanID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricSupplyPlan';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ServiceGroup_renewableSubscriptionPlanID_fkey"
-            columns: ["renewableSubscriptionPlanID"]
-            isOneToOne: false
-            referencedRelation: "RenewableSubscriptionPlan"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ServiceGroup_renewableSubscriptionPlanID_fkey';
+            columns: ['renewableSubscriptionPlanID'];
+            isOneToOne: false;
+            referencedRelation: 'RenewableSubscriptionPlan';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ServiceGroup_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ServiceGroup_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       ServiceZip: {
         Row: {
-          id: number
-          isPrimaryUtility: boolean | null
-          state: string | null
-          utilityCompanyID: string | null
-          zip: string | null
-        }
+          id: number;
+          isPrimaryUtility: boolean | null;
+          state: string | null;
+          utilityCompanyID: string | null;
+          zip: string | null;
+        };
         Insert: {
-          id?: number
-          isPrimaryUtility?: boolean | null
-          state?: string | null
-          utilityCompanyID?: string | null
-          zip?: string | null
-        }
+          id?: number;
+          isPrimaryUtility?: boolean | null;
+          state?: string | null;
+          utilityCompanyID?: string | null;
+          zip?: string | null;
+        };
         Update: {
-          id?: number
-          isPrimaryUtility?: boolean | null
-          state?: string | null
-          utilityCompanyID?: string | null
-          zip?: string | null
-        }
+          id?: number;
+          isPrimaryUtility?: boolean | null;
+          state?: string | null;
+          utilityCompanyID?: string | null;
+          zip?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ServiceZip_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ServiceZip_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
+      StartServiceRuns: {
+        Row: {
+          createdAt: string;
+          electricAccountID: number | null;
+          gasAccountID: number | null;
+          id: number;
+          triggerRunId: string;
+        };
+        Insert: {
+          createdAt?: string;
+          electricAccountID?: number | null;
+          gasAccountID?: number | null;
+          id?: number;
+          triggerRunId: string;
+        };
+        Update: {
+          createdAt?: string;
+          electricAccountID?: number | null;
+          gasAccountID?: number | null;
+          id?: number;
+          triggerRunId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'StartServiceRuns_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'StartServiceRuns_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'StartServiceRuns_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'StartServiceRuns_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+        ];
+      };
       StripeWebhookEvents: {
         Row: {
-          createdAt: string | null
-          id: string
-          lastUpdated: string | null
-          stripeApiVersion: string
-          stripeCreatedAt: string
-          stripeEventID: string
-          stripeEventType: string
-          stripeJson: Json
-          stripeLiveMode: boolean
-          stripeRequestID: string | null
-          stripeRequestIdempotencyKey: string | null
-        }
+          createdAt: string | null;
+          id: string;
+          lastUpdated: string | null;
+          stripeApiVersion: string;
+          stripeCreatedAt: string;
+          stripeEventID: string;
+          stripeEventType: string;
+          stripeJson: Json;
+          stripeLiveMode: boolean;
+          stripeRequestID: string | null;
+          stripeRequestIdempotencyKey: string | null;
+        };
         Insert: {
-          createdAt?: string | null
-          id?: string
-          lastUpdated?: string | null
-          stripeApiVersion: string
-          stripeCreatedAt: string
-          stripeEventID: string
-          stripeEventType: string
-          stripeJson: Json
-          stripeLiveMode: boolean
-          stripeRequestID?: string | null
-          stripeRequestIdempotencyKey?: string | null
-        }
+          createdAt?: string | null;
+          id?: string;
+          lastUpdated?: string | null;
+          stripeApiVersion: string;
+          stripeCreatedAt: string;
+          stripeEventID: string;
+          stripeEventType: string;
+          stripeJson: Json;
+          stripeLiveMode: boolean;
+          stripeRequestID?: string | null;
+          stripeRequestIdempotencyKey?: string | null;
+        };
         Update: {
-          createdAt?: string | null
-          id?: string
-          lastUpdated?: string | null
-          stripeApiVersion?: string
-          stripeCreatedAt?: string
-          stripeEventID?: string
-          stripeEventType?: string
-          stripeJson?: Json
-          stripeLiveMode?: boolean
-          stripeRequestID?: string | null
-          stripeRequestIdempotencyKey?: string | null
-        }
-        Relationships: []
-      }
+          createdAt?: string | null;
+          id?: string;
+          lastUpdated?: string | null;
+          stripeApiVersion?: string;
+          stripeCreatedAt?: string;
+          stripeEventID?: string;
+          stripeEventType?: string;
+          stripeJson?: Json;
+          stripeLiveMode?: boolean;
+          stripeRequestID?: string | null;
+          stripeRequestIdempotencyKey?: string | null;
+        };
+        Relationships: [];
+      };
+      TempAuditInfo: {
+        Row: {
+          auditData: Json | null;
+          created_at: string | null;
+          id: number;
+          recordId: string | null;
+          tableOid: unknown | null;
+          txid: number | null;
+        };
+        Insert: {
+          auditData?: Json | null;
+          created_at?: string | null;
+          id?: number;
+          recordId?: string | null;
+          tableOid?: unknown | null;
+          txid?: number | null;
+        };
+        Update: {
+          auditData?: Json | null;
+          created_at?: string | null;
+          id?: number;
+          recordId?: string | null;
+          tableOid?: unknown | null;
+          txid?: number | null;
+        };
+        Relationships: [];
+      };
       TermsAndConditions: {
         Row: {
-          emailContent: string | null
-          id: string
-          versionDate: string | null
-          websiteContent: string | null
-        }
+          emailContent: string | null;
+          id: string;
+          versionDate: string | null;
+          websiteContent: string | null;
+        };
         Insert: {
-          emailContent?: string | null
-          id?: string
-          versionDate?: string | null
-          websiteContent?: string | null
-        }
+          emailContent?: string | null;
+          id?: string;
+          versionDate?: string | null;
+          websiteContent?: string | null;
+        };
         Update: {
-          emailContent?: string | null
-          id?: string
-          versionDate?: string | null
-          websiteContent?: string | null
-        }
-        Relationships: []
-      }
+          emailContent?: string | null;
+          id?: string;
+          versionDate?: string | null;
+          websiteContent?: string | null;
+        };
+        Relationships: [];
+      };
+      TransactionalEmails: {
+        Row: {
+          bcc: string[] | null;
+          cc: string[] | null;
+          cottageUserID: string | null;
+          createdAt: string;
+          from: string;
+          html: string | null;
+          id: string;
+          lastEvent: string | null;
+          replyTo: string[] | null;
+          subject: string;
+          text: string | null;
+          to: string[] | null;
+        };
+        Insert: {
+          bcc?: string[] | null;
+          cc?: string[] | null;
+          cottageUserID?: string | null;
+          createdAt?: string;
+          from: string;
+          html?: string | null;
+          id?: string;
+          lastEvent?: string | null;
+          replyTo?: string[] | null;
+          subject: string;
+          text?: string | null;
+          to?: string[] | null;
+        };
+        Update: {
+          bcc?: string[] | null;
+          cc?: string[] | null;
+          cottageUserID?: string | null;
+          createdAt?: string;
+          from?: string;
+          html?: string | null;
+          id?: string;
+          lastEvent?: string | null;
+          replyTo?: string[] | null;
+          subject?: string;
+          text?: string | null;
+          to?: string[] | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'TransactionalEmails_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'TransactionalEmails_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
+          },
+          {
+            foreignKeyName: 'TransactionalEmails_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'TransactionalEmails_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       UserTermsAcceptance: {
         Row: {
-          accepted_at: string
-          terms_id: string
-          user_id: string
-        }
+          accepted_at: string;
+          terms_id: string;
+          user_id: string;
+        };
         Insert: {
-          accepted_at?: string
-          terms_id: string
-          user_id: string
-        }
+          accepted_at?: string;
+          terms_id: string;
+          user_id: string;
+        };
         Update: {
-          accepted_at?: string
-          terms_id?: string
-          user_id?: string
-        }
+          accepted_at?: string;
+          terms_id?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "fk_terms"
-            columns: ["terms_id"]
-            isOneToOne: false
-            referencedRelation: "TermsAndConditions"
-            referencedColumns: ["id"]
+            foreignKeyName: 'fk_terms';
+            columns: ['terms_id'];
+            isOneToOne: false;
+            referencedRelation: 'TermsAndConditions';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "fk_user"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'fk_user';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "fk_user"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'fk_user';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "fk_user"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'fk_user';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'fk_user';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       UtilityAccountPaymentState: {
         Row: {
-          created_at: string
-          dueAmount: number | null
-          dueInDB: number | null
-          electricAccount: number | null
-          errors: string[] | null
-          gasAccount: number | null
-          id: string
-          info: string[] | null
-          unpaidElectricBills: number[] | null
-          unpaidGasBills: number[] | null
-          updated_at: string | null
-          warnings: string[] | null
-        }
+          created_at: string;
+          dueAmount: number | null;
+          dueInDB: number | null;
+          electricAccount: number | null;
+          errors: string[] | null;
+          gasAccount: number | null;
+          id: string;
+          info: string[] | null;
+          unpaidElectricBills: number[] | null;
+          unpaidGasBills: number[] | null;
+          updated_at: string | null;
+          warnings: string[] | null;
+        };
         Insert: {
-          created_at?: string
-          dueAmount?: number | null
-          dueInDB?: number | null
-          electricAccount?: number | null
-          errors?: string[] | null
-          gasAccount?: number | null
-          id?: string
-          info?: string[] | null
-          unpaidElectricBills?: number[] | null
-          unpaidGasBills?: number[] | null
-          updated_at?: string | null
-          warnings?: string[] | null
-        }
+          created_at?: string;
+          dueAmount?: number | null;
+          dueInDB?: number | null;
+          electricAccount?: number | null;
+          errors?: string[] | null;
+          gasAccount?: number | null;
+          id?: string;
+          info?: string[] | null;
+          unpaidElectricBills?: number[] | null;
+          unpaidGasBills?: number[] | null;
+          updated_at?: string | null;
+          warnings?: string[] | null;
+        };
         Update: {
-          created_at?: string
-          dueAmount?: number | null
-          dueInDB?: number | null
-          electricAccount?: number | null
-          errors?: string[] | null
-          gasAccount?: number | null
-          id?: string
-          info?: string[] | null
-          unpaidElectricBills?: number[] | null
-          unpaidGasBills?: number[] | null
-          updated_at?: string | null
-          warnings?: string[] | null
-        }
+          created_at?: string;
+          dueAmount?: number | null;
+          dueInDB?: number | null;
+          electricAccount?: number | null;
+          errors?: string[] | null;
+          gasAccount?: number | null;
+          id?: string;
+          info?: string[] | null;
+          unpaidElectricBills?: number[] | null;
+          unpaidGasBills?: number[] | null;
+          updated_at?: string | null;
+          warnings?: string[] | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "UtilityAccountPaymentState_electricAccount_fkey"
-            columns: ["electricAccount"]
-            isOneToOne: true
-            referencedRelation: "ADMIN_ElectricAccountsAudit"
-            referencedColumns: ["electricAccountID"]
+            foreignKeyName: 'UtilityAccountPaymentState_electricAccount_fkey';
+            columns: ['electricAccount'];
+            isOneToOne: true;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityAccountPaymentState_electricAccount_fkey"
-            columns: ["electricAccount"]
-            isOneToOne: true
-            referencedRelation: "ElectricAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityAccountPaymentState_electricAccount_fkey';
+            columns: ['electricAccount'];
+            isOneToOne: true;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
           },
           {
-            foreignKeyName: "UtilityAccountPaymentState_gasAccount_fkey"
-            columns: ["gasAccount"]
-            isOneToOne: true
-            referencedRelation: "GasAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityAccountPaymentState_gasAccount_fkey';
+            columns: ['gasAccount'];
+            isOneToOne: true;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'UtilityAccountPaymentState_gasAccount_fkey';
+            columns: ['gasAccount'];
+            isOneToOne: true;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+        ];
+      };
       UtilityAPIReferrals: {
         Row: {
-          id: number
-          manuallyProcessed: boolean | null
-          needsManualChecking: boolean
-          provider: string | null
-          referral: string | null
-          userId: string | null
-        }
+          id: number;
+          manuallyProcessed: boolean | null;
+          needsManualChecking: boolean;
+          provider: string | null;
+          referral: string | null;
+          userId: string | null;
+        };
         Insert: {
-          id?: number
-          manuallyProcessed?: boolean | null
-          needsManualChecking?: boolean
-          provider?: string | null
-          referral?: string | null
-          userId?: string | null
-        }
+          id?: number;
+          manuallyProcessed?: boolean | null;
+          needsManualChecking?: boolean;
+          provider?: string | null;
+          referral?: string | null;
+          userId?: string | null;
+        };
         Update: {
-          id?: number
-          manuallyProcessed?: boolean | null
-          needsManualChecking?: boolean
-          provider?: string | null
-          referral?: string | null
-          userId?: string | null
-        }
-        Relationships: []
-      }
+          id?: number;
+          manuallyProcessed?: boolean | null;
+          needsManualChecking?: boolean;
+          provider?: string | null;
+          referral?: string | null;
+          userId?: string | null;
+        };
+        Relationships: [];
+      };
+      UtilityAuditAccountError: {
+        Row: {
+          electricAccountID: number | null;
+          gasAccountID: number | null;
+          id: string;
+          issueID: string;
+          parentErrorID: string;
+        };
+        Insert: {
+          electricAccountID?: number | null;
+          gasAccountID?: number | null;
+          id?: string;
+          issueID: string;
+          parentErrorID: string;
+        };
+        Update: {
+          electricAccountID?: number | null;
+          gasAccountID?: number | null;
+          id?: string;
+          issueID?: string;
+          parentErrorID?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'utilityauditaccounterror_electricaccountid_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'utilityauditaccounterror_electricaccountid_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'utilityauditaccounterror_gasaccountid_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'utilityauditaccounterror_gasaccountid_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+          {
+            foreignKeyName: 'utilityauditaccounterror_parenterrorid_fkey';
+            columns: ['parentErrorID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityAuditParentError';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      UtilityAuditParentError: {
+        Row: {
+          errorType: string;
+          id: string;
+          moduleID: string;
+          parentErrorTicketID: string;
+          projectID: string;
+          utilityCompanyID: string;
+        };
+        Insert: {
+          errorType: string;
+          id?: string;
+          moduleID: string;
+          parentErrorTicketID: string;
+          projectID: string;
+          utilityCompanyID: string;
+        };
+        Update: {
+          errorType?: string;
+          id?: string;
+          moduleID?: string;
+          parentErrorTicketID?: string;
+          projectID?: string;
+          utilityCompanyID?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'UtilityAuditParentError_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       UtilityAutomationLog: {
         Row: {
-          attempt_count: number | null
-          created_at: string | null
-          description: string | null
-          id: number
-          operation: string
-          payload: string | null
-          provider: string
-          status: string
-          updated_at: string | null
-          user: string | null
-        }
+          attempt_count: number | null;
+          created_at: string | null;
+          description: string | null;
+          id: number;
+          operation: string;
+          payload: string | null;
+          provider: string;
+          status: string;
+          updated_at: string | null;
+          user: string | null;
+        };
         Insert: {
-          attempt_count?: number | null
-          created_at?: string | null
-          description?: string | null
-          id?: number
-          operation: string
-          payload?: string | null
-          provider: string
-          status: string
-          updated_at?: string | null
-          user?: string | null
-        }
+          attempt_count?: number | null;
+          created_at?: string | null;
+          description?: string | null;
+          id?: number;
+          operation: string;
+          payload?: string | null;
+          provider: string;
+          status: string;
+          updated_at?: string | null;
+          user?: string | null;
+        };
         Update: {
-          attempt_count?: number | null
-          created_at?: string | null
-          description?: string | null
-          id?: number
-          operation?: string
-          payload?: string | null
-          provider?: string
-          status?: string
-          updated_at?: string | null
-          user?: string | null
-        }
-        Relationships: []
-      }
+          attempt_count?: number | null;
+          created_at?: string | null;
+          description?: string | null;
+          id?: number;
+          operation?: string;
+          payload?: string | null;
+          provider?: string;
+          status?: string;
+          updated_at?: string | null;
+          user?: string | null;
+        };
+        Relationships: [];
+      };
       UtilityCompany: {
         Row: {
-          checkOutageStatusURL: string | null
-          createdAt: string | null
-          electricZoneID: string | null
-          id: string
+          addsDepositToFirstBill: boolean | null;
+          checkOutageStatusURL: string | null;
+          createdAt: string | null;
+          description: string | null;
+          electricZoneID: string | null;
+          id: string;
           identityVerificationTypes:
-            | Database["public"]["Enums"]["identityVerificationType"][]
-            | null
-          isActiveReferralProgram: boolean | null
-          isBillingRequired: boolean
-          isDocUploadRequired: boolean
-          isHandleBilling: boolean | null
-          isHandleMoveIns: boolean | null
-          isPriorAddressRequired: boolean
-          isReviewBilling: boolean
-          isSSNRequired: boolean | null
-          isSSOEnabled: boolean
-          logoURL: string | null
-          name: string | null
-          outageMapURL: string | null
-          referralProgramAmount: number | null
-          registrationURL: string | null
-          reportOutageURL: string | null
-          signupReady: boolean | null
-          status: Database["public"]["Enums"]["utilityCompanyStatus"] | null
+            | Database['public']['Enums']['identityVerificationType'][]
+            | null;
+          isActiveReferralProgram: boolean | null;
+          isBillingRequired: boolean;
+          isDocUploadRequired: boolean;
+          isHandleBilling: boolean | null;
+          isHandleMoveIns: boolean | null;
+          isPriorAddressRequired: boolean;
+          isReviewBilling: boolean;
+          isSSNRequired: boolean | null;
+          isSSOEnabled: boolean;
+          logoURL: string | null;
+          name: string | null;
+          needsAdditionalDocuments: boolean;
+          outageMapURL: string | null;
+          phone: string | null;
+          preferPhoneSignUp: boolean;
+          referralProgramAmount: number | null;
+          registrationURL: string | null;
+          reportOutageURL: string | null;
+          shouldShowDisplayContent: boolean;
+          signupReady: boolean | null;
+          status: Database['public']['Enums']['utilityCompanyStatus'] | null;
           utilitiesHandled:
-            | Database["public"]["Enums"]["UtilityCompany_utilitiesHandled"][]
-            | null
-          utilityCode: string | null
+            | Database['public']['Enums']['UtilityCompany_utilitiesHandled'][]
+            | null;
+          utilityCode: string | null;
           utilityIntegrationType:
-            | Database["public"]["Enums"]["utilityIntegrationType"]
-            | null
-          website: string | null
-        }
+            | Database['public']['Enums']['utilityIntegrationType']
+            | null;
+          website: string | null;
+        };
         Insert: {
-          checkOutageStatusURL?: string | null
-          createdAt?: string | null
-          electricZoneID?: string | null
-          id: string
+          addsDepositToFirstBill?: boolean | null;
+          checkOutageStatusURL?: string | null;
+          createdAt?: string | null;
+          description?: string | null;
+          electricZoneID?: string | null;
+          id: string;
           identityVerificationTypes?:
-            | Database["public"]["Enums"]["identityVerificationType"][]
-            | null
-          isActiveReferralProgram?: boolean | null
-          isBillingRequired?: boolean
-          isDocUploadRequired?: boolean
-          isHandleBilling?: boolean | null
-          isHandleMoveIns?: boolean | null
-          isPriorAddressRequired?: boolean
-          isReviewBilling?: boolean
-          isSSNRequired?: boolean | null
-          isSSOEnabled?: boolean
-          logoURL?: string | null
-          name?: string | null
-          outageMapURL?: string | null
-          referralProgramAmount?: number | null
-          registrationURL?: string | null
-          reportOutageURL?: string | null
-          signupReady?: boolean | null
-          status?: Database["public"]["Enums"]["utilityCompanyStatus"] | null
+            | Database['public']['Enums']['identityVerificationType'][]
+            | null;
+          isActiveReferralProgram?: boolean | null;
+          isBillingRequired?: boolean;
+          isDocUploadRequired?: boolean;
+          isHandleBilling?: boolean | null;
+          isHandleMoveIns?: boolean | null;
+          isPriorAddressRequired?: boolean;
+          isReviewBilling?: boolean;
+          isSSNRequired?: boolean | null;
+          isSSOEnabled?: boolean;
+          logoURL?: string | null;
+          name?: string | null;
+          needsAdditionalDocuments?: boolean;
+          outageMapURL?: string | null;
+          phone?: string | null;
+          preferPhoneSignUp?: boolean;
+          referralProgramAmount?: number | null;
+          registrationURL?: string | null;
+          reportOutageURL?: string | null;
+          shouldShowDisplayContent?: boolean;
+          signupReady?: boolean | null;
+          status?: Database['public']['Enums']['utilityCompanyStatus'] | null;
           utilitiesHandled?:
-            | Database["public"]["Enums"]["UtilityCompany_utilitiesHandled"][]
-            | null
-          utilityCode?: string | null
+            | Database['public']['Enums']['UtilityCompany_utilitiesHandled'][]
+            | null;
+          utilityCode?: string | null;
           utilityIntegrationType?:
-            | Database["public"]["Enums"]["utilityIntegrationType"]
-            | null
-          website?: string | null
-        }
+            | Database['public']['Enums']['utilityIntegrationType']
+            | null;
+          website?: string | null;
+        };
         Update: {
-          checkOutageStatusURL?: string | null
-          createdAt?: string | null
-          electricZoneID?: string | null
-          id?: string
+          addsDepositToFirstBill?: boolean | null;
+          checkOutageStatusURL?: string | null;
+          createdAt?: string | null;
+          description?: string | null;
+          electricZoneID?: string | null;
+          id?: string;
           identityVerificationTypes?:
-            | Database["public"]["Enums"]["identityVerificationType"][]
-            | null
-          isActiveReferralProgram?: boolean | null
-          isBillingRequired?: boolean
-          isDocUploadRequired?: boolean
-          isHandleBilling?: boolean | null
-          isHandleMoveIns?: boolean | null
-          isPriorAddressRequired?: boolean
-          isReviewBilling?: boolean
-          isSSNRequired?: boolean | null
-          isSSOEnabled?: boolean
-          logoURL?: string | null
-          name?: string | null
-          outageMapURL?: string | null
-          referralProgramAmount?: number | null
-          registrationURL?: string | null
-          reportOutageURL?: string | null
-          signupReady?: boolean | null
-          status?: Database["public"]["Enums"]["utilityCompanyStatus"] | null
+            | Database['public']['Enums']['identityVerificationType'][]
+            | null;
+          isActiveReferralProgram?: boolean | null;
+          isBillingRequired?: boolean;
+          isDocUploadRequired?: boolean;
+          isHandleBilling?: boolean | null;
+          isHandleMoveIns?: boolean | null;
+          isPriorAddressRequired?: boolean;
+          isReviewBilling?: boolean;
+          isSSNRequired?: boolean | null;
+          isSSOEnabled?: boolean;
+          logoURL?: string | null;
+          name?: string | null;
+          needsAdditionalDocuments?: boolean;
+          outageMapURL?: string | null;
+          phone?: string | null;
+          preferPhoneSignUp?: boolean;
+          referralProgramAmount?: number | null;
+          registrationURL?: string | null;
+          reportOutageURL?: string | null;
+          shouldShowDisplayContent?: boolean;
+          signupReady?: boolean | null;
+          status?: Database['public']['Enums']['utilityCompanyStatus'] | null;
           utilitiesHandled?:
-            | Database["public"]["Enums"]["UtilityCompany_utilitiesHandled"][]
-            | null
-          utilityCode?: string | null
+            | Database['public']['Enums']['UtilityCompany_utilitiesHandled'][]
+            | null;
+          utilityCode?: string | null;
           utilityIntegrationType?:
-            | Database["public"]["Enums"]["utilityIntegrationType"]
-            | null
-          website?: string | null
-        }
+            | Database['public']['Enums']['utilityIntegrationType']
+            | null;
+          website?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ElectricCompany_electricZoneID_fkey"
-            columns: ["electricZoneID"]
-            isOneToOne: false
-            referencedRelation: "ElectricZone"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricCompany_electricZoneID_fkey';
+            columns: ['electricZoneID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricZone';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       UtilityCompany_ServiceAccounts: {
         Row: {
-          active: boolean | null
-          created_at: string
-          serviceAccount: string
-          utilityCompanyID: string
-        }
+          active: boolean | null;
+          created_at: string;
+          serviceAccount: string;
+          utilityCompanyID: string;
+        };
         Insert: {
-          active?: boolean | null
-          created_at?: string
-          serviceAccount: string
-          utilityCompanyID: string
-        }
+          active?: boolean | null;
+          created_at?: string;
+          serviceAccount: string;
+          utilityCompanyID: string;
+        };
         Update: {
-          active?: boolean | null
-          created_at?: string
-          serviceAccount?: string
-          utilityCompanyID?: string
-        }
+          active?: boolean | null;
+          created_at?: string;
+          serviceAccount?: string;
+          utilityCompanyID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_ElectricCompany_ServiceAccounts_id_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityCompany_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ElectricCompany_ServiceAccounts_serviceAccount_fkey"
-            columns: ["serviceAccount"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityCompany_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "public_ElectricCompany_ServiceAccounts_serviceAccount_fkey"
-            columns: ["serviceAccount"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'UtilityCompany_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ElectricCompany_ServiceAccounts_serviceAccount_fkey"
-            columns: ["serviceAccount"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityCompany_ServiceAccounts_serviceAccount_fkey';
+            columns: ['serviceAccount'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'UtilityCompany_ServiceAccounts_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       UtilityCompanyAuditSettings: {
         Row: {
-          active: boolean | null
-          createdAt: string
-          id: string
-          lastAuditThreshold: number
-          maxConcurrency: number
-          withProxy: boolean
-        }
+          active: boolean | null;
+          createdAt: string;
+          disableIncognito: boolean | null;
+          id: string;
+          lastAuditThreshold: number;
+          maxConcurrency: number;
+          useFirefox: boolean | null;
+          webSocket: Database['public']['Enums']['websocket_enum'] | null;
+          withProxy: boolean;
+        };
         Insert: {
-          active?: boolean | null
-          createdAt?: string
-          id: string
-          lastAuditThreshold?: number
-          maxConcurrency?: number
-          withProxy?: boolean
-        }
+          active?: boolean | null;
+          createdAt?: string;
+          disableIncognito?: boolean | null;
+          id: string;
+          lastAuditThreshold?: number;
+          maxConcurrency?: number;
+          useFirefox?: boolean | null;
+          webSocket?: Database['public']['Enums']['websocket_enum'] | null;
+          withProxy?: boolean;
+        };
         Update: {
-          active?: boolean | null
-          createdAt?: string
-          id?: string
-          lastAuditThreshold?: number
-          maxConcurrency?: number
-          withProxy?: boolean
-        }
+          active?: boolean | null;
+          createdAt?: string;
+          disableIncognito?: boolean | null;
+          id?: string;
+          lastAuditThreshold?: number;
+          maxConcurrency?: number;
+          useFirefox?: boolean | null;
+          webSocket?: Database['public']['Enums']['websocket_enum'] | null;
+          withProxy?: boolean;
+        };
         Relationships: [
           {
-            foreignKeyName: "UtilityCompanyAuditSettings_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityCompanyAuditSettings_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
+      UtilityCompanyPasswordSettings: {
+        Row: {
+          allowedCharacters: string;
+          createdAt: string;
+          id: string;
+        };
+        Insert: {
+          allowedCharacters: string;
+          createdAt?: string;
+          id: string;
+        };
+        Update: {
+          allowedCharacters?: string;
+          createdAt?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'UtilityCompanyPasswordSettings_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       UtilityCompanyQuestion: {
         Row: {
-          answerChoices: string[] | null
-          defaultValue: string | null
-          displayLocation: Database["public"]["Enums"]["UtilityCompanyQuestion_displayLocation"]
-          id: string
-          inputType: Database["public"]["Enums"]["UtilityCompanyQuestion_inputType"]
-          questionText: string
-          utilityCompanyID: string
-        }
+          answerChoices: string[] | null;
+          defaultValue: string | null;
+          displayLocation: Database['public']['Enums']['UtilityCompanyQuestion_displayLocation'];
+          id: string;
+          inputType: Database['public']['Enums']['UtilityCompanyQuestion_inputType'];
+          questionText: string;
+          utilityCompanyID: string;
+        };
         Insert: {
-          answerChoices?: string[] | null
-          defaultValue?: string | null
-          displayLocation?: Database["public"]["Enums"]["UtilityCompanyQuestion_displayLocation"]
-          id?: string
-          inputType?: Database["public"]["Enums"]["UtilityCompanyQuestion_inputType"]
-          questionText: string
-          utilityCompanyID: string
-        }
+          answerChoices?: string[] | null;
+          defaultValue?: string | null;
+          displayLocation?: Database['public']['Enums']['UtilityCompanyQuestion_displayLocation'];
+          id?: string;
+          inputType?: Database['public']['Enums']['UtilityCompanyQuestion_inputType'];
+          questionText: string;
+          utilityCompanyID: string;
+        };
         Update: {
-          answerChoices?: string[] | null
-          defaultValue?: string | null
-          displayLocation?: Database["public"]["Enums"]["UtilityCompanyQuestion_displayLocation"]
-          id?: string
-          inputType?: Database["public"]["Enums"]["UtilityCompanyQuestion_inputType"]
-          questionText?: string
-          utilityCompanyID?: string
-        }
+          answerChoices?: string[] | null;
+          defaultValue?: string | null;
+          displayLocation?: Database['public']['Enums']['UtilityCompanyQuestion_displayLocation'];
+          id?: string;
+          inputType?: Database['public']['Enums']['UtilityCompanyQuestion_inputType'];
+          questionText?: string;
+          utilityCompanyID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "UtilityCompanyQuestion_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityCompanyQuestion_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       UtilityCompanyRefreshSettings: {
         Row: {
-          billRefreshFrequency: number | null
-          created_at: string
-          id: string
-          pdfPullFrequency: number | null
-          usageRefreshFrequency: number | null
-        }
+          billRefreshFrequency: number | null;
+          created_at: string;
+          id: string;
+          pdfPullFrequency: number | null;
+          usageRefreshFrequency: number | null;
+        };
         Insert: {
-          billRefreshFrequency?: number | null
-          created_at?: string
-          id: string
-          pdfPullFrequency?: number | null
-          usageRefreshFrequency?: number | null
-        }
+          billRefreshFrequency?: number | null;
+          created_at?: string;
+          id: string;
+          pdfPullFrequency?: number | null;
+          usageRefreshFrequency?: number | null;
+        };
         Update: {
-          billRefreshFrequency?: number | null
-          created_at?: string
-          id?: string
-          pdfPullFrequency?: number | null
-          usageRefreshFrequency?: number | null
-        }
+          billRefreshFrequency?: number | null;
+          created_at?: string;
+          id?: string;
+          pdfPullFrequency?: number | null;
+          usageRefreshFrequency?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "UtilityCompanyRefreshSettings_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityCompanyRefreshSettings_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       UtilityPaymentHistory: {
         Row: {
-          amount: number
-          datePaid: string
-          electricAccountID: number | null
-          forUser: string
-          gasAccountID: number | null
-          id: number
-          paidBy: string | null
-          status: string
-          utilityCompanyID: string
-        }
+          amount: number;
+          datePaid: string;
+          electricAccountID: number | null;
+          forUser: string;
+          gasAccountID: number | null;
+          id: number;
+          paidBy: string | null;
+          status: string;
+          utilityCompanyID: string;
+        };
         Insert: {
-          amount: number
-          datePaid: string
-          electricAccountID?: number | null
-          forUser: string
-          gasAccountID?: number | null
-          id?: number
-          paidBy?: string | null
-          status: string
-          utilityCompanyID: string
-        }
+          amount: number;
+          datePaid: string;
+          electricAccountID?: number | null;
+          forUser: string;
+          gasAccountID?: number | null;
+          id?: number;
+          paidBy?: string | null;
+          status: string;
+          utilityCompanyID: string;
+        };
         Update: {
-          amount?: number
-          datePaid?: string
-          electricAccountID?: number | null
-          forUser?: string
-          gasAccountID?: number | null
-          id?: number
-          paidBy?: string | null
-          status?: string
-          utilityCompanyID?: string
-        }
+          amount?: number;
+          datePaid?: string;
+          electricAccountID?: number | null;
+          forUser?: string;
+          gasAccountID?: number | null;
+          id?: number;
+          paidBy?: string | null;
+          status?: string;
+          utilityCompanyID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "UtilityPaymentHistory_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ADMIN_ElectricAccountsAudit"
-            referencedColumns: ["electricAccountID"]
+            foreignKeyName: 'UtilityPaymentHistory_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityPaymentHistory_electricAccountID_fkey"
-            columns: ["electricAccountID"]
-            isOneToOne: false
-            referencedRelation: "ElectricAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityPaymentHistory_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
           },
           {
-            foreignKeyName: "UtilityPaymentHistory_forUser_fkey"
-            columns: ["forUser"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityPaymentHistory_forUser_fkey';
+            columns: ['forUser'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityPaymentHistory_forUser_fkey"
-            columns: ["forUser"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'UtilityPaymentHistory_forUser_fkey';
+            columns: ['forUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "UtilityPaymentHistory_forUser_fkey"
-            columns: ["forUser"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityPaymentHistory_forUser_fkey';
+            columns: ['forUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityPaymentHistory_gasAccountID_fkey"
-            columns: ["gasAccountID"]
-            isOneToOne: false
-            referencedRelation: "GasAccount"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityPaymentHistory_forUser_fkey';
+            columns: ['forUser'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityPaymentHistory_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityPaymentHistory_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'UtilityPaymentHistory_gasAccountID_fkey';
+            columns: ['gasAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+          {
+            foreignKeyName: 'UtilityPaymentHistory_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       UtilityQuestionAnswer: {
         Row: {
-          answer: string
-          cottageUserID: string
-          id: string
-          questionID: string
-        }
+          answer: string;
+          cottageUserID: string;
+          id: string;
+          questionID: string;
+        };
         Insert: {
-          answer: string
-          cottageUserID: string
-          id?: string
-          questionID: string
-        }
+          answer: string;
+          cottageUserID: string;
+          id?: string;
+          questionID: string;
+        };
         Update: {
-          answer?: string
-          cottageUserID?: string
-          id?: string
-          questionID?: string
-        }
+          answer?: string;
+          cottageUserID?: string;
+          id?: string;
+          questionID?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "UtilityQuestionAnswer_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityQuestionAnswer_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityQuestionAnswer_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'UtilityQuestionAnswer_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "UtilityQuestionAnswer_cottageUserID_fkey"
-            columns: ["cottageUserID"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityQuestionAnswer_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "UtilityQuestionAnswer_questionID_fkey"
-            columns: ["questionID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompanyQuestion"
-            referencedColumns: ["id"]
+            foreignKeyName: 'UtilityQuestionAnswer_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'UtilityQuestionAnswer_questionID_fkey';
+            columns: ['questionID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompanyQuestion';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      UtilityRemittanceRecord: {
+        Row: {
+          created_at: string;
+          historyRecord: number | null;
+          id: string;
+          payment: string;
+          paymentMethodTransactionId: string | null;
+          remittance_status: Database['public']['Enums']['remittance_status'];
+        };
+        Insert: {
+          created_at?: string;
+          historyRecord?: number | null;
+          id?: string;
+          payment: string;
+          paymentMethodTransactionId?: string | null;
+          remittance_status: Database['public']['Enums']['remittance_status'];
+        };
+        Update: {
+          created_at?: string;
+          historyRecord?: number | null;
+          id?: string;
+          payment?: string;
+          paymentMethodTransactionId?: string | null;
+          remittance_status?: Database['public']['Enums']['remittance_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'fk_historyRecord';
+            columns: ['historyRecord'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityPaymentHistory';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'fk_payment';
+            columns: ['payment'];
+            isOneToOne: true;
+            referencedRelation: 'Payments';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'fk_payment';
+            columns: ['payment'];
+            isOneToOne: true;
+            referencedRelation: 'ViewRemittanceReview';
+            referencedColumns: ['payment_id'];
+          },
+        ];
+      };
       WaitList: {
         Row: {
-          address: string | null
-          created_at: string | null
-          email: string | null
-          id: number
-          isForBeta: boolean | null
-          name: string | null
-          reference: string | null
-          zip: string | null
-        }
+          address: string | null;
+          created_at: string | null;
+          email: string | null;
+          id: number;
+          isForBeta: boolean | null;
+          name: string | null;
+          reference: string | null;
+          zip: string | null;
+        };
         Insert: {
-          address?: string | null
-          created_at?: string | null
-          email?: string | null
-          id?: number
-          isForBeta?: boolean | null
-          name?: string | null
-          reference?: string | null
-          zip?: string | null
-        }
+          address?: string | null;
+          created_at?: string | null;
+          email?: string | null;
+          id?: number;
+          isForBeta?: boolean | null;
+          name?: string | null;
+          reference?: string | null;
+          zip?: string | null;
+        };
         Update: {
-          address?: string | null
-          created_at?: string | null
-          email?: string | null
-          id?: number
-          isForBeta?: boolean | null
-          name?: string | null
-          reference?: string | null
-          zip?: string | null
-        }
-        Relationships: []
-      }
-    }
+          address?: string | null;
+          created_at?: string | null;
+          email?: string | null;
+          id?: number;
+          isForBeta?: boolean | null;
+          name?: string | null;
+          reference?: string | null;
+          zip?: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      ADMIN_ElectricAccountsAudit: {
+      ElectricBillingMetrics: {
         Row: {
-          electricAccountID: number | null
-          isUnderCottageEIN: boolean | null
-          maintainedFor: string | null
-          nextUtilityPaymentDate: string | null
-          paymentDiff: number | null
-          paymentsNotCollected: number | null
-          scheduledPayments: number | null
-          status: string | null
-          stripeCustomerID: string | null
-          totalAmountDue: number | null
-          totalAmountPaid: number | null
-          totalOutstandingBalance: number | null
-          utilityCompanyID: string | null
-          waitingForUserPayments: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ElectricAccount_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_ElectricAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_ElectricAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
-          },
-          {
-            foreignKeyName: "public_ElectricAccount_maintainedFor_fkey"
-            columns: ["maintainedFor"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+          billsPendingUtilityPayment: number | null;
+          daysSinceLastAudit: number | null;
+          daysSinceLastBill: number | null;
+          daysUntilPaymentDue: number | null;
+          delinquentDays: number | null;
+          electricAccountID: number | null;
+          isOutOfSync: boolean | null;
+          isPaymentDue: boolean | null;
+          nonTriggeredBills: number | null;
+          numberOfDelinquentBills: number | null;
+          totalBills: number | null;
+          totalOutstandingBalance: number | null;
+        };
+        Relationships: [];
+      };
+      files_awaiting_ocr: {
+        Row: {
+          name: string | null;
+        };
+        Relationships: [];
+      };
+      filesawaitingocr: {
+        Row: {
+          created_at: string | null;
+          name: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          name?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
+      GasBillingMetrics: {
+        Row: {
+          billsPendingUtilityPayment: number | null;
+          daysSinceLastAudit: number | null;
+          daysSinceLastBill: number | null;
+          daysUntilPaymentDue: number | null;
+          delinquentDays: number | null;
+          gasAccountID: number | null;
+          isOutOfSync: boolean | null;
+          isPaymentDue: boolean | null;
+          nonTriggeredBills: number | null;
+          numberOfDelinquentBills: number | null;
+          totalBills: number | null;
+          totalOutstandingBalance: number | null;
+        };
+        Relationships: [];
+      };
+      ViewAllBills: {
+        Row: {
+          accountId: number | null;
+          accountNumber: string | null;
+          accountStatus:
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          approvedBy: string | null;
+          approvedByName: string | null;
+          approvedDate: string | null;
+          billType: string | null;
+          city: string | null;
+          communitySolarStatus:
+            | Database['public']['Enums']['enum_ElectricAccount_communitySolarStatus']
+            | null;
+          createdAt: string | null;
+          dueDate: string | null;
+          endDate: string | null;
+          feeStructure: number | null;
+          id: number | null;
+          isDepositOnlyBill: boolean | null;
+          isIncomplete: boolean | null;
+          isPaidUtilityCompany: boolean | null;
+          isSendReminder: boolean | null;
+          lastPaymentAttemptDate: string | null;
+          manual: boolean | null;
+          paidByUser: string | null;
+          paidNotificationSent: boolean | null;
+          paymentDate: string | null;
+          paymentStatus: Database['public']['Enums']['paymentstatus'] | null;
+          pdfPath: string | null;
+          propertyId: number | null;
+          residentFirstName: string | null;
+          residentLastName: string | null;
+          startDate: string | null;
+          state: string | null;
+          statementDate: string | null;
+          street: string | null;
+          stripePaymentId: string | null;
+          ticketID: string | null;
+          totalAmountDue: number | null;
+          totalOutstandingBalance: number | null;
+          totalUsage: number | null;
+          transactionFee: number | null;
+          unitNumber: string | null;
+          updatedAt: string | null;
+          userEmail: string | null;
+          userId: string | null;
+          utilityCompanyID: string | null;
+          utilityCompanyLogo: string | null;
+          utilityCompanyName: string | null;
+          utilityCompanyPaidAt: string | null;
+          visible: boolean | null;
+          zip: string | null;
+        };
+        Relationships: [];
+      };
       ViewCompanyCustomerPermission: {
         Row: {
-          companyId: string | null
-          customerId: string | null
-          utilityAccounts: Json | null
-        }
+          companyId: string | null;
+          customerId: string | null;
+          utilityAccounts: Json | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["customerId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["customerId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["customerId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["companyId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["companyId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["companyId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ViewConnectCustomerInfoV2: {
         Row: {
-          address: Json | null
-          canceled: boolean | null
-          companyId: string | null
-          completed: boolean | null
-          createdAt: string | null
-          customerId: string | null
-          customerInfo: Json | null
-          expiresAt: string | null
-          grantedAt: string | null
-          revoked: boolean | null
-          revokedAt: string | null
-          utilityAccounts: Json | null
-        }
+          address: Json | null;
+          canceled: boolean | null;
+          companyId: string | null;
+          completed: boolean | null;
+          createdAt: string | null;
+          customerId: string | null;
+          customerInfo: Json | null;
+          expiresAt: string | null;
+          grantedAt: string | null;
+          revoked: boolean | null;
+          revokedAt: string | null;
+          utilityAccounts: Json | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["customerId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["customerId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "ConnectRequest_requestedFromId_fkey"
-            columns: ["customerId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["companyId"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ConnectRequest_requestedFromId_fkey';
+            columns: ['customerId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["companyId"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "public_ConnectRequest_requestorId_fkey"
-            columns: ["companyId"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'public_ConnectRequest_requestorId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ViewCottageUserWithUtilityAccount: {
         Row: {
-          accountID: number | null
-          accountNumber: string | null
-          accountType: string | null
-          cottageUserID: string | null
-          maintainedFor: string | null
-          propertyID: number | null
-          uniqueIdentifier: string | null
-          utilityCompanyID: string | null
-        }
-        Relationships: []
-      }
+          accountID: number | null;
+          accountNumber: string | null;
+          accountType: string | null;
+          cottageUserID: string | null;
+          maintainedFor: string | null;
+          propertyID: number | null;
+          uniqueIdentifier: string | null;
+          utilityCompanyID: string | null;
+        };
+        Relationships: [];
+      };
       ViewMoveInPartnerReferral: {
         Row: {
-          id: string | null
-          imgURL: string | null
-          isThemed: boolean | null
-          name: string | null
-          referralCode: string | null
-          themeID: string | null
-        }
+          id: string | null;
+          imgURL: string | null;
+          isThemed: boolean | null;
+          name: string | null;
+          referralCode: string | null;
+          themeID: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "MoveInPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "MoveInPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "MoveInPartner_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'MoveInPartner_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      ViewPGAdminServiceAccounts: {
+        Row: {
+          createdAt: string | null;
+          electric_accounts: number | null;
+          email: string | null;
+          gas_accounts: number | null;
+          id: string | null;
+          isReady: boolean | null;
+          isValid: boolean | null;
+          sessionPersistenceTokenStatus: boolean | null;
+          total_linked_accounts: number | null;
+          utilityCompanyID: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'UtilityCredentials_provider_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ViewReferralsWithResidentInfo: {
         Row: {
-          createdAt: string | null
-          firstName: string | null
-          lastName: string | null
-          referralStatus: Database["public"]["Enums"]["referral_status"] | null
-          referred: string | null
-          referredBy: string | null
-        }
+          createdAt: string | null;
+          firstName: string | null;
+          lastName: string | null;
+          referralStatus: Database['public']['Enums']['referral_status'] | null;
+          referred: string | null;
+          referredBy: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Referrals_referred_fkey"
-            columns: ["referred"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referred_fkey"
-            columns: ["referred"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
           {
-            foreignKeyName: "Referrals_referred_fkey"
-            columns: ["referred"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referredBy_fkey"
-            columns: ["referredBy"]
-            isOneToOne: false
-            referencedRelation: "CottageUsers"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referred_fkey';
+            columns: ['referred'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referredBy_fkey"
-            columns: ["referredBy"]
-            isOneToOne: false
-            referencedRelation: "ViewCottageUserWithUtilityAccount"
-            referencedColumns: ["cottageUserID"]
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "Referrals_referredBy_fkey"
-            columns: ["referredBy"]
-            isOneToOne: false
-            referencedRelation: "ViewResidentDetails"
-            referencedColumns: ["id"]
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
           },
-        ]
-      }
+          {
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Referrals_referredBy_fkey';
+            columns: ['referredBy'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      ViewRemittanceReview: {
+        Row: {
+          amountDue: number | null;
+          bill_type: string | null;
+          customer_id: string | null;
+          electric_account_number: string | null;
+          electric_bill_amount: number | null;
+          electric_bill_due_date: string | null;
+          electric_bill_id: number | null;
+          electric_utility_company_paid_at: string | null;
+          gas_account_number: string | null;
+          gas_bill_amount: number | null;
+          gas_bill_due_date: string | null;
+          gas_bill_id: number | null;
+          gas_utility_company_paid_at: string | null;
+          payment_created_at: string | null;
+          payment_id: string | null;
+          paymentStatus: Database['public']['Enums']['paymentstatus'] | null;
+          remittance_created_at: string | null;
+          remittance_id: string | null;
+          remittance_status:
+            | Database['public']['Enums']['remittance_status']
+            | null;
+          stripePaymentID: string | null;
+          stripePaymentIntentId: string | null;
+          utility_name: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['customer_id'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['customer_id'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
+          },
+          {
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['customer_id'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Payments_paidBy_fkey';
+            columns: ['customer_id'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       ViewResidentDetails: {
         Row: {
-          accountNumber: string | null
-          city: string | null
-          confirmationNumber: number | null
-          email: string | null
-          firstName: string | null
-          id: string | null
-          isBillingCustomer: boolean | null
-          isRegistrationComplete: boolean | null
-          lastName: string | null
+          accountNumber: string | null;
+          city: string | null;
+          confirmationNumber: number | null;
+          email: string | null;
+          firstName: string | null;
+          id: string | null;
+          isBillingCustomer: boolean | null;
+          isRegistrationComplete: boolean | null;
+          lastName: string | null;
           paymentMethodStatus:
-            | Database["public"]["Enums"]["paymentmethodstatus"]
-            | null
-          phone: string | null
-          referralCode: string | null
-          startServiceDate: string | null
-          state: string | null
+            | Database['public']['Enums']['paymentmethodstatus']
+            | null;
+          phone: string | null;
+          referralCode: string | null;
+          startServiceDate: string | null;
+          state: string | null;
           status:
-            | Database["public"]["Enums"]["enum_UtilityAccount_status"]
-            | null
-          street: string | null
-          unitNumber: string | null
-          utilityCompanyID: string | null
-        }
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
+          street: string | null;
+          unitNumber: string | null;
+          utilityCompanyID: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "ElectricAccount_utilityCompanyID_fkey"
-            columns: ["utilityCompanyID"]
-            isOneToOne: false
-            referencedRelation: "UtilityCompany"
-            referencedColumns: ["id"]
+            foreignKeyName: 'ElectricAccount_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       ViewServiceAccounts: {
         Row: {
-          lookupID: string | null
-          serviceAccount: string | null
-        }
-        Relationships: []
-      }
+          lookupID: string | null;
+          serviceAccount: string | null;
+        };
+        Relationships: [];
+      };
       ViewUtilityCompaniesForZip: {
         Row: {
-          otherUtilityCompanies: Json[] | null
-          primaryUtilityCompany: Json | null
-          state: string | null
-          zip: string | null
-        }
-        Relationships: []
-      }
-    }
+          otherUtilityCompanies: Json[] | null;
+          primaryUtilityCompany: Json | null;
+          state: string | null;
+          zip: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Functions: {
-      approve_user_external_company: {
+      admin_upsert_utility_credentials: {
         Args: {
-          email_arg: string
-        }
-        Returns: undefined
-      }
+          p_user: string;
+          p_encryptedusername?: string;
+          p_encryptedpassword?: string;
+          p_cipheriv?: string;
+          p_mfaemail?: string;
+          p_provider?: string;
+          p_isready?: boolean;
+          p_mfatextanswer?: string;
+          p_id?: number;
+        };
+        Returns: {
+          user: string;
+          encryptedUsername: string;
+          encryptedPassword: string;
+          cipherIv: string;
+          mfaEmail: string;
+          provider: string;
+          isReady: boolean;
+          mfaTextAnswer: string;
+          created_at: string;
+        }[];
+      };
+      approve_user_external_company: {
+        Args: { email_arg: string };
+        Returns: undefined;
+      };
+      bytea_to_text: {
+        Args: { data: string };
+        Returns: string;
+      };
+      check_electric_bill_for_roommate: {
+        Args: { id_check: string; billid: number };
+        Returns: boolean;
+      };
+      cleanup_temp_audit_info: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
       create_move_in_resident: {
         Args: {
-          email_input: string
-          first_name: string
-          last_name: string
-          address_id: string
-          is_handle_billing: boolean
-          user_id: string
-          property_type: Database["public"]["Enums"]["enum_Unit_residenceType"]
-          start_service_date: string
-          answers: Json
-          move_in_identifier?: string
-          phone_input?: string
-          unit_number?: string
-          prior_address_id?: string
-          default_fee_id?: number
-          electric_company_id?: string
-          gas_company_id?: string
-          building_id?: string
-        }
-        Returns: boolean
-      }
+          email_input: string;
+          first_name: string;
+          last_name: string;
+          address_id: string;
+          is_handle_billing: boolean;
+          user_id: string;
+          property_type: Database['public']['Enums']['enum_Unit_residenceType'];
+          start_service_date: string;
+          answers: Json;
+          move_in_identifier?: string;
+          phone_input?: string;
+          unit_number?: string;
+          prior_address_id?: string;
+          default_fee_id?: number;
+          electric_company_id?: string;
+          gas_company_id?: string;
+          building_id?: string;
+        };
+        Returns: boolean;
+      };
       decrypt_aes_cbc: {
-        Args: {
-          iv: string
-          encrypted: string
-        }
-        Returns: string
-      }
+        Args: { iv: string; encrypted: string };
+        Returns: string;
+      };
       electric_bill_rls_check: {
-        Args: {
-          id_check: string
-          test: number
-        }
-        Returns: boolean
-      }
+        Args: { id_check: string; test: number };
+        Returns: boolean;
+      };
       gas_bill_rls_check: {
-        Args: {
-          id_check: string
-          test: number
-        }
-        Returns: boolean
-      }
+        Args: { id_check: string; test: number };
+        Returns: boolean;
+      };
+      get_current_user_id: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
       get_green_button_sync_jobs_to_retry: {
-        Args: Record<PropertyKey, never>
+        Args: Record<PropertyKey, never>;
         Returns: {
-          greenbuttonoauthid: number
-          operation: string
-          status: string
-          subscriptionid: string
-          refreshtoken: string
-          userid: string
-          provider: string
-        }[]
-      }
+          greenbuttonoauthid: number;
+          operation: string;
+          status: string;
+          subscriptionid: string;
+          refreshtoken: string;
+          userid: string;
+          provider: string;
+        }[];
+      };
       get_last_7_days_usage_interval: {
-        Args: {
-          account_type: string
-          account_id: number
-          end_date: string
-        }
+        Args: { account_type: string; account_id: number; end_date: string };
         Returns: {
-          readingAt: string
-          reading: number
-          duration: number
-        }[]
-      }
+          readingAt: string;
+          reading: number;
+          duration: number;
+        }[];
+      };
       get_meter_readings_interval: {
         Args: {
-          electric_account_id: number
-          start_time: string
-          end_time: string
-        }
+          electric_account_id: number;
+          start_time: string;
+          end_time: string;
+        };
         Returns: {
-          readingAt: string
-          reading: number
-        }[]
-      }
+          readingAt: string;
+          reading: number;
+        }[];
+      };
       get_referrals: {
-        Args: {
-          userid: string
-        }
+        Args: { userid: string };
         Returns: {
-          referred: string
-          referredBy: string
-          referralStatus: Database["public"]["Enums"]["referral_status"]
-          firstName: string
-          lastName: string
-          createdAt: string
-        }[]
-      }
+          referred: string;
+          referredBy: string;
+          referralStatus: Database['public']['Enums']['referral_status'];
+          firstName: string;
+          lastName: string;
+          createdAt: string;
+        }[];
+      };
       get_tables_and_columns: {
-        Args: Record<PropertyKey, never>
+        Args: Record<PropertyKey, never>;
         Returns: {
-          table_name: string
-          column_name: string
-        }[]
-      }
+          table_name: string;
+          column_name: string;
+        }[];
+      };
+      get_temp_audit_info: {
+        Args: { p_relid: unknown; p_record_id: string };
+        Returns: {
+          audit_user_id: string;
+          change_source: string;
+        }[];
+      };
       get_user_data: {
-        Args: Record<PropertyKey, never>
+        Args: { user_id?: string };
         Returns: {
-          id: string
-          email: string
-          createdAt: string
-          stripePaymentMethodID: string
-          isAutoPaymentEnabled: boolean
-          auditTicketId: string
-          firstName: string
-          lastName: string
-          phone: string
-          startServiceDate: string
-          isRegistrationComplete: boolean
-          dateOfBirth: string
-          properties: Json
-        }[]
-      }
+          id: string;
+          email: string;
+          createdAt: string;
+          stripePaymentMethodID: string;
+          isAutoPaymentEnabled: boolean;
+          firstName: string;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          isRegistrationComplete: boolean;
+          dateOfBirth: string;
+          properties: Json;
+        }[];
+      };
       get_user_data_single: {
-        Args: {
-          user_id: string
-        }
+        Args: { user_id: string };
         Returns: {
-          id: string
-          email: string
-          createdAt: string
-          stripePaymentMethodID: string
-          isAutoPaymentEnabled: boolean
-          firstName: string
-          lastName: string
-          phone: string
-          startServiceDate: string
-          isRegistrationComplete: boolean
-          dateOfBirth: string
-          properties: Json
-        }[]
-      }
+          id: string;
+          email: string;
+          createdAt: string;
+          stripePaymentMethodID: string;
+          isAutoPaymentEnabled: boolean;
+          firstName: string;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          isRegistrationComplete: boolean;
+          dateOfBirth: string;
+          properties: Json;
+        }[];
+      };
+      get_user_data_small: {
+        Args: { user_id?: string };
+        Returns: {
+          id: string;
+          email: string;
+          createdAt: string;
+          firstName: string;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          isRegistrationComplete: boolean;
+          moveInPartnerName: string;
+          moveInIdentifier: string;
+          properties: Json;
+        }[];
+      };
+      get_user_data_small_2: {
+        Args: { user_id?: string };
+        Returns: {
+          id: string;
+          email: string;
+          createdAt: string;
+          firstName: string;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          isRegistrationComplete: boolean;
+          moveInPartnerName: string;
+          moveInIdentifier: string;
+          properties: Json;
+        }[];
+      };
+      get_user_data_v2: {
+        Args: { user_id?: string };
+        Returns: {
+          id: string;
+          email: string;
+          createdAt: string;
+          stripePaymentMethodID: string;
+          isAutoPaymentEnabled: boolean;
+          dateOfTextMessageConsent: string;
+          isAbleToSendTextMessages: boolean;
+          pgEmail: string;
+          firstName: string;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          isRegistrationComplete: boolean;
+          dateOfBirth: string;
+          referralId: string;
+          moveInPartnerId: string;
+          moveInPartnerName: string;
+          moveInIdentifier: string;
+          intercomID: string;
+          utilityCompanyQuestions: Json;
+          properties: Json;
+        }[];
+      };
+      get_utility_error_stats: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          utility_company_id: string;
+          error_type: string;
+          error_count: number;
+        }[];
+      };
       get_utility_readings_interval: {
         Args: {
-          account_type: string
-          account_id: number
-          start_time: string
-          end_time: string
-        }
+          account_type: string;
+          account_id: number;
+          start_time: string;
+          end_time: string;
+        };
         Returns: {
-          readingAt: string
-          reading: number
-          duration: number
-        }[]
-      }
+          readingAt: string;
+          reading: number;
+          duration: number;
+        }[];
+      };
       http: {
-        Args: {
-          request: Database["public"]["CompositeTypes"]["http_request"]
-        }
-        Returns: unknown
-      }
-      http_delete:
-        | {
-            Args: {
-              uri: string
-            }
-            Returns: unknown
-          }
-        | {
-            Args: {
-              uri: string
-              content: string
-              content_type: string
-            }
-            Returns: unknown
-          }
-      http_get:
-        | {
-            Args: {
-              uri: string
-            }
-            Returns: unknown
-          }
-        | {
-            Args: {
-              uri: string
-              data: Json
-            }
-            Returns: unknown
-          }
+        Args: { request: Database['public']['CompositeTypes']['http_request'] };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
+      http_delete: {
+        Args:
+          | { uri: string }
+          | { uri: string; content: string; content_type: string };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
+      http_get: {
+        Args: { uri: string } | { uri: string; data: Json };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
       http_head: {
-        Args: {
-          uri: string
-        }
-        Returns: unknown
-      }
+        Args: { uri: string };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
       http_header: {
-        Args: {
-          field: string
-          value: string
-        }
-        Returns: Database["public"]["CompositeTypes"]["http_header"]
-      }
+        Args: { field: string; value: string };
+        Returns: Database['public']['CompositeTypes']['http_header'];
+      };
       http_list_curlopt: {
-        Args: Record<PropertyKey, never>
+        Args: Record<PropertyKey, never>;
         Returns: {
-          curlopt: string
-          value: string
-        }[]
-      }
+          curlopt: string;
+          value: string;
+        }[];
+      };
       http_patch: {
-        Args: {
-          uri: string
-          content: string
-          content_type: string
-        }
-        Returns: unknown
-      }
-      http_post:
-        | {
-            Args: {
-              uri: string
-              content: string
-              content_type: string
-            }
-            Returns: unknown
-          }
-        | {
-            Args: {
-              uri: string
-              data: Json
-            }
-            Returns: unknown
-          }
+        Args: { uri: string; content: string; content_type: string };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
+      http_post: {
+        Args:
+          | { uri: string; content: string; content_type: string }
+          | { uri: string; data: Json };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
       http_put: {
-        Args: {
-          uri: string
-          content: string
-          content_type: string
-        }
-        Returns: unknown
-      }
+        Args: { uri: string; content: string; content_type: string };
+        Returns: Database['public']['CompositeTypes']['http_response'];
+      };
       http_reset_curlopt: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       http_set_curlopt: {
-        Args: {
-          curlopt: string
-          value: string
-        }
-        Returns: boolean
-      }
+        Args: { curlopt: string; value: string };
+        Returns: boolean;
+      };
+      list_utility_credential_users: {
+        Args: Record<PropertyKey, never>;
+        Returns: string[];
+      };
       populate_user_data: {
-        Args: {
-          input_email: string
-        }
-        Returns: undefined
-      }
+        Args: { input_email: string };
+        Returns: undefined;
+      };
+      refresh_billing_metrics: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
       register_user: {
         Args: {
-          email_input: string
-          first_name: string
-          last_name: string
-          address_id: string
-          is_handle_billing: boolean
-          user_id: string
-          property_type: Database["public"]["Enums"]["enum_Unit_residenceType"]
-          with_resident_identity: boolean
-          start_service_date: string
-          answers: Json
-          did_setup_payment: boolean
-          move_in_identifier?: string
-          phone_input?: string
-          date_of_birth?: string
-          identity_type?: string
-          identity_number?: string
-          identity_other?: string
-          unit_number?: string
-          prior_address_id?: string
-          partner_id?: string
-          default_fee_id?: number
-          electric_company_id?: string
-          gas_company_id?: string
-          building_id?: string
-        }
+          email_input: string;
+          first_name: string;
+          last_name: string;
+          address_id: string;
+          is_handle_billing: boolean;
+          user_id: string;
+          property_type: Database['public']['Enums']['enum_Unit_residenceType'];
+          with_resident_identity: boolean;
+          start_service_date: string;
+          answers: Json;
+          did_setup_payment: boolean;
+          move_in_identifier?: string;
+          phone_input?: string;
+          date_of_birth?: string;
+          identity_type?: string;
+          identity_number?: string;
+          identity_other?: string;
+          unit_number?: string;
+          prior_address_id?: string;
+          partner_id?: string;
+          default_fee_id?: number;
+          electric_company_id?: string;
+          gas_company_id?: string;
+          building_id?: string;
+        };
         Returns: {
-          bcc_email: string
-          address_data: Json
-        }[]
-      }
-      retry_green_button_jobs:
-        | {
-            Args: {
-              url: string
-            }
-            Returns: {
-              http_post: string
-            }[]
-          }
-        | {
-            Args: {
-              url: string
-              secret: string
-            }
-            Returns: {
-              http_post: string
-            }[]
-          }
+          bcc_email: string;
+          address_data: Json;
+        }[];
+      };
+      retry_green_button_jobs: {
+        Args: { url: string } | { url: string; secret: string };
+        Returns: {
+          http_post: string;
+        }[];
+      };
       retry_utility_automation_jobs: {
-        Args: {
-          url: string
-          secret: string
-        }
+        Args: { url: string; secret: string };
         Returns: {
-          http_post: string
-        }[]
-      }
-      urlencode:
-        | {
-            Args: {
-              data: Json
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              string: string
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              string: string
-            }
-            Returns: string
-          }
-    }
+          http_post: string;
+        }[];
+      };
+      text_to_bytea: {
+        Args: { data: string };
+        Returns: string;
+      };
+      urlencode: {
+        Args: { data: Json } | { string: string } | { string: string };
+        Returns: string;
+      };
+    };
     Enums: {
       enum_CottageUsers_cottageConnectUserType:
-        | "CUSTOMER"
-        | "COMPANY"
-        | "REFERRAL_PARTNER"
-        | "BUILDING"
-        | "MOVE_IN"
-        | "SERVICE_ACCOUNT"
-      enum_CottageUsers_stripePaymentMethodType: "card" | "us_bank_account"
-      enum_ElectricAccount_communitySolarStatus: "NONE" | "PENDING" | "ENROLLED"
+        | 'CUSTOMER'
+        | 'COMPANY'
+        | 'REFERRAL_PARTNER'
+        | 'BUILDING'
+        | 'MOVE_IN'
+        | 'SERVICE_ACCOUNT';
+      enum_CottageUsers_stripePaymentMethodType: 'card' | 'us_bank_account';
+      enum_ElectricAccount_communitySolarStatus:
+        | 'NONE'
+        | 'PENDING'
+        | 'ENROLLED';
       enum_ElectricAccount_supplyStatus:
-        | "DEFAULT"
-        | "CHANGE_PENDING"
-        | "NON_DEFAULT"
-      enum_ElectricSupplyPlan_rateType: "FIXED" | "VARIABLE" | "TIME_OF_USE"
+        | 'DEFAULT'
+        | 'CHANGE_PENDING'
+        | 'NON_DEFAULT';
+      enum_ElectricSupplyPlan_rateType: 'FIXED' | 'VARIABLE' | 'TIME_OF_USE';
+      enum_ElectricSupplyPlan_supplyStatus:
+        | 'PENDING'
+        | 'SUBMITTED'
+        | 'ENROLLED'
+        | 'NOT_ENROLLED';
       enum_LinkAccountJob_status:
-        | "PENDING"
-        | "SUCCESS"
-        | "ERROR"
-        | "MFA_CODE_PENDING"
-        | "MFA_CODE_VALID"
-      enum_PropertyGroupTenant_inviteStatus:
-        | "accepted"
-        | "declined"
-        | "rejected"
-        | "pending"
-      enum_RegistrationJob_status: "FAILED" | "COMPLETE" | "RUNNING"
-      enum_unit_residencetype: "APARTMENT" | "HOME"
-      enum_Unit_residenceType: "APARTMENT" | "HOME"
+        | 'PENDING'
+        | 'SUCCESS'
+        | 'ERROR'
+        | 'MFA_CODE_PENDING'
+        | 'MFA_CODE_VALID';
+      enum_PropertyGroupResident_inviteStatus:
+        | 'accepted'
+        | 'rejected'
+        | 'pending'
+        | 'removed';
+      enum_RegistrationJob_status: 'FAILED' | 'COMPLETE' | 'RUNNING';
+      enum_unit_residencetype: 'APARTMENT' | 'HOME';
+      enum_Unit_residenceType: 'APARTMENT' | 'HOME';
       enum_UtilityAccount_status:
-        | "NEW"
-        | "PENDING_CREATE"
-        | "ACTIVE"
-        | "INACTIVE"
-        | "PENDING_SYNC"
-        | "PENDING_ONLINE_ACCOUNT_CREATION"
-        | "PENDING_START_SERVICE"
-        | "PENDING_ISSUE"
-        | "PENDING_ACCOUNT_NUMBER"
-        | "PENDING_FIRST_BILL"
-        | "RESYNC_REQUIRED"
-        | "PENDING_LAST_BILL"
-      ExternalCompanyStatusEnum: "PENDING" | "APPROVED"
+        | 'NEW'
+        | 'PENDING_CREATE'
+        | 'ACTIVE'
+        | 'INACTIVE'
+        | 'PENDING_SYNC'
+        | 'PENDING_ONLINE_ACCOUNT_CREATION'
+        | 'PENDING_START_SERVICE'
+        | 'PENDING_ISSUE'
+        | 'PENDING_ACCOUNT_NUMBER'
+        | 'PENDING_FIRST_BILL'
+        | 'RESYNC_REQUIRED'
+        | 'PENDING_LAST_BILL'
+        | 'IN_PROGRESS'
+        | 'CREATE_ONLINE_ACCOUNT'
+        | 'ON_HOLD'
+        | 'AWAITING_EMAIL_CONFIRMATION'
+        | 'LINK_ONLINE_ACCOUNT'
+        | 'ADDRESS_VERIFICATION_NEEDED'
+        | 'METER_VERIFICATION_NEEDED'
+        | 'WAITING_FOR_DOCS'
+        | 'CALL_IN_REQUIRED'
+        | 'ROADBLOCKED'
+        | 'INVALID_IDENTITY_INFORMATION'
+        | 'UTILITY_VERIFICATION_NEEDED'
+        | 'UTILITY_VERIFICATION_SUBMITTED'
+        | 'AUTOMATED_START_SERVICE_ERROR'
+        | 'NEEDS_OFF_BOARDING';
+      ExternalCompanyStatusEnum: 'PENDING' | 'APPROVED';
       identityVerificationType:
-        | "ssn"
-        | "driversLicense"
-        | "passport"
-        | "publicAssistanceID"
-        | "alienID"
-      paymentmethodstatus: "VALID" | "INVALID"
+        | 'ssn'
+        | 'driversLicense'
+        | 'passport'
+        | 'publicAssistanceID'
+        | 'alienID';
+      paymentmethodstatus: 'VALID' | 'INVALID';
       paymentstatus:
-        | "processing"
-        | "succeeded"
-        | "failed"
-        | "scheduled_for_payment"
-        | "waiting_for_user"
-        | "canceled"
-        | "paid_by_user"
-        | "approved"
-      providerStatus: "AVAILABLE" | "DEGRADED" | "DOWN"
-      referral_status: "pending" | "complete" | "invalid"
-      serviceGroupCommunitySolarAvailability: "NONE" | "WAITLIST" | "ACTIVE"
-      serviceGroupStatus: "ACTIVE" | "BETA" | "NOT_ACTIVE"
+        | 'processing'
+        | 'succeeded'
+        | 'failed'
+        | 'scheduled_for_payment'
+        | 'waiting_for_user'
+        | 'canceled'
+        | 'paid_by_user'
+        | 'approved'
+        | 'requires_capture'
+        | 'awaiting_refund'
+        | 'refund_processing'
+        | 'refunded';
+      providerStatus: 'AVAILABLE' | 'DEGRADED' | 'DOWN';
+      referral_status: 'pending' | 'complete' | 'invalid';
+      registrationDocumentsStatus: 'REQUESTED' | 'RECEIVED';
+      remittance_status:
+        | 'ready_for_remittance'
+        | 'cancelled'
+        | 'pending_confirmation'
+        | 'requires_review'
+        | 'manually_approved'
+        | 'failed'
+        | 'done'
+        | 'waiting_for_payment';
+      serviceGroupCommunitySolarAvailability: 'NONE' | 'WAITLIST' | 'ACTIVE';
+      serviceGroupStatus: 'ACTIVE' | 'BETA' | 'NOT_ACTIVE';
       stripepaymentstatus:
-        | "requires_payment_method"
-        | "requires_confirmation"
-        | "requires_action"
-        | "processing"
-        | "requires_capture"
-        | "canceled"
-        | "succeeded"
-      UtilityCompany_utilitiesHandled: "gas" | "electricity"
-      UtilityCompanyQuestion_displayLocation: "moveIn" | "ev"
+        | 'requires_payment_method'
+        | 'requires_confirmation'
+        | 'requires_action'
+        | 'processing'
+        | 'requires_capture'
+        | 'canceled'
+        | 'succeeded';
+      UtilityCompany_utilitiesHandled: 'gas' | 'electricity';
+      UtilityCompanyQuestion_displayLocation: 'moveIn' | 'ev';
       UtilityCompanyQuestion_inputType:
-        | "text"
-        | "radio"
-        | "textarea"
-        | "checkbox"
-        | "select"
-        | "button"
-        | "submit"
-        | "reset"
-        | "file"
-        | "hidden"
-        | "image"
-        | "date"
-        | "email"
-        | "number"
-        | "url"
-      utilityCompanyStatus: "BETA" | "ACTIVE" | "NOT_ACTIVE"
+        | 'text'
+        | 'radio'
+        | 'textarea'
+        | 'checkbox'
+        | 'select'
+        | 'button'
+        | 'submit'
+        | 'reset'
+        | 'file'
+        | 'hidden'
+        | 'image'
+        | 'date'
+        | 'email'
+        | 'number'
+        | 'url';
+      utilityCompanyStatus: 'BETA' | 'ACTIVE' | 'NOT_ACTIVE';
       utilityIntegrationType:
-        | "greenButton"
-        | "automation"
-        | "other"
-        | "utilityCode"
-    }
+        | 'greenButton'
+        | 'automation'
+        | 'other'
+        | 'utilityCode';
+      websocket_enum: 'default' | 'browserless' | 'steel';
+    };
     CompositeTypes: {
       http_header: {
-        field: string | null
-        value: string | null
-      }
+        field: string | null;
+        value: string | null;
+      };
       http_request: {
-        method: unknown | null
-        uri: string | null
-        headers: Database["public"]["CompositeTypes"]["http_header"][] | null
-        content_type: string | null
-        content: string | null
-      }
+        method: unknown | null;
+        uri: string | null;
+        headers: Database['public']['CompositeTypes']['http_header'][] | null;
+        content_type: string | null;
+        content: string | null;
+      };
       http_response: {
-        status: number | null
-        content_type: string | null
-        headers: Database["public"]["CompositeTypes"]["http_header"][] | null
-        content: string | null
-      }
-    }
-  }
-}
+        status: number | null;
+        content_type: string | null;
+        headers: Database['public']['CompositeTypes']['http_header'][] | null;
+        content: string | null;
+      };
+    };
+  };
+};
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, 'public'>];
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        Database[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      Database[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+      Row: infer R;
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema['Tables']
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Insert: infer I;
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema['Tables']
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Update: infer U;
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema['Enums']
     | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
+    | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+    : never;
+
+export const Constants = {
+  public: {
+    Enums: {
+      enum_CottageUsers_cottageConnectUserType: [
+        'CUSTOMER',
+        'COMPANY',
+        'REFERRAL_PARTNER',
+        'BUILDING',
+        'MOVE_IN',
+        'SERVICE_ACCOUNT',
+      ],
+      enum_CottageUsers_stripePaymentMethodType: ['card', 'us_bank_account'],
+      enum_ElectricAccount_communitySolarStatus: [
+        'NONE',
+        'PENDING',
+        'ENROLLED',
+      ],
+      enum_ElectricAccount_supplyStatus: [
+        'DEFAULT',
+        'CHANGE_PENDING',
+        'NON_DEFAULT',
+      ],
+      enum_ElectricSupplyPlan_rateType: ['FIXED', 'VARIABLE', 'TIME_OF_USE'],
+      enum_ElectricSupplyPlan_supplyStatus: [
+        'PENDING',
+        'SUBMITTED',
+        'ENROLLED',
+        'NOT_ENROLLED',
+      ],
+      enum_LinkAccountJob_status: [
+        'PENDING',
+        'SUCCESS',
+        'ERROR',
+        'MFA_CODE_PENDING',
+        'MFA_CODE_VALID',
+      ],
+      enum_PropertyGroupResident_inviteStatus: [
+        'accepted',
+        'rejected',
+        'pending',
+        'removed',
+      ],
+      enum_RegistrationJob_status: ['FAILED', 'COMPLETE', 'RUNNING'],
+      enum_unit_residencetype: ['APARTMENT', 'HOME'],
+      enum_Unit_residenceType: ['APARTMENT', 'HOME'],
+      enum_UtilityAccount_status: [
+        'NEW',
+        'PENDING_CREATE',
+        'ACTIVE',
+        'INACTIVE',
+        'PENDING_SYNC',
+        'PENDING_ONLINE_ACCOUNT_CREATION',
+        'PENDING_START_SERVICE',
+        'PENDING_ISSUE',
+        'PENDING_ACCOUNT_NUMBER',
+        'PENDING_FIRST_BILL',
+        'RESYNC_REQUIRED',
+        'PENDING_LAST_BILL',
+        'IN_PROGRESS',
+        'CREATE_ONLINE_ACCOUNT',
+        'ON_HOLD',
+        'AWAITING_EMAIL_CONFIRMATION',
+        'LINK_ONLINE_ACCOUNT',
+        'ADDRESS_VERIFICATION_NEEDED',
+        'METER_VERIFICATION_NEEDED',
+        'WAITING_FOR_DOCS',
+        'CALL_IN_REQUIRED',
+        'ROADBLOCKED',
+        'INVALID_IDENTITY_INFORMATION',
+        'UTILITY_VERIFICATION_NEEDED',
+        'UTILITY_VERIFICATION_SUBMITTED',
+        'AUTOMATED_START_SERVICE_ERROR',
+        'NEEDS_OFF_BOARDING',
+      ],
+      ExternalCompanyStatusEnum: ['PENDING', 'APPROVED'],
+      identityVerificationType: [
+        'ssn',
+        'driversLicense',
+        'passport',
+        'publicAssistanceID',
+        'alienID',
+      ],
+      paymentmethodstatus: ['VALID', 'INVALID'],
+      paymentstatus: [
+        'processing',
+        'succeeded',
+        'failed',
+        'scheduled_for_payment',
+        'waiting_for_user',
+        'canceled',
+        'paid_by_user',
+        'approved',
+        'requires_capture',
+        'awaiting_refund',
+        'refund_processing',
+        'refunded',
+      ],
+      providerStatus: ['AVAILABLE', 'DEGRADED', 'DOWN'],
+      referral_status: ['pending', 'complete', 'invalid'],
+      registrationDocumentsStatus: ['REQUESTED', 'RECEIVED'],
+      remittance_status: [
+        'ready_for_remittance',
+        'cancelled',
+        'pending_confirmation',
+        'requires_review',
+        'manually_approved',
+        'failed',
+        'done',
+        'waiting_for_payment',
+      ],
+      serviceGroupCommunitySolarAvailability: ['NONE', 'WAITLIST', 'ACTIVE'],
+      serviceGroupStatus: ['ACTIVE', 'BETA', 'NOT_ACTIVE'],
+      stripepaymentstatus: [
+        'requires_payment_method',
+        'requires_confirmation',
+        'requires_action',
+        'processing',
+        'requires_capture',
+        'canceled',
+        'succeeded',
+      ],
+      UtilityCompany_utilitiesHandled: ['gas', 'electricity'],
+      UtilityCompanyQuestion_displayLocation: ['moveIn', 'ev'],
+      UtilityCompanyQuestion_inputType: [
+        'text',
+        'radio',
+        'textarea',
+        'checkbox',
+        'select',
+        'button',
+        'submit',
+        'reset',
+        'file',
+        'hidden',
+        'image',
+        'date',
+        'email',
+        'number',
+        'url',
+      ],
+      utilityCompanyStatus: ['BETA', 'ACTIVE', 'NOT_ACTIVE'],
+      utilityIntegrationType: [
+        'greenButton',
+        'automation',
+        'other',
+        'utilityCode',
+      ],
+      websocket_enum: ['default', 'browserless', 'steel'],
+    },
+  },
+} as const;

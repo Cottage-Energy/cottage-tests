@@ -12,8 +12,7 @@ export class FastmailClient {
     this.authUrl = `https://${this.hostname}/.well-known/jmap`;
     this.headers = {
       "Content-Type": "application/json",
-      //Authorization: `Bearer ${Config.FASTMAIL_API_KEY}`,
-      Authorization: `Bearer fmu1-3f64404e-6ceb8566aa55e6e3ed2dc0625463e0f5-0-92c1bc478137cd5f771f184efc3c5753`,
+      Authorization: `Bearer ${process.env.FASTMAIL_API_KEY}`,
     };
   }
 

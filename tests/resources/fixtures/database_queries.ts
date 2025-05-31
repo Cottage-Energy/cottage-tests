@@ -3,7 +3,7 @@ import {supabase} from '../../resources/utils/supabase';
 
 export class SupabaseQueries{
 
-    async Get_Cottage_User_Id(Email: string, TextConsent?: boolean) {
+    async Check_Cottage_User_Id(Email: string, TextConsent?: boolean) {
         const email = Email.toLowerCase();
         console.log(email);
         const { data: cottageUser } = await supabase
@@ -29,6 +29,19 @@ export class SupabaseQueries{
             await expect(isAbleToSendText).toBe(false);
         }
 
+        return cottageUserId;
+    }
+
+    async Get_Cottage_User_Id(Email: string) {
+        const email = Email.toLowerCase();
+        console.log(email);
+        const { data: cottageUser } = await supabase
+            .from('CottageUsers')
+            .select('*')
+            .eq('email', email)
+            .single()
+        const cottageUserId = cottageUser?.id ?? '';
+        console.log(cottageUserId);
         return cottageUserId;
     }
 
@@ -198,6 +211,30 @@ export class SupabaseQueries{
         const isBillingRequired = Utility?.isBillingRequired ?? '';
         console.log("isBillingRequired:",isBillingRequired);
         return isBillingRequired;
+    }
+
+
+    async Get_Electric_Plane_Ticket_Id(cottageUserId: string) {
+        const { data: ElectricTicket } = await supabase
+            .from('ElectricAccount')
+            .select('planeTicketID')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+        const ElectricPlaneTicketId = ElectricTicket?.planeTicketID ?? '';
+        console.log("Plane Ticket Electric: ",ElectricPlaneTicketId.toString());
+        return ElectricPlaneTicketId.toString();
+    }
+
+
+    async Get_Gas_Plane_Ticket_Id(cottageUserId: string) {
+        const { data: GasTicket } = await supabase
+            .from('GasAccount')
+            .select('planeTicketID')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+        const GasPlaneTicketId = GasTicket?.planeTicketID ?? '';
+        console.log("Plane Ticket Gas: ",GasPlaneTicketId.toString());
+        return GasPlaneTicketId.toString();
     }
 
 
