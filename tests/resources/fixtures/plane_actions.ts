@@ -3,6 +3,7 @@ import { planeClient } from '../../resources/utils/plane';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 
 const supabaseQueries = new SupabaseQueries();
+const planeProjectId = process.env.PLANE_MOVE_IN_PROJECT_ID;
 
 export class PlaneActions{
 
@@ -28,7 +29,7 @@ export class PlaneActions{
 
         if(ElectricTicket == true){
             await expect(electricPlaneTicketID).not.toBe("");
-            const electricPlaneTicket = await planeClient.getIssueWithState(process.env.PLANE_MOVE_IN_PROJECT_ID!, electricPlaneTicketID);
+            const electricPlaneTicket = await planeClient.getIssueWithState(planeProjectId!, electricPlaneTicketID);
             expect(electricPlaneTicket).toBeTruthy();
         }
         else{
@@ -37,7 +38,7 @@ export class PlaneActions{
 
         if(GasTicket == true){
             await expect(gasPlaneTicketID).not.toBe("");
-            const gasPlaneTicket = await planeClient.getIssueWithState(process.env.PLANE_MOVE_IN_PROJECT_ID!, gasPlaneTicketID);
+            const gasPlaneTicket = await planeClient.getIssueWithState(planeProjectId!, gasPlaneTicketID);
             expect(gasPlaneTicket).toBeTruthy();
         }
         else{
