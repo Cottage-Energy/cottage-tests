@@ -19,6 +19,7 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression1'
+    secrets: inherit
 
   PG_Test_Run_Scheduled_Regression2_Dev:
     if: github.event.schedule == '0 5 * * 1'
@@ -27,6 +28,7 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression2'
+    secrets: inherit
 
   PG_Test_Run_Scheduled_Regression3_Dev:
     if: github.event.schedule == '0 5 * * 2'
@@ -35,6 +37,7 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression3'
+    secrets: inherit
 
   PG_Test_Run_Scheduled_Regression4_Dev:
     if: github.event.schedule == '0 5 * * 3'
@@ -43,6 +46,7 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression4'
+    secrets: inherit
 
   PG_Test_Run_Scheduled_Regression5_Dev:
     if: github.event.schedule == '0 5 * * 4'
@@ -51,6 +55,7 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression5'
+    secrets: inherit
 
   PG_Test_Run_Scheduled_Regression6_Dev:
     if: github.event.schedule == '0 5 * * 5'
@@ -59,6 +64,7 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression6'
+    secrets: inherit
 
   PG_Test_Run_Scheduled_Regression7_Dev:
     if: github.event.schedule == '0 5 * * 6'
@@ -67,3 +73,4 @@ jobs:
       logLevel: 'DEBUG'
       environment: 'dev'
       scope: 'Regression7'
+    secrets: inherit
