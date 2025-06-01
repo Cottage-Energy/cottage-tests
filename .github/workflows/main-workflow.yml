@@ -58,7 +58,7 @@ on:
 jobs:
   PG_Test_Run:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
+    environment: ${{ inputs.environment || github.event.inputs.environment || github.event.client_payload.environment }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
