@@ -14,21 +14,27 @@ on:
 jobs:
   PG_Test_Run_Scheduled_Regression1_Dev:
     if: github.event.schedule == '0 5 * * 0'
-    uses: ./.github/workflows/main-workflow.yml
-    with:
-      logLevel: 'DEBUG'
-      environment: 'dev'
-      scope: 'Regression1'
-    secrets: inherit
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run main-workflow Regression1
+        uses: ./.github/workflows/main-workflow.yml
+        with:
+          logLevel: 'DEBUG'
+          environment: 'dev'
+          scope: 'Regression1'
 
   PG_Test_Run_Scheduled_Regression2_Dev:
     if: github.event.schedule == '0 5 * * 1'
-    uses: ./.github/workflows/main-workflow.yml
-    with:
-      logLevel: 'DEBUG'
-      environment: 'dev'
-      scope: 'Regression2'
-    secrets: inherit
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run main-workflow Regression2
+        uses: ./.github/workflows/main-workflow.yml
+        with:
+          logLevel: 'DEBUG'
+          environment: 'dev'
+          scope: 'Regression2'
 
   PG_Test_Run_Scheduled_Regression3_Dev:
     if: github.event.schedule == '0 5 * * 2'
