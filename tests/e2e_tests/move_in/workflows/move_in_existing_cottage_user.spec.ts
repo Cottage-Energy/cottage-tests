@@ -433,6 +433,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     //check if the user will be able to login - suppose to be not
  
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
+    await page.waitForLoadState("networkidle");
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
@@ -510,6 +511,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     //check if the user will be able to login - suppose to be not a directed move-in again
     await page.goto('/move-in?gasCompany=EVERSOURCE',{ waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState("networkidle");
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
