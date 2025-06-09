@@ -601,22 +601,46 @@ export class MoveInPage{
 
 
     async BGE_Questions(){
-        const options = [
+        const Q1options = [
+            'Less than 6 months',
+            '6 months',
+            '1 year or longer',
+            'Unsure',
+        ];
+        const Q1randomIndex = Math.floor(Math.random() * Q1options.length);
+        const Q1randomOption = Q1options[Q1randomIndex];
+        console.log(Q1randomOption);
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.Move_In_Texas_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
+        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.hover();
+        await this.page.waitForTimeout(500);
+        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
+        await this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
+
+        const Q2options = [
             'Employed more than 3 years',
             'Employed less than 3 years',
             'Retired',
             'Receives assistance',
             'Other'
-          ];
-        const randomIndex = Math.floor(Math.random() * options.length);
-        const randomOption = options[randomIndex];
-        console.log(randomOption);
+        ];
+        const Q2randomIndex = Math.floor(Math.random() * Q2options.length);
+        const Q2randomOption = Q2options[Q2randomIndex];
+        console.log(Q2randomOption);
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_BGE_Employment_Status_Title).toBeVisible({timeout:30000});
         await this.Move_In_BGE_Employment_Status_Dropdown.hover();
+        await this.page.waitForTimeout(500);
         await this.Move_In_BGE_Employment_Status_Dropdown.click();
-        await this.Move_In_BGE_Employment_Selection(randomOption).click();
-        return randomOption;
+        await this.page.waitForTimeout(500);
+        await expect(this.Move_In_BGE_Employment_Selection(Q2randomOption)).toBeVisible({timeout:30000});
+        await this.Move_In_BGE_Employment_Selection(Q2randomOption).click({timeout:5000});
+        return {
+            Q1randomOption,
+            Q2randomOption
+        }
     }
 
 
