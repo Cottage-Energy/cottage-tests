@@ -9,8 +9,6 @@ const supabaseQueries = new SupabaseQueries();
 
 //Modify flow such that if both electric and gas are false it will not continue the flow
 //Modify also, that if Electric is false and Gas is not visible it not continue the flow
-//COMED block can be used for DTE, PSEG
-//EVERSOURCE block can be used for NGMA, NYS-EG
 
 //Create a unified code block for all the move in flows
 //Move pay through PG here with default value of true
@@ -22,8 +20,8 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false ;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -62,6 +60,18 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
 
+
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+   
+
     try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
@@ -70,8 +80,8 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
+
 
     try{
         const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
@@ -81,7 +91,6 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -131,8 +140,8 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -172,13 +181,22 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
     }
     catch(error){
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -188,7 +206,6 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     }
     catch(error){
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -239,8 +256,8 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -280,13 +297,22 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
     }
     catch(error){
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -296,7 +322,6 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
     }
     catch(error){
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -337,8 +362,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -378,13 +403,22 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
     }
     catch(error){
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -394,7 +428,6 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
     }
     catch(error){
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -443,8 +476,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -484,13 +517,22 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+        
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
     }
     catch(error){
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -500,7 +542,6 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
     }
     catch(error){
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -550,8 +591,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -591,13 +632,22 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
     }
     catch(error){
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -607,7 +657,6 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
     }
     catch(error){
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -656,8 +705,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -697,13 +746,22 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
     }
     catch(error){
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -713,7 +771,6 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
     }
     catch(error){
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -764,8 +821,8 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.TX_DEREGaddress,PGuser.UnitNumber);
@@ -784,6 +841,16 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
@@ -791,7 +858,6 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -802,7 +868,6 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -852,8 +917,8 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Unit(PGuser.UnitNumber);
@@ -872,6 +937,16 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
@@ -879,7 +954,6 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -890,7 +964,6 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -940,8 +1013,8 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -981,6 +1054,16 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
@@ -988,7 +1071,6 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -999,7 +1081,6 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -1048,8 +1129,8 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
     const PGUserEmail = PGuser.Email;
     const cardNumber = CCcardNumber || PaymentData.ValidCardNUmber;
-    let electricQuestionsPresent;
-    let gasQuestionsPresent;
+    let electricQuestionsPresent = false;
+    let gasQuestionsPresent = false;
     let addressType = MoveIndata.COMEDaddress;
 
     if (ElectricCompany === null) {
@@ -1089,6 +1170,16 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
     await moveInpage.Next_Move_In_Button();
 
     try{
+        await moveInpage.Program_Enrolled_Questions();
+        electricQuestionsPresent = true;
+        gasQuestionsPresent = true;
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
+
+    try{
         const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
         await moveInpage[`${electricCompany}_Questions`]();
         electricQuestionsPresent = true;
@@ -1096,7 +1187,6 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Electric company");
-        electricQuestionsPresent = false;
     }
 
     try{
@@ -1107,7 +1197,6 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
     catch(error){
         console.log(error);
         console.log("No questions to answer for this Gas company")
-        gasQuestionsPresent = false;
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -1175,7 +1264,6 @@ export async function Move_In_Existing_Utility_Account(moveInpage: any, NewElect
 
 
 export const MoveInTestUtilities = {
-    //COMED Block can be used for DTE
     New_User_Move_In_Auto_Payment_Added,
     New_User_Move_In_Manual_Payment_Added,
     New_User_Move_In_Skip_Payment,

@@ -81,12 +81,15 @@ export class MoveInPage{
     readonly Move_In_BGE_Employment_Status_Dropdown: Locator;
     readonly Move_In_BGE_Employment_Selection: (selection: string) => Locator;
 
-    readonly Move_In_Texas_Lenght_of_Staying_Question: Locator;
-    readonly Move_In_Texas_Lenght_of_Staying_Dropdown: Locator;
-    readonly Move_In_Texas_Lenght_of_Staying_Selection: (selection: string) => Locator;
+    readonly Move_In_Lenght_of_Staying_Question: Locator;
+    readonly Move_In_Lenght_of_Staying_Dropdown: Locator;
+    readonly Move_In_Lenght_of_Staying_Selection: (selection: string) => Locator;
     readonly Move_In_Texas_Thermostat_Question: Locator;
     readonly Move_In_Texas_Thermostat_Yes_Button: Locator;
     readonly Move_In_Texas_Thermostat_No_Button: Locator;
+
+    readonly Move_In_Program_Enrolled_Question: Locator;
+    readonly Move_In_Program_Enrolled_Options: (option: string) => Locator;
     
     readonly Move_In_Identity_Info_Title: Locator;
     readonly Move_In_Birthdate_Field: Locator;
@@ -216,12 +219,15 @@ export class MoveInPage{
         this.Move_In_BGE_Employment_Status_Dropdown = page.locator('//p[contains(text(),"Employment Status")]//parent::div//button');
         this.Move_In_BGE_Employment_Selection = (selection: string) => page.locator(`//span[contains(text(),"${selection}")]`);
 
-        this.Move_In_Texas_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
-        this.Move_In_Texas_Lenght_of_Staying_Dropdown = page.locator('//p[contains(text(),"How long are you planning on staying at your current address?")]//parent::div//button');
-        this.Move_In_Texas_Lenght_of_Staying_Selection = (selection: string) => page.getByText(selection, { exact: true });
+        this.Move_In_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
+        this.Move_In_Lenght_of_Staying_Dropdown = page.locator('//p[contains(text(),"How long are you planning on staying at your current address?")]//parent::div//button');
+        this.Move_In_Lenght_of_Staying_Selection = (selection: string) => page.getByText(selection, { exact: true });
         this.Move_In_Texas_Thermostat_Question = page.getByText('Do you own a smart thermostat?');
         this.Move_In_Texas_Thermostat_Yes_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "Yes")]');
         this.Move_In_Texas_Thermostat_No_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "No")]');
+
+        this.Move_In_Program_Enrolled_Question = page.locator('//p[text()="Are you enrolled in any of the programs below? If so, you might qualify for additional savings on your bill."]');
+        this.Move_In_Program_Enrolled_Options = (option: string) => page.locator(`//p[text()="Are you enrolled in any of the programs below? If so, you might qualify for additional savings on your bill."]//parent::div//..//label[contains(@for, "${option}")]`);
 
         this.Move_In_Birthdate_Field = page.locator('input[name="dateOfBirth"]');
         this.Move_In_Birthdate_Required_Message = page.getByText('Date of Birth Required');
@@ -611,13 +617,13 @@ export class MoveInPage{
         const Q1randomOption = Q1options[Q1randomIndex];
         console.log(Q1randomOption);
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Texas_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.hover();
+        await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
+        await this.Move_In_Lenght_of_Staying_Dropdown.hover();
         await this.page.waitForTimeout(500);
-        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.click();
+        await this.Move_In_Lenght_of_Staying_Dropdown.click();
         await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
-        await this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
+        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
+        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
 
         const Q2options = [
             'Employed more than 3 years',
@@ -655,12 +661,12 @@ export class MoveInPage{
         const Q1randomOption = Q1options[Q1randomIndex];
         console.log(Q1randomOption);
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Texas_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.hover();
-        await this.Move_In_Texas_Lenght_of_Staying_Dropdown.click();
+        await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
+        await this.Move_In_Lenght_of_Staying_Dropdown.hover();
+        await this.Move_In_Lenght_of_Staying_Dropdown.click();
         await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
-        await this.Move_In_Texas_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:10000});
+        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
+        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:10000});
 
         await this.page.waitForTimeout(500);
 
@@ -678,6 +684,26 @@ export class MoveInPage{
             Q1randomOption,
             Q2randomOptionText
         }
+    }
+
+
+    async Program_Enrolled_Questions(){
+        const Q1options = [
+            "Yes",
+            "No",
+            "Pass"
+          ];
+        const Q1randomIndex = Math.floor(Math.random() * Q1options.length);
+        const Q1randomOption = Q1options[Q1randomIndex];
+        console.log("Program Enrolled: ", Q1randomOption);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await expect(this.Move_In_Program_Enrolled_Question).toBeVisible({timeout:10000});
+        await expect(this.Move_In_Program_Enrolled_Options(Q1randomOption)).toBeVisible({timeout:10000});  
+        await this.Move_In_Program_Enrolled_Options(Q1randomOption).hover({timeout:10000});
+        await this.Move_In_Program_Enrolled_Options(Q1randomOption).click({timeout:10000});
+
+        return Q1randomOption
     }
 
 
