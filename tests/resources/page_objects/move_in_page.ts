@@ -259,7 +259,7 @@ export class MoveInPage{
         this.Move_In_Account_Number = page.getByText('Account Number:');
 
         this.Move_In_Almost_Done_Message = page.getByRole('heading', { name: 'Almost Done!' })
-        this.Move_In_Registration_Status = page.locator('//p[contains(text(),"Registration Status")]');
+        this.Move_In_Registration_Status = page.locator('//div[contains(text(),"Registration Status")]');
 
         this.Move_In_Account_Number_Value = page.locator("//div[contains(@class,'callout-text')]//child::b");
         this.Move_In_Survey_Star = page.locator('path').nth(2);
