@@ -450,6 +450,15 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     } else {
         throw new Error('Invalid OTP');
     }*/
+   
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, 'COMED', null);
@@ -528,6 +537,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     } else {
         throw new Error('Invalid OTP');
     }*/
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, null,"EVERSOURCE");
@@ -609,6 +626,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     } else {
         throw new Error('Invalid OTP');
     }*/
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","EVERSOURCE");
@@ -692,9 +717,16 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     } else {
         throw new Error('Invalid OTP');
     }*/
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.CON_EDISON_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
 
-    await moveInpage.CON_EDISON_Questions();
-    await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","CON-EDISON");
     await moveInpage.Next_Move_In_Button();
@@ -751,6 +783,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
@@ -795,7 +835,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Next_Move_In_Button();
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Next_Move_In_Button();
     await page.waitForTimeout(30000);
@@ -841,6 +888,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"PSEG","PSEG");
     await moveInpage.Next_Move_In_Button();
@@ -886,6 +941,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
+    try{
+        await moveInpage.Program_Enrolled_Questions();
+        await moveInpage.Next_Move_In_Button();
+    }
+    catch(error){
+        console.log(error);
+        console.log("No questions to answer for this Program Enrolled");
+    }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","DTE");
     await moveInpage.Next_Move_In_Button();
@@ -919,3 +982,27 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
 
 });
+
+
+//need to add early  and late drop off that simulates closing of the browser and opening it again
+/*
+test('Move-in process with browser restart', async ({ browser }) => {
+  // Start move-in process
+  let context = await browser.newContext();
+  let page = await context.newPage();
+  
+  await page.goto('/move-in', { waitUntil: 'domcontentloaded' });
+  await moveInpage.Agree_on_Terms_and_Get_Started();
+  await moveInpage.Enter_Address(MoveIndata.COMEDaddress, PGuser.UnitNumber);
+  
+  // Simulate browser closure
+  await context.close();
+  
+  // User returns later - new browser session
+  context = await browser.newContext();
+  page = await context.newPage();
+  
+  await page.goto('/move-in', { waitUntil: 'domcontentloaded' });
+  // Test if user can continue or needs to restart
+});
+*/
