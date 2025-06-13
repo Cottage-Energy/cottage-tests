@@ -84,7 +84,7 @@ export class OverviewPage {
     //methods
 
     async Accept_New_Terms_And_Conditions(){
-        const maxRetries = 30;
+        const maxRetries = 10;
         let retries = 0;
         let vis = false;
 
