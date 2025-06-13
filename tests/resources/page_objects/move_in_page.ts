@@ -279,7 +279,6 @@ export class MoveInPage{
     //methods
     async Agree_on_Terms_and_Get_Started() {
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
         await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_PG_Description).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:1000})
