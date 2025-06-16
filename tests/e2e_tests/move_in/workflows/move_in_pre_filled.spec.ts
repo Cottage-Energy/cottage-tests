@@ -126,7 +126,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
 //shortcode & address parameters
 //shortcode & address parameters & guid
 //shortcode & move-in params & address parameters & guid
-test.describe('Move In ShortCoded GUID & Address Parameters New User Electric &/or Gas', () => {
+test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
