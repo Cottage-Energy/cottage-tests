@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test';
+import { type Page, type Locator, expect, FrameLocator } from '@playwright/test';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { format } from 'date-fns';
 
@@ -15,6 +15,9 @@ export class FinishAccountSetupPage {
     readonly FinishAccountSetup_Save_Payment_Button: Locator
     readonly FinishAccountSetup_Success_Message: Locator
 
+    readonly FinishAccountSetup_Payment_Frame: FrameLocator
+    readonly FinishAccountSetup_Bank_Account_Tab: Locator
+
     readonly FinishAccountSetup_Cancel_Registration_Button: Locator
     readonly FinishAccountSetup_Confirm_Cancel_Registration_Button: Locator
     readonly FinishAccountSetup_Cancel_Registration_Success_Message: Locator
@@ -29,6 +32,9 @@ export class FinishAccountSetupPage {
         this.FinishAccountSetup_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.FinishAccountSetup_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.FinishAccountSetup_Success_Message = page.getByText('🥳 Success', { exact: true });
+
+        this.FinishAccountSetup_Payment_Frame = page.frameLocator('[title ="Secure payment input frame"]');
+        this.FinishAccountSetup_Bank_Account_Tab = this.FinishAccountSetup_Payment_Frame.locator('[id = "us_bank_account-tab"]');
 
         this.FinishAccountSetup_Cancel_Registration_Button = page.locator('//span[text()="Cancel Registration"]');
         this.FinishAccountSetup_Confirm_Cancel_Registration_Button = page.getByRole('button', { name: 'I\'ll sign-up on my own' });
@@ -196,11 +202,15 @@ export class FinishAccountSetupPage {
         const stripeFrame = await stripeIframe.contentFrame()
         await this.page.waitForTimeout(3000);
     
-        const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
+        //const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
 
 
-        await BankAccountTab?.waitForElementState('visible');
-        await BankAccountTab?.click();
+        //await BankAccountTab?.waitForElementState('visible');
+        //await BankAccountTab?.click();
+        await expect(this.FinishAccountSetup_Bank_Account_Tab).toBeVisible({timeout:30000});
+        await this.FinishAccountSetup_Bank_Account_Tab.hover();
+        await this.FinishAccountSetup_Bank_Account_Tab.click();
+
         await this.page.waitForTimeout(500);
 
         const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
