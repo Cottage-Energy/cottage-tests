@@ -14,7 +14,7 @@ let MoveIn: any;
 
 test.beforeEach(async ({ page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
-  await page.goto('/move-in?',{ waitUntil: 'domcontentloaded' });
+  await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 });
 
 test.afterEach(async ({ page },testInfo) => {
