@@ -190,6 +190,7 @@ export class FinishAccountSetupPage {
 
     async Enter_Auto_Payment_Valid_Bank_Details_After_Skip(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('networkidle');
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
