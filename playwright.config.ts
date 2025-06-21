@@ -32,27 +32,42 @@ export default defineConfig({
   projects: [
     {
       name: 'Chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        screenshot: 'only-on-failure',
+      },
     },
 
     {
       name: 'Firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { 
+        ...devices['Desktop Firefox'],
+        screenshot: 'only-on-failure',
+      },
     },
 
     {
       name: 'Safari',
-      use: { ...devices['Desktop Safari'] },
+      use: { 
+        ...devices['Desktop Safari'],
+        screenshot: 'only-on-failure',
+      },
     },
 
     /* Test against mobile viewports. */
     {
        name: 'Mobile_Chrome',
-       use: { ...devices['Pixel 5'] },
+       use: { 
+        ...devices['Pixel 5'],
+        screenshot: 'only-on-failure',
+      },
     },
     {
        name: 'Mobile_Safari',
-       use: { ...devices['iPhone 12'] },
+       use: { 
+        ...devices['iPhone 12'],
+        screenshot: 'only-on-failure',
+      },
     },
 
     /* Test against specific tags. */
