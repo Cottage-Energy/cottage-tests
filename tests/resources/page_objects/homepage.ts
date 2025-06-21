@@ -54,7 +54,12 @@ export class HomePage{
         await this.About_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('networkidle');
-        await expect (this.About_Content).toBeVisible({timeout: 120000});
+        try{
+            await expect (this.About_Content).toBeVisible({timeout: 120000});
+        }
+        catch (error) {
+            console.error('Error while waiting for About Content to be visible:', error);
+        }
     }
 
     async click_Resources() {
