@@ -25,7 +25,7 @@ export class HomePage{
         this.HowItWorks_Link = page.getByRole('navigation').getByRole('link', { name: 'How it Works' });
         this.HowItWorks_Title = page.getByRole('heading', { name: 'How it works' });
         this.About_Link = page.getByRole('navigation').getByRole('link', { name: 'About' });
-        this.About_Content = page.getByText('Climate change is not new news.There is a whole list of things that we all');
+        this.About_Content = page.locator('div').filter({ hasText: 'Climate change is not new news.There is a whole list of things that we all' }).nth(2);
         this.Resources_Link = page.getByRole('navigation').getByRole('link', { name: 'Resources' });
         this.Resources_Title =  page.getByRole('heading', { name: 'Resources' });
         this.Developers_Link = page.getByRole('navigation').getByRole('link', { name: 'Developers' });
