@@ -80,7 +80,6 @@ export class HomePage{
         await this.page.waitForLoadState('domcontentloaded');
         await this.Sign_In_Button.click({timeout: 30000});
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('networkidle');
         await expect (this.Sign_In_Title).toBeVisible({timeout: 30000});
         await expect (this.Sign_In_Email_Field).toBeVisible();
         await expect (this.Sign_In_OTP_Button).toBeVisible({timeout: 30000});
