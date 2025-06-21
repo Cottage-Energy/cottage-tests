@@ -73,7 +73,7 @@ export class HomePage{
 
     async click_SignIn() {
         await this.page.waitForLoadState('domcontentloaded');
-        await this.Sign_In_Button.click();
+        await this.Sign_In_Button.click({timeout: 30000});
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('networkidle');
         await expect (this.Sign_In_Title).toBeVisible({timeout: 30000});
