@@ -42,48 +42,43 @@ export class HomePage{
     //methods
 
     async click_HowItWorks() {
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.HowItWorks_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
         await expect (this.HowItWorks_Title).toBeVisible();
     }
 
 
     async  click_About() {
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.About_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
         await this.page.waitForLoadState('networkidle');
-        await expect (this.About_Content).toBeVisible();
+        await expect (this.About_Content).toBeVisible({timeout: 30000});
     }
 
     async click_Resources() {
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.Resources_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
         await expect (this.Resources_Title).toBeVisible();
     }
 
     async click_Developers() {
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.Developers_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
         await expect (this.Developers_Title).toBeVisible();
     }
 
     async click_SignIn() {
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.Sign_In_Button.click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
         await this.page.waitForLoadState('networkidle');
         await expect (this.Sign_In_Title).toBeVisible({timeout: 30000});
         await expect (this.Sign_In_Email_Field).toBeVisible();
-        await expect (this.Sign_In_OTP_Button).toBeVisible();
+        await expect (this.Sign_In_OTP_Button).toBeVisible({timeout: 30000});
     }
 
 
