@@ -26,31 +26,31 @@ test.afterEach(async ({ page },testInfo) => {
 test.describe('Homepage Navigation', () => {
   
   test('Go to How it Works', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
-    test.setTimeout(120000);
+    test.slow()
     await homePage.click_HowItWorks();
     console.log('Navigated to:', page.url());
   });
   
   test('Go to About', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
-    test.setTimeout(120000);
+    test.slow()
     await homePage.click_About();
     console.log('Navigated to:', page.url());
   });
   
   test('Go to Resources', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
-    test.setTimeout(120000);
+    test.slow()
     await homePage.click_Resources();
     console.log('Navigated to:', page.url());
   });
   
   test('Go to Developers', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
-    test.setTimeout(120000);
+    test.slow()
     await homePage.click_Developers();
     console.log('Navigated to:', page.url());
   });
   
   test('Go to Sign In', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
-    test.setTimeout(120000);
+    test.slow()
     await homePage.click_SignIn();
     console.log('Navigated to:', page.url());
   });
