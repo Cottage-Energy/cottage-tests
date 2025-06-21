@@ -53,7 +53,6 @@ export class HomePage{
         await this.page.waitForLoadState('domcontentloaded');
         await this.About_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('networkidle');
         try{
             await expect (this.About_Content).toBeVisible({timeout:30000});
         }
