@@ -32,7 +32,7 @@ export class HomePage{
         this.Developers_Title = page.getByText('BETABUILD WITH YOURELECTRIC');
         
         this.Sign_In_Button = page.getByRole('navigation').getByText('Sign In');
-        this.Sign_In_Title = page.getByRole('heading', { name: 'Welcome Back 👋' });
+        this.Sign_In_Title = page.locator('//h1[text()="Welcome Back 👋"]');
         this.Sign_In_Email_Field = page.locator('//input[@name="email"]');
         this.Sign_In_OTP_Button = page.getByRole('button', { name: 'Sign in with OTP' });
     }
