@@ -22,7 +22,7 @@ test.afterEach(async ({ page },testInfo) => {
 
 });*/
 
-
+test.describe.configure({mode: "serial"});
 test.describe('Homepage Navigation', () => {
   
   test('Go to How it Works', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
