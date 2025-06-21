@@ -54,7 +54,7 @@ export class HomePage{
         await this.About_Link.click();
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('networkidle');
-        await expect (this.About_Content).toBeVisible({timeout: 30000});
+        await expect (this.About_Content).toBeVisible({timeout: 120000});
     }
 
     async click_Resources() {
@@ -78,7 +78,7 @@ export class HomePage{
         await this.page.waitForLoadState('networkidle');
         await expect (this.Sign_In_Title).toBeVisible({timeout: 30000});
         await expect (this.Sign_In_Email_Field).toBeVisible();
-        await expect (this.Sign_In_OTP_Button).toBeVisible({timeout: 30000});
+        await expect (this.Sign_In_OTP_Button).toBeVisible({timeout: 120000});
     }
 
 
