@@ -14,8 +14,8 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
-  //await page.close();
+  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
@@ -66,6 +66,34 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", "BGE");
+  });
+
+
+  test('New User for ShortCode Electric and Gas EVERSOURCE Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+    test.setTimeout(240000);
+    await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "EVERSOURCE");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "EVERSOURCE", "EVERSOURCE", true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE", "EVERSOURCE");
+  });
+
+
+  test('New User for ShortCode Electric and Gas EVERSOURCE NGMA Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+    test.setTimeout(240000);
+    await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
+    await supabaseQueries.Update_Building_Billing("autotest",true);
+    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "NGMA", "NGMA", true, true);
+    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await page.waitForTimeout(10000);
+    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "NGMA", "NGMA");
   });
 
 
