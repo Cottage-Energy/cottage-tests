@@ -14,8 +14,8 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
-  await page.close();
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
@@ -83,7 +83,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas EVERSOURCE NGMA Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+  test('New User for ShortCode Electric and Gas NGMA Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
     test.setTimeout(240000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
