@@ -57,7 +57,7 @@ export class HomePage{
             await expect (this.About_Content).toBeVisible({timeout:30000});
         }
         catch (error) {
-            console.error('Error while waiting for About Content to be visible:', error);
+            console.log('Error while waiting for About Content to be visible:', error);
         }
     }
 
@@ -85,7 +85,7 @@ export class HomePage{
             await expect (this.Sign_In_OTP_Button).toBeVisible({timeout: 30000});
         }
         catch (error) {
-            console.error('Error while waiting for Sign In elements to be visible:', error);
+            console.log('Error while waiting for Sign In elements to be visible:', error);
         }
         
     }
