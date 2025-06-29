@@ -31,6 +31,7 @@ test.describe('Homepage Navigation', () => {
   });
   
   test('Go to About', {tag: ['@smoke', '@regression1', '@regression2','@regression3','@regression4','@regression5','@regression6','@regression7' ],}, async ({page}) => {
+    test.slow();
     await homePage.click_About();
     console.log('Navigated to:', page.url());
   });
