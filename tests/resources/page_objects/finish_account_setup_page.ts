@@ -239,10 +239,10 @@ export class FinishAccountSetupPage {
         const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
 
         const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
-        await ConfirmButton?.waitForElementState('visible');
+        //await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
 
-        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const SuccessMessage = await modalFrame?.waitForSelector('//div[contains(@class, "SuccessPane-textWrapper")]');
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
