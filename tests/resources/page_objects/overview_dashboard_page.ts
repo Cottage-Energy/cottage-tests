@@ -322,7 +322,7 @@ export class OverviewPage {
         await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
 
-        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="//div[contains(@class, "SuccessPane-textWrapper")]"]');
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
@@ -378,7 +378,7 @@ export class OverviewPage {
         await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
 
-        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="//div[contains(@class, "SuccessPane-textWrapper")]"]');
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
@@ -440,7 +440,7 @@ export class OverviewPage {
         await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
 
-        const SuccessMessage = await modalFrame?.waitForSelector('[class ="la-v3-successTextWrapper"]');
+        const SuccessMessage = await modalFrame?.waitForSelector('[class ="//div[contains(@class, "SuccessPane-textWrapper")]"]');
         const DoneButton = await modalFrame?.waitForSelector('[data-testid ="done-button"]');
         await SuccessMessage?.waitForElementState('visible');
         await DoneButton?.click();
