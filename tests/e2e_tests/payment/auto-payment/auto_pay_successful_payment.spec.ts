@@ -72,6 +72,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
 
+
     
     
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
