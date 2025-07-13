@@ -622,7 +622,9 @@ export class MoveInPage{
         await this.page.waitForTimeout(500);
         await this.Move_In_Lenght_of_Staying_Dropdown.click();
         await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
+        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(500);
+        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).hover({timeout:5000});  
         await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
 
         const Q2options = [
@@ -642,7 +644,10 @@ export class MoveInPage{
         await this.Move_In_BGE_Employment_Status_Dropdown.click();
         await this.page.waitForTimeout(500);
         await expect(this.Move_In_BGE_Employment_Selection(Q2randomOption)).toBeVisible({timeout:30000});
+        await this.page.waitForTimeout(500);
+        await this.Move_In_BGE_Employment_Selection(Q2randomOption).hover({timeout:5000});
         await this.Move_In_BGE_Employment_Selection(Q2randomOption).click({timeout:5000});
+
         return {
             Q1randomOption,
             Q2randomOption

@@ -58,15 +58,29 @@ export default defineConfig({
     {
        name: 'Mobile_Chrome',
        use: { 
-        ...devices['Pixel 5'],
-        screenshot: 'only-on-failure',
+      ...devices['Pixel 7'],
+      screenshot: 'only-on-failure',
       },
     },
     {
        name: 'Mobile_Safari',
        use: { 
-        ...devices['iPhone 12'],
-        screenshot: 'only-on-failure',
+      ...devices['iPhone 14'],
+      screenshot: 'only-on-failure',
+      },
+    },
+    {
+       name: 'Mobile_Samsung',
+       use: { 
+      ...devices['Galaxy S9+'],
+      screenshot: 'only-on-failure',
+      },
+    },
+    {
+       name: 'Tablet_iPad',
+       use: { 
+      ...devices['iPad Pro'],
+      screenshot: 'only-on-failure',
       },
     },
 

@@ -71,32 +71,49 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
         console.log("No questions to answer for this Program Enrolled");
     }
    
-
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Gas company")
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
         await moveInpage.Next_Move_In_Button();
     }
-
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
@@ -190,22 +207,44 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -306,22 +345,44 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -412,22 +473,44 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -526,22 +609,44 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
         console.log("No questions to answer for this Program Enrolled");
     }
         
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -641,22 +746,44 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -755,22 +882,44 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -850,24 +999,44 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -946,24 +1115,44 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -1063,24 +1252,44 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
@@ -1179,24 +1388,44 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
         console.log("No questions to answer for this Program Enrolled");
     }
 
-    try{
-        const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-        await moveInpage[`${electricCompany}_Questions`]();
-        electricQuestionsPresent = true;
+    if (ElectricCompany === GasCompany) {
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            try{
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+                await moveInpage[`${gasCompany}_Questions`]();
+                gasQuestionsPresent = true;
+            }
+            catch(error){
+                console.log("No questions to answer for these companies");
+            }
+        }
     }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Electric company");
-    }
+    else{
+        try{
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
+            await moveInpage[`${electricCompany}_Questions`]();
+            electricQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Electric company");
+        }
 
-    try{
-        const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-        await moveInpage[`${gasCompany}_Questions`]();
-        gasQuestionsPresent = true;
-    }
-    catch(error){
-        console.log(error);
-        console.log("No questions to answer for this Gas company")
+
+        try{
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
+            await moveInpage[`${gasCompany}_Questions`]();
+            gasQuestionsPresent = true;
+        }
+        catch(error){
+            console.log(error);
+            console.log("No questions to answer for this Gas company")
+        }
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
