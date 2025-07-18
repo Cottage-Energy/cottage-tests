@@ -202,14 +202,12 @@ export class FinishAccountSetupPage {
         const stripeFrame = await stripeIframe.contentFrame()
         await this.page.waitForTimeout(3000);
     
-        //const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
-
-
-        //await BankAccountTab?.waitForElementState('visible');
-        //await BankAccountTab?.click();
-        await expect(this.FinishAccountSetup_Bank_Account_Tab).toBeVisible({timeout:30000});
-        await this.FinishAccountSetup_Bank_Account_Tab.hover();
-        await this.FinishAccountSetup_Bank_Account_Tab.click();
+        const BankAccountTab = await stripeFrame?.waitForSelector('[id = "us_bank_account-tab"]');
+        await BankAccountTab?.waitForElementState('visible');
+        await BankAccountTab?.click();
+        //await expect(this.FinishAccountSetup_Bank_Account_Tab).toBeVisible({timeout:30000});
+        //await this.FinishAccountSetup_Bank_Account_Tab.hover();
+        //await this.FinishAccountSetup_Bank_Account_Tab.click();
 
         await this.page.waitForTimeout(500);
 
