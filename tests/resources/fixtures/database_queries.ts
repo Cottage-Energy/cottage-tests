@@ -242,12 +242,62 @@ export class SupabaseQueries{
     //////////// Bill Queries ////////////
     //Insert bill
 
+    async Insert_Electric_Bill(electricAccountId: string, totalAmountDue?: number, totalUsage?: number) {
+        const amount = totalAmountDue ?? Math.floor(Math.random() * (99999 - 1000 + 1) + 1000);
+        const usage = totalUsage ?? Math.floor(Math.random() * (99 - 10 + 1) + 10);
+        
+        const { data: bill, error } = await supabase
+            .from('ElectricBill')
+            .insert({
+                electricAccountID: parseInt(electricAccountId),
+                totalAmountDue: amount,
+                totalUsage: usage,
+                startDate: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                endDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                statementDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                visible: false,
+                dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+            })
+            .select('id')
+            .single()
+            .throwOnError();
+            
+        const billId = bill?.id ?? '';
+        console.log("Inserted Electric Bill ID:", billId.toString());
+        return billId.toString();
+    }
+
+    async Insert_Gas_Bill(gasAccountId: string, totalAmountDue?: number, totalUsage?: number) {
+        const amount = totalAmountDue ?? Math.floor(Math.random() * (99999 - 1000 + 1) + 1000);
+        const usage = totalUsage ?? Math.floor(Math.random() * (99 - 10 + 1) + 10);
+        
+        const { data: bill, error } = await supabase
+            .from('GasBill')
+            .insert({
+                gasAccountID: parseInt(gasAccountId),
+                totalAmountDue: amount,
+                totalUsage: usage,
+                startDate: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                endDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                statementDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                visible: false,
+                dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+            })
+            .select('id')
+            .single()
+            .throwOnError();
+            
+        const billId = bill?.id ?? '';
+        console.log("Inserted Gas Bill ID:", billId.toString());
+        return billId.toString();
+    }
+
 
     //Apprrove Bill
     async Approve_Electric_Bill(BillId: string) {
         const { data,error} = await supabase
         .from('ElectricBill')
-        .update({ paymentStatus: 'approved' })
+        .update({ ingestionState: 'approved' })
         .eq('id', BillId )
         .select()
         .throwOnError();
@@ -259,7 +309,7 @@ export class SupabaseQueries{
     async Approve_Gas_Bill(BillId: string) {
         const { data,error} = await supabase
         .from('GasBill')
-        .update({ paymentStatus: 'approved' })
+        .update({ ingestionState: 'approved' })
         .eq('id', BillId )
         .select()
         .throwOnError();
