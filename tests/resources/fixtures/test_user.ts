@@ -33,6 +33,7 @@ interface TestUser {
 export async function generateTestUserData(serviceFeePercentage?: number): Promise<TestUser> {
     const firstname = faker.person.firstName();
     const lastname = faker.person.lastName();
+    const uniqueKey = faker.string.alphanumeric(10);
     
     const today = new Date();
     const tomorrow = new Date(today);
@@ -64,7 +65,7 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       FirstName: firstname,
       LastName: lastname,
       PhoneNumber: "111-111-1111",
-      Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname, provider: 'joinpublicgrid.com'}),
+      Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname + uniqueKey, provider: 'joinpublicgrid.com'}),
       UnitNumber: faker.location.buildingNumber() + faker.string.alpha({ length: 1 }),
       Today: today.getDate().toString(),
       Tomorrow: tomorrow.getDate().toString(),

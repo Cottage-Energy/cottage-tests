@@ -74,7 +74,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
 
 
     
-    await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
+    await supabaseQueries.Insert_Electric_Bill(ElectricAccountId);
     await page.waitForTimeout(500);
     await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
   });
