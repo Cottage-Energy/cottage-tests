@@ -6,7 +6,6 @@ import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities
 import { PaymentUtilities } from '../../../resources/fixtures/paymentUtilities';
 import { AdminApi } from '../../../resources/api/admin_api';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
-import tokenConfig from '../../../resources/utils/tokenConfig';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
@@ -24,7 +23,7 @@ let MoveIn: any;
 test.beforeEach(async ({ playwright, page },testInfo) => {
   const env = process.env.ENV || 'dev';
   const baseUrl = environmentBaseUrl[env].admin_api;
-  const adminToken = tokenConfig[env].admin;
+  const adminToken = process.env.ADMIN_TOKEN;
 
   AdminApiContext = await playwright.request.newContext({
     baseURL: baseUrl,
