@@ -88,7 +88,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     //AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage)
     await supabaseQueries.Insert_Electric_Bill(ElectricAccountId);
     await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+    await paymentUtilities.Auto_Card_Payment_Electric_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId);
   });
 
 
@@ -128,7 +128,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
         supabaseQueries.Insert_Gas_Bill(GasAccountId)
     ]);
     await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
   });
 
 
@@ -170,7 +170,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
         supabaseQueries.Insert_Gas_Bill(GasAccountId)
     ]);
     await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
   });
 
 
@@ -210,7 +210,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
         supabaseQueries.Insert_Gas_Bill(GasAccountId)
     ]);
     await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
   });
 
 
@@ -246,7 +246,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Insert_Gas_Bill(GasAccountId);
     await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+    await paymentUtilities.Auto_Card_Payment_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, GasAccountId);
   });
 
 
