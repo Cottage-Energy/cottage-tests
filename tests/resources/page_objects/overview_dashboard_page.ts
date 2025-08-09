@@ -97,7 +97,7 @@ export class OverviewPage {
                 break;
             }
             retries++;
-            await new Promise(resolve => setTimeout(resolve, 1500)); // wait for 1.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 500)); // wait for 0.5 seconds
         }
         
         console.log("Updated Terms:",vis);

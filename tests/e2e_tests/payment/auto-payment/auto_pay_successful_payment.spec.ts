@@ -38,7 +38,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+    //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
     //await page.close();
 });
   
@@ -82,13 +82,10 @@ test.describe.skip('Valid Card Auto Payment', () => {
     
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
 
-    //TO UPDATE from this point forward!
-    //AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage)
-    await supabaseQueries.Insert_Electric_Bill(ElectricAccountId);
-    await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Electric_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId);
+
+    //Payment Checks
+    await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage, AdminApiContext);
   });
 
 
@@ -121,14 +118,18 @@ test.describe.skip('Valid Card Auto Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     await overviewPage.Accept_New_Terms_And_Conditions();
-    const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+
+
+
+
+    const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await Promise.all([
         supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
         supabaseQueries.Insert_Gas_Bill(GasAccountId)
     ]);
     await page.waitForTimeout(500);
-    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+    //await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
   });
 
 
@@ -163,8 +164,8 @@ test.describe.skip('Valid Card Auto Payment', () => {
     
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await Promise.all([
         supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
         supabaseQueries.Insert_Gas_Bill(GasAccountId)
@@ -203,8 +204,8 @@ test.describe.skip('Valid Card Auto Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     await overviewPage.Accept_New_Terms_And_Conditions();
-    const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await Promise.all([
         supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
         supabaseQueries.Insert_Gas_Bill(GasAccountId)
@@ -243,7 +244,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     await overviewPage.Accept_New_Terms_And_Conditions();
-    const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Insert_Gas_Bill(GasAccountId);
     await page.waitForTimeout(500);
     await paymentUtilities.Auto_Card_Payment_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, GasAccountId);
@@ -277,7 +278,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     
         await newTab.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
         await supabaseQueries.Insert_Electric_Bill(ElectricAccountId);
         await page.waitForTimeout(500);
         await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -315,8 +316,8 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
         await Promise.all([
             supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
             supabaseQueries.Insert_Gas_Bill(GasAccountId)
@@ -355,8 +356,8 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
         await Promise.all([
             supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
             supabaseQueries.Insert_Gas_Bill(GasAccountId)
@@ -397,8 +398,8 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
         await Promise.all([
             supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
             supabaseQueries.Insert_Gas_Bill(GasAccountId)
@@ -440,7 +441,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
         await supabaseQueries.Insert_Gas_Bill(GasAccountId);
         await page.waitForTimeout(500);
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);

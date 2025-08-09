@@ -73,7 +73,7 @@ export class SupabaseQueries{
     }
     
 
-    async Get_Electric_Account_Id(cottageUserId: string) {
+    async Check_Get_Electric_Account_Id(cottageUserId: string) {
         const { data: EAccount } = await supabase
             .from('ElectricAccount')
             .select('id')
@@ -97,9 +97,34 @@ export class SupabaseQueries{
         console.log(error);
         await expect(EAccount).toBeNull();
     }
-    
+
+
+    async Get_Electric_Account_Id(cottageUserId: string) {
+        const { data: EAccount } = await supabase
+            .from('ElectricAccount')
+            .select('id')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+            .throwOnError();
+        const ElectricAccountId = EAccount?.id ?? null;
+        console.log(ElectricAccountId?.toString() ?? 'null');
+        return ElectricAccountId?.toString() ?? null;
+    }
 
     async Get_Gas_Account_Id(cottageUserId: string) {
+        const { data: GAccount } = await supabase
+            .from('GasAccount')
+            .select('id')
+            .eq('cottageUserID', cottageUserId)
+            .maybeSingle()
+            .throwOnError();
+        const GasAccountId = GAccount?.id ?? null;
+        console.log(GasAccountId?.toString() ?? 'null');
+        return GasAccountId?.toString() ?? null;
+    }
+    
+
+    async Check_Get_Gas_Account_Id(cottageUserId: string) {
         const { data: GAccount } = await supabase
             .from('GasAccount')
             .select('id')
@@ -242,14 +267,14 @@ export class SupabaseQueries{
     //////////// Bill Queries ////////////
     //Insert bill
 
-    async Insert_Electric_Bill(electricAccountId: string, totalAmountDue?: number, totalUsage?: number) {
+    async Insert_Electric_Bill(electricAccountId: string | null, totalAmountDue?: number, totalUsage?: number) {
         const amount = totalAmountDue ?? Math.floor(Math.random() * (99999 - 1000 + 1) + 1000);
         const usage = totalUsage ?? Math.floor(Math.random() * (99 - 10 + 1) + 10);
         
         const { data: bill, error } = await supabase
             .from('ElectricBill')
             .insert({
-                electricAccountID: parseInt(electricAccountId),
+                electricAccountID: parseInt(electricAccountId??''),
                 totalAmountDue: amount,
                 totalUsage: usage,
                 startDate: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -267,14 +292,14 @@ export class SupabaseQueries{
         return billId.toString();
     }
 
-    async Insert_Gas_Bill(gasAccountId: string, totalAmountDue?: number, totalUsage?: number) {
+    async Insert_Gas_Bill(gasAccountId: string | null, totalAmountDue?: number, totalUsage?: number) {
         const amount = totalAmountDue ?? Math.floor(Math.random() * (99999 - 1000 + 1) + 1000);
         const usage = totalUsage ?? Math.floor(Math.random() * (99 - 10 + 1) + 10);
         
         const { data: bill, error } = await supabase
             .from('GasBill')
             .insert({
-                gasAccountID: parseInt(gasAccountId),
+                gasAccountID: parseInt(gasAccountId??''),
                 totalAmountDue: amount,
                 totalUsage: usage,
                 startDate: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -403,108 +428,53 @@ export class SupabaseQueries{
 
 
     //Get Charge ID and Validity - to be modified
-    async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
-        const { data: ECharge } = await supabase
-            .from('ElectricBillCharge')
-            .select('chargeId, isValid')
-            .eq('electricBillId', electricBillID)   
-            .single()
-            .throwOnError();
-        const ElectricChargeId = ECharge?.chargeId ?? '';
-        const ElectricChargeValidity = ECharge?.isValid ?? '';
-        await expect(ElectricChargeId).not.toBeNull();
-        await expect(ElectricChargeValidity).toBe(validity);
-        console.log("Charge ID:",ElectricChargeId.toString(),"Validity:",ElectricChargeValidity);
-        return ElectricChargeId.toString();
-    }
-
-
-    async Get_Gas_Charge_Id_validity(gasBillID: any, validity: boolean) {
-        const { data: GCharge } = await supabase
-            .from('GasBillCharge')
-            .select('chargeId, isValid')
-            .eq('gasBillId', gasBillID)   
-            .single()
-            .throwOnError();
-        const GasChargeId = GCharge?.chargeId ?? '';
-        const GasChargeValidity = GCharge?.isValid ?? '';
-        await expect(GasChargeId).not.toBeNull();
-        await expect(GasChargeValidity).toBe(validity);
-        console.log("Charge ID:",GasChargeId.toString(),"Validity:",GasChargeValidity);
-        return GasChargeId.toString();
-    }
-
-    //////////////////////////////////to be modified to refer to Charges Table or the Electric/Gas Charge using Charge ID //////////////////
-    async Check_Electric_Bill_Visibility(ElectricAccountId: string, state: boolean) {
-        const maxRetries = 3;
+    async Get_Check_Charge_Account(electricAccountId: string | null, gasAccountId: string | null) {
+        const maxRetries = 2;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
-        let ElectricBillVis;
+        let ChargeAccount: any = null;
 
-        while (retries < maxRetries) {
-            const { data } = await supabase
-                .from('ElectricBill')
-                .select('visible')
-                .eq('electricAccountID', ElectricAccountId)
-                .single()
-                .throwOnError();
+        while (retries <= maxRetries) {
+            try {
+                let query = supabase
+                    .from('ChargeAccount')
+                    .select('id');
 
-            ElectricBillVis = data;
+                if (electricAccountId) {
+                    query = query.eq('electricAccountID', parseInt(electricAccountId));
+                } else {
+                    query = query.is('electricAccountID', null);
+                }
 
-            if (ElectricBillVis) {
+                if (gasAccountId) {
+                    query = query.eq('gasAccountID', parseInt(gasAccountId));
+                } else {
+                    query = query.is('gasAccountID', null);
+                }
+
+                const { data } = await query
+                    .single()
+                    .throwOnError();
+                
+                ChargeAccount = data;
                 break;
-            }
-
-            retries++;
-            if (retries < maxRetries) {
-                console.log(`No data found, retrying in 10 seconds... (${retries}/${maxRetries})`);
-                await new Promise(resolve => setTimeout(resolve, 10000)); // wait for 10 seconds
+            } catch (error) {
+                if (retries < maxRetries) {
+                    retries++;
+                    console.log(`Retrying Get_Check_Charge_Account... (${retries}/${maxRetries})`);
+                    await delay(60000);
+                } else {
+                    throw error;
+                }
             }
         }
 
-        if (!ElectricBillVis) {
-            throw new Error('No data found after maximum retries');
-        }
-
-        const ElectricBillvisib = ElectricBillVis?.visible ?? '';
-        console.log(ElectricBillvisib);
-        await expect(ElectricBillvisib).toBe(state);
+        const chargeAccountId = ChargeAccount?.id ?? '';
+        expect(ChargeAccount).not.toBeNull();
+        console.log("Charge ID:", chargeAccountId.toString());
+        return chargeAccountId.toString();
     }
 
-
-    async Check_Gas_Bill_Visibility(GasAccountId: string, state: boolean) {
-        const maxRetries = 3;
-        let retries = 0;
-        let GasBillVis;
-    
-        while (retries < maxRetries) {
-            const { data } = await supabase
-                .from('GasBill')
-                .select('visible')
-                .eq('gasAccountID', GasAccountId)
-                .single()
-                .throwOnError();
-    
-            GasBillVis = data;
-    
-            if (GasBillVis) {
-                break;
-            }
-    
-            retries++;
-            if (retries < maxRetries) {
-                console.log(`No data found, retrying in 10 seconds... (${retries}/${maxRetries})`);
-                await new Promise(resolve => setTimeout(resolve, 10000)); // wait for 10 seconds
-            }
-        }
-    
-        if (!GasBillVis) {
-            throw new Error('No data found after maximum retries');
-        }
-    
-        const GasBillvisib = GasBillVis?.visible ?? '';
-        console.log(GasBillvisib);
-        await expect(GasBillvisib).toBe(state);
-    }
 
     //////////////////////////////// To be Modified to Refer to Payment Table  using Charge ID //////////////////
     async Check_Eletric_Bill_Reminder(ElectricAccountId: string, state:boolean) {
@@ -931,32 +901,6 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Electric_Account_Id_Non_Test(cottageUserId: string) {
-        const { data: EAccount } = await supabase
-            .from('ElectricAccount')
-            .select('id')
-            .eq('cottageUserID', cottageUserId)
-            .maybeSingle()
-            .throwOnError();
-        const ElectricAccountId = EAccount?.id ?? '';
-        console.log(ElectricAccountId.toString());
-        return ElectricAccountId.toString();
-    }
-    
-
-    async Get_Gas_Account_Id_Non_Test(cottageUserId: string) {
-        const { data: GAccount } = await supabase
-            .from('GasAccount')
-            .select('id')
-            .eq('cottageUserID', cottageUserId)
-            .maybeSingle()
-            .throwOnError();
-        const GasAccountId = GAccount?.id ?? '';
-        console.log(GasAccountId.toString());
-        return GasAccountId.toString();
-    }
-
-
     async Get_Property_Id_by_Electric_Account(cottageUserId: string) {
         const { data: EAccount } = await supabase
             .from('ElectricAccount')
@@ -982,6 +926,8 @@ export class SupabaseQueries{
         return PropertyId.toString();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     async delete_Cottage_User(cottageUserId: string) {
         const { error } = await supabase
@@ -997,12 +943,11 @@ export class SupabaseQueries{
     }
 
 
-    async delete_Electric_Account(ElectricAccountID: number) {
+    async delete_Electric_Account(ElectricAccountID: string | null) {
         const { error } = await supabase
             .from('ElectricAccount')
             .delete()
-            .eq('id', ElectricAccountID);
-    
+            .eq('id', parseInt(ElectricAccountID??''));
         if (error) {
             console.error('Error:', error);
         } else {
@@ -1011,12 +956,12 @@ export class SupabaseQueries{
     }
 
 
-    async delete_Gas_Account(GasAccountID: number) {
+    async delete_Gas_Account(GasAccountID: string | null) {
         const { error } = await supabase
             .from('GasAccount')
             .delete()
-            .eq('id', GasAccountID);
-    
+            .eq('id', parseInt(GasAccountID??''));
+
         if (error) {
             console.error('Error:', error);
         } else {

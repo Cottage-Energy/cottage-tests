@@ -113,7 +113,8 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(2);
 }
 

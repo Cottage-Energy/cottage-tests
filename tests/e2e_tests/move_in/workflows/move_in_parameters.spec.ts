@@ -32,7 +32,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?electricCompany=DOMINION',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'DOMINION', null, true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -45,7 +45,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?gasCompany=EVERGY',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, 'EVERGY', true, true);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
@@ -58,8 +58,8 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?electricCompany=DELMARVA&gasCompany=DELMARVA',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "DELMARVA", "DELMARVA", true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "DELMARVA", "DELMARVA");
@@ -71,8 +71,8 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     test.setTimeout(600000);
     await page.goto('/move-in?electricCompany=PGE&gasCompany=PSEG',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "PGE", "PSEG", true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PGE", "PSEG");
@@ -93,7 +93,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest&electricCompany=ACE',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'ACE', null, true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -108,7 +108,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest&gasCompany=FPL',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, 'FPL', true, true);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
@@ -123,8 +123,8 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest&electricCompany=XCEL-ENERGY&gasCompany=XCEL-ENERGY',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "XCEL-ENERGY", "XCEL-ENERGY", true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "XCEL-ENERGY", "XCEL-ENERGY");
@@ -138,8 +138,8 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest&electricCompany=PSEG-LI&gasCompany=LA-DWP',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "PSEG-LI", "LA-DWP", true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PSEG-LI", "LA-DWP");
@@ -158,7 +158,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?electricCompany=XXX',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'COMED', null, true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -171,7 +171,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?gasCompany=XXX',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, 'COMED', true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -185,7 +185,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await page.goto('/move-in?electricCompany=XXX&gasCompany=SCE',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, "SCE", true, true);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "SCE");
@@ -197,7 +197,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     test.setTimeout(600000);
     await page.goto('/move-in?electricCompany=SDGE&gasCompany=XXX',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "SDGE", null, true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -210,7 +210,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     test.setTimeout(600000);
     await page.goto('/move-in?electricCompany=XXX&gasCompany=XXX',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "COSERV", null, true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -231,7 +231,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?electricCompany=TX-DEREG',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'TX-DEREG', null, true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
@@ -244,7 +244,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?gasCompany=TX-DEREG',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'TX-DEREG', null, true, true);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
@@ -257,8 +257,8 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in?electricCompany=TX-DEREG&gasCompany=SCE',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'TX-DEREG', "SCE", true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "SCE");
@@ -270,8 +270,8 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     test.setTimeout(600000);
     await page.goto('/move-in?electricCompany=SDGE&gasCompany=TX-DEREG',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "SDGE", 'TX-DEREG', true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "SDGE", null);
@@ -283,8 +283,8 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     test.setTimeout(600000);
     await page.goto('/move-in?electricCompany=TX-DEREG&gasCompany=TX-DEREG',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'TX-DEREG', 'TX-DEREG', true, true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, null);
@@ -296,8 +296,8 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     test.setTimeout(360000);
     await page.goto('/move-in??electricCompany=PECO&gasCompany=PEPCO',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Fix_TX_DEREG_Address(moveInpage, "PECO", "PEPCO",true,true);
-    await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PECO", "PEPCO");

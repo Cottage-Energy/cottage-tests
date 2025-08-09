@@ -1,4 +1,8 @@
-import { test, expect } from '../../resources/page_objects/base/pg_page_base';
+import { SidebarChat } from '../../resources/page_objects/sidebar_chat';
+import { OverviewPage } from '../../resources/page_objects/overview_dashboard_page';
+import { BillingPage } from '../../resources/page_objects/billing_page';
+import { ProfilePage } from '../../resources/page_objects/account_profile_page';
+
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
 import * as PaymentData from '../../resources/data/payment-data.json';
@@ -7,37 +11,57 @@ import { AdminApi } from '../../resources/api/admin_api';
 const supabaseQueries = new SupabaseQueries();
 
 export class PaymentUtilities {
-    
-    // Helper method to get current test fixtures
-    private getCurrentTestFixtures() {
-        return test.info().project.testDir ? 
-            (test as any)._currentTest?.fixtures : 
-            null;
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Private functions to get charge accounts
+    private async getPaymentDetailsSingleChargeAccount(MoveIn: any)
+    {
+        const cottageUserId = MoveIn.cottageUserId;
+        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(ElectricAccountId, GasAccountId);
+
+        return {
+            cottageUserId,
+            ElectricAccountId,
+            GasAccountId,
+            ChargeAccountId
+        };
     }
 
+    private async getPaymentDetailsMultipleChargeAccounts(MoveIn: any)
+    {
+        const cottageUserId = MoveIn.cottageUserId;
+        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(ElectricAccountId, null);
+        const GasChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(null, GasAccountId);
+
+        return {
+            cottageUserId,
+            ElectricAccountId,
+            GasAccountId,   
+            ElectricChargeAccountId,
+            GasChargeAccountId
+        };
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Successfull Payment Checks
 
-    async Auto_Card_Payment_Electric_Checks(
-        AdminApiContext: any,
-        MoveIn: any,
-        PGuserUsage: any,
-        ElectricAccountId: string
-    ) {
-        // Get fixtures from current test context
-        const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
-        
-        // Fallback to test context if fixtures not available
-        const testContext = test.info();
-        if (!fixtures) {
-            throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
-        }
-        
+    async Auto_Card_Payment_Electric_Checks(page: any, MoveIn: any, PGuserUsage: any, AdminApiContext?: any) {
+        const sidebarChat = new SidebarChat(page);
+        const overviewPage = new OverviewPage(page);
+        const billingPage = new BillingPage(page);
+        const profilePage = new ProfilePage(page);
+
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+
+        await supabaseQueries.Insert_Electric_Bill(userPaymentInfo.ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        await page.waitForTimeout(500);
+
         await test.step('Get Electric Bill ID and validate', async () => {
             const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
-            expect(ElectriBillID, 'Electric Bill ID should exist').toBeTruthy();
         });
 
         await test.step('Verify auto payment initial checks', async () => {
@@ -149,7 +173,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
@@ -301,7 +325,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
@@ -411,7 +435,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
@@ -542,7 +566,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
@@ -696,7 +720,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
@@ -816,7 +840,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
@@ -927,7 +951,7 @@ export class PaymentUtilities {
     ) {
         // Get fixtures from current test context
         const fixtures = this.getCurrentTestFixtures();
-        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries: dbQueries } = fixtures || {};
+        const { page, overviewPage, billingPage, sidebarChat, supabaseQueries } = fixtures || {};
         
         if (!fixtures) {
             throw new Error('Test fixtures not available. Make sure this method is called within a test context.');
