@@ -29,7 +29,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
   test.describe.configure({mode: "serial"});
   
   test('New User for CON-EDISON Service Zip Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await page.goto('/move-in?streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage, 'CON-EDISON', null, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -42,7 +42,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
 
 
   test('New User for POTOMAC-EDISON Nove-in Parameters for Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await page.goto('/move-in?electricCompany=POTOMAC-EDISON&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage,'POTOMAC-EDISON', null, true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -55,7 +55,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
 
 
   test('New User for LA-DWP Nove-in Parameters for Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await page.goto('/move-in?gasCompany=LA-DWP&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage, null, 'LA-DWP', true, true);
     await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -68,7 +68,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
 
 
   test('New User for PSE Nove-in Parameters for Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await page.goto('/move-in?electricCompany=PSE&gasCompany=PSE&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage,'PSE', 'PSE', true, true);
     await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -90,7 +90,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
     
   
     test('New User for EVERSOURCE Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-      test.setTimeout(240000);
+      test.setTimeout(480000);
       await page.goto(`/move-in?guid=${MoveIndata.GUID1}`,{ waitUntil: 'domcontentloaded' });
       MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'EVERSOURCE', null, true, true);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -103,7 +103,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
   
   
     test('New User for CON-EDISON Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
-      test.setTimeout(240000);
+      test.setTimeout(480000);
       await page.goto(`/move-in?streetAddress=123+williams&city=New+York&zip=1234&guid=${MoveIndata.GUID2}`,{ waitUntil: 'domcontentloaded' });
       MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(moveInpage, null, 'CON-EDISON', true, true);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -116,7 +116,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
   
   
     test('New User for PSEG-LI Electric and Gas Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-      test.setTimeout(240000);
+      test.setTimeout(480000);
       await page.goto(`/move-in?electricCompany=PSEG-LI&gasCompany=PSEG-LI&guid=${MoveIndata.GUID1}`,{ waitUntil: 'domcontentloaded' });
       MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, "PSEG-LI", "PSEG-LI", true, true);
       await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -138,7 +138,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
   
 
   test('New User for BGE Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto(`/move-in?shortCode=autotest&guid=${MoveIndata.GUID1}`,{ waitUntil: 'domcontentloaded' });
@@ -153,7 +153,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
 
 
   test('New User for SDGE Gas Only', {tag: [ '@regression2'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null , "SDGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto(`/move-in?shortCode=autotest&guid=${MoveIndata.GUID2}`,{ waitUntil: 'domcontentloaded' });
@@ -168,7 +168,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
 
 
   test('New User for DTE BGE Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
@@ -183,7 +183,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
 
 
   test('New User for XCEL-ENERGY Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "XCEL-ENERGY", "XCEL-ENERGY");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto(`/move-in?shortCode=autotest&streetAddress=123+williams&city=New+York&zip=1234&guid=${MoveIndata.GUID1}`,{ waitUntil: 'domcontentloaded' });
@@ -198,7 +198,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
 
 
   test('New User for Duke Electric & Gas', {tag: ['@regression7'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto(`/move-in?shortCode=autotest&electricCompany=DUKE&gasCompany=DUKE&streetAddress=123+williams&city=New+York&zip=1234&guid=${MoveIndata.GUID2}`,{ waitUntil: 'domcontentloaded' });

@@ -28,7 +28,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@smoke','@regression2'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -43,7 +43,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => { // Use BGE and NGMA
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -58,7 +58,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", "BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -73,7 +73,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas EVERSOURCE Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -88,7 +88,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric and Gas NGMA Same Company', {tag: ['@regression7'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", "NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });

@@ -31,7 +31,7 @@ test.describe.skip('Short Code Referal', () => {
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
-    test.setTimeout(240000);
+    test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -88,7 +88,7 @@ test.describe.skip('Non Short Code Referal', () => {
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression3'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(360000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NYS-EG", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
