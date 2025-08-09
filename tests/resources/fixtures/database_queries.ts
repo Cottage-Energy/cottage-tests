@@ -402,7 +402,7 @@ export class SupabaseQueries{
     }
 
 
-    //Get Charge ID and Validity
+    //Get Charge ID and Validity - to be modified
     async Get_Electric_Charge_Id_Validity(electricBillID: any, validity: boolean) {
         const { data: ECharge } = await supabase
             .from('ElectricBillCharge')
