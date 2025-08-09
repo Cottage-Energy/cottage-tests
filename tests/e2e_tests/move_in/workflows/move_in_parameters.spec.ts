@@ -37,6 +37,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "DOMINION", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -49,6 +50,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "EVERGY");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -61,6 +63,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "DELMARVA", "DELMARVA");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail); 
   });
 
 
@@ -73,6 +76,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PGE", "PSEG");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -94,6 +98,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "ACE", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -108,6 +113,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "FPL");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -122,6 +128,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "XCEL-ENERGY", "XCEL-ENERGY");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -136,6 +143,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PSEG-LI", "LA-DWP");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -155,6 +163,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -167,6 +176,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "COMED");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -179,6 +189,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "SCE");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -191,6 +202,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "SDGE", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -203,6 +215,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COSERV", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -223,6 +236,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -235,6 +249,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -247,6 +262,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "SCE");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -259,6 +275,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "SDGE", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -271,6 +288,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 
@@ -283,6 +301,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PECO", "PEPCO");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
 
 

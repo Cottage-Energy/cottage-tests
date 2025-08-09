@@ -41,6 +41,7 @@ test.describe('Move In New Service Zip User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -54,6 +55,7 @@ test.describe('Move In New Service Zip User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COSERV");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -68,6 +70,7 @@ test.describe('Move In New Service Zip User', () => {
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -81,6 +84,7 @@ test.describe('Move In New Service Zip User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -95,6 +99,7 @@ test.describe('Move In New Service Zip User', () => {
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -108,6 +113,7 @@ test.describe('Move In New Service Zip User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -128,6 +134,7 @@ test.describe('Move In New Service Zip User', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "CON-EDISON");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -152,6 +159,7 @@ test.describe('Move In New Service Zip User', () => {
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "EVERSOURCE");
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 
@@ -170,7 +178,7 @@ test.describe('Move In New Service Zip User', () => {
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail); 
     //check Account Status
   });
 
@@ -207,6 +215,7 @@ test.describe('Move In New Service Zip User', () => {
     //add check in DB fro question answers
     await page.waitForTimeout(10000);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     //check Account Status
   });
 

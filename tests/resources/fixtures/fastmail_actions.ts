@@ -53,7 +53,8 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Start Service Confirmation email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     //await expect(email_body).toContain(AccountNumber);
 
@@ -68,7 +69,7 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
 
 
 export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
-    const maxRetries = 4;
+    const maxRetries = 8;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -82,9 +83,12 @@ export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Start Service Confirmation email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    //const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Payment Emails
 
 
 export async function Check_Start_Service_Confirmation_Not_Present(Email: string) {
