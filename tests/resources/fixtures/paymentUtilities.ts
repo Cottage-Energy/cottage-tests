@@ -17,32 +17,32 @@ export class PaymentUtilities {
     private async getPaymentDetailsSingleChargeAccount(MoveIn: any)
     {
         const cottageUserId = MoveIn.cottageUserId;
-        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-        const ChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(ElectricAccountId, GasAccountId);
+        const electricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const gasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const chargeAccountId = await supabaseQueries.Get_Check_Charge_Account(electricAccountId, gasAccountId);
 
         return {
             cottageUserId,
-            ElectricAccountId,
-            GasAccountId,
-            ChargeAccountId
+            electricAccountId,
+            gasAccountId,
+            chargeAccountId
         };
     }
 
     private async getPaymentDetailsMultipleChargeAccounts(MoveIn: any)
     {
         const cottageUserId = MoveIn.cottageUserId;
-        const ElectricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
-        const ElectricChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(ElectricAccountId, null);
-        const GasChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(null, GasAccountId);
+        const electricAccountId = await supabaseQueries.Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const gasAccountId = await supabaseQueries.Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const electricChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(electricAccountId, null);
+        const gasChargeAccountId = await supabaseQueries.Get_Check_Charge_Account(null, gasAccountId);
 
         return {
             cottageUserId,
-            ElectricAccountId,
-            GasAccountId,   
-            ElectricChargeAccountId,
-            GasChargeAccountId
+            electricAccountId,
+            gasAccountId,
+            electricChargeAccountId,
+            gasChargeAccountId
         };
     }
 
@@ -57,8 +57,16 @@ export class PaymentUtilities {
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
-        await supabaseQueries.Insert_Electric_Bill(userPaymentInfo.ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
+        await supabaseQueries.Insert_Electric_Bill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
+        
+        //check no visibility
+        //approve bill
+        // wait for bill processed
+        //check payment status
+        //check page bill visibility
+
+
 
         await test.step('Get Electric Bill ID and validate', async () => {
             const ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
