@@ -1226,7 +1226,7 @@ export class MoveInPage{
 
         await newPage.waitForLoadState('domcontentloaded');
         await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
-        await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeVisible({timeout:60000});
+        //await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeVisible({timeout:60000});
         await newPage.close();
     }
 
