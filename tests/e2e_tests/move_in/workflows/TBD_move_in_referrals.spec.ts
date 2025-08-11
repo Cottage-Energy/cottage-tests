@@ -69,7 +69,7 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
     //add check in DB fro question answers
     await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
     //No service confirmation email

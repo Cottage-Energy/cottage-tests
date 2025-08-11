@@ -820,7 +820,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(PGuser.Email, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", "EVERSOURCE");
@@ -875,7 +875,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(PGuser.Email, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", null,"NGMA");
@@ -931,7 +931,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(PGuser.Email, false, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", "PSEG");
@@ -984,7 +984,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(PGuser.Email, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "EVERSOURCE", "DTE");

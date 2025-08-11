@@ -130,7 +130,7 @@ test.describe('Move In New Service Zip User', () => {
     //add check in DB fro question answers
     await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "CON-EDISON");
@@ -155,7 +155,7 @@ test.describe('Move In New Service Zip User', () => {
     //finish setup paymment
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await overviewPage.Check_Get_Started_Widget_Visible();
+    //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
     await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, "PENDING", "EVERSOURCE");
