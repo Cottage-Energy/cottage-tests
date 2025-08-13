@@ -108,7 +108,7 @@ export class MoveInPage{
     readonly Move_In_Pay_Through_PG_Yes: Locator;
     readonly Move_In_Pay_Through_PG_No: Locator;
     readonly Move_In_Service_Fee_Message: Locator;
-    readonly Move_In_PG_Does_Not_Add_Fee: Locator;
+
     readonly Move_In_Auto_Payment_Checbox: Locator;
     readonly Move_In_Submit_Button: Locator;
     readonly Move_In_Skip_Button: Locator;
@@ -145,10 +145,10 @@ export class MoveInPage{
         this.page = page;
         this.Move_In_Terms_Logo = page.locator('[alt="Public Grid Logo"]');
         this.Move_In_Terms_PG_Description = page.getByText('Public Grid is a free');
-        this.Move_In_Terms_Service_Description = page.getByText('Create a Public Grid account');
+        this.Move_In_Terms_Service_Description = page.getByText('Open up an account with');
         //this.Move_In_Tx_Svc_Service_Description = page.getByText('Service is guaranteed by your');
-        this.Move_In_Terms_Payment_Description = page.getByText('Skip the utility. We set up');
-        this.Move_In_Terms_Automation_Description = page.getByText('Energy on auto-pilot. We find')
+        this.Move_In_Terms_Payment_Description = page.getByText('Skip the utility. We create');
+        this.Move_In_Terms_Automation_Description = page.getByText('Your energy on auto-pilot. We');
 ;
         
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
@@ -249,12 +249,12 @@ export class MoveInPage{
         this.Move_In_Confirm_Skip_Payment_Add_Now_Button = page.getByRole('button', { name: 'Add a payment method now' });
         this.Move_In_Confirm_Skip_Payment_Add_Later_Button = page.getByRole('button', { name: 'I will add my payment later' });
 
-        this.Move_In_Payment_Details_Title = page.locator('//h3[text()="Add payment method for utility bills"]');
+        this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add a payment method for your' });
         this.Move_In_Pay_Through_PG_Title = page.getByText('Do you want to pay your bill');
         this.Move_In_Pay_Through_PG_Yes = page.getByLabel('Yes');
         this.Move_In_Pay_Through_PG_No = page.getByLabel('No', { exact: true });
-        this.Move_In_Service_Fee_Message = page.getByText('Public Grid pays the utility on your behalf. Card payments have a 3% fee, while');
-        this.Move_In_PG_Does_Not_Add_Fee = page.getByText('Public Grid is free and does');
+        this.Move_In_Service_Fee_Message = page.getByText('Public Grid pays the utility on your behalf.Cards have a 3% fee, while bank');
+
         this.Move_In_Success_Message = page.getByText('Success! 🥳Your account is');
         this.Move_In_Account_Number = page.getByText('Account Number:');
 
@@ -910,7 +910,7 @@ export class MoveInPage{
         let success = false;
 
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
-        await expect(this.Move_In_PG_Does_Not_Add_Fee).toBeVisible({timeout:30000});
+        
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
@@ -967,7 +967,7 @@ export class MoveInPage{
     async Enter_Sucessful_Bank_Details(Email:string, FullName:string){
 
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
-        await expect(this.Move_In_PG_Does_Not_Add_Fee).toBeVisible({timeout:30000});
+        
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
@@ -1017,7 +1017,7 @@ export class MoveInPage{
     async Enter_Failed_Bank_Details(Email:string, FullName:string){
 
         await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
-        await expect(this.Move_In_PG_Does_Not_Add_Fee).toBeVisible({timeout:30000});
+        
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
         const stripeFrame = await stripeIframe.contentFrame()
