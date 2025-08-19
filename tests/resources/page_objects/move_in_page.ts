@@ -267,7 +267,7 @@ export class MoveInPage{
         this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback 💚');
         this.Move_In_Dashboard_Link = page.getByRole('link', { name: 'Dashboard' });
 
-        this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new Move-in Request"]');
+        this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new move-in request"]');
 
         this.Move_In_ESCO_Title = page.getByRole('heading', { name: 'Because you live in New York' });
         this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,')
