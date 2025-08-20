@@ -243,7 +243,7 @@ export class MoveInPage{
 
         this.Move_In_Auto_Payment_Checbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit', exact: true });
-        this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now (and Submit)' });
+        this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now' });
 
         this.Move_In_Confirm_Skip_Payment_Title = page.getByRole('heading', { name: 'We need a payment method on' });
         this.Move_In_Confirm_Skip_Payment_Question_Link = page.getByText('Questions? Chat with us so we');
