@@ -105,8 +105,9 @@ export class MoveInPage{
 
     readonly Move_In_Payment_Details_Title: Locator;
     readonly Move_In_Pay_Through_PG_Title: Locator;
-    readonly Move_In_Pay_Through_PG_Yes: Locator;
-    readonly Move_In_Pay_Through_PG_No: Locator;
+    readonly Move_In_Pay_Through_PG_Switch: Locator;
+    //readonly Move_In_Pay_Through_PG_Yes: Locator;
+    //readonly Move_In_Pay_Through_PG_No: Locator;
     readonly Move_In_Service_Fee_Message: Locator;
 
     readonly Move_In_Auto_Payment_Checbox: Locator;
@@ -250,10 +251,11 @@ export class MoveInPage{
         this.Move_In_Confirm_Skip_Payment_Add_Later_Button = page.getByRole('button', { name: 'I will add my payment later' });
 
         this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add a payment method for your' });
-        this.Move_In_Pay_Through_PG_Title = page.getByText('Do you want to pay your bill');
-        this.Move_In_Pay_Through_PG_Yes = page.getByLabel('Yes');
-        this.Move_In_Pay_Through_PG_No = page.getByLabel('No', { exact: true });
-        this.Move_In_Service_Fee_Message = page.getByText('Public Grid pays the utility on your behalf.Cards have a 3% fee, while bank');
+        this.Move_In_Pay_Through_PG_Title = page.getByText('Pay your bill through Public');
+        this.Move_In_Pay_Through_PG_Switch = page.getByRole('switch');
+        //this.Move_In_Pay_Through_PG_Yes = page.getByLabel('Yes');
+        //this.Move_In_Pay_Through_PG_No = page.getByLabel('No', { exact: true });
+        this.Move_In_Service_Fee_Message = page.getByText('Cards have a 3% fee, while bank');
 
         this.Move_In_Success_Message = page.getByText('Success! 🥳Your account is');
         this.Move_In_Account_Number = page.getByText('Account Number:');
@@ -822,20 +824,23 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+        await this.page.waitForTimeout(1000);
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
             if(PayThroughPG == true){
-                await this.Move_In_Pay_Through_PG_Yes.hover();
-                await this.Move_In_Pay_Through_PG_Yes.click();
+                await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
+                //await this.Move_In_Pay_Through_PG_Yes.hover();
+                //await this.Move_In_Pay_Through_PG_Yes.click();
 
                 console.log("Pay through PG:", PayThroughPG);
 
                 await this.Enter_Payment_Details(CCnumber, CCexpiry, CCcvc, CCcountry, CCzip);
             }
             else{
-                await this.Move_In_Pay_Through_PG_No.hover();
-                await this.Move_In_Pay_Through_PG_No.click();
+                await this.Move_In_Pay_Through_PG_Switch.setChecked(false, { timeout: 5000 });
+                //await this.Move_In_Pay_Through_PG_No.hover();
+                //await this.Move_In_Pay_Through_PG_No.click();
 
                 console.log("Pay through PG:", PayThroughPG);
             }
@@ -850,20 +855,23 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+        await this.page.waitForTimeout(1000);
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
             if(PayThroughPG == true){
-                await this.Move_In_Pay_Through_PG_Yes.hover();
-                await this.Move_In_Pay_Through_PG_Yes.click();
+                await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
+                //await this.Move_In_Pay_Through_PG_Yes.hover();
+                //await this.Move_In_Pay_Through_PG_Yes.click();
 
                 console.log("Pay through PG:", PayThroughPG);
 
                 await this.Enter_Sucessful_Bank_Details(Email, FullName);
             }
             else{
-                await this.Move_In_Pay_Through_PG_No.hover();
-                await this.Move_In_Pay_Through_PG_No.click();
+                await this.Move_In_Pay_Through_PG_Switch.setChecked(false, { timeout: 5000 });
+                //await this.Move_In_Pay_Through_PG_No.hover();
+                //await this.Move_In_Pay_Through_PG_No.click();
 
                 console.log("Pay through PG:", PayThroughPG);
             }
@@ -879,20 +887,24 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+        await this.page.waitForTimeout(1000);
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
+
 
         if(PayThroughPGVisible){
             if(PayThroughPG == true){
-                await this.Move_In_Pay_Through_PG_Yes.hover();
-                await this.Move_In_Pay_Through_PG_Yes.click();
+                await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
+                //await this.Move_In_Pay_Through_PG_Yes.hover();
+                //await this.Move_In_Pay_Through_PG_Yes.click();
 
                 console.log("Pay through PG:", PayThroughPG);
 
                 await this.Enter_Failed_Bank_Details(Email, FullName);
             }
             else{
-                await this.Move_In_Pay_Through_PG_No.hover();
-                await this.Move_In_Pay_Through_PG_No.click();
+                await this.Move_In_Pay_Through_PG_Switch.setChecked(false, { timeout: 5000 });
+                //await this.Move_In_Pay_Through_PG_No.hover();
+                //await this.Move_In_Pay_Through_PG_No.click();
 
                 console.log("Pay through PG:", PayThroughPG);
             }
@@ -1089,12 +1101,11 @@ export class MoveInPage{
     async Skip_Payment_Details(){
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible();
+        await this.page.waitForTimeout(1000);
+        const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
-            await expect(this.Move_In_Pay_Through_PG_Yes).toBeVisible({timeout:30000});
-            await this.Move_In_Pay_Through_PG_Yes.hover();
-            await this.Move_In_Pay_Through_PG_Yes.click();
+            await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
 
             await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
             await this.Move_In_Skip_Button.hover();
