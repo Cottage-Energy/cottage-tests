@@ -128,9 +128,19 @@ jobs:
       run: |
         echo "## 📊 Test Results Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "🔗 **[View Test Results Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})**" >> $GITHUB_STEP_SUMMARY
+        echo "### � Download Test Report" >> $GITHUB_STEP_SUMMARY
+        echo "1. **[Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})**" >> $GITHUB_STEP_SUMMARY
+        echo "2. **Extract the zip file** and open \`index.html\` in your browser" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "📁 **Artifact Name:** PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "### � Run Details" >> $GITHUB_STEP_SUMMARY
+        echo "- **📁 Artifact Name:** PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **🎯 Test Scope:** ${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **🌍 Environment:** ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **📅 Run Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "🎯 **Test Scope:** ${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" >> $GITHUB_STEP_SUMMARY
-        echo "🌍 **Environment:** ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "### 💡 Quick Access" >> $GITHUB_STEP_SUMMARY
+        echo "The test report contains detailed results including:" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Passed tests" >> $GITHUB_STEP_SUMMARY
+        echo "- ❌ Failed tests with error details" >> $GITHUB_STEP_SUMMARY
+        echo "- 📸 Screenshots and videos (if available)" >> $GITHUB_STEP_SUMMARY
+        echo "- 📊 Test execution timeline" >> $GITHUB_STEP_SUMMARY
