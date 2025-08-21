@@ -123,3 +123,15 @@ jobs:
       with:
         name: PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
         path: test-results/*
+
+    - name: Generate Test Report Link
+      if: ${{ !cancelled() }}
+      run: |
+        echo "## 📊 Test Results Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🔗 **[View Test Results Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📁 **Artifact Name:** PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🎯 **Test Scope:** ${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" >> $GITHUB_STEP_SUMMARY
+        echo "🌍 **Environment:** ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}" >> $GITHUB_STEP_SUMMARY
