@@ -824,7 +824,7 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
@@ -855,7 +855,7 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
@@ -887,7 +887,7 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
 
@@ -1101,7 +1101,7 @@ export class MoveInPage{
     async Skip_Payment_Details(){
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
