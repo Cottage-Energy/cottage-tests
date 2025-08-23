@@ -116,6 +116,26 @@ jobs:
           npx playwright test --grep /@regression7/ --project=Mobile_Safari
         fi
 
+    - name: Generate Allure Report
+      if: always()
+      run: |
+        npm install -g allure-commandline
+        allure generate allure-results --clean -o allure-report
+
+    - name: Deploy to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        destination_dir: allure-reports/${{ github.run_number }}
+
+    - name: Add Allure Report Link to Summary
+      if: always()
+      run: |
+        echo "## 📊 Test Report" >> $GITHUB_STEP_SUMMARY
+        echo "🔗 [View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-reports/${{ github.run_number }}/)" >> $GITHUB_STEP_SUMMARY
+
     - name: Test Report Generation
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}

@@ -18,7 +18,8 @@
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.47.0",
     "@types/axios": "^0.14.0",
-    "@types/node": "^20.12.7"
+    "@types/node": "^20.12.7",
+    "allure-playwright": "^3.0.0"
   },
   "dependencies": {
     "@linear/sdk": "^27.0.0",
