@@ -24,7 +24,7 @@ response. </p>
 line tools to access the API. For installation instructions, see <a href="http://aws.amazon.com/tools/">Tools for
 Amazon Web Services</a>. </p>
 <p>For a list of Region-specific endpoints that Lambda supports,
-see <a href="https://docs.aws.amazon.com/general/latest/gr/lambda-service.html/">Lambda
+see <a href="https://docs.aws.amazon.com/general/latest/gr/lambda-service.html">Lambda
 endpoints and quotas </a> in the <i>Amazon Web Services General Reference.</i>. </p>
 <p>When making the API calls, you will need to
 authenticate your request by providing a signature. Lambda supports signature version 4. For more information,
@@ -75,7 +75,7 @@ up-to-date is the more straightforward solution. To learn more about ACM-provide
 
 ## Installing
 
-To install the this package, simply type add or install @aws-sdk/client-lambda
+To install this package, simply type add or install @aws-sdk/client-lambda
 using your favorite package manager:
 
 - `npm install @aws-sdk/client-lambda`
