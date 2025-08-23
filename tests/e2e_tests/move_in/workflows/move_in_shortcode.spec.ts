@@ -14,8 +14,8 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
-  await page.close();
+  //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  //await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
