@@ -33,7 +33,7 @@ test.describe('Move In Existing Utility Account', () => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(moveInpage,false,false, true);
+    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
     await page.waitForTimeout(5000);
@@ -48,7 +48,7 @@ test.describe('Move In Existing Utility Account', () => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(moveInpage,false,false, false);
+    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
     await page.waitForTimeout(5000);
@@ -65,7 +65,7 @@ test.describe('Move In Existing Utility Account', () => {
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(moveInpage,false,false, true);
+    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
     await page.waitForTimeout(5000);
@@ -82,7 +82,7 @@ test.describe('Move In Existing Utility Account', () => {
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(moveInpage,false,false, false);
+    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
     await page.waitForTimeout(5000);

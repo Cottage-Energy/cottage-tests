@@ -60,7 +60,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest", "NGMA", null);
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(moveInpage, "NGMA", null, true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(page, "NGMA", null, true, true);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       
@@ -87,7 +87,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", "NGMA");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(moveInpage, "COMED", "NGMA", true, false);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(page, "COMED", "NGMA", true, false);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       
@@ -114,7 +114,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,"CON-EDISON","CON-EDISON", true, false);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"CON-EDISON","CON-EDISON", true, false);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -152,7 +152,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(moveInpage,"EVERSOURCE","EVERSOURCE", true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(page,"EVERSOURCE","EVERSOURCE", true, true);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -192,7 +192,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","BGE");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,"NGMA","BGE", true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"NGMA","BGE", true, true);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -234,7 +234,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(moveInpage,"COMED","COMED", false, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(page,"COMED","COMED", false, true);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -270,7 +270,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "BGE");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage, "EVERSOURCE", "BGE", false, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, "EVERSOURCE", "BGE", false, true);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -308,7 +308,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
       await supabaseQueries.Update_Companies_to_Building("autotest", null, "EVERSOURCE");
       await supabaseQueries.Update_Building_Billing("autotest",true);
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage, null, "EVERSOURCE", true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, null, "EVERSOURCE", true, true);
   
       await page.goto('/sign-in'); //TEMPORARY FIX
       /*
@@ -350,7 +350,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(moveInpage, 'EVERSOURCE', null, true, true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(page, 'EVERSOURCE', null, true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     
@@ -377,7 +377,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,"COMED","COMED", true, false);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"COMED","COMED", true, false);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -415,7 +415,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","CON-EDISON");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,"COMED","CON-EDISON", true, false);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"COMED","CON-EDISON", true, false);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -453,7 +453,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest","BGE","BGE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(moveInpage,"BGE","BGE", true, true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(page,"BGE","BGE", true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -493,7 +493,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest","BGE","NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage,"BGE","NGMA", true, true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"BGE","NGMA", true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -535,7 +535,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(moveInpage,"NGMA","NGMA", false, true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(page,"NGMA","NGMA", false, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -571,7 +571,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","EVERSOURCE");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(moveInpage,"CON-EDISON","EVERSOURCE", false, true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Bank_Account_Added(page,"CON-EDISON","EVERSOURCE", false, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -607,7 +607,7 @@ test.describe.skip('Valid Bank Manual Payment', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", null, "COMED");
     await supabaseQueries.Update_Building_Billing("autotest",true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(moveInpage, null, "COMED", true, true);
+    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, null, "COMED", true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*

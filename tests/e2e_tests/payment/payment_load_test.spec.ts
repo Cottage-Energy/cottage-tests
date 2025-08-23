@@ -44,7 +44,7 @@ test.describe('Valid Card Auto Payment', () => {
       const PGuserUsage = await generateTestUserData();
       
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'COMED', null, true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'COMED', null, true, true);
       const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
 
       await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
@@ -64,7 +64,7 @@ test.describe('Valid Card Auto Payment', () => {
       const PGuserUsage = await generateTestUserData();
       
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'EVERSOURCE', null, true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'EVERSOURCE', null, true, true);
       const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
 
       await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
@@ -84,7 +84,7 @@ test.describe('Valid Card Auto Payment', () => {
       const PGuserUsage = await generateTestUserData();
       
       await page.goto('/move-in?gasCompany=BGE',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, null, 'BGE', true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, null, 'BGE', true, true);
       const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
 
       await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
@@ -104,7 +104,7 @@ test.describe('Valid Card Auto Payment', () => {
       const PGuserUsage = await generateTestUserData();
       
       await page.goto('/move-in?electricCompany=DELMARVA&gasCompany=DELMARVA',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'DELMARVA', 'DELMARVA', true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'DELMARVA', 'DELMARVA', true, true);
       const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
 
@@ -126,7 +126,7 @@ test.describe('Valid Card Auto Payment', () => {
       const PGuserUsage = await generateTestUserData();
 
       await page.goto('/move-in?electricCompany=NGMA&gasCompany=NGMA',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'NGMA', 'NGMA', true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'NGMA', 'NGMA', true, true);
       const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
 
@@ -148,7 +148,7 @@ test.describe('Valid Card Auto Payment', () => {
       const PGuserUsage = await generateTestUserData();
 
       await page.goto('/move-in?electricCompany=PGE&gasCompany=PSEG',{ waitUntil: 'domcontentloaded' });
-      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(moveInpage, 'PGE', 'PSEG', true, true);
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'PGE', 'PSEG', true, true);
       const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
 

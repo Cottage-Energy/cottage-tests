@@ -1,6 +1,6 @@
 import { generateTestUserData } from '../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
-//import { MoveInPage } from '../../resources/page_objects/move_in_page';
+import { MoveInPage } from '../../resources/page_objects/move_in_page';
 import * as MoveIndata from '../../resources/data/move_in-data.json';
 import * as PaymentData from '../../resources/data/payment-data.json';
 import { TIMEOUT } from 'dns';
@@ -13,8 +13,8 @@ const supabaseQueries = new SupabaseQueries();
 //Create a unified code block for all the move in flows
 //Move pay through PG here with default value of true
 
-export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -150,8 +150,8 @@ export async function New_User_Move_In_Auto_Payment_Added(moveInpage: any, Elect
     };
 }
 
-export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -288,8 +288,8 @@ export async function New_User_Move_In_Manual_Payment_Added(moveInpage: any, Ele
     };
 }
 
-export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -417,8 +417,8 @@ export async function New_User_Move_In_Skip_Payment(moveInpage: any, ElectricCom
     };
 }
 
-export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
-    
+export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -553,8 +553,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(moveInpage: any, 
     };
 }
 
-export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
-    
+export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -690,8 +690,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(moveInpage: any
     };
 }
 
-export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
-    
+export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -826,8 +826,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(moveInpage
     };
 }
 
-export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
-    
+export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -963,8 +963,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(moveInpa
     };
 }
 
-export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -1079,8 +1079,8 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(moveInpage: any, Ele
     };
 }
 
-export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_Address_Parameter_Flow(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -1195,8 +1195,8 @@ export async function New_User_Move_In_Address_Parameter_Flow(moveInpage: any, E
     };
 }
 
-export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -1331,8 +1331,8 @@ export async function New_User_Move_In_GUID_Flow(moveInpage: any, ElectricCompan
     };
 }
 
-export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpage: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
-    
+export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
@@ -1471,8 +1471,8 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(moveInpag
 /////////////////////////////////////////////////////////////////////////
 
 
-export async function Move_In_Existing_Utility_Account(moveInpage: any, NewElectric: boolean, NewGas: boolean, SubmitRequest: boolean) {
-    
+export async function Move_In_Existing_Utility_Account(page: any, NewElectric: boolean, NewGas: boolean, SubmitRequest: boolean) {
+    const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();
     const PGUserName = "PGTest " + PGuser.FirstName + " " + PGuser.LastName;
     const PGUserFirstName = "PGTest " + PGuser.FirstName;
