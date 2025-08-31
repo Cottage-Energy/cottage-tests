@@ -376,7 +376,7 @@ export class SupabaseQueries{
         const { data,error} = await supabase
         .from('ElectricBill')
         .update({ ingestionState: 'approved' })
-        .eq('id', BillId )
+        .eq('id', parseInt(BillId))
         .select()
         .throwOnError();
         console.log(data);
@@ -387,7 +387,7 @@ export class SupabaseQueries{
         const { data,error} = await supabase
         .from('GasBill')
         .update({ ingestionState: 'approved' })
-        .eq('id', BillId )
+        .eq('id', parseInt(BillId))
         .select()
         .throwOnError();
         console.log(data);
@@ -405,7 +405,7 @@ export class SupabaseQueries{
             const { data: ElectricBillData } = await supabase
                 .from('ElectricBill')
                 .select('ingestionState')
-                .eq('id', BillId)
+                .eq('id', parseInt(BillId))
                 .single()
                 .throwOnError();
                 
@@ -438,7 +438,7 @@ export class SupabaseQueries{
             const { data: GasBillData } = await supabase
                 .from('GasBill')
                 .select('ingestionState')
-                .eq('id', BillId)
+                .eq('id', parseInt(BillId))
                 .single()
                 .throwOnError();
                 
@@ -468,7 +468,7 @@ export class SupabaseQueries{
         const { data: EBill } = await supabase
             .from('ElectricBill')
             .select('id')
-            .eq('electricAccountID', ElectricAccountId)
+            .eq('electricAccountID', parseInt(ElectricAccountId))
             .eq('totalAmountDue', Amount)
             .eq('totalUsage', Usage)    
             .single()
@@ -483,7 +483,7 @@ export class SupabaseQueries{
         const { data: GBill } = await supabase
             .from('GasBill')
             .select('id')
-            .eq('gasAccountID', GasAccountId)
+            .eq('gasAccountID', parseInt(GasAccountId))
             .eq('totalAmountDue', Amount)
             .eq('totalUsage', Usage)    
             .single()
@@ -622,7 +622,7 @@ export class SupabaseQueries{
         const { data: ElectricBill } = await supabase
             .from('ElectricBill')
             .select('startDate')
-            .eq('electricAccountID', ElectricAccountId)
+            .eq('electricAccountID', parseInt(ElectricAccountId))
             .maybeSingle()
             .throwOnError();
         const StartDate = ElectricBill?.startDate ?? '';
@@ -634,7 +634,7 @@ export class SupabaseQueries{
         const { data: ElectricBill } = await supabase
             .from('ElectricBill')
             .select('endDate')
-            .eq('electricAccountID', ElectricAccountId)
+            .eq('electricAccountID', parseInt(ElectricAccountId))
             .maybeSingle()
             .throwOnError();
         const EndDate = ElectricBill?.endDate ?? '';
@@ -646,7 +646,7 @@ export class SupabaseQueries{
         const { data: GasBill } = await supabase
             .from('GasBill')
             .select('startDate')
-            .eq('gasAccountID', GasAccountId)
+            .eq('gasAccountID', parseInt(GasAccountId))
             .maybeSingle()
             .throwOnError();
         const StartDate = GasBill?.startDate ?? '';
@@ -658,7 +658,7 @@ export class SupabaseQueries{
         const { data: GasBill } = await supabase
             .from('GasBill')
             .select('endDate')
-            .eq('gasAccountID', GasAccountId)
+            .eq('gasAccountID', parseInt(GasAccountId))
             .maybeSingle()
             .throwOnError();
         const EndDate = GasBill?.endDate ?? '';
