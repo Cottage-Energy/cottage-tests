@@ -205,7 +205,7 @@ export class MoveInPage{
         this.Move_In_Email_Invalid_Message = page.getByText('Email address must be valid.');
         
         this.Move_In_Date_Field = page.locator('//p[contains(text(),"Date")]//following::div[@type="button"]');
-        this.Move_In_Date_Selector = (day: string) => page.locator('//button[text()='+ day +'and not(@disabled)]');
+        this.Move_In_Date_Selector = (day: string) => page.locator('//button[text()='+ day +'and not(@disabled) and (contains(@class,"bg-accent"))]');
         this.Move_In_Next_Month_Button = page.getByLabel('Go to next month');
         this.Move_In_Prev_Month_Button = page.getByLabel('Go to previous month');
         this.Move_In_Identity_Info_Title = page.getByRole('heading', { name: 'Identity Information' });
