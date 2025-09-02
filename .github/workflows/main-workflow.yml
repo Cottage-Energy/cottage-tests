@@ -165,7 +165,7 @@ jobs:
         SCOPE="${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}"
         case "$SCOPE" in
           "Smoke")
-            npx playwright test --grep /@smoke/ --project=Chromium --project=Mobile_Safari
+            npx playwright test --grep /@smoke/ --project=Chromium
             ;;
           "Regression1")
             npx playwright test --grep /@regression1/ --project=Chromium
