@@ -722,6 +722,7 @@ export class MoveInPage{
         await this.Move_In_ID_Number_Field.isEnabled({timeout:10000});
         await this.Move_In_ID_Number_Field.isEditable({timeout:10000});
         await this.Move_In_ID_Number_Field.fill(IDnumber);
+        await this.page.waitForTimeout(1000);
     }
 
 
@@ -732,7 +733,8 @@ export class MoveInPage{
         await this.Move_In_Birthdate_Field.fill(birthdate,{timeout:10000});
         await this.Move_In_CON_ED_ID_Number_Field.isEnabled({timeout:10000});
         await this.Move_In_CON_ED_ID_Number_Field.isEditable({timeout:10000});
-        await this.Move_In_CON_ED_ID_Number_Field.fill(IDnumber)
+        await this.Move_In_CON_ED_ID_Number_Field.fill(IDnumber);
+        await this.page.waitForTimeout(1000);
     }
 
 
@@ -761,6 +763,7 @@ export class MoveInPage{
             await this.Move_In_Address_Dropdown(prevAddress).click();
             await this.page.waitForTimeout(500);
             await this.Move_In_Identity_Info_Title.click();
+            await this.page.waitForTimeout(1000);
         }
     }
 
