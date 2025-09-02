@@ -3,6 +3,7 @@ import {supabase} from '../../resources/utils/supabase';
 
 export class SupabaseQueries{
 
+        //////////// Cottage User Queries ////////////
     async Check_Cottage_User_Id(Email: string, TextConsent?: boolean) {
         const email = Email.toLowerCase();
         console.log(email);
@@ -262,6 +263,36 @@ export class SupabaseQueries{
         return GasPlaneTicketId.toString();
     }
 
+
+    //////////// Light User Queries ////////////
+    async Check_Light_User_Id(Email: string) {
+        const email = Email.toLowerCase();
+        console.log(email);
+        const { data: LightUser } = await supabase
+            .from('LightUsers')
+            .select('*')
+            .eq('email', email)
+            .single()
+            .throwOnError();
+        const lightUserId = LightUser?.id ?? '';
+        console.log(lightUserId);
+        await expect(lightUserId).not.toBe("");
+
+        return lightUserId;
+    }
+
+    async Get_Light_User_Id(Email: string) {
+        const email = Email.toLowerCase();
+        console.log(email);
+        const { data: LightUser } = await supabase
+            .from('LightUsers')
+            .select('*')
+            .eq('email', email)
+            .single()
+        const lightUserId = LightUser?.id ?? '';
+        console.log(lightUserId);
+        return lightUserId;
+    }
 
 
     //////////// Bill Queries ////////////
