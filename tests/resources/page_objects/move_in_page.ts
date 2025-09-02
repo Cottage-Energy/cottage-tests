@@ -826,6 +826,7 @@ export class MoveInPage{
 
     async Enter_Card_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('networkidle');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
         await this.page.waitForTimeout(3000);
