@@ -50,6 +50,14 @@ on:
         - Regression5
         - Regression6
         - Regression7
+      notify:
+        description: 'Send notifications on completion'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+        - 'true'
+        - 'false'
 
   repository_dispatch:
     types: [deploy]
@@ -58,12 +66,40 @@ jobs:
   PG_Test_Run:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment || github.event.inputs.environment || github.event.client_payload.environment }}
+    timeout-minutes: 60
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+        
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
         cache: 'npm'
+
+    - name: Validate inputs
+      run: |
+        SCOPE="${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}"
+        ENV="${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}"
+        
+        if [[ ! "$SCOPE" =~ ^(Smoke|Regression[1-7])$ ]]; then
+          echo "❌ Invalid scope: $SCOPE"
+          echo "Valid scopes: Smoke, Regression1-7"
+          exit 1
+        fi
+        
+        if [[ ! "$ENV" =~ ^(dev|staging)$ ]]; then
+          echo "❌ Invalid environment: $ENV"
+          echo "Valid environments: dev, staging"
+          exit 1
+        fi
+        
+        echo "✅ Scope: $SCOPE"
+        echo "✅ Environment: $ENV"
 
     - name: Install dependencies
       run: |
@@ -72,7 +108,17 @@ jobs:
         npm config set fetch-retry-factor 10
         npm config set fetch-retries 5
         for i in {1..3}; do
-          npm ci && break || echo "Attempt $i failed, retrying in 30 seconds..." && sleep 30
+          if npm ci; then
+            echo "Dependencies installed successfully"
+            break
+          else
+            echo "Attempt $i failed, retrying in 30 seconds..."
+            if [ $i -eq 3 ]; then
+              echo "Failed to install dependencies after 3 attempts"
+              exit 1
+            fi
+            sleep 30
+          fi
         done
 
     - name: Install Playwright Browsers
@@ -86,15 +132,25 @@ jobs:
       run: |
         echo "LOG_LEVEL=${{ github.event.inputs.logLevel || github.event.client_payload.logLevel || inputs.logLevel }}" >> $GITHUB_ENV
 
-    - name: Debug secrets access
+    - name: Validate secrets and environment
       run: |
-        echo "Checking secret availability..."
-        echo "FASTMAIL_API_KEY exists: ${{ secrets.FASTMAIL_API_KEY != '' }}"
-        echo "PLANE_MOVE_IN_PROJECT_ID exists: ${{ secrets.PLANE_MOVE_IN_PROJECT_ID != '' }}"
-        echo "PLANE_API_KEY exists: ${{ secrets.PLANE_API_KEY != '' }}"
-        echo "SUPABASE_API_KEY exists: ${{ secrets.SUPABASE_API_KEY != '' }}"
-        echo "Repository: ${{ github.repository }}"
-        echo "Workflow trigger: ${{ github.event_name }}"
+        echo "🔍 Validating secrets and environment..."
+        
+        # Check required secrets
+        MISSING_SECRETS=""
+        [[ -z "${{ secrets.FASTMAIL_API_KEY }}" ]] && MISSING_SECRETS="$MISSING_SECRETS FASTMAIL_API_KEY"
+        [[ -z "${{ secrets.PLANE_API_KEY }}" ]] && MISSING_SECRETS="$MISSING_SECRETS PLANE_API_KEY"
+        [[ -z "${{ secrets.SUPABASE_API_KEY }}" ]] && MISSING_SECRETS="$MISSING_SECRETS SUPABASE_API_KEY"
+        
+        if [[ -n "$MISSING_SECRETS" ]]; then
+          echo "❌ Missing required secrets:$MISSING_SECRETS"
+          exit 1
+        fi
+        
+        echo "✅ All required secrets are available"
+        echo "✅ Repository: ${{ github.repository }}"
+        echo "✅ Workflow trigger: ${{ github.event_name }}"
+        echo "✅ Environment: $ENV"
 
     - name: Run Playwright tests
       env:
@@ -106,27 +162,58 @@ jobs:
 
 
       run: |
-        if [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Smoke" ]; then
-          npx playwright test --grep /@smoke/ --project=Chromium
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression1" ]; then
-          npx playwright test --grep /@regression1/ --project=Chromium
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression2" ]; then
-          npx playwright test --grep /@regression2/ --project=Firefox
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression3" ]; then
-          npx playwright test --grep /@regression3/ --project=Safari
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression4" ]; then
-          npx playwright test --grep /@regression4/ --project=Mobile_Chrome
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression5" ]; then
-          npx playwright test --grep /@regression5/ --project=Mobile_Safari
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression6" ]; then
-          npx playwright test --grep /@regression6/ --project=Mobile_Chrome
-        elif [ "${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}" == "Regression7" ]; then
-          npx playwright test --grep /@regression7/ --project=Mobile_Safari
-        fi
+        SCOPE="${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}"
+        case "$SCOPE" in
+          "Smoke")
+            npx playwright test --grep /@smoke/ --project=Chromium --project=Mobile_Safari
+            ;;
+          "Regression1")
+            npx playwright test --grep /@regression1/ --project=Chromium
+            ;;
+          "Regression2")
+            npx playwright test --grep /@regression2/ --project=Firefox
+            ;;
+          "Regression3")
+            npx playwright test --grep /@regression3/ --project=Safari
+            ;;
+          "Regression4")
+            npx playwright test --grep /@regression4/ --project=Mobile_Chrome
+            ;;
+          "Regression5")
+            npx playwright test --grep /@regression5/ --project=Mobile_Safari
+            ;;
+          "Regression6")
+            npx playwright test --grep /@regression6/ --project=Mobile_Chrome
+            ;;
+          "Regression7")
+            npx playwright test --grep /@regression7/ --project=Mobile_Safari
+            ;;
+          *)
+            echo "Unknown scope: $SCOPE"
+            exit 1
+            ;;
+        esac
 
     - name: Test Report Generation
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }} - ${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
-        path: test-results/*
+        name: PG_${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}_Test_Results_${{ github.run_number }}_${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}
+        path: |
+          test-results/
+          playwright-report/
+        retention-days: 30
+
+    - name: Upload Test Summary
+      if: ${{ !cancelled() }}
+      run: |
+        SCOPE="${{ github.event.inputs.scope || github.event.client_payload.scope || inputs.scope }}"
+        ENV="${{ github.event.inputs.environment || github.event.client_payload.environment || inputs.environment }}"
+        echo "## Test Results Summary 📊" >> $GITHUB_STEP_SUMMARY
+        echo "- **Scope**: $SCOPE" >> $GITHUB_STEP_SUMMARY  
+        echo "- **Environment**: $ENV" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build**: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        if [ -f "test-results/results.json" ]; then
+          echo "- **Results**: Check artifacts for detailed report" >> $GITHUB_STEP_SUMMARY
+        fi
