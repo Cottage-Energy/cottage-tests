@@ -162,7 +162,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Payment Emails
 
-export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string, ElectricUsage: any, ElectricBillTotal: any) {
+export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string, ElectricBillTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
@@ -185,7 +185,7 @@ export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string,
 }
 
 
-export async function Check_Electric_Bill_Ready_Email(Email: string, ElectricUsage: any, ElectricBillTotal: any) {
+export async function Check_Electric_Bill_Ready_Email(Email: string, ElectricBillTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
@@ -228,7 +228,7 @@ export async function Check_Electric_Bill_Payment_Success(Email: string, Electri
 }
 
 
-export async function Check_Gas_Bill_Scheduled_Payment_Email(Email: string, GasUsage: any, GasBillTotal: any) {
+export async function Check_Gas_Bill_Scheduled_Payment_Email(Email: string, GasBillTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
@@ -250,7 +250,7 @@ export async function Check_Gas_Bill_Scheduled_Payment_Email(Email: string, GasU
 }
 
 
-export async function Check_Gas_Bill_Ready_Email(Email: string, GasUsage: any, GasBillTotal: any) {
+export async function Check_Gas_Bill_Ready_Email(Email: string, GasBillTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
