@@ -550,21 +550,22 @@ export class SupabaseQueries{
         const maxRetries = 300;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
-        let ElectricBillstatus = '';
+        let PaymentStatus = '';
         
         while (retries < maxRetries) {
-            const { data: ElectricBillStatus } = await supabase
-                .from('ElectricBill')
+            const { data: PayStatus } = await supabase
+                .from('Payment')
                 .select('paymentStatus')
-                .eq('electricAccountID', ElectricAccountId)
+                .eq('paidBy', cottageUserId)
+                .eq('amount', Amount)
                 .single()
                 .throwOnError();
-                
-            ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
-            console.log(ElectricBillstatus);
-        
-            if (ElectricBillstatus === status) {
-                await expect(ElectricBillstatus).toBe(status);
+
+            PaymentStatus = PayStatus?.paymentStatus ?? '';
+            console.log(PaymentStatus);
+
+            if (PaymentStatus === status) {
+                await expect(PaymentStatus).toBe(status);
                 break;
             }
         
@@ -574,7 +575,7 @@ export class SupabaseQueries{
         }
         
         // If the loop exits without matching the status, throw an error
-        if (ElectricBillstatus !== status) {
+        if (PaymentStatus !== status) {
             throw new Error(`Expected status '${status}' not met after ${maxRetries} retries.`);
         }
     }
@@ -584,20 +585,21 @@ export class SupabaseQueries{
         const maxRetries = 500;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
-        let ElectricBillstatus = '';
+        let PaymentStatus = '';
         
         while (retries < maxRetries) {
-            const { data: ElectricBillStatus } = await supabase
-                .from('ElectricBill')
+            const { data: PayStatus } = await supabase
+                .from('Payment')
                 .select('paymentStatus')
-                .eq('electricAccountID', ElectricAccountId)
+                .eq('paidBy', cottageUserId)
+                .eq('amount', Amount)
                 .single()
                 .throwOnError();
-                
-            ElectricBillstatus = ElectricBillStatus?.paymentStatus ?? '';
-            console.log(ElectricBillstatus);
-        
-            if (ElectricBillstatus === "processing" || ElectricBillstatus === "succeeded"|| ElectricBillstatus === "failed") {
+
+            PaymentStatus = PayStatus?.paymentStatus ?? '';
+            console.log(PaymentStatus);
+
+            if (PaymentStatus === "processing" || PaymentStatus === "succeeded"|| PaymentStatus === "failed") {
                 break;
             }
         
@@ -606,13 +608,44 @@ export class SupabaseQueries{
             await delay(50);
         }
 
-        await expect(ElectricBillstatus).toMatch(/^(processing|succeeded|failed)$/);
-        
+        await expect(PaymentStatus).toMatch(/^(processing|succeeded|failed)$/);
+
     }
 
 
-    async Check_Utility_Remittance(chargeAccountId: string, Amount: number){
+    async Check_Utility_Remittance(chargeAccountId: string, Amount: number, status: string){
+        const maxRetries = 300;
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        let retries = 0;
+        let utilityRemittance: any;
 
+        while (retries < maxRetries) {
+            const { data: UtilityRemittance } = await supabase
+                .from('UtilityRemittance')
+                .select('*')
+                .eq('chargeAccountID', chargeAccountId)
+                .eq('amount', Amount)
+                .eq('status', status)
+                .single()
+                .throwOnError();
+
+            utilityRemittance = UtilityRemittance;
+
+            if (utilityRemittance) {
+                await expect(utilityRemittance.id).not.toBeNull();
+                console.log("Utility Remittance ID:", utilityRemittance.id);
+                break;
+            }
+
+            retries++;
+            console.log(`Retrying... (${retries}/${maxRetries})`);
+            await delay(1000);
+        }
+
+        // If the loop exits without matching the status, throw an error
+        if (!utilityRemittance) {
+            throw new Error(`Utility Remittance is not present after ${maxRetries} retries.`);
+        }
     }
 
 
@@ -718,64 +751,6 @@ export class SupabaseQueries{
         .throwOnError();
         console.log(data);
         console.log(error);
-    }
-
-
-    async Check_Registration_Job_Completion(JobId: string) {
-        const maxRetries = 10;
-        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-        let retries = 0;
-        let JobStatus = '';
-
-        while (retries < maxRetries) {
-            const { data: Job } = await supabase
-                .from('RegistrationJob')
-                .select('status')
-                .eq('id', JobId)
-                .maybeSingle()
-                .throwOnError();
-            JobStatus = Job?.status ?? '';
-            console.log(JobStatus);
-
-            if (JobStatus === 'COMPLETE' || JobStatus === 'FAILED') {
-                break;
-            }
-
-            retries++;
-            console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(30000);
-        }
-        
-        await expect(JobStatus).toBe('COMPLETE');
-    }
-
-
-    async Get_Running_Registration_Job (cottageUserId: string) {
-        const maxRetries = 60;
-        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-        let retries = 0;
-        let RegJobId = '';
-
-        while (retries < maxRetries) {
-            const { data: RegJob } = await supabase
-                .from('RegistrationJob')
-                .select('id')
-                .eq('forCottageUserID', cottageUserId)
-                .eq('status', 'RUNNING')
-                .maybeSingle()
-                .throwOnError();
-            RegJobId = RegJob?.id ?? '';
-            console.log(RegJobId);
-
-            if (RegJobId !== '') {
-                break;
-            }
-
-            retries++;
-            console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(500);
-        }
-        return RegJobId;
     }
 
 

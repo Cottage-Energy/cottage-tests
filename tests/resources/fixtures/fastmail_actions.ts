@@ -87,9 +87,6 @@ export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
     //await expect(content.length).toEqual(1);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Payment Emails
-
 
 export async function Check_Start_Service_Confirmation_Not_Present(Email: string) {
     let content: any[] = [];
@@ -97,6 +94,8 @@ export async function Check_Start_Service_Confirmation_Not_Present(Email: string
     await expect(content.length).toEqual(0);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Payment Method Reminder Emails
 
 export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Email: string) {
     const maxRetries = 2;
@@ -161,6 +160,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Payment Emails
 
 export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string, ElectricUsage: any, ElectricBillTotal: any) {
     const maxRetries = 2;
