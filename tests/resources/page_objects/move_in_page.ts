@@ -858,6 +858,7 @@ export class MoveInPage{
 
     async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('networkidle');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
         await this.page.waitForTimeout(3000);
@@ -890,6 +891,7 @@ export class MoveInPage{
 
     async Enter_Invalid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('networkidle');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
         await this.page.waitForTimeout(3000);
@@ -1104,6 +1106,8 @@ export class MoveInPage{
 
 
     async Skip_Payment_Details(){
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForLoadState('networkidle');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
         await this.page.waitForTimeout(3000);
