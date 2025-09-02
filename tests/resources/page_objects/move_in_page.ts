@@ -250,7 +250,8 @@ export class MoveInPage{
         this.Move_In_Confirm_Skip_Payment_Add_Now_Button = page.getByRole('button', { name: 'Add a payment method now' });
         this.Move_In_Confirm_Skip_Payment_Add_Later_Button = page.getByRole('button', { name: 'I will add my payment later' });
 
-        this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add a payment method for your' });
+        //this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add a payment method for your' });
+        this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: /Add a payment method/i });
         this.Move_In_Pay_Through_PG_Title = page.getByText('Pay your bill through Public');
         this.Move_In_Pay_Through_PG_Switch = page.getByRole('switch');
         //this.Move_In_Pay_Through_PG_Yes = page.getByLabel('Yes');
