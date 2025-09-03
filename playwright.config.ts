@@ -18,7 +18,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: undefined,
-  reporter: [['html', { outputFolder: 'test-results' }]],
+  reporter: [
+    ["line"],
+    ["html", { outputFolder: "test-results" }]
+  ],
   use: {
     trace: 'on-first-retry',
     /* Base URL to use in actions like `await page.goto('/')`. */
