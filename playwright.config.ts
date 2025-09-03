@@ -39,8 +39,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         screenshot: 'on',
         video: 'retain-on-failure',
-        trace: 'retain-on-failure',
-        viewport: { width: 1920, height: 1080 }
+        trace: 'retain-on-failure'
       },
     },
 
