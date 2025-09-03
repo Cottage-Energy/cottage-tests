@@ -34,7 +34,9 @@ export default defineConfig({
       name: 'Chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        screenshot: 'only-on-failure',
+        screenshot: 'on',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure',
       },
     },
 
@@ -42,15 +44,18 @@ export default defineConfig({
       name: 'Firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        screenshot: 'only-on-failure',
+        screenshot: 'on',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure',
       },
     },
 
     {
       name: 'Safari',
       use: { 
-        ...devices['Desktop Safari'],
-        screenshot: 'only-on-failure',
+        screenshot: 'on',
+        video: 'retain-on-failure',
+        trace: 'retain-on-failure',
       },
     },
 
@@ -59,28 +64,36 @@ export default defineConfig({
        name: 'Mobile_Chrome',
        use: { 
       ...devices['Pixel 7'],
-      screenshot: 'only-on-failure',
+      screenshot: 'on',
+      video: 'retain-on-failure',
+      trace: 'retain-on-failure',
       },
     },
     {
        name: 'Mobile_Safari',
        use: { 
       ...devices['iPhone 14'],
-      screenshot: 'only-on-failure',
+      screenshot: 'on',
+      video: 'retain-on-failure',
+      trace: 'retain-on-failure',
       },
     },
     {
        name: 'Mobile_Samsung',
        use: { 
       ...devices['Galaxy S9+'],
-      screenshot: 'only-on-failure',
+      screenshot: 'on',
+      video: 'retain-on-failure',
+      trace: 'retain-on-failure',
       },
     },
     {
        name: 'Tablet_iPad',
        use: { 
       ...devices['iPad Pro'],
-      screenshot: 'only-on-failure',
+      screenshot: 'on',
+      video: 'retain-on-failure',
+      trace: 'retain-on-failure',
       },
     },
 
