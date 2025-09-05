@@ -10,6 +10,7 @@ import { ProfilePage } from '../account_profile_page';
 import { BillUploadPage } from '../bill_upload_page';
 import { SupabaseQueries } from '../../fixtures/database_queries';
 import { PlaneActions } from '../../fixtures/plane_actions';
+import { ViewportUtils } from '../../utils/viewportUtils';
 
 
 type pages = {
@@ -31,38 +32,48 @@ type pages = {
 const testPages = base.extend<pages>({
     
     homepage: async ({page},use) => {
+        // Set consistent viewport and zoom level
+        await ViewportUtils.setStandardViewport(page);
         await use(new HomePage(page));
     },
 
     sidebarChat: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new SidebarChat(page));
     },
 
     moveInpage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new MoveInPage(page));
     },
 
     finishAccountSetupPage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new FinishAccountSetupPage(page));
     },
 
     overviewPage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new OverviewPage(page));
     },
 
     billingPage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new BillingPage(page));
     },
 
     servicesPage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new ServicesPage(page));
     },
 
     profilePage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new ProfilePage(page));
     },
 
     billUploadPage: async ({page},use) => {
+        await ViewportUtils.setStandardViewport(page);
         await use(new BillUploadPage(page));
     },
 

@@ -55,7 +55,8 @@ export default defineConfig({
 
     {
       name: 'Safari',
-      use: { 
+      use: {
+        ...devices['Desktop Safari'],
         screenshot: 'on',
         video: 'retain-on-failure',
         trace: 'retain-on-failure',
@@ -76,24 +77,6 @@ export default defineConfig({
        name: 'Mobile_Safari',
        use: { 
       ...devices['iPhone 14'],
-      screenshot: 'on',
-      video: 'retain-on-failure',
-      trace: 'retain-on-failure',
-      },
-    },
-    {
-       name: 'Mobile_Samsung',
-       use: { 
-      ...devices['Galaxy S9+'],
-      screenshot: 'on',
-      video: 'retain-on-failure',
-      trace: 'retain-on-failure',
-      },
-    },
-    {
-       name: 'Tablet_iPad',
-       use: { 
-      ...devices['iPad Pro'],
       screenshot: 'on',
       video: 'retain-on-failure',
       trace: 'retain-on-failure',

@@ -1,5 +1,6 @@
 import { type Page, type Locator, expect } from '@playwright/test';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+import { ViewportUtils } from '../../resources/utils/viewportUtils';
 import * as MoveIndata from '../../resources/data/move_in-data.json';
 
 const supabaseQueries = new SupabaseQueries();
@@ -283,6 +284,11 @@ export class MoveInPage{
     async Agree_on_Terms_and_Get_Started() {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
+        
+        // Ensure viewport is set correctly for this page
+        await ViewportUtils.setStandardViewport(this.page);
+        await ViewportUtils.ensureFullWidth(this.page);
+        
         await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_PG_Description).toBeVisible({timeout:30000});
         await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:1000})
@@ -827,6 +833,11 @@ export class MoveInPage{
     async Enter_Card_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
+        
+        // Ensure viewport is set correctly for payment form
+        await ViewportUtils.setStandardViewport(this.page);
+        await ViewportUtils.ensureFullWidth(this.page);
+        
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
 
         await this.page.waitForTimeout(3000);
