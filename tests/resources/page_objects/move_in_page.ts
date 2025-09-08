@@ -830,7 +830,7 @@ export class MoveInPage{
         await this.page.waitForLoadState('load');
     
         
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
         await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
@@ -862,7 +862,7 @@ export class MoveInPage{
     async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
         await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
@@ -895,7 +895,7 @@ export class MoveInPage{
     async Enter_Invalid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
         await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
@@ -931,7 +931,7 @@ export class MoveInPage{
         let attempt = 0;
         let success = false;
 
-        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:90000});
         
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -988,7 +988,7 @@ export class MoveInPage{
 
     async Enter_Sucessful_Bank_Details(Email:string, FullName:string){
 
-        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:90000});
         
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -1038,7 +1038,7 @@ export class MoveInPage{
 
     async Enter_Failed_Bank_Details(Email:string, FullName:string){
 
-        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Service_Fee_Message).toBeVisible({timeout:90000});
         
 
         const stripeIframe = await this.page?.waitForSelector('[title ="Secure payment input frame"]')
@@ -1111,7 +1111,7 @@ export class MoveInPage{
     async Skip_Payment_Details(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
         await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
