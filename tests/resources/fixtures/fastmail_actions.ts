@@ -161,13 +161,13 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Payment Emails
-
-export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string, ElectricBillTotal: any) {
+//autopay
+export async function Check_Electric_Bill_Is_Ready(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Your Bill is Scheduled for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Electric bill is ready`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -175,22 +175,20 @@ export async function Check_Electric_Bill_Scheduled_Payment_Email(Email: string,
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to fetch Electric Bill Scheduled Payment email after multiple attempts.");
+        throw new Error("Failed to fetch Electric Bill Is Ready email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${ElectricUsage}`);
-    await expect(email_body).toContain(`kWh`);
-    await expect(email_body).toContain(`$${ElectricBillTotal}`);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
-export async function Check_Electric_Bill_Ready_Email(Email: string, ElectricBillTotal: any) {
+export async function Check_Gas_Bill_Is_Ready(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Your Electric Bill is Ready for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Gas bill is ready`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -198,21 +196,20 @@ export async function Check_Electric_Bill_Ready_Email(Email: string, ElectricBil
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to fetch Electric Bill Ready email after multiple attempts.");
+        throw new Error("Failed to fetch Gas Bill Is Ready email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${ElectricUsage}kWh`);
-    await expect(email_body).toContain(`$${ElectricBillTotal}`);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
-export async function Check_Electric_Bill_Payment_Success(Email: string, ElectricBillTotal: any) {
+export async function Check_Electric_And_Gas_Bill_Is_Ready(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Electric Bill Payment Success`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Electric and Gas bills are ready`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -220,20 +217,21 @@ export async function Check_Electric_Bill_Payment_Success(Email: string, Electri
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to fetch Electric Bill Payment Success email after multiple attempts.");
+        throw new Error("Failed to fetch Electric and Gas Bill Is Ready email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`$${ElectricBillTotal}`);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
-export async function Check_Gas_Bill_Scheduled_Payment_Email(Email: string, GasBillTotal: any) {
+//manual pay
+export async function Check_Electric_Bill_Is_Ready_For_Payment(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Your Gas Bill is Scheduled for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Electric bill is ready for payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -241,21 +239,20 @@ export async function Check_Gas_Bill_Scheduled_Payment_Email(Email: string, GasB
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to fetch Gas Bill Scheduled Payment email after multiple attempts.");
+        throw new Error("Failed to fetch Electric Bill Is Ready for Payment email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${GasUsage}therms`); // space is missing in the email
-    await expect(email_body).toContain(`$${GasBillTotal}`);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
-export async function Check_Gas_Bill_Ready_Email(Email: string, GasBillTotal: any) {
+export async function Check_Gas_Bill_Is_Ready_For_Payment(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Your Gas Bill is Ready for Payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Gas bill is ready for payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -263,21 +260,20 @@ export async function Check_Gas_Bill_Ready_Email(Email: string, GasBillTotal: an
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to fetch Gas Bill Ready email after multiple attempts.");
+        throw new Error("Failed to fetch Gas Bill Is Ready for Payment email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`${GasUsage}therms`);
-    await expect(email_body).toContain(`$${GasBillTotal}`);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
-export async function Check_Gas_Bill_Payment_Success(Email: string, GasBillTotal: any) {
+export async function Check_Electric_And_Gas_Bill_Is_Ready_For_Payment(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Gas Bill Payment Success`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Electric and Gas bills are ready for payment`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -285,20 +281,21 @@ export async function Check_Gas_Bill_Payment_Success(Email: string, GasBillTotal
         await delay(30000); // delay
     }
     if (!content || content.length === 0) {
-        throw new Error("Failed to fetch Gas Bill Payment Success email after multiple attempts.");
+        throw new Error("Failed to fetch Electric and Gas Bill Is Ready for Payment email after multiple attempts.");
     }
     const email_body = content[0].bodyValues[1].value;
     await expect(content.length).toEqual(1);
-    await expect(email_body).toContain(`$${GasBillTotal}`);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
-export async function Check_Failed_Payment_Email(Email: string, ElectricBillTotal: any | null, GasBillTotal: any | null) {
+//failed payment
+export async function Check_Failed_Payment_Email(Email: string, AmountTotal: any) {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `[Action Required] Update your Payment Details`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Payment Failed - Action Required`, from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -308,35 +305,30 @@ export async function Check_Failed_Payment_Email(Email: string, ElectricBillTota
     if (!content || content.length === 0) {
         throw new Error("Failed to Get Failed Payment email after multiple attempts.");
     }
-
-
-    if (ElectricBillTotal === null) {
-        const email_body = content[0].bodyValues[1].value;
-        //await expect(content.length).toEqual(1);
-
-        await expect(email_body).toContain(`$${GasBillTotal}`);
-    }
-    else if (GasBillTotal === null) {
-        const email_body = content[0].bodyValues[1].value;
-        //await expect(content.length).toEqual(1);
-
-        await expect(email_body).toContain(`$${ElectricBillTotal}`);
-    }
-    else {
-        const email1_body = content[0].bodyValues[1].value;
-        const email2_body = content[1].bodyValues[1].value;
-        //await expect(content.length).toEqual(2);
-
-        try {
-            await expect(email1_body).toContain(`$${ElectricBillTotal}`);
-            await expect(email2_body).toContain(`$${GasBillTotal}`);
-        } catch (error) {
-            await expect(email1_body).toContain(`$${GasBillTotal}`);
-            await expect(email2_body).toContain(`$${ElectricBillTotal}`);
-        }
-    }
+    const email_body = content[0].bodyValues[1].value;
+    await expect(content.length).toEqual(1);
+    await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
+
+export async function Check_Update_Payment_Method_Email(Email: string) {
+    const maxRetries = 2;
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    let content: any[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `[Urgent] - Update Your Payment Method`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) {
+            break;
+        }
+        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
+        await delay(30000); // delay
+    }
+    if (!content || content.length === 0) {
+        throw new Error("Failed to Get Failed Payment email after multiple attempts.");
+    }
+    const email_body = content[0].bodyValues[1].value;
+    await expect(content.length).toEqual(1);
+}
 
 
 
@@ -352,12 +344,12 @@ export const FastmailActions = {
     Check_Need_Payment_Method_to_Start_Electricity_Service,
     Check_Need_Payment_Method_to_Start_Gas_Service,
     Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service,
-    Check_Electric_Bill_Scheduled_Payment_Email,
-    Check_Electric_Bill_Ready_Email,
-    Check_Electric_Bill_Payment_Success,
-    Check_Gas_Bill_Scheduled_Payment_Email,
-    Check_Gas_Bill_Ready_Email,
-    Check_Gas_Bill_Payment_Success,
-    Check_Failed_Payment_Email
-    
+    Check_Electric_Bill_Is_Ready,
+    Check_Gas_Bill_Is_Ready,
+    Check_Electric_And_Gas_Bill_Is_Ready,
+    Check_Electric_Bill_Is_Ready_For_Payment,
+    Check_Gas_Bill_Is_Ready_For_Payment,
+    Check_Electric_And_Gas_Bill_Is_Ready_For_Payment,
+    Check_Failed_Payment_Email,
+    Check_Update_Payment_Method_Email
 };
