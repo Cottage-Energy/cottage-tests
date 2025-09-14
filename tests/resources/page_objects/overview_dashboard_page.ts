@@ -32,8 +32,8 @@ export class OverviewPage {
     readonly Overview_Payment_Initiated_Message: Locator
 
     readonly Overview_Pay_Outstanding_Balance_Modal: Locator
-    readonly Overview_Pay_Now_Button: Locator
-    readonly Overview_Pay_Later_Button: Locator
+    //readonly Overview_Pay_Now_Button: Locator
+    //readonly Overview_Pay_Later_Button: Locator
 
     readonly Overview_New_Terms_Modal_Title: Locator
     readonly Overview_New_Terms_Modal_Content: Locator

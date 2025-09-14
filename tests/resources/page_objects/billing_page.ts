@@ -17,9 +17,9 @@ export class BillingPage {
     readonly Billing_Save_Payment_Button: Locator
     readonly Billing_Success_Message: Locator
 
-    readonly Billing_Pay_Outstanding_Balance_Modal: Locator
-    readonly Billing_Pay_Now_Button: Locator
-    readonly Billing_Pay_Later_Button: Locator
+    //readonly Billing_Pay_Outstanding_Balance_Modal: Locator
+    //readonly Billing_Pay_Now_Button: Locator
+    //readonly Billing_Pay_Later_Button: Locator
 
     //locators
     constructor(page: Page) {

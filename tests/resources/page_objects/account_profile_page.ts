@@ -8,7 +8,6 @@ export class ProfilePage {
 
     readonly Profile_Payment_Info_Tab: Locator;
     readonly Profile_Payment_Info_Title: Locator;
- 
 
     readonly Profile_Setup_Payment_Title: Locator
     readonly Profile_Setup_Payment_Button: Locator
