@@ -12,7 +12,7 @@ export async function Test_User_Clean_Up(Email: string) {
   const ElectricAccountID = await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
   const GasAccountID = await supabaseQueries.Get_Gas_Account_Id(cottageUserId);
 
-  await planeActions.DeleteTickets(Email);
+  //await planeActions.DeleteTickets(Email);
   
   await supabaseQueries.delete_Cottage_User(cottageUserId);
   await supabaseQueries.delete_Electric_Account(ElectricAccountID);

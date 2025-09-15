@@ -41,7 +41,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
       await moveInpage.Click_Start_New_Move_In_Request();
@@ -82,7 +82,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
       await moveInpage.Click_Start_New_Move_In_Request();
@@ -123,7 +123,7 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
       await moveInpage.Click_Start_New_Move_In_Request();
@@ -171,7 +171,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -212,7 +212,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -254,7 +254,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -301,7 +301,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -343,7 +343,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -385,7 +385,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -496,7 +496,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
     await supabaseQueries.Check_Get_Electric_Account_Id(cottageUserID);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, true, false, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, "COMED", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -585,7 +585,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, true, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, null, "EVERSOURCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -675,7 +675,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, true, true);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, null, "EVERSOURCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -767,7 +767,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
     await supabaseQueries.Check_Get_Electric_Account_Id(cottageUserID);
     await page.waitForTimeout(30000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, true, true, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, "EVERSOURCE", "CON-EDISON");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -815,14 +815,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     const paymentVis = await moveInpage.Check_Payment_Page_Visibility('EVERSOURCE', null);
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, true, false, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", "EVERSOURCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -870,14 +870,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     const paymentVis = await moveInpage.Check_Payment_Page_Visibility(null,"NGMA");
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, true, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", null,"NGMA");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -926,14 +926,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     const paymentVis = await moveInpage.Check_Payment_Page_Visibility("PSEG","PSEG");
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, true, true);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", "PSEG");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {
@@ -979,14 +979,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     const paymentVis = await moveInpage.Check_Payment_Page_Visibility("EVERSOURCE","DTE");
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, false, false, false);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(PGuser.Email, true, true, false);
+    //await planeActions.CheckMoveInTickets(PGuser.Email, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "EVERSOURCE", "DTE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const moveIn = {

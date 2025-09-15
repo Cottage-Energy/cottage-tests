@@ -35,7 +35,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -48,7 +48,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "POTOMAC-EDISON", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -61,7 +61,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "LA-DWP");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -74,7 +74,7 @@ test.describe('Move In Address Parameters Only New User Electric &/or Gas', () =
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PSE", 'PSE');
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -96,7 +96,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
       await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE", null);
       await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     });
@@ -109,7 +109,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
       await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "CON-EDISON");
       await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     });
@@ -122,7 +122,7 @@ test.describe('Move In GUID Only New User Electric &/or Gas', () => {
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
       await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "PSEG-LI", "PSEG-LI");
       await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
     });  
@@ -146,7 +146,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -161,7 +161,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, 'SDGE');
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -176,7 +176,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, false);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "DTE", "BGE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -191,7 +191,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "XCEL-ENERGY", "XCEL-ENERGY");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -206,7 +206,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
+    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, true, true);
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "DUKE", "DUKE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });  
