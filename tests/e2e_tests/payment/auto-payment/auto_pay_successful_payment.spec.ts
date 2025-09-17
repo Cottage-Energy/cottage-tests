@@ -21,8 +21,8 @@ let MoveIn: any;
     
 //});
 
-test.beforeEach(async ({ playwright, page },testInfo) => {
-  const env = process.env.ENV || 'dev';
+test.beforeEach(async ({ playwright, page, supabaseQueries },testInfo) => {
+  /*const env = process.env.ENV || 'dev';
   const baseUrl = environmentBaseUrl[env].admin_api;
   const adminToken = process.env.ADMIN_TOKEN;
 
@@ -32,8 +32,11 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
       Authorization: `Bearer ${adminToken}`,
       Accept: 'application/json',
     },
-  });
-
+  });*/
+  
+  await supabaseQueries.Update_Building_Billing("autotest",true);
+  await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
+  await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
   
@@ -58,7 +61,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"EVERSOURCE","EVERSOURCE", true, false);
 
@@ -96,7 +99,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await supabaseQueries.Update_Companies_to_Building("autotest","PSEG","PSEG");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,"PSEG","PSEG", true, true);
 
@@ -140,7 +143,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await supabaseQueries.Update_Companies_to_Building("autotest","COMED","BGE");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"COMED","BGE", true, true);
 
@@ -182,7 +185,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,"NGMA","NGMA", true, true);
 
@@ -222,7 +225,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
     const PGuserUsage = await generateTestUserData();
     
     await supabaseQueries.Update_Companies_to_Building("autotest","BGE","CON-EDISON");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,"BGE","CON-EDISON", false, true);
 
@@ -265,7 +268,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         const PGuserUsage = await generateTestUserData();
         
         await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
-        await supabaseQueries.Update_Building_Billing("autotest",true);
+        
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Bank_Account_Added(page, "COMED", null, true, true);
     
@@ -292,7 +295,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         const PGuserUsage = await generateTestUserData();
         
         await supabaseQueries.Update_Companies_to_Building("autotest","DELMARVA","DELMARVA");
-        await supabaseQueries.Update_Building_Billing("autotest",true);
+        
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"DELMARVA","DELMARVA", true, true);
     
@@ -334,7 +337,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         const PGuserUsage = await generateTestUserData();
         
         await supabaseQueries.Update_Companies_to_Building("autotest","BGE","DTE");
-        await supabaseQueries.Update_Building_Billing("autotest",true);
+        
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Bank_Account_Added(page,"BGE","DTE", true, true);
     
@@ -374,7 +377,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         const PGuserUsage = await generateTestUserData();
         
         await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
-        await supabaseQueries.Update_Building_Billing("autotest",true);
+        
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,"EVERSOURCE","EVERSOURCE", true, true);
     
@@ -417,7 +420,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         const PGuserUsage = await generateTestUserData();
         
         await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
-        await supabaseQueries.Update_Building_Billing("autotest",true);
+        
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, null, "BGE", true, true);
     

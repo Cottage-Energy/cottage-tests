@@ -12,7 +12,10 @@ let MoveIn: any;
 
 });*/
 
-test.beforeEach(async ({ page },testInfo) => {
+test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
+  await supabaseQueries.Update_Building_Billing("autotest",true);
+  await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
+  await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
 
@@ -62,7 +65,7 @@ test.describe('Move In Existing Utility Account', () => {
   test('Move-in ShortCode Existing Utility Account Requested', {tag: ['@regression3'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(150000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", "PSEG");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
     MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
@@ -79,7 +82,7 @@ test.describe('Move In Existing Utility Account', () => {
   test('Move-in ShortCode Existing Utility Account Skip', {tag: ['@regression4'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(150000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "CON-EDISON", "NYS-EG" );
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
     MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);

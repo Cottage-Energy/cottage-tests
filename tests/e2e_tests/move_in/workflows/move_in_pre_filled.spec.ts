@@ -10,7 +10,10 @@ let MoveIn: any;
 
 });*/
 
-test.beforeEach(async ({ page },testInfo) => {
+test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
+  await supabaseQueries.Update_Building_Billing("autotest",true);
+  await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
+  await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
 
@@ -140,7 +143,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
   test('New User for BGE Electric Only', {tag: [ '@regression2'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
     test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto(`/move-in?shortCode=autotest&guid=${MoveIndata.GUID1}`,{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_GUID_Flow(page, 'BGE', null, true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -155,7 +158,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
   test('New User for SDGE Gas Only', {tag: [ '@regression2'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
     test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", null , "SDGE");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto(`/move-in?shortCode=autotest&guid=${MoveIndata.GUID2}`,{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_GUID_Flow(page, null, 'SDGE', true, true);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -170,7 +173,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
   test('New User for DTE BGE Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
     test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", "BGE");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto('/move-in?shortCode=autotest&streetAddress=123+williams&city=New+York&zip=1234',{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_Flow(page, "DTE", "BGE", true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -185,7 +188,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
   test('New User for XCEL-ENERGY Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => { // Use BGE and NGMA
     test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "XCEL-ENERGY", "XCEL-ENERGY");
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto(`/move-in?shortCode=autotest&streetAddress=123+williams&city=New+York&zip=1234&guid=${MoveIndata.GUID1}`,{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_And_GUID_Flow(page, "XCEL-ENERGY", "XCEL-ENERGY", true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
@@ -200,7 +203,7 @@ test.describe.fixme('Move In ShortCoded GUID & Address Parameters New User Elect
   test('New User for Duke Electric & Gas', {tag: ['@regression7'],}, async ({moveInpage,page, supabaseQueries, planeActions}) => {
     test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
-    await supabaseQueries.Update_Building_Billing("autotest",true);
+    
     await page.goto(`/move-in?shortCode=autotest&electricCompany=DUKE&gasCompany=DUKE&streetAddress=123+williams&city=New+York&zip=1234&guid=${MoveIndata.GUID2}`,{ waitUntil: 'domcontentloaded' });
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Address_Parameter_And_GUID_Flow(page, "DUKE", "DUKE", true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);

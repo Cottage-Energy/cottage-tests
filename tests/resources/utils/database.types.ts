@@ -295,6 +295,13 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'BillCredit_chargeAccountID_fkey';
+            columns: ['chargeAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewBlacklistedChargeAccounts';
+            referencedColumns: ['charge_account_id'];
+          },
+          {
             foreignKeyName: 'BillCredit_electricBillID_fkey';
             columns: ['electricBillID'];
             isOneToOne: false;
@@ -335,6 +342,111 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'PGAdminUsers';
             referencedColumns: ['id'];
+          },
+        ];
+      };
+      BillEmailNotifications: {
+        Row: {
+          cloudmailinId: string | null;
+          created_at: string;
+          electricAccountId: number | null;
+          emailSubject: string | null;
+          fromAddress: string | null;
+          gasAccountId: number | null;
+          id: string;
+          originalRecipient: string | null;
+          parsedValues: Json | null;
+          parseStatus: Database['public']['Enums']['bill_notif_status'] | null;
+          processed: boolean | null;
+          rawContent: string | null;
+          utilityCompanyID: string | null;
+        };
+        Insert: {
+          cloudmailinId?: string | null;
+          created_at?: string;
+          electricAccountId?: number | null;
+          emailSubject?: string | null;
+          fromAddress?: string | null;
+          gasAccountId?: number | null;
+          id?: string;
+          originalRecipient?: string | null;
+          parsedValues?: Json | null;
+          parseStatus?: Database['public']['Enums']['bill_notif_status'] | null;
+          processed?: boolean | null;
+          rawContent?: string | null;
+          utilityCompanyID?: string | null;
+        };
+        Update: {
+          cloudmailinId?: string | null;
+          created_at?: string;
+          electricAccountId?: number | null;
+          emailSubject?: string | null;
+          fromAddress?: string | null;
+          gasAccountId?: number | null;
+          id?: string;
+          originalRecipient?: string | null;
+          parsedValues?: Json | null;
+          parseStatus?: Database['public']['Enums']['bill_notif_status'] | null;
+          processed?: boolean | null;
+          rawContent?: string | null;
+          utilityCompanyID?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'BillEmailNotifications_electricAccountId_fkey';
+            columns: ['electricAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'BillEmailNotifications_electricAccountId_fkey';
+            columns: ['electricAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'BillEmailNotifications_electricAccountId_fkey';
+            columns: ['electricAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'PropertyWithAccountsAndUsers';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'BillEmailNotifications_gasAccountId_fkey';
+            columns: ['gasAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'GasAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'BillEmailNotifications_gasAccountId_fkey';
+            columns: ['gasAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'GasBillingMetrics';
+            referencedColumns: ['gasAccountID'];
+          },
+          {
+            foreignKeyName: 'BillEmailNotifications_gasAccountId_fkey';
+            columns: ['gasAccountId'];
+            isOneToOne: false;
+            referencedRelation: 'PropertyWithAccountsAndUsers';
+            referencedColumns: ['gasAccountID'];
+          },
+          {
+            foreignKeyName: 'billemailnotifications_utilitycompanyid_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'UtilityCompany';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'billemailnotifications_utilitycompanyid_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
         ];
       };
@@ -408,6 +520,7 @@ export type Database = {
           shortCode: string | null;
           showPGAccountNumber: boolean;
           totalUnitCount: number | null;
+          useEncouragedConversion: boolean;
           utilityCity: string | null;
           utilityFriendlyAddress: string | null;
           utilityState: string | null;
@@ -436,6 +549,7 @@ export type Database = {
           shortCode?: string | null;
           showPGAccountNumber?: boolean;
           totalUnitCount?: number | null;
+          useEncouragedConversion?: boolean;
           utilityCity?: string | null;
           utilityFriendlyAddress?: string | null;
           utilityState?: string | null;
@@ -464,6 +578,7 @@ export type Database = {
           shortCode?: string | null;
           showPGAccountNumber?: boolean;
           totalUnitCount?: number | null;
+          useEncouragedConversion?: boolean;
           utilityCity?: string | null;
           utilityFriendlyAddress?: string | null;
           utilityState?: string | null;
@@ -484,6 +599,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Building_gasCompanyID_fkey';
+            columns: ['gasCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
           {
             foreignKeyName: 'Building_moveInPartnerID_fkey';
@@ -512,6 +634,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Building_utilityCompanyID_fkey';
+            columns: ['electricCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
         ];
       };
@@ -587,6 +716,76 @@ export type Database = {
           {
             foreignKeyName: 'BuildingManagerAssignment_managerProfileID_fkey';
             columns: ['managerProfileID'];
+            isOneToOne: false;
+            referencedRelation: 'BuildingManagerProfile';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      BuildingManagerInvitation: {
+        Row: {
+          addToAllBuildings: boolean;
+          companyId: string;
+          email: string;
+          expiresAt: string;
+          firstName: string | null;
+          id: string;
+          invitedAt: string;
+          invitedBy: string;
+          lastName: string | null;
+          role: string;
+          status: string;
+          supabaseUserId: string | null;
+          token: string | null;
+        };
+        Insert: {
+          addToAllBuildings?: boolean;
+          companyId: string;
+          email: string;
+          expiresAt: string;
+          firstName?: string | null;
+          id?: string;
+          invitedAt?: string;
+          invitedBy: string;
+          lastName?: string | null;
+          role: string;
+          status?: string;
+          supabaseUserId?: string | null;
+          token?: string | null;
+        };
+        Update: {
+          addToAllBuildings?: boolean;
+          companyId?: string;
+          email?: string;
+          expiresAt?: string;
+          firstName?: string | null;
+          id?: string;
+          invitedAt?: string;
+          invitedBy?: string;
+          lastName?: string | null;
+          role?: string;
+          status?: string;
+          supabaseUserId?: string | null;
+          token?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'BuildingManagerInvitation_companyId_fkey';
+            columns: ['companyId'];
+            isOneToOne: false;
+            referencedRelation: 'BuildingOwnershipCompany';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'BuildingManagerInvitation_invitedBy_fkey';
+            columns: ['invitedBy'];
+            isOneToOne: false;
+            referencedRelation: 'BuildingManagerProfile';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'BuildingManagerInvitation_supabaseUserId_fkey';
+            columns: ['supabaseUserId'];
             isOneToOne: false;
             referencedRelation: 'BuildingManagerProfile';
             referencedColumns: ['id'];
@@ -1100,6 +1299,98 @@ export type Database = {
         };
         Relationships: [];
       };
+      CommunitySolarPlan: {
+        Row: {
+          assignedToProject: string | null;
+          billingType: Database['public']['Enums']['billing_type_enum'];
+          createdAt: string;
+          deletedAt: string | null;
+          discount: number;
+          electricAccountID: number;
+          endDate: string | null;
+          id: string;
+          providerID: number;
+          residualAmount: number | null;
+          residualUnit: Database['public']['Enums']['residual_unit_enum'];
+          savingShare: number;
+          startDate: string;
+          status:
+            | Database['public']['Enums']['community_solar_plan_status']
+            | null;
+          updatedAt: string;
+          upfrontFee: number | null;
+        };
+        Insert: {
+          assignedToProject?: string | null;
+          billingType?: Database['public']['Enums']['billing_type_enum'];
+          createdAt?: string;
+          deletedAt?: string | null;
+          discount?: number;
+          electricAccountID: number;
+          endDate?: string | null;
+          id?: string;
+          providerID: number;
+          residualAmount?: number | null;
+          residualUnit?: Database['public']['Enums']['residual_unit_enum'];
+          savingShare?: number;
+          startDate: string;
+          status?:
+            | Database['public']['Enums']['community_solar_plan_status']
+            | null;
+          updatedAt?: string;
+          upfrontFee?: number | null;
+        };
+        Update: {
+          assignedToProject?: string | null;
+          billingType?: Database['public']['Enums']['billing_type_enum'];
+          createdAt?: string;
+          deletedAt?: string | null;
+          discount?: number;
+          electricAccountID?: number;
+          endDate?: string | null;
+          id?: string;
+          providerID?: number;
+          residualAmount?: number | null;
+          residualUnit?: Database['public']['Enums']['residual_unit_enum'];
+          savingShare?: number;
+          startDate?: string;
+          status?:
+            | Database['public']['Enums']['community_solar_plan_status']
+            | null;
+          updatedAt?: string;
+          upfrontFee?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'CommunitySolarPlan_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricAccount';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'CommunitySolarPlan_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBillingMetrics';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'CommunitySolarPlan_electricAccountID_fkey';
+            columns: ['electricAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'PropertyWithAccountsAndUsers';
+            referencedColumns: ['electricAccountID'];
+          },
+          {
+            foreignKeyName: 'CommunitySolarPlan_providerID_fkey';
+            columns: ['providerID'];
+            isOneToOne: false;
+            referencedRelation: 'CommunitySolarProvider';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       CommunitySolarProvider: {
         Row: {
           capacity: number | null;
@@ -1363,6 +1654,7 @@ export type Database = {
           isAutoPaymentEnabled: boolean | null;
           isEligibleForRetargeting: boolean | null;
           isReceivingSetupReminders: boolean;
+          lastSyncCrispDate: string | null;
           moveInIdentifier: string | null;
           paymentMethodStatus:
             | Database['public']['Enums']['paymentmethodstatus']
@@ -1400,6 +1692,7 @@ export type Database = {
           isAutoPaymentEnabled?: boolean | null;
           isEligibleForRetargeting?: boolean | null;
           isReceivingSetupReminders?: boolean;
+          lastSyncCrispDate?: string | null;
           moveInIdentifier?: string | null;
           paymentMethodStatus?:
             | Database['public']['Enums']['paymentmethodstatus']
@@ -1437,6 +1730,7 @@ export type Database = {
           isAutoPaymentEnabled?: boolean | null;
           isEligibleForRetargeting?: boolean | null;
           isReceivingSetupReminders?: boolean;
+          lastSyncCrispDate?: string | null;
           moveInIdentifier?: string | null;
           paymentMethodStatus?:
             | Database['public']['Enums']['paymentmethodstatus']
@@ -1645,6 +1939,7 @@ export type Database = {
           createdAt: string | null;
           customerNumber: string | null;
           defaultBillFeeStructure: number | null;
+          delayReason: Database['public']['Enums']['delay_reason_enum'] | null;
           delinquentDays: number;
           depositAmount: number | null;
           depositInstallments: number | null;
@@ -1662,10 +1957,13 @@ export type Database = {
           isDelinquent: boolean;
           isEnrolledInCCA: boolean | null;
           isEnrolledInUtilityAutoPay: boolean | null;
+          isPGFault: boolean | null;
           isUnderCottageEIN: boolean | null;
           lastAuditAttempt: string | null;
           lastAuditDate: string | null;
           lastAuditLog: string | null;
+          lastBillEmailId: string | null;
+          lastFastmailBillDate: string | null;
           lastSuccessfulAudit: string | null;
           lastSync: string | null;
           lastUtilityPaymentDate: string | null;
@@ -1680,6 +1978,7 @@ export type Database = {
           registrationDocumentsStatus:
             | Database['public']['Enums']['registrationDocumentsStatus']
             | null;
+          registrationJobCompleted: boolean;
           retries: number;
           sentAccountNumberDate: string | null;
           serviceNumber: string | null;
@@ -1716,6 +2015,7 @@ export type Database = {
           createdAt?: string | null;
           customerNumber?: string | null;
           defaultBillFeeStructure?: number | null;
+          delayReason?: Database['public']['Enums']['delay_reason_enum'] | null;
           delinquentDays?: number;
           depositAmount?: number | null;
           depositInstallments?: number | null;
@@ -1733,10 +2033,13 @@ export type Database = {
           isDelinquent?: boolean;
           isEnrolledInCCA?: boolean | null;
           isEnrolledInUtilityAutoPay?: boolean | null;
+          isPGFault?: boolean | null;
           isUnderCottageEIN?: boolean | null;
           lastAuditAttempt?: string | null;
           lastAuditDate?: string | null;
           lastAuditLog?: string | null;
+          lastBillEmailId?: string | null;
+          lastFastmailBillDate?: string | null;
           lastSuccessfulAudit?: string | null;
           lastSync?: string | null;
           lastUtilityPaymentDate?: string | null;
@@ -1751,6 +2054,7 @@ export type Database = {
           registrationDocumentsStatus?:
             | Database['public']['Enums']['registrationDocumentsStatus']
             | null;
+          registrationJobCompleted?: boolean;
           retries?: number;
           sentAccountNumberDate?: string | null;
           serviceNumber?: string | null;
@@ -1787,6 +2091,7 @@ export type Database = {
           createdAt?: string | null;
           customerNumber?: string | null;
           defaultBillFeeStructure?: number | null;
+          delayReason?: Database['public']['Enums']['delay_reason_enum'] | null;
           delinquentDays?: number;
           depositAmount?: number | null;
           depositInstallments?: number | null;
@@ -1804,10 +2109,13 @@ export type Database = {
           isDelinquent?: boolean;
           isEnrolledInCCA?: boolean | null;
           isEnrolledInUtilityAutoPay?: boolean | null;
+          isPGFault?: boolean | null;
           isUnderCottageEIN?: boolean | null;
           lastAuditAttempt?: string | null;
           lastAuditDate?: string | null;
           lastAuditLog?: string | null;
+          lastBillEmailId?: string | null;
+          lastFastmailBillDate?: string | null;
           lastSuccessfulAudit?: string | null;
           lastSync?: string | null;
           lastUtilityPaymentDate?: string | null;
@@ -1822,6 +2130,7 @@ export type Database = {
           registrationDocumentsStatus?:
             | Database['public']['Enums']['registrationDocumentsStatus']
             | null;
+          registrationJobCompleted?: boolean;
           retries?: number;
           sentAccountNumberDate?: string | null;
           serviceNumber?: string | null;
@@ -1927,6 +2236,13 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'ElectricAccount_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
+          {
             foreignKeyName: 'public_ElectricAccount_maintainedFor_fkey';
             columns: ['maintainedFor'];
             isOneToOne: false;
@@ -1989,6 +2305,7 @@ export type Database = {
           isPaidByUser: boolean | null;
           isPaidUtilityCompany: boolean | null;
           isSendReminder: boolean | null;
+          issueText: string | null;
           lastPaymentAttemptDate: string | null;
           manual: boolean | null;
           otherCharges: number | null;
@@ -2028,6 +2345,7 @@ export type Database = {
           isPaidByUser?: boolean | null;
           isPaidUtilityCompany?: boolean | null;
           isSendReminder?: boolean | null;
+          issueText?: string | null;
           lastPaymentAttemptDate?: string | null;
           manual?: boolean | null;
           otherCharges?: number | null;
@@ -2067,6 +2385,7 @@ export type Database = {
           isPaidByUser?: boolean | null;
           isPaidUtilityCompany?: boolean | null;
           isSendReminder?: boolean | null;
+          issueText?: string | null;
           lastPaymentAttemptDate?: string | null;
           manual?: boolean | null;
           otherCharges?: number | null;
@@ -2268,6 +2587,8 @@ export type Database = {
           contractExternalID: string | null;
           contractLengthMonths: number | null;
           contractSentDate: string | null;
+          createdAt: string;
+          deletedAt: string | null;
           electricAccountID: number | null;
           endDate: string | null;
           id: number;
@@ -2282,6 +2603,7 @@ export type Database = {
           supplyStatus:
             | Database['public']['Enums']['enum_electricsupplyplan_supplystatus']
             | null;
+          updatedAt: string;
           upfrontFee: number | null;
         };
         Insert: {
@@ -2289,6 +2611,8 @@ export type Database = {
           contractExternalID?: string | null;
           contractLengthMonths?: number | null;
           contractSentDate?: string | null;
+          createdAt?: string;
+          deletedAt?: string | null;
           electricAccountID?: number | null;
           endDate?: string | null;
           id?: number;
@@ -2303,6 +2627,7 @@ export type Database = {
           supplyStatus?:
             | Database['public']['Enums']['enum_electricsupplyplan_supplystatus']
             | null;
+          updatedAt?: string;
           upfrontFee?: number | null;
         };
         Update: {
@@ -2310,6 +2635,8 @@ export type Database = {
           contractExternalID?: string | null;
           contractLengthMonths?: number | null;
           contractSentDate?: string | null;
+          createdAt?: string;
+          deletedAt?: string | null;
           electricAccountID?: number | null;
           endDate?: string | null;
           id?: number;
@@ -2324,6 +2651,7 @@ export type Database = {
           supplyStatus?:
             | Database['public']['Enums']['enum_electricsupplyplan_supplystatus']
             | null;
+          updatedAt?: string;
           upfrontFee?: number | null;
         };
         Relationships: [
@@ -2623,6 +2951,7 @@ export type Database = {
           cottageUserID: string | null;
           createdAt: string | null;
           defaultBillFeeStructure: number | null;
+          delayReason: Database['public']['Enums']['delay_reason_enum'] | null;
           delinquentDays: number;
           depositAmount: number | null;
           depositInstallments: number | null;
@@ -2636,10 +2965,13 @@ export type Database = {
           isActive: boolean | null;
           isDelinquent: boolean;
           isEnrolledInUtilityAutoPay: boolean | null;
+          isPGFault: boolean | null;
           isUnderCottageEIN: boolean | null;
           lastAuditAttempt: string | null;
           lastAuditDate: string | null;
           lastAuditLog: string | null;
+          lastBillEmailId: string | null;
+          lastFastmailBillDate: string | null;
           lastSuccessfulAudit: string | null;
           lastSync: string | null;
           lastUtilityPaymentDate: string | null;
@@ -2653,6 +2985,7 @@ export type Database = {
           registrationDocumentsStatus:
             | Database['public']['Enums']['registrationDocumentsStatus']
             | null;
+          registrationJobCompleted: boolean;
           retries: number;
           sentAccountNumberDate: string | null;
           startDate: string | null;
@@ -2675,6 +3008,7 @@ export type Database = {
           cottageUserID?: string | null;
           createdAt?: string | null;
           defaultBillFeeStructure?: number | null;
+          delayReason?: Database['public']['Enums']['delay_reason_enum'] | null;
           delinquentDays?: number;
           depositAmount?: number | null;
           depositInstallments?: number | null;
@@ -2688,10 +3022,13 @@ export type Database = {
           isActive?: boolean | null;
           isDelinquent?: boolean;
           isEnrolledInUtilityAutoPay?: boolean | null;
+          isPGFault?: boolean | null;
           isUnderCottageEIN?: boolean | null;
           lastAuditAttempt?: string | null;
           lastAuditDate?: string | null;
           lastAuditLog?: string | null;
+          lastBillEmailId?: string | null;
+          lastFastmailBillDate?: string | null;
           lastSuccessfulAudit?: string | null;
           lastSync?: string | null;
           lastUtilityPaymentDate?: string | null;
@@ -2705,6 +3042,7 @@ export type Database = {
           registrationDocumentsStatus?:
             | Database['public']['Enums']['registrationDocumentsStatus']
             | null;
+          registrationJobCompleted?: boolean;
           retries?: number;
           sentAccountNumberDate?: string | null;
           startDate?: string | null;
@@ -2727,6 +3065,7 @@ export type Database = {
           cottageUserID?: string | null;
           createdAt?: string | null;
           defaultBillFeeStructure?: number | null;
+          delayReason?: Database['public']['Enums']['delay_reason_enum'] | null;
           delinquentDays?: number;
           depositAmount?: number | null;
           depositInstallments?: number | null;
@@ -2740,10 +3079,13 @@ export type Database = {
           isActive?: boolean | null;
           isDelinquent?: boolean;
           isEnrolledInUtilityAutoPay?: boolean | null;
+          isPGFault?: boolean | null;
           isUnderCottageEIN?: boolean | null;
           lastAuditAttempt?: string | null;
           lastAuditDate?: string | null;
           lastAuditLog?: string | null;
+          lastBillEmailId?: string | null;
+          lastFastmailBillDate?: string | null;
           lastSuccessfulAudit?: string | null;
           lastSync?: string | null;
           lastUtilityPaymentDate?: string | null;
@@ -2757,6 +3099,7 @@ export type Database = {
           registrationDocumentsStatus?:
             | Database['public']['Enums']['registrationDocumentsStatus']
             | null;
+          registrationJobCompleted?: boolean;
           retries?: number;
           sentAccountNumberDate?: string | null;
           startDate?: string | null;
@@ -2883,6 +3226,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'GasAccount_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       GasBill: {
@@ -2903,6 +3253,7 @@ export type Database = {
           isPaidByUser: boolean | null;
           isPaidUtilityCompany: boolean | null;
           isSendReminder: boolean | null;
+          issueText: string | null;
           lastPaymentAttemptDate: string | null;
           manual: boolean | null;
           otherCharges: Json | null;
@@ -2941,6 +3292,7 @@ export type Database = {
           isPaidByUser?: boolean | null;
           isPaidUtilityCompany?: boolean | null;
           isSendReminder?: boolean | null;
+          issueText?: string | null;
           lastPaymentAttemptDate?: string | null;
           manual?: boolean | null;
           otherCharges?: Json | null;
@@ -2979,6 +3331,7 @@ export type Database = {
           isPaidByUser?: boolean | null;
           isPaidUtilityCompany?: boolean | null;
           isSendReminder?: boolean | null;
+          issueText?: string | null;
           lastPaymentAttemptDate?: string | null;
           manual?: boolean | null;
           otherCharges?: Json | null;
@@ -3282,6 +3635,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'GreenButtonOAuth_provider_fkey';
+            columns: ['provider'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       InngestLog: {
@@ -3518,6 +3878,65 @@ export type Database = {
           },
         ];
       };
+      MessageTemplate: {
+        Row: {
+          category:
+            | Database['public']['Enums']['message_template_category']
+            | null;
+          createdAt: string;
+          createdBy: string;
+          defaultDeliveryMethod: Database['public']['Enums']['message_template_default_delivery_method'];
+          description: string | null;
+          emailBody: string | null;
+          emailSubject: string | null;
+          id: string;
+          isActive: boolean;
+          name: string;
+          smsContent: string | null;
+          updatedAt: string;
+        };
+        Insert: {
+          category?:
+            | Database['public']['Enums']['message_template_category']
+            | null;
+          createdAt?: string;
+          createdBy: string;
+          defaultDeliveryMethod?: Database['public']['Enums']['message_template_default_delivery_method'];
+          description?: string | null;
+          emailBody?: string | null;
+          emailSubject?: string | null;
+          id?: string;
+          isActive?: boolean;
+          name: string;
+          smsContent?: string | null;
+          updatedAt?: string;
+        };
+        Update: {
+          category?:
+            | Database['public']['Enums']['message_template_category']
+            | null;
+          createdAt?: string;
+          createdBy?: string;
+          defaultDeliveryMethod?: Database['public']['Enums']['message_template_default_delivery_method'];
+          description?: string | null;
+          emailBody?: string | null;
+          emailSubject?: string | null;
+          id?: string;
+          isActive?: boolean;
+          name?: string;
+          smsContent?: string | null;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'MessageTemplates_createdBy_fkey';
+            columns: ['createdBy'];
+            isOneToOne: false;
+            referencedRelation: 'PGAdminUsers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       MeterReadings: {
         Row: {
           created_at: string | null;
@@ -3603,6 +4022,7 @@ export type Database = {
           offerLayla: boolean | null;
           shouldSkipSuccessScreen: boolean;
           themeID: string | null;
+          useEncouragedConversion: boolean;
         };
         Insert: {
           bccEmail?: string | null;
@@ -3615,6 +4035,7 @@ export type Database = {
           offerLayla?: boolean | null;
           shouldSkipSuccessScreen?: boolean;
           themeID?: string | null;
+          useEncouragedConversion?: boolean;
         };
         Update: {
           bccEmail?: string | null;
@@ -3627,6 +4048,7 @@ export type Database = {
           offerLayla?: boolean | null;
           shouldSkipSuccessScreen?: boolean;
           themeID?: string | null;
+          useEncouragedConversion?: boolean;
         };
         Relationships: [
           {
@@ -3763,9 +4185,12 @@ export type Database = {
           deliveryChargesElectric: number | null;
           deliveryChargesGas: number | null;
           dueByDate: string | null;
+          electricBillID: number | null;
           endDate: string | null;
           file: string;
+          gasBillID: number | null;
           id: number;
+          isReconciled: boolean | null;
           output: Json;
           pastDueCharges: number | null;
           provider: string;
@@ -3789,9 +4214,12 @@ export type Database = {
           deliveryChargesElectric?: number | null;
           deliveryChargesGas?: number | null;
           dueByDate?: string | null;
+          electricBillID?: number | null;
           endDate?: string | null;
           file: string;
+          gasBillID?: number | null;
           id?: number;
+          isReconciled?: boolean | null;
           output: Json;
           pastDueCharges?: number | null;
           provider: string;
@@ -3815,9 +4243,12 @@ export type Database = {
           deliveryChargesElectric?: number | null;
           deliveryChargesGas?: number | null;
           dueByDate?: string | null;
+          electricBillID?: number | null;
           endDate?: string | null;
           file?: string;
+          gasBillID?: number | null;
           id?: number;
+          isReconciled?: boolean | null;
           output?: Json;
           pastDueCharges?: number | null;
           provider?: string;
@@ -3836,11 +4267,46 @@ export type Database = {
         };
         Relationships: [
           {
+            foreignKeyName: 'OCR_Output_electricBillID_fkey';
+            columns: ['electricBillID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBill';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'OCR_Output_electricBillID_fkey';
+            columns: ['electricBillID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewRemittanceReview';
+            referencedColumns: ['electric_bill_id'];
+          },
+          {
+            foreignKeyName: 'OCR_Output_gasBillID_fkey';
+            columns: ['gasBillID'];
+            isOneToOne: false;
+            referencedRelation: 'ElectricBill';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'OCR_Output_gasBillID_fkey';
+            columns: ['gasBillID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewRemittanceReview';
+            referencedColumns: ['electric_bill_id'];
+          },
+          {
             foreignKeyName: 'OCR_Output_provider_fkey';
             columns: ['provider'];
             isOneToOne: false;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'OCR_Output_provider_fkey';
+            columns: ['provider'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
           {
             foreignKeyName: 'OCR_Output_user_fkey';
@@ -3897,6 +4363,7 @@ export type Database = {
           paymentMethodID: string;
           paymentStatus: Database['public']['Enums']['paymentstatus'] | null;
           payout_id: string | null;
+          refundedAmount: number | null;
           stripePaymentID: string | null;
           updated_at: string | null;
         };
@@ -3910,6 +4377,7 @@ export type Database = {
           paymentMethodID: string;
           paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
           payout_id?: string | null;
+          refundedAmount?: number | null;
           stripePaymentID?: string | null;
           updated_at?: string | null;
         };
@@ -3923,6 +4391,7 @@ export type Database = {
           paymentMethodID?: string;
           paymentStatus?: Database['public']['Enums']['paymentstatus'] | null;
           payout_id?: string | null;
+          refundedAmount?: number | null;
           stripePaymentID?: string | null;
           updated_at?: string | null;
         };
@@ -3984,6 +4453,7 @@ export type Database = {
           createdAt: string;
           id: string;
           isActive: boolean;
+          itemID: string | null;
           provider: string | null;
           reference: string;
           remittancePoolId: string | null;
@@ -3996,6 +4466,7 @@ export type Database = {
           createdAt?: string;
           id?: string;
           isActive?: boolean;
+          itemID?: string | null;
           provider?: string | null;
           reference: string;
           remittancePoolId?: string | null;
@@ -4008,6 +4479,7 @@ export type Database = {
           createdAt?: string;
           id?: string;
           isActive?: boolean;
+          itemID?: string | null;
           provider?: string | null;
           reference?: string;
           remittancePoolId?: string | null;
@@ -4029,6 +4501,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'fk_pi_utilitycompany';
+            columns: ['utilityCompanyId'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
         ];
       };
@@ -4199,6 +4678,7 @@ export type Database = {
           acceptedIPs: string[] | null;
           canViewSensitiveInformation: boolean | null;
           createdAt: string;
+          crispID: string | null;
           id: string;
           intercomID: number | null;
           isActive: boolean | null;
@@ -4208,6 +4688,7 @@ export type Database = {
           acceptedIPs?: string[] | null;
           canViewSensitiveInformation?: boolean | null;
           createdAt?: string;
+          crispID?: string | null;
           id?: string;
           intercomID?: number | null;
           isActive?: boolean | null;
@@ -4217,6 +4698,7 @@ export type Database = {
           acceptedIPs?: string[] | null;
           canViewSensitiveInformation?: boolean | null;
           createdAt?: string;
+          crispID?: string | null;
           id?: string;
           intercomID?: number | null;
           isActive?: boolean | null;
@@ -4938,11 +5420,20 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'RegistrationJob_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       RemittanceExecution: {
         Row: {
           actualRemitted: number | null;
+          baasConfirmed: boolean | null;
+          baasReference: string | null;
           chargeAccountID: string;
           confirmationNumber: string | null;
           createdAt: string;
@@ -4954,6 +5445,8 @@ export type Database = {
         };
         Insert: {
           actualRemitted?: number | null;
+          baasConfirmed?: boolean | null;
+          baasReference?: string | null;
           chargeAccountID: string;
           confirmationNumber?: string | null;
           createdAt?: string;
@@ -4965,6 +5458,8 @@ export type Database = {
         };
         Update: {
           actualRemitted?: number | null;
+          baasConfirmed?: boolean | null;
+          baasReference?: string | null;
           chargeAccountID?: string;
           confirmationNumber?: string | null;
           createdAt?: string;
@@ -4981,6 +5476,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'ChargeAccount';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'remittanceexecution_chargeaccount_fk';
+            columns: ['chargeAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewBlacklistedChargeAccounts';
+            referencedColumns: ['charge_account_id'];
           },
         ];
       };
@@ -5034,7 +5536,7 @@ export type Database = {
           baasAccountId: string;
           baasProvider: string;
           createdAt?: string;
-          id: string;
+          id?: string;
           ledgerAccountIdentifier: string;
           status?: string;
           updatedAt?: string;
@@ -5552,6 +6054,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'ServiceGroup_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       ServiceZip: {
@@ -5583,6 +6092,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'ServiceZip_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
         ];
       };
@@ -5694,6 +6210,99 @@ export type Database = {
           stripeRequestIdempotencyKey?: string | null;
         };
         Relationships: [];
+      };
+      Subscription: {
+        Row: {
+          canceledAt: string | null;
+          cottageUserID: string | null;
+          createdAt: string;
+          endDate: string;
+          id: number;
+          propertyId: number | null;
+          startDate: string;
+          status: Database['public']['Enums']['enum_Subscription_subscription_status'];
+          updatedAt: string;
+        };
+        Insert: {
+          canceledAt?: string | null;
+          cottageUserID?: string | null;
+          createdAt?: string;
+          endDate: string;
+          id?: number;
+          propertyId?: number | null;
+          startDate: string;
+          status?: Database['public']['Enums']['enum_Subscription_subscription_status'];
+          updatedAt?: string;
+        };
+        Update: {
+          canceledAt?: string | null;
+          cottageUserID?: string | null;
+          createdAt?: string;
+          endDate?: string;
+          id?: number;
+          propertyId?: number | null;
+          startDate?: string;
+          status?: Database['public']['Enums']['enum_Subscription_subscription_status'];
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Subscription_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'CottageUsers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Subscription_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewConsolidatedUnpaidBills';
+            referencedColumns: ['userId'];
+          },
+          {
+            foreignKeyName: 'Subscription_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewCottageUserWithUtilityAccount';
+            referencedColumns: ['cottageUserID'];
+          },
+          {
+            foreignKeyName: 'Subscription_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewPGAdminServiceAccounts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Subscription_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewResidentDetails';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Subscription_cottageUserID_fkey';
+            columns: ['cottageUserID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['userId'];
+          },
+          {
+            foreignKeyName: 'Subscription_propertyId_fkey';
+            columns: ['propertyId'];
+            isOneToOne: false;
+            referencedRelation: 'Property';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Subscription_propertyId_fkey';
+            columns: ['propertyId'];
+            isOneToOne: false;
+            referencedRelation: 'PropertyWithAccountsAndUsers';
+            referencedColumns: ['propertyID'];
+          },
+        ];
       };
       Supplier: {
         Row: {
@@ -6251,6 +6860,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'UtilityAuditParentError_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       UtilityAutomationLog: {
@@ -6299,6 +6915,7 @@ export type Database = {
           createdAt: string | null;
           description: string | null;
           electricZoneID: string | null;
+          emailTemplates: Json | null;
           id: string;
           identityVerificationTypes:
             | Database['public']['Enums']['identityVerificationType'][]
@@ -6319,6 +6936,8 @@ export type Database = {
           isSSNRequired: boolean | null;
           isSSOEnabled: boolean;
           lastAssignedInstrumentId: string | null;
+          lastAuditThreshold: number;
+          lastBillThreshold: number;
           logoURL: string | null;
           maintenanceAt: string | null;
           name: string | null;
@@ -6330,6 +6949,7 @@ export type Database = {
           preferPhoneSignUp: boolean;
           referralProgramAmount: number | null;
           registrationURL: string | null;
+          renewableEnergyDefaultPrice: number | null;
           reportOutageURL: string | null;
           shouldShowDisplayContent: boolean;
           signupReady: boolean | null;
@@ -6349,6 +6969,7 @@ export type Database = {
           createdAt?: string | null;
           description?: string | null;
           electricZoneID?: string | null;
+          emailTemplates?: Json | null;
           id: string;
           identityVerificationTypes?:
             | Database['public']['Enums']['identityVerificationType'][]
@@ -6369,6 +6990,8 @@ export type Database = {
           isSSNRequired?: boolean | null;
           isSSOEnabled?: boolean;
           lastAssignedInstrumentId?: string | null;
+          lastAuditThreshold?: number;
+          lastBillThreshold?: number;
           logoURL?: string | null;
           maintenanceAt?: string | null;
           name?: string | null;
@@ -6380,6 +7003,7 @@ export type Database = {
           preferPhoneSignUp?: boolean;
           referralProgramAmount?: number | null;
           registrationURL?: string | null;
+          renewableEnergyDefaultPrice?: number | null;
           reportOutageURL?: string | null;
           shouldShowDisplayContent?: boolean;
           signupReady?: boolean | null;
@@ -6399,6 +7023,7 @@ export type Database = {
           createdAt?: string | null;
           description?: string | null;
           electricZoneID?: string | null;
+          emailTemplates?: Json | null;
           id?: string;
           identityVerificationTypes?:
             | Database['public']['Enums']['identityVerificationType'][]
@@ -6419,6 +7044,8 @@ export type Database = {
           isSSNRequired?: boolean | null;
           isSSOEnabled?: boolean;
           lastAssignedInstrumentId?: string | null;
+          lastAuditThreshold?: number;
+          lastBillThreshold?: number;
           logoURL?: string | null;
           maintenanceAt?: string | null;
           name?: string | null;
@@ -6430,6 +7057,7 @@ export type Database = {
           preferPhoneSignUp?: boolean;
           referralProgramAmount?: number | null;
           registrationURL?: string | null;
+          renewableEnergyDefaultPrice?: number | null;
           reportOutageURL?: string | null;
           shouldShowDisplayContent?: boolean;
           signupReady?: boolean | null;
@@ -6529,6 +7157,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'UtilityCompany_ServiceAccounts_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       UtilityCompanyAuditSettings: {
@@ -6582,6 +7217,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'UtilityCompanyAuditSettings_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       UtilityCompanyPasswordSettings: {
@@ -6608,6 +7250,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'UtilityCompanyPasswordSettings_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       UtilityCompanyQuestion: {
@@ -6617,6 +7266,7 @@ export type Database = {
           displayLocation: Database['public']['Enums']['UtilityCompanyQuestion_displayLocation'];
           id: string;
           inputType: Database['public']['Enums']['UtilityCompanyQuestion_inputType'];
+          isLMIQuestion: boolean | null;
           questionText: string;
           utilityCompanyID: string;
         };
@@ -6626,6 +7276,7 @@ export type Database = {
           displayLocation?: Database['public']['Enums']['UtilityCompanyQuestion_displayLocation'];
           id?: string;
           inputType?: Database['public']['Enums']['UtilityCompanyQuestion_inputType'];
+          isLMIQuestion?: boolean | null;
           questionText: string;
           utilityCompanyID: string;
         };
@@ -6635,6 +7286,7 @@ export type Database = {
           displayLocation?: Database['public']['Enums']['UtilityCompanyQuestion_displayLocation'];
           id?: string;
           inputType?: Database['public']['Enums']['UtilityCompanyQuestion_inputType'];
+          isLMIQuestion?: boolean | null;
           questionText?: string;
           utilityCompanyID?: string;
         };
@@ -6645,6 +7297,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'UtilityCompanyQuestion_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
         ];
       };
@@ -6677,6 +7336,13 @@ export type Database = {
             isOneToOne: true;
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'UtilityCompanyRefreshSettings_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
           },
         ];
       };
@@ -6806,6 +7472,13 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'UtilityPaymentHistory_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       UtilityQuestionAnswer: {
@@ -6885,6 +7558,7 @@ export type Database = {
           chargeAccountID: string;
           created_at: string | null;
           id: string;
+          isDelta: boolean;
           paymentId: string | null;
           processingAt: string | null;
           remittanceStatus: Database['public']['Enums']['remittance_status'];
@@ -6894,6 +7568,7 @@ export type Database = {
           chargeAccountID: string;
           created_at?: string | null;
           id?: string;
+          isDelta?: boolean;
           paymentId?: string | null;
           processingAt?: string | null;
           remittanceStatus: Database['public']['Enums']['remittance_status'];
@@ -6903,6 +7578,7 @@ export type Database = {
           chargeAccountID?: string;
           created_at?: string | null;
           id?: string;
+          isDelta?: boolean;
           paymentId?: string | null;
           processingAt?: string | null;
           remittanceStatus?: Database['public']['Enums']['remittance_status'];
@@ -6914,6 +7590,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'ChargeAccount';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'UtilityRemittance_chargeAccountID_fkey';
+            columns: ['chargeAccountID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewBlacklistedChargeAccounts';
+            referencedColumns: ['charge_account_id'];
           },
         ];
       };
@@ -7154,14 +7837,18 @@ export type Database = {
           dueDate: string | null;
           endDate: string | null;
           feeStructure: number | null;
+          hasOverdueBalance: boolean | null;
           id: number | null;
           ingestionState: Database['public']['Enums']['ingestion_state'] | null;
+          isBillEqualToBalance: boolean | null;
           isDepositOnlyBill: boolean | null;
           isIncomplete: boolean | null;
           isPaidByUser: boolean | null;
           isPaidUtilityCompany: boolean | null;
           isSendReminder: boolean | null;
+          issueText: string | null;
           lastPaymentAttemptDate: string | null;
+          lastSuccessfulAudit: string | null;
           manual: boolean | null;
           paidByUser: string | null;
           paidNotificationSent: boolean | null;
@@ -7190,6 +7877,20 @@ export type Database = {
           utilityCompanyPaidAt: string | null;
           visible: boolean | null;
           zip: string | null;
+        };
+        Relationships: [];
+      };
+      ViewBlacklistedChargeAccounts: {
+        Row: {
+          balance: number | null;
+          charge_account_id: string | null;
+          inflight_balance: number | null;
+          outstanding: number | null;
+          total_bills_sum: number | null;
+          total_processing_amount: number | null;
+          total_succeeded_amount: number | null;
+          utility_type: string | null;
+          utilityCompanyID: string | null;
         };
         Relationships: [];
       };
@@ -7431,6 +8132,7 @@ export type Database = {
           name: string | null;
           referralCode: string | null;
           themeID: string | null;
+          useEncouragedConversion: boolean | null;
         };
         Relationships: [
           {
@@ -7490,15 +8192,7 @@ export type Database = {
           total_linked_accounts: number | null;
           utilityCompanyID: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'UtilityCredentials_provider_fkey';
-            columns: ['utilityCompanyID'];
-            isOneToOne: false;
-            referencedRelation: 'UtilityCompany';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       ViewReferralsWithResidentInfo: {
         Row: {
@@ -7703,17 +8397,31 @@ export type Database = {
             referencedRelation: 'UtilityCompany';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'ElectricAccount_utilityCompanyID_fkey';
+            columns: ['utilityCompanyID'];
+            isOneToOne: false;
+            referencedRelation: 'ViewUnpaidRemittances';
+            referencedColumns: ['utilityCompanyID'];
+          },
         ];
       };
       ViewUnpaidRemittances: {
         Row: {
           amountToBeRemitted: number | null;
+          daysSinceOldest: number | null;
           hasOverdue: string | null;
           lastPaymentStatusChangedDate: string | null;
           lastSuccessfulAudit: string | null;
+          oldestUnlinkedDate: string | null;
+          oldestUnlinkedReason: string | null;
+          status:
+            | Database['public']['Enums']['enum_UtilityAccount_status']
+            | null;
           totalOutstandingBalance: number | null;
           userEmail: string | null;
           userId: string | null;
+          utilityCompanyID: string | null;
           utilityCompanyName: string | null;
         };
         Relationships: [];
@@ -7862,6 +8570,81 @@ export type Database = {
         Args: { id_check: string; test: number };
         Returns: boolean;
       };
+      get_address_prefill_users: {
+        Args: { filter_date?: string; move_in_partner_filter?: string };
+        Returns: {
+          accountstatus: string;
+          buildingid: string;
+          buildingname: string;
+          city: string;
+          createdat: string;
+          electricaccountid: number;
+          email: string;
+          moveinpartnerid: string;
+          moveinpartnername: string;
+          name: string;
+          propertyid: number;
+          referralpartnerid: string;
+          referralpartnername: string;
+          startdate: string;
+          state: string;
+          streetaddress: string;
+          userid: string;
+          utilitycompanyid: string;
+          utilitycompanyname: string;
+          zip: string;
+        }[];
+      };
+      get_all_residents_electric_summary: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          account_number: string;
+          account_status: string;
+          city: string;
+          community_solar_provider: string;
+          community_solar_status: string;
+          electric_choice_id: string;
+          electric_company: string;
+          est_annual_usage: number;
+          first_name: string;
+          is_on_autopay: boolean;
+          is_under_ein: boolean;
+          last_bill_pdf: string;
+          last_name: string;
+          last_usage: number;
+          number_of_bills: number;
+          start_date: string;
+          state: string;
+          street: string;
+          sum_of_usage: number;
+          supply_platform: string;
+          supply_status: string;
+          unit: string;
+          zip: string;
+        }[];
+      };
+      get_auditable_users: {
+        Args: { statuses?: string[] };
+        Returns: {
+          cottageUserID: string;
+        }[];
+      };
+      get_base_users: {
+        Args: { statuses?: string[]; user_ids?: string[] };
+        Returns: {
+          createdAt: string;
+          dateOfBirth: string;
+          email: string;
+          firstName: string;
+          id: string;
+          isAutoPaymentEnabled: boolean;
+          isRegistrationComplete: boolean;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          stripePaymentMethodID: string;
+        }[];
+      };
       get_charge_account_remittances_grouped: {
         Args: { p_charge_account_id: string };
         Returns: Json;
@@ -7923,6 +8706,55 @@ export type Database = {
         Returns: {
           reading: number;
           readingAt: string;
+        }[];
+      };
+      get_non_billing_electric_accounts: {
+        Args: { property_ids: number[]; user_ids: string[] };
+        Returns: {
+          account_data: Json;
+          account_id: number;
+          property_id: number;
+          user_id: string;
+        }[];
+      };
+      get_non_billing_gas_accounts: {
+        Args: { property_ids: number[]; user_ids: string[] };
+        Returns: {
+          account_data: Json;
+          account_id: number;
+          property_id: number;
+          user_id: string;
+        }[];
+      };
+      get_non_billing_properties: {
+        Args: { user_ids?: string[] };
+        Returns: {
+          city: string;
+          property_id: number;
+          state: string;
+          street: string;
+          unit_number: string;
+          user_id: string;
+          utility_friendly_address: string;
+          zip: string;
+        }[];
+      };
+      get_non_billing_users: {
+        Args: { user_ids?: string[] };
+        Returns: {
+          createdAt: string;
+          dateOfBirth: string;
+          electricID: string;
+          email: string;
+          firstName: string;
+          gasID: string;
+          id: string;
+          isAutoPaymentEnabled: boolean;
+          isRegistrationComplete: boolean;
+          lastName: string;
+          phone: string;
+          startServiceDate: string;
+          stripePaymentMethodID: string;
         }[];
       };
       get_pending_executions: {
@@ -8097,6 +8929,7 @@ export type Database = {
       get_user_data_v2: {
         Args: { user_id?: string };
         Returns: {
+          accountNumber: number;
           createdAt: string;
           dateOfBirth: string;
           dateOfTextMessageConsent: string;
@@ -8270,6 +9103,7 @@ export type Database = {
           p_failed_explanation?: string;
           p_status: Database['public']['Enums']['remittance_execution_status'];
           p_success_screenshot?: string;
+          p_trigger_run_id?: string;
         };
         Returns: Json;
       };
@@ -8279,8 +9113,21 @@ export type Database = {
       };
     };
     Enums: {
+      account_type: 'GasAccount' | 'ElectricAccount' | 'BothAccounts';
       adjustment_phase_type: 'pre-ingestion' | 'post-ingestion';
       bill_credit_type: 'PG_PAYS' | 'OVERPAYMENT';
+      bill_notif_status: 'failed' | 'done';
+      billing_type_enum: 'ucb' | 'dual';
+      community_solar_plan_status:
+        | 'ENROLLED'
+        | 'PENDING'
+        | 'DISQUALIFIED'
+        | 'INACTIVE';
+      delay_reason_enum:
+        | 'SELECTED_DATE_NOT_AVAILABLE'
+        | 'WEBSITE_ISSUE'
+        | 'USER_DELAYED_RESPONSE'
+        | 'PG_FAULT';
       enum_CottageUsers_cottageConnectUserType:
         | 'CUSTOMER'
         | 'COMPANY'
@@ -8329,6 +9176,7 @@ export type Database = {
         | 'pending'
         | 'removed';
       enum_RegistrationJob_status: 'FAILED' | 'COMPLETE' | 'RUNNING';
+      enum_Subscription_subscription_status: 'pending' | 'active' | 'canceled';
       enum_transaction_code:
         | 'credit_for_overpayment'
         | 'credit_for_incentive'
@@ -8380,8 +9228,16 @@ export type Database = {
         | 'passport'
         | 'publicAssistanceID'
         | 'alienID';
-      ingestion_state: 'approved' | 'processed' | 'cancelled';
+      ingestion_state: 'approved' | 'processed' | 'cancelled' | 'viewable';
       job_types_enum: 'payBills' | 'audit' | 'start_service';
+      message_template_category:
+        | 'utility_setup'
+        | 'document_requests'
+        | 'account_verification'
+        | 'confirm_account_number'
+        | 'verification_rejection'
+        | 'verification_approval';
+      message_template_default_delivery_method: 'both' | 'email' | 'sms';
       payment_instrument_assignment_direction: 'up' | 'down';
       paymentmethodstatus: 'VALID' | 'INVALID';
       paymentstatus:
@@ -8419,6 +9275,7 @@ export type Database = {
         | 'waiting_for_payment'
         | 'for_bundling'
         | 'processing';
+      residual_unit_enum: 'per_kwh' | 'per_month';
       serviceGroupCommunitySolarAvailability: 'NONE' | 'WAITLIST' | 'ACTIVE';
       serviceGroupStatus: 'ACTIVE' | 'BETA' | 'NOT_ACTIVE';
       stripepaymentstatus:
@@ -8607,8 +9464,23 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: ['GasAccount', 'ElectricAccount', 'BothAccounts'],
       adjustment_phase_type: ['pre-ingestion', 'post-ingestion'],
       bill_credit_type: ['PG_PAYS', 'OVERPAYMENT'],
+      bill_notif_status: ['failed', 'done'],
+      billing_type_enum: ['ucb', 'dual'],
+      community_solar_plan_status: [
+        'ENROLLED',
+        'PENDING',
+        'DISQUALIFIED',
+        'INACTIVE',
+      ],
+      delay_reason_enum: [
+        'SELECTED_DATE_NOT_AVAILABLE',
+        'WEBSITE_ISSUE',
+        'USER_DELAYED_RESPONSE',
+        'PG_FAULT',
+      ],
       enum_CottageUsers_cottageConnectUserType: [
         'CUSTOMER',
         'COMPANY',
@@ -8664,6 +9536,7 @@ export const Constants = {
         'removed',
       ],
       enum_RegistrationJob_status: ['FAILED', 'COMPLETE', 'RUNNING'],
+      enum_Subscription_subscription_status: ['pending', 'active', 'canceled'],
       enum_transaction_code: [
         'credit_for_overpayment',
         'credit_for_incentive',
@@ -8718,8 +9591,17 @@ export const Constants = {
         'publicAssistanceID',
         'alienID',
       ],
-      ingestion_state: ['approved', 'processed', 'cancelled'],
+      ingestion_state: ['approved', 'processed', 'cancelled', 'viewable'],
       job_types_enum: ['payBills', 'audit', 'start_service'],
+      message_template_category: [
+        'utility_setup',
+        'document_requests',
+        'account_verification',
+        'confirm_account_number',
+        'verification_rejection',
+        'verification_approval',
+      ],
+      message_template_default_delivery_method: ['both', 'email', 'sms'],
       payment_instrument_assignment_direction: ['up', 'down'],
       paymentmethodstatus: ['VALID', 'INVALID'],
       paymentstatus: [
@@ -8760,6 +9642,7 @@ export const Constants = {
         'for_bundling',
         'processing',
       ],
+      residual_unit_enum: ['per_kwh', 'per_month'],
       serviceGroupCommunitySolarAvailability: ['NONE', 'WAITLIST', 'ACTIVE'],
       serviceGroupStatus: ['ACTIVE', 'BETA', 'NOT_ACTIVE'],
       stripepaymentstatus: [

@@ -7,7 +7,7 @@ const planeProjectId = process.env.PLANE_MOVE_IN_PROJECT_ID;
 
 export class PlaneActions{
 
-    async CheckMoveInTickets(Email: string, ElectricTicket: boolean, GasTicket: boolean, SameCompany: boolean) {
+    /*async CheckMoveInTickets(Email: string, ElectricTicket: boolean, GasTicket: boolean, SameCompany: boolean) {
         const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(Email);
         const electricPlaneTicketID = await supabaseQueries.Get_Electric_Plane_Ticket_Id(cottageUserId);
         const gasPlaneTicketID = await supabaseQueries.Get_Gas_Plane_Ticket_Id(cottageUserId);
@@ -67,7 +67,7 @@ export class PlaneActions{
         catch{
             console.log("No Plane Ticket at Gas Account to be Deleted")
         }
-    }
+    }*/
 
 
 }

@@ -240,30 +240,6 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Electric_Plane_Ticket_Id(cottageUserId: string) {
-        const { data: ElectricTicket } = await supabase
-            .from('ElectricAccount')
-            .select('planeTicketID')
-            .eq('cottageUserID', cottageUserId)
-            .maybeSingle()
-        const ElectricPlaneTicketId = ElectricTicket?.planeTicketID ?? '';
-        console.log("Plane Ticket Electric: ",ElectricPlaneTicketId.toString());
-        return ElectricPlaneTicketId.toString();
-    }
-
-
-    async Get_Gas_Plane_Ticket_Id(cottageUserId: string) {
-        const { data: GasTicket } = await supabase
-            .from('GasAccount')
-            .select('planeTicketID')
-            .eq('cottageUserID', cottageUserId)
-            .maybeSingle()
-        const GasPlaneTicketId = GasTicket?.planeTicketID ?? '';
-        console.log("Plane Ticket Gas: ",GasPlaneTicketId.toString());
-        return GasPlaneTicketId.toString();
-    }
-
-
     //////////// Light User Queries ////////////
     async Check_Light_User_Id(Email: string) {
         const email = Email.toLowerCase();
@@ -778,6 +754,30 @@ export class SupabaseQueries{
         .from('Building')
         .update({ isHandleBilling: IsHandledBilling })
         .eq('shortCode', ShortCode )
+        .select()
+        .throwOnError();
+        console.log(data);
+        console.log(error);
+    }
+
+
+    async Update_Building_Use_Encourage_Conversion(ShortCode: string, UseEncourageConversion: boolean) {
+        const { data,error} = await supabase
+        .from('Building')
+        .update({ useEncouragedConversion: UseEncourageConversion })
+        .eq('shortCode', ShortCode )
+        .select()
+        .throwOnError();
+        console.log(data);
+        console.log(error);
+    }
+
+
+    async Update_Partner_Use_Encourage_Conversion(PartnerName: string, UseEncourageConversion: boolean) {
+        const { data,error} = await supabase
+        .from('MoveInPartner')
+        .update({ useEncouragedConversion: UseEncourageConversion })
+        .eq('name', PartnerName )
         .select()
         .throwOnError();
         console.log(data);
