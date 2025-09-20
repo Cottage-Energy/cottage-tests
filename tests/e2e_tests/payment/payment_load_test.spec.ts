@@ -51,7 +51,7 @@ test.describe('Valid Card Auto Payment', () => {
       await page.waitForTimeout(500);
       await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
       await page.waitForTimeout(500);      
-      await supabaseQueries.Insert_Electric_Bill(ElectricAccountId);
+      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
     });
   }
 
