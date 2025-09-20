@@ -26,7 +26,7 @@ export class BillingPage {
         this.page = page;
         this.Billing_Electric_Usage_Row = (electric_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${electric_usage} kWh")]/ancestor::tr`)
         this.Billing_Gas_Usage_Row = (gas_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${gas_usage} therms")]/ancestor::tr`)
-        this.Billing_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div');
+        this.Billing_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div/parent::div');
 
 
         this.Billing_Pay_Dialog_Title = page.getByRole('heading', { name: 'Bill Payment Details' })
@@ -292,7 +292,7 @@ export class BillingPage {
     }
 
 
-    async Check_Outstanding_Balance_Auto_Pay_Message(message: string) {
+    async Check_Outstanding_Balance_Message(message: string) {
         await expect(this.Billing_Outstanding_Balance).toContainText(message);
     }
 

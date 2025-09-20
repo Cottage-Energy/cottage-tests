@@ -658,11 +658,11 @@ export class SupabaseQueries{
 
     ///////////////////////////////////////////////////////////////////////////////////
 
-    async Get_Electric_Bill_Start_Date(ElectricAccountId: string) {
+    async Get_Electric_Bill_Start_Date(BillId: string) {
         const { data: ElectricBill } = await supabase
             .from('ElectricBill')
             .select('startDate')
-            .eq('electricAccountID', parseInt(ElectricAccountId))
+            .eq('id', parseInt(BillId))
             .maybeSingle()
             .throwOnError();
         const StartDate = ElectricBill?.startDate ?? '';
@@ -670,11 +670,11 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Electric_Bill_End_Date(ElectricAccountId: string) {
+    async Get_Electric_Bill_End_Date(BillId: string) {
         const { data: ElectricBill } = await supabase
             .from('ElectricBill')
             .select('endDate')
-            .eq('electricAccountID', parseInt(ElectricAccountId))
+            .eq('id', parseInt(BillId))
             .maybeSingle()
             .throwOnError();
         const EndDate = ElectricBill?.endDate ?? '';
@@ -682,11 +682,11 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Gas_Bill_Start_Date(GasAccountId: string) {
+    async Get_Gas_Bill_Start_Date(BillId: string) {
         const { data: GasBill } = await supabase
             .from('GasBill')
             .select('startDate')
-            .eq('gasAccountID', parseInt(GasAccountId))
+            .eq('id', parseInt(BillId))
             .maybeSingle()
             .throwOnError();
         const StartDate = GasBill?.startDate ?? '';
@@ -694,11 +694,11 @@ export class SupabaseQueries{
     }
 
 
-    async Get_Gas_Bill_End_Date(GasAccountId: string) {
+    async Get_Gas_Bill_End_Date(BillId: string) {
         const { data: GasBill } = await supabase
             .from('GasBill')
             .select('endDate')
-            .eq('gasAccountID', parseInt(GasAccountId))
+            .eq('id', parseInt(BillId))
             .maybeSingle()
             .throwOnError();
         const EndDate = GasBill?.endDate ?? '';

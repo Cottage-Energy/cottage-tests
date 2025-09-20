@@ -9,13 +9,10 @@ export class OverviewPage {
     //variables
     readonly page: Page;
     readonly Overview_Outstanding_Balance: Locator;
-    readonly Overview_Pay_Bill_Link: Locator;
+    readonly Overview_Make_Payment_Button: Locator;
 
     readonly Overview_Electricity_Card: Locator;
     readonly Overview_Gas_Card: Locator;
-
-    readonly Overview_Get_Started_Widget: Locator
-    readonly Overview_Setup_Payment_Link: Locator
 
     readonly Overview_Add_Payment_Title: Locator
     readonly Overview_Service_Fee_Message: Locator
@@ -29,11 +26,7 @@ export class OverviewPage {
     readonly Overview_Failed_Payment_Alert: Locator;
     readonly Overview_Failed_Payment_Update_Payment_Link: Locator;
 
-    readonly Overview_Payment_Initiated_Message: Locator
 
-    readonly Overview_Pay_Outstanding_Balance_Modal: Locator
-    //readonly Overview_Pay_Now_Button: Locator
-    //readonly Overview_Pay_Later_Button: Locator
 
     readonly Overview_New_Terms_Modal_Title: Locator
     readonly Overview_New_Terms_Modal_Content: Locator
@@ -45,14 +38,12 @@ export class OverviewPage {
     //locators
     constructor(page: Page) {
         this.page = page;
-        this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div');
-        this.Overview_Pay_Bill_Link = page.locator('//button[contains(text(),"Pay Bill")]');
+        this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div/parent::div');
+        this.Overview_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
 
         this.Overview_Electricity_Card = page.locator('//span[text()="Electricity"]/parent::h3/parent::div/parent::div');
         this.Overview_Gas_Card = page.locator('//span[text()="Gas"]/parent::h3/parent::div/parent::div');
 
-        this.Overview_Get_Started_Widget = page.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div');
-        this.Overview_Setup_Payment_Link = page.getByText('Setup a Payment Method');
 
         this.Overview_Add_Payment_Title = page.getByRole('heading', { name: 'Add Payment Method' });
         this.Overview_Service_Fee_Message = page.getByText('Credit Card payments will be');
@@ -67,11 +58,7 @@ export class OverviewPage {
         this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
         this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
 
-        this.Overview_Payment_Initiated_Message = page.locator('//div[contains(text(),"Successfully initiated payment")]'); //getByText('Successfully initiated'); //
 
-        this.Overview_Pay_Outstanding_Balance_Modal = page.getByLabel('Pay outstanding balance');
-        this.Overview_Pay_Now_Button = page.getByRole('button', { name: 'Pay Now' });
-        this.Overview_Pay_Later_Button = page.getByRole('button', { name: 'Pay Later' });
 
         this.Overview_New_Terms_Modal_Title = page.getByRole('heading', { name: 'We\'ve made updates to our' });
         this.Overview_New_Terms_Modal_Content = page.getByText('We have expanded our services');
@@ -129,17 +116,6 @@ export class OverviewPage {
         await this.Overview_Profile_Button.hover();
         await this.Overview_Profile_Button.click();
     }
-
-    /*async Click_Setup_Payment_Link(){
-        await expect(this.Overview_Get_Started_Widget).toBeVisible({timeout:30000});
-        await this.Overview_Setup_Payment_Link.waitFor({state:"visible",timeout:10000});
-        await this.Overview_Setup_Payment_Link.hover({timeout:10000});
-        await this.Overview_Setup_Payment_Link.click({timeout:10000});
-
-        await expect(this.Overview_Add_Payment_Title).toBeVisible({timeout:30000});
-        await expect(this.Overview_Service_Fee_Message).toBeVisible({timeout:30000});
-    }*/
-
 
     async Enter_Auto_Payment_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string){
         
@@ -462,30 +438,16 @@ export class OverviewPage {
         await this.Overview_Failed_Payment_Update_Payment_Link.click();
     }
 
-
-    async Click_Pay_Bill_Link(){
-        await expect(this.Overview_Pay_Bill_Link).toBeVisible({timeout:30000});
-        await this.Overview_Pay_Bill_Link.hover();
-        await this.Overview_Pay_Bill_Link.click();
-    }
-
-
-    async Click_Pay_Now_Button(){
-        await expect(this.Overview_Pay_Now_Button).toBeVisible({timeout:30000});
-        await this.Overview_Pay_Now_Button.hover();
-        await this.Overview_Pay_Now_Button.click();
-    }
-
-
-    async Click_Pay_Later_Button(){
-        await expect(this.Overview_Pay_Later_Button).toBeVisible({timeout:30000});
-        await this.Overview_Pay_Later_Button.hover();
-        await this.Overview_Pay_Later_Button.click();
-    }
-
     
 
     //assertions
+    async Check_Make_Payment_Button_Visible(){
+        await expect(this.Overview_Make_Payment_Button).toBeVisible({timeout:10000});
+    }
+
+    async Check_Make_Payment_Button_Not_Visible(){
+        await expect(this.Overview_Make_Payment_Button).toBeHidden({timeout:10000});
+    }
 
     async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
         const electricAmount = parseFloat(ElectricAmount);
@@ -510,14 +472,8 @@ export class OverviewPage {
     }
 
 
-    async Check_Outstanding_Balance_Auto_Pay_Message(message: string) {
+    async Check_Outstanding_Balance_Message(message: string) {
         await expect(this.Overview_Outstanding_Balance).toContainText(message);
-    }
-
-
-    async Check_Pay_Bill_Link_Visible_Enable() {
-        await expect(this.Overview_Pay_Bill_Link).toBeEnabled();
-        await expect(this.Overview_Pay_Bill_Link).toBeVisible();
     }
 
 
@@ -531,12 +487,12 @@ export class OverviewPage {
     }
 
 
-    async Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId: string, Amount: any, Usage: any) {
+    async Check_Electricity_Card_Contain_Bill_Details(BillId: string, Amount: any, Usage: any) {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(ElectricAccountId);
-        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(ElectricAccountId);
+        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(BillId);
+        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -560,12 +516,12 @@ export class OverviewPage {
     }
 
 
-    async Check_Electricity_Card_Is_Clear(ElectricAccountId: string, Amount: any, Usage: any) {
+    async Check_Electricity_Card_Is_Clear(BillId: string, Amount: any, Usage: any) {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(ElectricAccountId);
-        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(ElectricAccountId);
+        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(BillId);
+        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -589,12 +545,12 @@ export class OverviewPage {
     }
 
 
-    async Check_Gas_Card_Contain_Bill_Details(GasAccountId: string, Amount: any, Usage: any) {
+    async Check_Gas_Card_Contain_Bill_Details(BillId: string, Amount: any, Usage: any) {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(GasAccountId);
-        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(GasAccountId);
+        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(BillId);
+        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -618,12 +574,12 @@ export class OverviewPage {
     }
 
 
-    async Check_Gas_Card_Is_Clear(GasAccountId: string, Amount: any, Usage: any) {
+    async Check_Gas_Card_Is_Clear(BillId: string, Amount: any, Usage: any) {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(GasAccountId);
-        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(GasAccountId);
+        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(BillId);
+        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -646,37 +602,6 @@ export class OverviewPage {
         await expect(this.Overview_Gas_Card).not.toContainText(usage);
     }
 
-
-    async Check_Payment_Initiated_Message(){
-        try{
-            await expect(this.Overview_Payment_Initiated_Message).toBeVisible({timeout:30000});
-        }catch(error){
-            console.log('Payment Initiated Message is not visible.');
-        }
-    }
-
-
-    async Check_Pay_Outstanding_Balance_Modal(ElectricAmount: any, GasAmount?: any){
-        const electricAmount = parseFloat(ElectricAmount);
-        const gasAmount = parseFloat(GasAmount) || 0;
-        
-        const totalAmount = (electricAmount + gasAmount);
-        let totalAmount2dec = totalAmount.toFixed(2);
-
-
-        await expect(this.Overview_Pay_Outstanding_Balance_Modal).toBeVisible({timeout:30000});
-        await expect(this.Overview_Pay_Outstanding_Balance_Modal).toContainText(totalAmount2dec);
-    }
-
-
-    async Check_Get_Started_Widget_Not_Visible() {
-        await expect(this.Overview_Get_Started_Widget).toBeHidden();
-    }
-
-
-    async Check_Get_Started_Widget_Visible() {
-        await expect(this.Overview_Get_Started_Widget).toBeVisible();
-    }
 
     async Check_Inactive_Account_Alert_Visible() {
         await expect(this.Overview_Inactive_Account_Alert).toBeVisible({timeout:30000});

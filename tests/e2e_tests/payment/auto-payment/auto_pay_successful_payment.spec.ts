@@ -50,7 +50,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe.skip('Valid Card Auto Payment', () => {
+test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
@@ -88,7 +88,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
 
 
     //Payment Checks
-    await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage, AdminApiContext);
+    await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
   });
 
 

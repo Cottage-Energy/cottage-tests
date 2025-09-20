@@ -48,7 +48,7 @@ export class SidebarChat {
         this.Close_Chat_Icon = page.getByRole('button', { name: 'Close chat' });
 
         this.Overview_Page_Title = page.locator('//h3[contains(text(),"Welcome back")]');
-        this.Billing_Page_Title = page.getByRole('heading', { name: 'Billing', exact: true });
+        this.Billing_Page_Title = page.getByRole('heading', { name: 'Bills & Payments' });
         this.Services_Page_Title = page.getByRole('heading', { name: 'Services', exact: true });
         this.Support_Page_Title = page.getByRole('heading', { name: 'We are here to help' });
     }
