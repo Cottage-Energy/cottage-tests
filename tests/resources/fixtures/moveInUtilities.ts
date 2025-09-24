@@ -26,8 +26,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) {
+                if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
+            }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -35,8 +37,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) {
+                if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
+            }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -73,14 +77,14 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
    
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -90,8 +94,8 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -101,8 +105,8 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -163,8 +167,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) {
+                if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
+            }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -172,8 +178,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) {
+                if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
+            }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -209,14 +217,14 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -226,8 +234,8 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -237,8 +245,8 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -301,8 +309,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) {
+                if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
+            }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -310,8 +320,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) {
+                if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
+            }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -347,14 +359,14 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -364,8 +376,8 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -375,8 +387,8 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -429,8 +441,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -438,8 +450,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -475,14 +487,14 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -492,8 +504,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -503,8 +515,8 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -565,8 +577,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -574,8 +586,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -611,14 +623,14 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
         
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -628,8 +640,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -639,8 +651,8 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -702,8 +714,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -711,8 +723,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -748,14 +760,14 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -765,8 +777,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -776,8 +788,8 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -838,8 +850,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -847,8 +859,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -884,14 +896,14 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -901,8 +913,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -912,8 +924,8 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -1001,14 +1013,14 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -1018,8 +1030,8 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -1029,8 +1041,8 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -1117,14 +1129,14 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -1134,8 +1146,8 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -1145,8 +1157,8 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -1208,8 +1220,8 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -1217,8 +1229,8 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -1254,14 +1266,14 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -1271,8 +1283,8 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -1282,8 +1294,8 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -1344,8 +1356,8 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
     if (ElectricCompany === null) {
         try {
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            addressType = MoveIndata[`${gasCompany}address`];
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { addressType = (MoveIndata as any)[`${gasCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Gas company");
         } catch (error) {
             console.log("No address type found for this Gas company");
@@ -1353,8 +1365,8 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
         }
     } else {
         try {
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            addressType = MoveIndata[`${electricCompany}address`];
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { addressType = (MoveIndata as any)[`${electricCompany}address`]; }
             if (!addressType) throw new Error("Address type is undefined for this Electric company");
         } catch (error) {
             console.log("No address type found for this Electric company");
@@ -1390,14 +1402,14 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
     if (ElectricCompany === GasCompany) {
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
             try{
-                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-                await moveInpage[`${gasCompany}_Questions`]();
+                const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+                if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
                 gasQuestionsPresent = true;
             }
             catch(error){
@@ -1407,8 +1419,8 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     }
     else{
         try{
-            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : ElectricCompany;
-            await moveInpage[`${electricCompany}_Questions`]();
+            const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
+            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
             electricQuestionsPresent = true;
         }
         catch(error){
@@ -1418,8 +1430,8 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
 
         try{
-            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : GasCompany;
-            await moveInpage[`${gasCompany}_Questions`]();
+            const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
+            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
             gasQuestionsPresent = true;
         }
         catch(error){
@@ -1507,3 +1519,5 @@ export const MoveInTestUtilities = {
 
     Move_In_Existing_Utility_Account
 };
+
+

@@ -272,9 +272,12 @@ export class MoveInPage{
 
         this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new move-in request"]');
 
-        this.Move_In_ESCO_Title = page.getByRole('heading', { name: 'Because you live in New York' });
-        this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,')
-        this.Move_In_ESCO_Got_It_Button = page.getByRole('button', { name: 'Got it!' })
+        //this.Move_In_ESCO_Title = page.getByRole('heading', { name: 'Because you live in New York' });
+        this.Move_In_ESCO_Title = page.getByText('Because you live in New York').nth(1);
+        //this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,')
+        this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,').nth(1);
+        //this.Move_In_ESCO_Got_It_Button = page.getByRole('button', { name: 'Got it!' })
+        this.Move_In_ESCO_Got_It_Button = page.getByText('Got it!').nth(1);
     }
 
 

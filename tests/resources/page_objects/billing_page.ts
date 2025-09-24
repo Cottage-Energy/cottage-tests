@@ -7,19 +7,14 @@ export class BillingPage {
     readonly Billing_Gas_Usage_Row: (gas_usage: string) => Locator;
     readonly Billing_Outstanding_Balance: Locator;
 
-    readonly Billing_Pay_Dialog_Title: Locator;
-    readonly Billing_Pay_Dialog_Box: Locator;
-    readonly Billing_Pay_Bill_Final_Button: Locator;
+    readonly Billing_Bills_History_Tab: Locator;
+    readonly Billing_Payments_Tab: Locator;
 
     readonly Billing_Make_Payment_Button: Locator;
-    readonly Billing_Successully_Initiated_Payment_Message: Locator;
 
     readonly Billing_Save_Payment_Button: Locator
     readonly Billing_Success_Message: Locator
 
-    //readonly Billing_Pay_Outstanding_Balance_Modal: Locator
-    //readonly Billing_Pay_Now_Button: Locator
-    //readonly Billing_Pay_Later_Button: Locator
 
     //locators
     constructor(page: Page) {
@@ -28,20 +23,13 @@ export class BillingPage {
         this.Billing_Gas_Usage_Row = (gas_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${gas_usage} therms")]/ancestor::tr`)
         this.Billing_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div/parent::div');
 
-
-        this.Billing_Pay_Dialog_Title = page.getByRole('heading', { name: 'Bill Payment Details' })
-        this.Billing_Pay_Dialog_Box = page.getByLabel('Bill Payment Details');
-        this.Billing_Pay_Bill_Final_Button = page.getByRole('button', { name: 'Pay' });
+        this.Billing_Bills_History_Tab = page.getByRole('tab', { name: 'Bills History' });
+        this.Billing_Payments_Tab = page.getByRole('tab', { name: 'Payments' });
 
         this.Billing_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
-        this.Billing_Successully_Initiated_Payment_Message = page.locator('//div[contains(text(),"Successfully initiated payment")]');//getByText('Successfully initiated');//
 
         this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });
-
-        this.Billing_Pay_Outstanding_Balance_Modal = page.getByLabel('Pay outstanding balance');
-        this.Billing_Pay_Now_Button = page.getByRole('button', { name: 'Pay Now' });
-        this.Billing_Pay_Later_Button = page.getByRole('button', { name: 'Pay Later' });
 
     }
 
@@ -162,22 +150,13 @@ export class BillingPage {
     }
 
 
-    async Click_Pay_Now_Button(){
-        await expect(this.Billing_Pay_Now_Button).toBeVisible({timeout:30000});
-        await this.Billing_Pay_Now_Button.hover();
-        await this.Billing_Pay_Now_Button.click();
-    }
-
-
-    async Click_Pay_Later_Button(){
-        await expect(this.Billing_Pay_Later_Button).toBeVisible({timeout:30000});
-        await this.Billing_Pay_Later_Button.hover();
-        await this.Billing_Pay_Later_Button.click();
-    }
-
-
 
     //assertions
+    async Check_Make_Payment_Button_Not_Visible() {
+        await expect(this.Billing_Make_Payment_Button).not.toBeVisible({timeout:30000});
+    }
+
+
     async Check_Electric_Bill_Hidden(electric_usage: string) {
         await expect(this.Billing_Electric_Usage_Row(electric_usage)).not.toBeVisible({timeout:30000});
     }
@@ -223,6 +202,7 @@ export class BillingPage {
         await expect(rowLocator).not.toContainText(ExpectedFee);
     }
 
+    //
 
     async Check_Gas_Bill_Hidden(gas_usage: string) {
         await expect(this.Billing_Gas_Usage_Row(gas_usage)).not.toBeVisible({timeout:30000});
@@ -301,30 +281,6 @@ export class BillingPage {
         await expect(this.Billing_Make_Payment_Button).toBeEnabled();
         await expect(this.Billing_Make_Payment_Button).toBeVisible();
     }
-
-
-    async Check_Payment_Initiated_Message(){
-        try{
-            await expect(this.Billing_Successully_Initiated_Payment_Message).toBeVisible({timeout:30000});
-        }catch(error){
-            console.log('Payment Initiated Message is not visible.');
-        }
-    }
-
-
-    async Check_Pay_Outstanding_Balance_Modal(ElectricAmount: any, GasAmount?: any){
-        const electricAmount = parseFloat(ElectricAmount);
-        const gasAmount = parseFloat(GasAmount) || 0;
-        
-        const totalAmount = (electricAmount + gasAmount);
-        let totalAmount2dec = totalAmount.toFixed(2);
-
-
-        await expect(this.Billing_Pay_Outstanding_Balance_Modal).toBeVisible({timeout:30000});
-        await expect(this.Billing_Pay_Outstanding_Balance_Modal).toContainText(totalAmount2dec);
-    }
-
-
 
 }
 

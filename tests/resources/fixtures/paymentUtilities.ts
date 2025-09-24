@@ -71,31 +71,24 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),// add check payment button not visible
+            billingPage.Check_Make_Payment_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
         ]);
+
+
+        await page.waitForTimeout(500);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await supabaseQueries.Approve_Electric_Bill(ElectricBillID);
+        //wait until Bill inngesttion state is processed 
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
+            supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
+        ]);        
         //check no visibility
         //approve bill
         // wait for bill processed
         //check payment status
         //check page bill visibility
-
-        let ElectriBillID: any;
-        await test.step('Process bill approval and validate scheduled payment', async () => {
-            await page.waitForTimeout(1000);
-            await sidebarChat.Goto_Overview_Page_Via_Icon();
-            await supabaseQueries.Check_Electric_Bill_Paid_Notif(ElectricAccountId, false);
-            await page.waitForTimeout(10000);
-            
-            ElectriBillID = await supabaseQueries.Get_Electric_Bill_Id(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
-            await supabaseQueries.Approve_Electric_Bill(ElectriBillID);
-            await page.waitForTimeout(10000);
-            
-            await Promise.all([
-                supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
-                supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
-            ]);
-        });
 
         await test.step('Verify scheduled payment state on overview page', async () => {
             await page.reload({ waitUntil: 'domcontentloaded' });

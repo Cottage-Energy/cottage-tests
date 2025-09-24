@@ -69,7 +69,6 @@ export class OverviewPage {
     }
 
     //methods
-
     async Accept_New_Terms_And_Conditions(){
         const maxRetries = 10;
         let retries = 0;
@@ -436,6 +435,14 @@ export class OverviewPage {
         await this.Overview_Failed_Payment_Update_Payment_Link.waitFor({state:"visible",timeout:10000});
         await this.Overview_Failed_Payment_Update_Payment_Link.hover();
         await this.Overview_Failed_Payment_Update_Payment_Link.click();
+    }
+
+
+    async Click_Make_Payment_Button() {
+        await expect(this.Overview_Make_Payment_Button).toBeVisible({timeout:30000});
+        await expect(this.Overview_Make_Payment_Button).toBeEnabled({timeout:30000});
+        await this.Overview_Make_Payment_Button.hover();
+        await this.Overview_Make_Payment_Button.click();
     }
 
     
