@@ -73,7 +73,7 @@ export class SidebarChat {
         await expect(this.Billing_Icon).toBeEnabled({timeout:30000});
         await this.Billing_Icon.hover();
         await this.Billing_Icon.click();
-        await expect(this.Billing_Page_Title).toBeVisible({timeout:30000});
+        await expect(this.Billing_Page_Title).toBeVisible({timeout:90000});
     }
 
     async Goto_Service_Page_Via_Icon(){

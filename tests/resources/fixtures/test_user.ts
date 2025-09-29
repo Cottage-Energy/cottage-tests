@@ -19,13 +19,13 @@ interface TestUser {
     Zip: string;
     ElectricAmount: number;
     ElectricAmountActual: string;
-    ElectricServiceFee: string;
-    ElectricAmountTotal: string;
+    ElectricServiceFee: number;
+    ElectricAmountTotal: number;
     ElectricUsage: number;
     GasAmount: number;
     GasAmountActual: string;
-    GasServiceFee: string;
-    GasAmountTotal: string;
+    GasServiceFee: number;
+    GasAmountTotal: number;
     GasUsage: number;
 }
 
@@ -55,12 +55,12 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     const feePercentage = serviceFeePercentage || 0.03;
 
     const electricAmountActual = (parseInt(AmountElectric) / 100).toFixed(2);
-    const electricServiceFee = (Math.ceil(((parseInt(AmountElectric) * (feePercentage))+(0.3*100)))/100).toFixed(2);
-    const electricAmountTotal = (parseFloat(electricAmountActual) + parseFloat(electricServiceFee)).toFixed(2);
+    const electricServiceFee = (Math.ceil(((parseInt(AmountElectric) * (feePercentage))+(0.3*100))));
+    const electricAmountTotal = parseInt(AmountElectric) + electricServiceFee;
     const gasAmountActual = (parseInt(AmountGas) / 100).toFixed(2);
-    const gasServiceFee = (Math.ceil(((parseInt(AmountGas) * (feePercentage))+(0.3*100)))/100).toFixed(2);
-    const gasAmountTotal = (parseFloat(gasAmountActual) + parseFloat(gasServiceFee)).toFixed(2);
-  
+    const gasServiceFee = (Math.ceil(((parseInt(AmountGas) * (feePercentage))+(0.3*100))));
+    const gasAmountTotal = parseInt(AmountGas) + gasServiceFee;
+
     const userData: TestUser = {
       FirstName: firstname,
       LastName: lastname,

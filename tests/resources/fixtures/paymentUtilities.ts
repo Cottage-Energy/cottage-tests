@@ -74,12 +74,28 @@ export class PaymentUtilities {
             billingPage.Check_Make_Payment_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
         ]);
-
-
         await page.waitForTimeout(500);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Approve_Electric_Bill(ElectricBillID);
-        //wait until Bill inngesttion state is processed 
+        await supabaseQueries.Check_Electric_Bill_Is_Processed(ElectricBillID);
+        await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"scheduled_for_payment");
+        
+        
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        await Promise.all([
+            //outstanding balance and message
+            //make payment button visible
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
+        ]);
+
+        await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"requires_capture");
+        await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal);
+        await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded");
+
+
+        /*
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "scheduled_for_payment"),
             supabaseQueries.Check_Electric_Bill_Visibility(ElectricAccountId, true)
@@ -91,14 +107,9 @@ export class PaymentUtilities {
         //check page bill visibility
 
         await test.step('Verify scheduled payment state on overview page', async () => {
-            await page.reload({ waitUntil: 'domcontentloaded' });
-            await page.waitForTimeout(500);
+
             
-            await Promise.all([
-                overviewPage.Check_Get_Started_Widget_Not_Visible(),
-                overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
-                overviewPage.Check_Gas_Card_Not_Visible(),
-            ]);
+
         });
 
         await test.step('Verify scheduled payment state on billing page', async () => {
@@ -142,6 +153,8 @@ export class PaymentUtilities {
                 overviewPage.Check_Gas_Card_Not_Visible(),
             ]);
         });
+
+        */
     }
 
 

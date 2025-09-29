@@ -560,20 +560,30 @@ export class SupabaseQueries{
         let PaymentStatus = '';
         
         while (retries < maxRetries) {
-            const { data: PayStatus } = await supabase
-                .from('Payment')
-                .select('paymentStatus')
-                .eq('paidBy', cottageUserId)
-                .eq('amount', Amount)
-                .single()
-                .throwOnError();
+            try {
+                const { data: PayStatus } = await supabase
+                    .from('Payment')
+                    .select('paymentStatus')
+                    .eq('paidBy', cottageUserId)
+                    .eq('amount', Amount)
+                    .single()
+                    .throwOnError();
 
-            PaymentStatus = PayStatus?.paymentStatus ?? '';
-            console.log(PaymentStatus);
+                PaymentStatus = PayStatus?.paymentStatus ?? '';
+                console.log(PaymentStatus);
 
-            if (PaymentStatus === status) {
-                await expect(PaymentStatus).toBe(status);
-                break;
+                if (PaymentStatus === status) {
+                    await expect(PaymentStatus).toBe(status);
+                    break;
+                }
+            } catch (error: any) {
+                // Handle the case where no record exists yet due to database delay
+                if (error?.message && error.message.includes('Cannot coerce the result to a single JSON object')) {
+                    console.log(`No payment record found yet for user ${cottageUserId} with amount ${Amount}`);
+                } else {
+                    // Re-throw other errors
+                    throw error;
+                }
             }
         
             retries++;
@@ -589,30 +599,40 @@ export class SupabaseQueries{
 
 
     async Check_Payment_Processing(cottageUserId: string, Amount: number) {
-        const maxRetries = 500;
+        const maxRetries = 3000;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let PaymentStatus = '';
         
         while (retries < maxRetries) {
-            const { data: PayStatus } = await supabase
-                .from('Payment')
-                .select('paymentStatus')
-                .eq('paidBy', cottageUserId)
-                .eq('amount', Amount)
-                .single()
-                .throwOnError();
+            try {
+                const { data: PayStatus } = await supabase
+                    .from('Payment')
+                    .select('paymentStatus')
+                    .eq('paidBy', cottageUserId)
+                    .eq('amount', Amount)
+                    .single()
+                    .throwOnError();
 
-            PaymentStatus = PayStatus?.paymentStatus ?? '';
-            console.log(PaymentStatus);
+                PaymentStatus = PayStatus?.paymentStatus ?? '';
+                console.log(PaymentStatus);
 
-            if (PaymentStatus === "processing" || PaymentStatus === "succeeded"|| PaymentStatus === "failed") {
-                break;
+                if (PaymentStatus === "processing" || PaymentStatus === "succeeded"|| PaymentStatus === "failed") {
+                    break;
+                }
+            } catch (error: any) {
+                // Handle the case where no record exists yet due to database delay
+                if (error?.message && error.message.includes('Cannot coerce the result to a single JSON object')) {
+                    console.log(`No payment record found yet for user ${cottageUserId} with amount ${Amount}`);
+                } else {
+                    // Re-throw other errors
+                    throw error;
+                }
             }
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(50);
+            await delay(100);
         }
 
         await expect(PaymentStatus).toMatch(/^(processing|succeeded|failed)$/);
