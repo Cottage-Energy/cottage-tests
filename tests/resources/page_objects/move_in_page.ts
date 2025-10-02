@@ -327,6 +327,7 @@ export class MoveInPage{
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);
         await this.page.waitForTimeout(1000);
+        
     }
 
 
@@ -349,6 +350,7 @@ export class MoveInPage{
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.pressSequentially('GUID'+ unit);
         await this.page.waitForTimeout(1000);
+        
     }
 
     async Parameterized_Address_GUID_Flow(unit:string) {
@@ -365,6 +367,7 @@ export class MoveInPage{
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.pressSequentially('GUID'+ unit);
         await this.page.waitForTimeout(1000);
+        
     }
 
     async Enter_Unit(unit:string) {
@@ -379,6 +382,7 @@ export class MoveInPage{
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);
         await this.page.waitForTimeout(1000);
+        
     }
 
 
