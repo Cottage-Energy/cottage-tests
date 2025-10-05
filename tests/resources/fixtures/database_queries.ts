@@ -554,7 +554,7 @@ export class SupabaseQueries{
 
 
     async Check_Payment_Status(cottageUserId: string, Amount: number, status: string) {
-        const maxRetries = 300;
+        const maxRetries = 900;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let PaymentStatus = '';
@@ -588,7 +588,7 @@ export class SupabaseQueries{
         
             retries++;
             console.log(`Retrying... (${retries}/${maxRetries})`);
-            await delay(3000);
+            await delay(1000);
         }
         
         // If the loop exits without matching the status, throw an error

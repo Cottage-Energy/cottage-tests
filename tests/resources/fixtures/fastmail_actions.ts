@@ -69,7 +69,7 @@ export async function Check_Start_Service_Confirmation(Email: string, AccountNum
 
 
 export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
-    const maxRetries = 2;
+    const maxRetries = 5;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -78,7 +78,7 @@ export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(15000); // delay
     }
     if (!content || content.length === 0) {
         console.log("Failed to fetch TLDR email after multiple attempts due to delays. Check it manually later if the issue persists.");

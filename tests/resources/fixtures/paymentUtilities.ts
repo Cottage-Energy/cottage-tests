@@ -79,20 +79,33 @@ export class PaymentUtilities {
         await supabaseQueries.Approve_Electric_Bill(ElectricBillID);
         await supabaseQueries.Check_Electric_Bill_Is_Processed(ElectricBillID);
         await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"scheduled_for_payment");
-        
-        
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
+
         await Promise.all([
-            //outstanding balance and message
-            //make payment button visible
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Make_Payment_Button_Visible(),
+            overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
+        await sidebarChat.Goto_Billing_Page_Via_Icon();
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            //billingPage.Check_Make_Payment_Button_Visible(),
+            //billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountTotal} payment is processing.`),
+            //billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
+        ]);
+        //go to payment tab and check payment is scheduled
 
         await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"requires_capture");
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        //go to payment tab and check payment is processing
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal);
         await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded");
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
 
 
         /*
