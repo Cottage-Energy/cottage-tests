@@ -83,7 +83,8 @@ export async function Check_Welcome_to_PG_Lets_Get_Started(Email: string) {
     if (!content || content.length === 0) {
         console.log("Failed to fetch TLDR email after multiple attempts due to delays. Check it manually later if the issue persists.");
     }
-    //const email_body = content[0].bodyValues[1].value;
+    //const firstKey = Object.keys(content[0].bodyValues)[0];
+    //const email_body = content[0].bodyValues[firstKey].value;
     //await expect(content.length).toEqual(1);
 }
 
@@ -163,7 +164,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
 //Payment Emails
 //autopay
 export async function Check_Electric_Bill_Is_Ready(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -172,19 +173,20 @@ export async function Check_Electric_Bill_Is_Ready(Email: string, AmountTotal: a
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Electric Bill Is Ready email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
 export async function Check_Gas_Bill_Is_Ready(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -193,19 +195,20 @@ export async function Check_Gas_Bill_Is_Ready(Email: string, AmountTotal: any) {
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Gas Bill Is Ready email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
 export async function Check_Electric_And_Gas_Bill_Is_Ready(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -214,12 +217,13 @@ export async function Check_Electric_And_Gas_Bill_Is_Ready(Email: string, Amount
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Electric and Gas Bill Is Ready email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
@@ -227,7 +231,7 @@ export async function Check_Electric_And_Gas_Bill_Is_Ready(Email: string, Amount
 
 //manual pay
 export async function Check_Electric_Bill_Is_Ready_For_Payment(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -236,19 +240,20 @@ export async function Check_Electric_Bill_Is_Ready_For_Payment(Email: string, Am
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Electric Bill Is Ready for Payment email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
 export async function Check_Gas_Bill_Is_Ready_For_Payment(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -257,19 +262,20 @@ export async function Check_Gas_Bill_Is_Ready_For_Payment(Email: string, AmountT
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Gas Bill Is Ready for Payment email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
 export async function Check_Electric_And_Gas_Bill_Is_Ready_For_Payment(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -278,12 +284,35 @@ export async function Check_Electric_And_Gas_Bill_Is_Ready_For_Payment(Email: st
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Electric and Gas Bill Is Ready for Payment email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
+    await expect(content.length).toEqual(1);
+    await expect(email_body).toContain(`$${AmountTotal}`);
+}
+
+//Payment confirmation
+export async function Check_Bill_Payment_Confirmation(Email: string, AmountTotal: any) {
+    const maxRetries = 120;
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    let content: any[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `Your Bill Payment Confirmation`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) {
+            break;
+        }
+        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
+        await delay(1000); // delay
+    }
+    if (!content || content.length === 0) {
+        throw new Error("Failed to fetch Electric Bill Is Ready email after multiple attempts.");
+    }
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
@@ -291,7 +320,7 @@ export async function Check_Electric_And_Gas_Bill_Is_Ready_For_Payment(Email: st
 
 //failed payment
 export async function Check_Failed_Payment_Email(Email: string, AmountTotal: any) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -300,19 +329,20 @@ export async function Check_Failed_Payment_Email(Email: string, AmountTotal: any
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to Get Failed Payment email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
     await expect(email_body).toContain(`$${AmountTotal}`);
 }
 
 
 export async function Check_Update_Payment_Method_Email(Email: string) {
-    const maxRetries = 2;
+    const maxRetries = 120;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -321,12 +351,13 @@ export async function Check_Update_Payment_Method_Email(Email: string) {
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(1000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to Get Failed Payment email after multiple attempts.");
     }
-    const email_body = content[0].bodyValues[1].value;
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
     await expect(content.length).toEqual(1);
 }
 
@@ -350,6 +381,7 @@ export const FastmailActions = {
     Check_Electric_Bill_Is_Ready_For_Payment,
     Check_Gas_Bill_Is_Ready_For_Payment,
     Check_Electric_And_Gas_Bill_Is_Ready_For_Payment,
+    Check_Bill_Payment_Confirmation,
     Check_Failed_Payment_Email,
     Check_Update_Payment_Method_Email
 };

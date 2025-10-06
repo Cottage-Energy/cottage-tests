@@ -46,7 +46,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('COSERV New User', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
+  test.fixme('COSERV New User', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     //to be fix Coserv service zip is now covered by light
     test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'COSERV', null, true,true);

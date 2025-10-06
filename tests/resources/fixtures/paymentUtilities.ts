@@ -7,6 +7,7 @@ import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
 import * as PaymentData from '../../resources/data/payment-data.json';
 import { AdminApi } from '../../resources/api/admin_api';
+import { fa } from '@faker-js/faker';
 
 const supabaseQueries = new SupabaseQueries();
 
@@ -78,7 +79,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Approve_Electric_Bill(ElectricBillID);
         await supabaseQueries.Check_Electric_Bill_Is_Processed(ElectricBillID);
-        await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"scheduled_for_payment");
+        await Promise.all([
+            supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"scheduled_for_payment"),
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual),
+        ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
 
@@ -103,7 +107,10 @@ export class PaymentUtilities {
         await page.waitForTimeout(500);
         //go to payment tab and check payment is processing
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal);
-        await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded");
+        await Promise.all([
+            supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded"),
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActualTotal)
+        ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
 
