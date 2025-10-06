@@ -156,6 +156,10 @@ export class BillingPage {
         await expect(this.Billing_Make_Payment_Button).not.toBeVisible({timeout:30000});
     }
 
+    async Check_Make_Payment_Button_Visible() {
+        await expect(this.Billing_Make_Payment_Button).toBeVisible({timeout:30000});
+    }
+
 
     async Check_Electric_Bill_Hidden(electric_usage: string) {
         await expect(this.Billing_Electric_Usage_Row(electric_usage)).not.toBeVisible({timeout:30000});

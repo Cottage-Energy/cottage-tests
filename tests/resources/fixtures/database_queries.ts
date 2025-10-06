@@ -640,28 +640,38 @@ export class SupabaseQueries{
     }
 
 
-    async Check_Utility_Remittance(chargeAccountId: string, Amount: number, status: string){
+    async Check_Utility_Remittance(chargeAccountId: string, Amount: number, status: "failed" | "done" | "cancelled" | "processing" | "ready_for_remittance" | "pending_confirmation" | "requires_review" | "manually_approved" | "waiting_for_payment" | "for_bundling"){
         const maxRetries = 300;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         let retries = 0;
         let utilityRemittance: any;
 
         while (retries < maxRetries) {
-            const { data: UtilityRemittance } = await supabase
-                .from('UtilityRemittance')
-                .select('*')
-                .eq('chargeAccountID', chargeAccountId)
-                .eq('amount', Amount)
-                .eq('status', status)
-                .single()
-                .throwOnError();
+            try {
+                const { data: UtilityRemittance } = await supabase
+                    .from('UtilityRemittance')
+                    .select('*')
+                    .eq('chargeAccountID', chargeAccountId)
+                    .eq('amount', Amount)
+                    .eq('remittanceStatus', status)
+                    .single()
+                    .throwOnError();
 
-            utilityRemittance = UtilityRemittance;
+                utilityRemittance = UtilityRemittance;
 
-            if (utilityRemittance) {
-                await expect(utilityRemittance.id).not.toBeNull();
-                console.log("Utility Remittance ID:", utilityRemittance.id);
-                break;
+                if (utilityRemittance) {
+                    await expect(utilityRemittance.id).not.toBeNull();
+                    console.log("Utility Remittance ID:", utilityRemittance.id);
+                    break;
+                }
+            } catch (error: any) {
+                // Handle the case where no record exists yet due to database delay
+                if (error?.message && error.message.includes('Cannot coerce the result to a single JSON object')) {
+                    console.log(`No utility remittance record found yet for charge account ${chargeAccountId} with amount ${Amount} and status ${status}`);
+                } else {
+                    // Re-throw other errors
+                    throw error;
+                }
             }
 
             retries++;
