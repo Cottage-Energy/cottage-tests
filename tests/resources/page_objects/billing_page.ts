@@ -153,11 +153,19 @@ export class BillingPage {
 
     //assertions
     async Check_Make_Payment_Button_Not_Visible() {
-        await expect(this.Billing_Make_Payment_Button).not.toBeVisible({timeout:30000});
+        await expect(this.Billing_Make_Payment_Button).not.toBeVisible({timeout:10000});
     }
 
     async Check_Make_Payment_Button_Visible() {
-        await expect(this.Billing_Make_Payment_Button).toBeVisible({timeout:30000});
+        await expect(this.Billing_Make_Payment_Button).toBeVisible({timeout:10000});
+    }
+
+    async Check_Make_Payment_Button_Enabled() {
+        await expect(this.Billing_Make_Payment_Button).toBeEnabled({timeout:10000});
+    }
+
+    async Check_Make_Payment_Button_Disabled() {
+        await expect(this.Billing_Make_Payment_Button).toBeDisabled({timeout:10000});
     }
 
 

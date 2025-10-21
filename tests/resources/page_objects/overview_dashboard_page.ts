@@ -456,6 +456,14 @@ export class OverviewPage {
         await expect(this.Overview_Make_Payment_Button).toBeHidden({timeout:10000});
     }
 
+    async Check_Make_Payment_Button_Enabled(){
+        await expect(this.Overview_Make_Payment_Button).toBeEnabled({timeout:10000});
+    }
+
+    async Check_Make_Payment_Button_Disabled(){
+        await expect(this.Overview_Make_Payment_Button).toBeDisabled({timeout:10000});
+    }
+
     async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
         const electricAmount = parseFloat(ElectricAmount);
         const gasAmount = parseFloat(GasAmount) || 0;
@@ -481,6 +489,10 @@ export class OverviewPage {
 
     async Check_Outstanding_Balance_Message(message: string) {
         await expect(this.Overview_Outstanding_Balance).toContainText(message);
+    }
+
+    async Check_Outstanding_Balance_Message_Not_Present(message: string) {
+        await expect(this.Overview_Outstanding_Balance).not.toContainText(message);
     }
 
 

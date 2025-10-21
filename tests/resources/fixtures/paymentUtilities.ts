@@ -79,26 +79,40 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Overview_Page_Via_Icon();
         await supabaseQueries.Approve_Electric_Bill(ElectricBillID);
         await supabaseQueries.Check_Electric_Bill_Is_Processed(ElectricBillID);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        
+        try{
+            await Promise.all([
+                overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
+                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
+                overviewPage.Check_Make_Payment_Button_Visible(),
+                overviewPage.Check_Make_Payment_Button_Enabled(),
+            ]);
+        } catch {
+            await Promise.all([
+                overviewPage.Check_Outstanding_Balance_Amount(0),
+                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
+                overviewPage.Check_Make_Payment_Button_Visible(),
+                overviewPage.Check_Make_Payment_Button_Disabled(),
+            ]);
+        }
+
+        await Promise.all([
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Not_Visible(),
+        ]);
+
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"scheduled_for_payment"),
             FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual),
         ]);
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(500);
 
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
-            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
-            overviewPage.Check_Gas_Card_Not_Visible(),
-        ]);
-        //to add try catch for outstanding amount not 0 and message is different
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Visible(),
             billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
+            billingPage.Check_Make_Payment_Button_Visible(),
+            billingPage.Check_Make_Payment_Button_Disabled(),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
         ]);
 
@@ -115,7 +129,6 @@ export class PaymentUtilities {
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        //check utility remittance
         await supabaseQueries.Check_Utility_Remittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.ElectricAmount, "ready_for_remittance");
         //go to payment tab and check payment is paid
         //check billing message
