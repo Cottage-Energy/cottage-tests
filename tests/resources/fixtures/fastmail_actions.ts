@@ -117,6 +117,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
     const email_body = content[0].bodyValues[firstKey].value;
     try{
         await expect(content.length).toEqual(2);
+        console.log("two emails found");
     }catch {
         await expect(content.length).toEqual(1);
     }
@@ -142,6 +143,7 @@ export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: stri
     const email_body = content[0].bodyValues[firstKey].value;
     try{
         await expect(content.length).toEqual(2);
+        console.log("two emails found");
     }catch {
         await expect(content.length).toEqual(1);
     }
@@ -167,6 +169,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
     const email_body = content[0].bodyValues[firstKey].value;
     try{
         await expect(content.length).toEqual(2);
+        console.log("two emails found");
     }catch {
         await expect(content.length).toEqual(1);
     }
