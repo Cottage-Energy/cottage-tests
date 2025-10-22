@@ -26,14 +26,18 @@ export class OverviewPage {
     readonly Overview_Failed_Payment_Alert: Locator;
     readonly Overview_Failed_Payment_Update_Payment_Link: Locator;
 
-
-
     readonly Overview_New_Terms_Modal_Title: Locator
     readonly Overview_New_Terms_Modal_Content: Locator
     readonly Overview_New_Terms_Modal_Agree_Checkbox: Locator
     readonly Overview_New_Terms_Modal_Accept_Button: Locator
 
     readonly Overview_Inactive_Account_Alert: Locator
+
+    readonly Overview_Setup_Password_Title: Locator
+    readonly Overview_Setup_Password_Description: Locator
+    readonly Overview_Setup_Password_Field: Locator
+    readonly Overview_Setup_Password_Confirm_Password_Field: Locator
+    readonly Overview_Setup_Password_Set_Password_Button: Locator
 
     //locators
     constructor(page: Page) {
@@ -58,14 +62,18 @@ export class OverviewPage {
         this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
         this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
 
-
-
         this.Overview_New_Terms_Modal_Title = page.getByRole('heading', { name: 'We\'ve made updates to our' });
         this.Overview_New_Terms_Modal_Content = page.getByText('We have expanded our services');
         this.Overview_New_Terms_Modal_Agree_Checkbox = page.locator('//p[contains(text(),"I agree to the updated Terms of Service")]//preceding::button[@role="checkbox"]')
         this.Overview_New_Terms_Modal_Accept_Button = page.getByRole('button', { name: 'Accept' })
 
         this.Overview_Inactive_Account_Alert = page.getByText('Inactive Account: Service at');
+
+        this.Overview_Setup_Password_Title = page.getByRole('heading', { name: 'Set Up Your Password' });
+        this.Overview_Setup_Password_Description = page.getByText('To keep your account secure');
+        this.Overview_Setup_Password_Field = page.locator('input[name="password"]');
+        this.Overview_Setup_Password_Confirm_Password_Field = page.locator('input[name="confirmPassword"]');
+        this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: 'Set Password' });
     }
 
     //methods
@@ -105,6 +113,37 @@ export class OverviewPage {
             await this.page.waitForTimeout(1000);
         }
 
+    }
+
+    async Setup_Password(password:string = "PublicGrid#1"){
+        await expect(this.Overview_Setup_Password_Title).toBeVisible({timeout:30000});
+        await expect(this.Overview_Setup_Password_Description).toBeVisible({timeout:30000});
+
+        await this.Overview_Setup_Password_Field.fill("pg");
+        await this.Overview_Setup_Password_Confirm_Password_Field.fill("pg");
+        await this.page.waitForTimeout(500);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+
+        await this.Overview_Setup_Password_Field.fill("publicgrid");
+        await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid");
+        await this.page.waitForTimeout(500);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+
+        await this.Overview_Setup_Password_Field.fill("publicgrid1");
+        await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid");
+        await this.page.waitForTimeout(500);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+
+        await this.Overview_Setup_Password_Field.fill("publicgrid!1");
+        await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid#1");
+        await this.page.waitForTimeout(500);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+
+        await this.Overview_Setup_Password_Field.fill(password);
+        await this.Overview_Setup_Password_Confirm_Password_Field.fill(password);
+        await this.page.waitForTimeout(500);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeEnabled({timeout:30000});
+        await this.Overview_Setup_Password_Set_Password_Button.click();
     }
 
     async Go_to_Profile(firstName: string) {

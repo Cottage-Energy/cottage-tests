@@ -822,6 +822,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -877,6 +878,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -933,6 +935,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -986,6 +989,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
     await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);

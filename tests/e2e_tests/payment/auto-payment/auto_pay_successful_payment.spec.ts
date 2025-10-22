@@ -84,6 +84,7 @@ test.describe('Valid Card Auto Payment', () => {
     await newPage.bringToFront();*/
     
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
 
