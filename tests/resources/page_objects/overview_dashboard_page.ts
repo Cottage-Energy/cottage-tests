@@ -121,27 +121,27 @@ export class OverviewPage {
 
         await this.Overview_Setup_Password_Field.fill("pg");
         await this.Overview_Setup_Password_Confirm_Password_Field.fill("pg");
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(200);
         await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
 
         await this.Overview_Setup_Password_Field.fill("publicgrid");
         await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid");
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(200);
         await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
 
         await this.Overview_Setup_Password_Field.fill("publicgrid1");
         await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid");
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(200);
         await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
 
         await this.Overview_Setup_Password_Field.fill("publicgrid!1");
         await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid#1");
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(200);
         await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
 
         await this.Overview_Setup_Password_Field.fill(password);
         await this.Overview_Setup_Password_Confirm_Password_Field.fill(password);
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(200);
         await expect(this.Overview_Setup_Password_Set_Password_Button).toBeEnabled({timeout:30000});
         await this.Overview_Setup_Password_Set_Password_Button.click();
     }

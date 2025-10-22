@@ -100,7 +100,7 @@ export async function Check_Start_Service_Confirmation_Not_Present(Email: string
 
 export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Email: string) {
     console.log("Email:", Email);
-    const maxRetries = 5;
+    const maxRetries = 7;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -126,7 +126,8 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
 
 
 export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: string) {
-    const maxRetries = 5;
+    console.log("Email:", Email);
+    const maxRetries = 7;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -152,7 +153,8 @@ export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: stri
 
 
 export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(Email: string) {
-    const maxRetries = 5;
+    console.log("Email:", Email);
+    const maxRetries = 7;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
