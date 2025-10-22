@@ -130,6 +130,7 @@ test.describe('Move In New Service Zip User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
     await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -155,6 +156,7 @@ test.describe('Move In New Service Zip User', () => {
     //add query to check if the user is added to the UtilityCredentials table
     //finish setup paymment
     await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
