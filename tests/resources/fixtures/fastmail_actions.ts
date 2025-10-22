@@ -99,7 +99,8 @@ export async function Check_Start_Service_Confirmation_Not_Present(Email: string
 //Payment Method Reminder Emails
 
 export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Email: string) {
-    const maxRetries = 2;
+    console.log("Email:", Email);
+    const maxRetries = 5;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -108,7 +109,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(15000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch email after multiple attempts.");
@@ -125,7 +126,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
 
 
 export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: string) {
-    const maxRetries = 2;
+    const maxRetries = 5;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -134,7 +135,7 @@ export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: stri
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(15000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch email after multiple attempts.");
@@ -151,7 +152,7 @@ export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: stri
 
 
 export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(Email: string) {
-    const maxRetries = 2;
+    const maxRetries = 5;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -160,7 +161,7 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Ser
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(15000); // delay
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch email after multiple attempts.");
