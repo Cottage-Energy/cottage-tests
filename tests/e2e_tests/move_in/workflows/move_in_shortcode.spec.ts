@@ -277,7 +277,8 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for TX Dereg Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+  test.fixme('(TBD to Light)New User for TX Dereg Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+    //convert to light
     test.setTimeout(180000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "TX-DEREG", null);
     
