@@ -46,21 +46,6 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test.fixme('COSERV New User', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
-    //to be fix Coserv service zip is now covered by light
-    test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'COSERV', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
-    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
-    //add query to check if the user is added to the UtilityCredentials table
-    await page.waitForTimeout(10000);
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COSERV");
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
-    //check Account Status
-  });
-
-
   test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression2'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
     test.setTimeout(600000);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'CON-EDISON', null, true,true);
