@@ -99,6 +99,19 @@ export class BillingPage {
         await expect(this.Billing_Success_Message).toBeVisible({timeout:30000});
     }
 
+    async Goto_Bills_History_Tab() {
+        await expect(this.Billing_Bills_History_Tab).toBeVisible({timeout:30000});
+        await expect(this.Billing_Bills_History_Tab).toBeEnabled({timeout:30000});
+        await this.Billing_Bills_History_Tab.hover();
+        await this.Billing_Bills_History_Tab.click();
+    }
+
+    async Goto_Payments_Tab() {
+        await expect(this.Billing_Payments_Tab).toBeVisible({timeout:30000});
+        await expect(this.Billing_Payments_Tab).toBeEnabled({timeout:30000});
+        await this.Billing_Payments_Tab.hover();
+        await this.Billing_Payments_Tab.click();
+    }
 
 
     //assertions

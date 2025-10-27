@@ -117,11 +117,16 @@ export class PaymentUtilities {
         ]);
 
         //go to payment tab and check payment is scheduled
+        await billingPage.Goto_Payments_Tab();
 
         await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"requires_capture");
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
+        
         //go to payment tab and check payment is processing
+        await billingPage.Goto_Payments_Tab();
+
+
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded"),
@@ -130,7 +135,10 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         await supabaseQueries.Check_Utility_Remittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.ElectricAmount, "ready_for_remittance");
+        
         //go to payment tab and check payment is paid
+        await billingPage.Goto_Payments_Tab();
+
         //check billing message
         //go to overview page
     }
