@@ -20,12 +20,14 @@ interface TestUser {
     ElectricAmount: number;
     ElectricAmountActual: string;
     ElectricServiceFee: number;
+    ElectricServiceFeeActual: string;
     ElectricAmountTotal: number;
     ElectricAmountActualTotal: string;
     ElectricUsage: number;
     GasAmount: number;
     GasAmountActual: string;
     GasServiceFee: number;
+    GasServiceFeeActual: string;
     GasAmountTotal: number;
     GasAmountActualTotal: string;
     GasUsage: number;
@@ -59,12 +61,14 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     const electricAmountActual = (parseInt(AmountElectric) / 100).toFixed(2);
     //const electricServiceFee = (Math.ceil(((parseInt(AmountElectric) * (feePercentage))+(0.3*100))));
     const electricServiceFee = (Math.round(((parseInt(AmountElectric) * (feePercentage))+(0.3*100))));
+    const electricServiceFeeActual = (electricServiceFee / 100).toFixed(2);
     const electricAmountTotal = parseInt(AmountElectric) + electricServiceFee;
     const electricAmountActualTotal = ((parseInt(AmountElectric) + electricServiceFee)/100).toFixed(2);
 
     const gasAmountActual = (parseInt(AmountGas) / 100).toFixed(2);
     //const gasServiceFee = (Math.ceil(((parseInt(AmountGas) * (feePercentage))+(0.3*100))));
     const gasServiceFee = (Math.round(((parseInt(AmountGas) * (feePercentage))+(0.3*100))));
+    const gasServiceFeeActual = (gasServiceFee / 100).toFixed(2);
     const gasAmountTotal = parseInt(AmountGas) + gasServiceFee;
     const gasAmountActualTotal = ((parseInt(AmountGas) + gasServiceFee)/100).toFixed(2);
 
@@ -87,6 +91,7 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       ElectricAmount: parseInt(AmountElectric),
       ElectricAmountActual: electricAmountActual,
       ElectricServiceFee: electricServiceFee,
+      ElectricServiceFeeActual: electricServiceFeeActual,
       ElectricAmountTotal: electricAmountTotal,
       ElectricAmountActualTotal: electricAmountActualTotal,
       ElectricUsage: parseInt(UsageElectric),
@@ -94,6 +99,7 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       GasAmount: parseInt(AmountGas),
       GasAmountActual: gasAmountActual,
       GasServiceFee: gasServiceFee,
+      GasServiceFeeActual: gasServiceFeeActual,
       GasAmountTotal: gasAmountTotal,
       GasAmountActualTotal: gasAmountActualTotal,
       GasUsage: parseInt(UsageGas),

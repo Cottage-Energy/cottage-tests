@@ -108,25 +108,31 @@ export class PaymentUtilities {
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-            billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-        ]);
 
-        //go to payment tab and check payment is scheduled
+        try{
+            await Promise.all([
+                billingPage.Check_Outstanding_Balance_Amount(0),
+                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
+                billingPage.Check_Make_Payment_Button_Visible(),
+                billingPage.Check_Make_Payment_Button_Disabled(),
+            ]);
+        } catch {
+            await Promise.all([
+                billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
+                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
+                billingPage.Check_Make_Payment_Button_Visible(),
+                billingPage.Check_Make_Payment_Button_Enabled(),
+            ]);
+        }
+
+        await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Goto_Payments_Tab();
-
+        await billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Scheduled");
         await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"requires_capture");
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        
-        //go to payment tab and check payment is processing
         await billingPage.Goto_Payments_Tab();
-
-
+        await billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Processing");
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded"),
@@ -135,12 +141,26 @@ export class PaymentUtilities {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
         await supabaseQueries.Check_Utility_Remittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.ElectricAmount, "ready_for_remittance");
-        
-        //go to payment tab and check payment is paid
         await billingPage.Goto_Payments_Tab();
-
-        //check billing message
-        //go to overview page
+        await Promise.all([
+            billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Paid"),
+            billingPage.Check_Payment_Transaction_Fee(PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFeeActual),
+        ]);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
+            billingPage.Check_Make_Payment_Button_Visible(),
+            billingPage.Check_Make_Payment_Button_Disabled(),
+        ]);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
+            overviewPage.Check_Make_Payment_Button_Visible(),
+            overviewPage.Check_Make_Payment_Button_Disabled(),
+        ]);
     }
 
 

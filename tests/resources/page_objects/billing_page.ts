@@ -141,6 +141,10 @@ export class BillingPage {
         await expect(this.Billing_Outstanding_Balance).toContainText(message);
     }
 
+    async Check_Outstanding_Balance_Message_Not_Present(message: string) {
+        await expect(this.Billing_Outstanding_Balance).not.toContainText(message);
+    }
+
     async Check_Make_Payment_Button_Not_Visible() {
         await expect(this.Billing_Make_Payment_Button).not.toBeVisible({timeout:10000});
     }
