@@ -31,6 +31,13 @@ interface TestUser {
     GasAmountTotal: number;
     GasAmountActualTotal: string;
     GasUsage: number;
+    // New fields for combined amounts
+    CombinedAmount: number;
+    CombinedAmountActual: string;
+    CombinedServiceFee: number;
+    CombinedServiceFeeActual: string;
+    CombinedAmountTotal: number;
+    CombinedAmountActualTotal: string;
 }
 
 
@@ -72,6 +79,15 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
     const gasAmountTotal = parseInt(AmountGas) + gasServiceFee;
     const gasAmountActualTotal = ((parseInt(AmountGas) + gasServiceFee)/100).toFixed(2);
 
+    // Calculate combined totals
+    const combinedAmount = parseInt(AmountElectric) + parseInt(AmountGas);
+    const combinedAmountActual = (combinedAmount / 100).toFixed(2);
+    const combinedServiceFee = (Math.round(((combinedAmount * (feePercentage))+(0.3*100))));
+    const combinedServiceFeeActual = (combinedServiceFee / 100).toFixed(2);
+    const combinedAmountTotal = combinedAmount + combinedServiceFee;
+    const combinedAmountActualTotal = (combinedAmountTotal / 100).toFixed(2);
+    
+
     const userData: TestUser = {
       FirstName: firstname,
       LastName: lastname,
@@ -103,6 +119,13 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       GasAmountTotal: gasAmountTotal,
       GasAmountActualTotal: gasAmountActualTotal,
       GasUsage: parseInt(UsageGas),
+
+      CombinedAmount: combinedAmount,
+      CombinedAmountActual: combinedAmountActual,
+      CombinedServiceFee: combinedServiceFee,
+      CombinedServiceFeeActual: combinedServiceFeeActual,
+      CombinedAmountTotal: combinedAmountTotal,
+      CombinedAmountActualTotal: combinedAmountActualTotal,
     };
   
     return userData;

@@ -93,7 +93,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test.fixme('PSEG Electric & Gas Valid Auto Payment Move In Added', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('PSEG Electric & Gas Valid Auto Payment Move In Added', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -121,19 +121,10 @@ test.describe('Valid Card Auto Payment', () => {
 
     // Switch to the new tab
     await newPage.bringToFront();*/
+    await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
-
-
-
-    const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-    const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
-    await Promise.all([
-        supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
-        supabaseQueries.Insert_Gas_Bill(GasAccountId)
-    ]);
-    await page.waitForTimeout(500);
-    //await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks(AdminApiContext, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+    await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks_Single_Charge(page, MoveIn, PGuserUsage);
   });
 
 
