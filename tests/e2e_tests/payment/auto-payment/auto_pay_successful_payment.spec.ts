@@ -240,7 +240,7 @@ test.describe('Valid Card Auto Payment', () => {
 });
 
 
-test.describe.skip('Valid Bank Auto Payment', () => {
+test.describe('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     
@@ -263,15 +263,14 @@ test.describe.skip('Valid Bank Auto Payment', () => {
         ]);
     
         await newTab.bringToFront();*/
+        await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        await supabaseQueries.Insert_Electric_Bill(ElectricAccountId);
-        await page.waitForTimeout(500);
-        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+
+        await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
     });
 
 
-    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test.fixme('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -313,7 +312,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     });
     
     
-    test('BGE DTE Electric & Gas Valid Bank Payment Move In Added', {tag: ['@smoke', '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test.fixme('BGE DTE Electric & Gas Valid Bank Payment Move In Added', {tag: ['@smoke', '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -353,7 +352,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     });
     
 
-    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test.fixme('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -396,7 +395,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     
     
 
-    test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test.fixme('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
