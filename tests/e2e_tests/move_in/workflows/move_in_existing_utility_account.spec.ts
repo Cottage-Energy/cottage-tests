@@ -42,7 +42,7 @@ test.describe('Move In Existing Utility Account', () => {
     await page.waitForTimeout(5000);
     await supabaseQueries.Check_Waitlist(MoveIn.PGUserEmail);
     await page.waitForTimeout(10000);
-    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
+
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
   });
 
@@ -57,7 +57,7 @@ test.describe('Move In Existing Utility Account', () => {
     await page.waitForTimeout(5000);
     await supabaseQueries.Check_Waitlist_Not_Present(MoveIn.PGUserEmail);
     await page.waitForTimeout(10000);
-    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
+
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
   });
 
@@ -74,7 +74,7 @@ test.describe('Move In Existing Utility Account', () => {
     await page.waitForTimeout(5000);
     await supabaseQueries.Check_Waitlist(MoveIn.PGUserEmail);
     await page.waitForTimeout(10000);
-    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
+
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
   });
 
@@ -91,7 +91,7 @@ test.describe('Move In Existing Utility Account', () => {
     await page.waitForTimeout(5000);
     await supabaseQueries.Check_Waitlist_Not_Present(MoveIn.PGUserEmail);
     await page.waitForTimeout(10000);
-    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, false, false, false);
+
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
   });
 

@@ -42,7 +42,7 @@ test.describe.skip('Short Code Referal', () => {
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
@@ -99,7 +99,7 @@ test.describe.skip('Non Short Code Referal', () => {
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+
     await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
   });
