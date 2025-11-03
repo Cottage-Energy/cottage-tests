@@ -270,7 +270,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test.fixme('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
         test.setTimeout(1800000);
     
@@ -300,15 +300,10 @@ test.describe('Valid Bank Auto Payment', () => {
         await newPage.bringToFront();*/
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
-        await Promise.all([
-            supabaseQueries.Insert_Electric_Bill(ElectricAccountId),
-            supabaseQueries.Insert_Gas_Bill(GasAccountId)
-        ]);
-        await page.waitForTimeout(500);
-        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+
+        await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks_Single_Charge(page, MoveIn, PGuserUsage);
     });
     
     

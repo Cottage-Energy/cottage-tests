@@ -685,6 +685,134 @@ export class PaymentUtilities {
     }
 
 
+    async Auto_Bank_Payment_Electric_Gas_Checks_Single_Charge(page: any, MoveIn: any, PGuserUsage: any) {
+        const sidebarChat = new SidebarChat(page);
+        const overviewPage = new OverviewPage(page);
+        const billingPage = new BillingPage(page);
+        const profilePage = new ProfilePage(page);
+
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+
+        const [ElectricBillID, GasBillID] = await Promise.all([
+            supabaseQueries.Insert_Electric_Bill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
+            supabaseQueries.Insert_Gas_Bill(userPaymentInfo.gasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage)
+        ]);
+        await page.waitForTimeout(500);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+        ]);
+        await sidebarChat.Goto_Billing_Page_Via_Icon();
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
+        ]);
+        await page.waitForTimeout(500);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await Promise.all([
+            supabaseQueries.Approve_Electric_Bill(ElectricBillID),
+            supabaseQueries.Approve_Gas_Bill(GasBillID)
+        ]);
+        await Promise.all([
+            supabaseQueries.Check_Electric_Bill_Is_Processed(ElectricBillID),
+            supabaseQueries.Check_Gas_Bill_Is_Processed(GasBillID)
+        ]);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        
+        try{
+            await Promise.all([
+                overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
+                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
+                overviewPage.Check_Make_Payment_Button_Visible(),
+                overviewPage.Check_Make_Payment_Button_Enabled(),
+            ]);
+        } catch {
+            await Promise.all([
+                overviewPage.Check_Outstanding_Balance_Amount(0),
+                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
+                overviewPage.Check_Make_Payment_Button_Visible(),
+                overviewPage.Check_Make_Payment_Button_Disabled(),
+            ]);
+        }
+
+        await Promise.all([
+            overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
+            overviewPage.Check_Gas_Card_Contain_Bill_Details(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
+        ]);
+
+        await Promise.all([
+            supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmount,"scheduled_for_payment"),
+            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual),
+        ]);
+
+        await sidebarChat.Goto_Billing_Page_Via_Icon();
+
+        try{
+            await Promise.all([
+                billingPage.Check_Outstanding_Balance_Amount(0),
+                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
+                billingPage.Check_Make_Payment_Button_Visible(),
+                billingPage.Check_Make_Payment_Button_Disabled(),
+            ]);
+        } catch {
+            await Promise.all([
+                billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
+                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
+                billingPage.Check_Make_Payment_Button_Visible(),
+                billingPage.Check_Make_Payment_Button_Enabled(),
+            ]);
+        }
+
+        await Promise.all([
+            billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
+            billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString())
+        ]);
+        await billingPage.Goto_Payments_Tab();
+        await billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Scheduled");
+        await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.CombinedAmount);
+        //await supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"requires_capture");
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        await billingPage.Goto_Payments_Tab();
+        await billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Processing");
+        //await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
+        await Promise.all([
+            supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmount,"succeeded"),
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual)
+        ]);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        await supabaseQueries.Check_Utility_Remittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.CombinedAmount, "ready_for_remittance");
+        await billingPage.Goto_Payments_Tab();
+        await Promise.all([
+            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Paid"),
+            billingPage.Check_Payment_Transaction_Fee(PGuserUsage.CombinedAmountActual, "-"),
+        ]);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(500);
+        await Promise.all([
+            billingPage.Check_Outstanding_Balance_Amount(0),
+            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
+            billingPage.Check_Make_Payment_Button_Visible(),
+            billingPage.Check_Make_Payment_Button_Disabled(),
+        ]);
+        await sidebarChat.Goto_Overview_Page_Via_Icon();
+        await Promise.all([
+            overviewPage.Check_Outstanding_Balance_Amount(0),
+            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
+            overviewPage.Check_Make_Payment_Button_Visible(),
+            overviewPage.Check_Make_Payment_Button_Disabled(),
+        ]);
+    }
+
+
 
 
 
