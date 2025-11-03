@@ -378,7 +378,6 @@ test.describe('Valid Bank Auto Payment', () => {
         await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks_Multiple_Charge(page, MoveIn, PGuserUsage);
     });
     
-    
 
     test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
         
