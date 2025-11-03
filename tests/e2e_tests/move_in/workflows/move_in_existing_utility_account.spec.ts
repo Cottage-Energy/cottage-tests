@@ -32,7 +32,7 @@ test.describe.configure({mode: "serial", retries: 0});
 test.describe('Move In Existing Utility Account', () => {
 
 
-  test('Move-in New User Existing Utility Account Requested', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
+  test('Move-in New User Existing Utility Account Requested', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
@@ -47,7 +47,7 @@ test.describe('Move In Existing Utility Account', () => {
   });
 
 
-  test('Move-in New User Existing Utility Account Skip', {tag: ['@regression2'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
+  test('Move-in New User Existing Utility Account Skip', {tag: ['@regression2'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
@@ -62,7 +62,7 @@ test.describe('Move In Existing Utility Account', () => {
   });
 
 
-  test('Move-in ShortCode Existing Utility Account Requested', {tag: ['@regression3'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
+  test('Move-in ShortCode Existing Utility Account Requested', {tag: ['@regression3'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(150000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "PSEG", "PSEG");
     
@@ -79,7 +79,7 @@ test.describe('Move In Existing Utility Account', () => {
   });
 
 
-  test('Move-in ShortCode Existing Utility Account Skip', {tag: ['@regression4'],}, async ({moveInpage, page, supabaseQueries, planeActions}) => {
+  test('Move-in ShortCode Existing Utility Account Skip', {tag: ['@regression4'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(150000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "CON-EDISON", "NYS-EG" );
     

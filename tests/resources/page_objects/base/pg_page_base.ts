@@ -9,7 +9,6 @@ import { ServicesPage } from '../services_page';
 import { ProfilePage } from '../account_profile_page';
 import { BillUploadPage } from '../bill_upload_page';
 import { SupabaseQueries } from '../../fixtures/database_queries';
-import { PlaneActions } from '../../fixtures/plane_actions';
 
 
 type pages = {
@@ -24,7 +23,6 @@ type pages = {
     billUploadPage: BillUploadPage
 
     supabaseQueries: SupabaseQueries
-    planeActions: PlaneActions
 }
 
 
@@ -70,10 +68,6 @@ const testPages = base.extend<pages>({
     supabaseQueries: async ({page},use) => {
         await use(new SupabaseQueries());
     },
-    planeActions: async ({page},use) => {
-        await use(new PlaneActions());
-    },
-
 
 })
 

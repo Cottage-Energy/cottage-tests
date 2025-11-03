@@ -139,7 +139,6 @@ jobs:
         # Check required secrets
         MISSING_SECRETS=""
         [[ -z "${{ secrets.FASTMAIL_API_KEY }}" ]] && MISSING_SECRETS="$MISSING_SECRETS FASTMAIL_API_KEY"
-        [[ -z "${{ secrets.PLANE_API_KEY }}" ]] && MISSING_SECRETS="$MISSING_SECRETS PLANE_API_KEY"
         [[ -z "${{ secrets.SUPABASE_API_KEY }}" ]] && MISSING_SECRETS="$MISSING_SECRETS SUPABASE_API_KEY"
         
         if [[ -n "$MISSING_SECRETS" ]]; then
@@ -155,8 +154,6 @@ jobs:
     - name: Run Playwright tests
       env:
         FASTMAIL_API_KEY: ${{ secrets.FASTMAIL_API_KEY }}
-        PLANE_MOVE_IN_PROJECT_ID: ${{ secrets.PLANE_MOVE_IN_PROJECT_ID }}
-        PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
 

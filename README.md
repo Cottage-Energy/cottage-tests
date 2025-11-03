@@ -69,4 +69,3 @@ The tests can run against different environments:
 - HTML test reports
 - Database integration via Supabase
 - Email testing via Fastmail
-- Project management integration via Plane.so
