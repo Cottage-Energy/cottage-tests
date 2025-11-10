@@ -15,6 +15,7 @@ let MoveIn: any;
 test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
   await supabaseQueries.Update_Building_Billing("autotest",true);
   await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
+  //disable utility verification flag
   await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });

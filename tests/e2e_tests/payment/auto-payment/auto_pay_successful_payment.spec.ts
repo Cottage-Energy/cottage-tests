@@ -167,7 +167,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -202,7 +202,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('DUKE CON-EDISON Gas Only Valid Auto Payment Move In Added', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('DUKE CON-EDISON Gas Only Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
