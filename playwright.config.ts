@@ -20,10 +20,13 @@ export default defineConfig({
   workers: undefined,
   reporter: [
     ["line"],
-    ["html", { outputFolder: "test-results" }]
+    ["html", { outputFolder: "test-results" }],
+    ["./tests/resources/fixtures/aiTestReporter.ts"]
   ],
   use: {
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.ENV === 'production' 
     ? baseEnvUrl.prod.home

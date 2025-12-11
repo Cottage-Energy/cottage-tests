@@ -23,7 +23,18 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
   
-test.afterEach(async ({ page },testInfo) => {
+test.afterEach(async ({ page, aiTestUtilities },testInfo) => {
+  // AI-powered failure analysis for failed tests
+  if (testInfo.status === 'failed' && process.env.ANTHROPIC_API_KEY) {
+    console.log('\n🤖 AI is analyzing the test failure...');
+    const errors = testInfo.errors;
+    if (errors.length > 0) {
+      const error = new Error(errors[0].message || 'Unknown error');
+      error.stack = errors[0].stack;
+      await aiTestUtilities.analyzeFailure(page, testInfo, error);
+    }
+  }
+  
     //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
     //await page.close();
 });

@@ -10,7 +10,18 @@ test.beforeEach(async ({ page }, testInfo) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
-test.afterEach(async ({ page }, testInfo) => {
+test.afterEach(async ({ page, aiTestUtilities }, testInfo) => {
+  // AI-powered failure analysis for failed tests
+  if (testInfo.status === 'failed' && process.env.ANTHROPIC_API_KEY) {
+    console.log('\n🤖 AI is analyzing the test failure...');
+    const errors = testInfo.errors;
+    if (errors.length > 0) {
+      const error = new Error(errors[0].message || 'Unknown error');
+      error.stack = errors[0].stack;
+      await aiTestUtilities.analyzeFailure(page, testInfo, error);
+    }
+  }
+  
   // Clean up test data if needed
   // await CleanUp.Test_User_Clean_Up(BillUpload?.testEmail);
   await page.close();
@@ -19,7 +30,7 @@ test.afterEach(async ({ page }, testInfo) => {
 test.describe.configure({ mode: "serial" });
 test.describe('Bill Upload Flow Tests', () => {
 
-  test('Bill Upload - Con Edison Utility', { tag: ['@smoke', '@billupload', '@regression1'] }, async ({ billUploadPage, page }) => {
+  test('Bill Upload - Con Edison Utility', { tag: ['@smoke', '@billupload', '@regression1', '@ai-enhanced'] }, async ({ billUploadPage, page }) => {
     test.setTimeout(600000);
     
     const imgPath = path.join(__dirname, '../../resources/data', 'PGLogo002.jpg');

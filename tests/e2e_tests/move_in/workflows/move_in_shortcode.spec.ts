@@ -16,7 +16,19 @@ test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
 
-test.afterEach(async ({ page },testInfo) => {
+test.afterEach(async ({ page, aiTestUtilities },testInfo) => {
+  // AI-powered failure analysis for failed tests
+  if (testInfo.status === 'failed' && process.env.ANTHROPIC_API_KEY) {
+    console.log('\n🤖 AI is analyzing the test failure...');
+    const errors = testInfo.errors;
+    if (errors.length > 0) {
+      // Convert TestInfoError to Error for AI analysis
+      const error = new Error(errors[0].message || 'Unknown error');
+      error.stack = errors[0].stack;
+      await aiTestUtilities.analyzeFailure(page, testInfo, error);
+    }
+  }
+  
   await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
   await page.close();
 });
@@ -30,17 +42,38 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@smoke','@regression2'],}, async ({moveInpage,page, planeActions, supabaseQueries}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@smoke','@regression2','@ai-enhanced'],}, async ({moveInpage,page, planeActions, supabaseQueries, aiTestUtilities}) => {
     test.setTimeout(480000);
-    await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'BGE', null, true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
-    //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+    
+    try {
+      await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
+      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+      
+      // AI: Validate we're at the correct flow step
+      if (process.env.ANTHROPIC_API_KEY) {
+        const flowValidation = await aiTestUtilities.validateTestFlow(
+          page,
+          ['Landing Page', 'Move In Form', 'Address Entry', 'Account Setup'],
+          0
+        );
+        
+        if (!flowValidation.isValid) {
+          console.warn('⚠️ Flow validation issues:', flowValidation.issues);
+        }
+      }
+      
+      MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'BGE', null, true, true);
+      await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+      await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+      await page.waitForTimeout(10000);
+      //await planeActions.CheckMoveInTickets(MoveIn.PGUserEmail, true, false, false);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      
+    } catch (error) {
+      // AI will analyze in afterEach
+      throw error;
+    }
   });
 
 

@@ -10,6 +10,8 @@ import { ProfilePage } from '../account_profile_page';
 import { BillUploadPage } from '../bill_upload_page';
 import { SupabaseQueries } from '../../fixtures/database_queries';
 import { PlaneActions } from '../../fixtures/plane_actions';
+import { AITestUtilities } from '../../fixtures/aiTestUtilities';
+import { MCPPlaywrightHelper } from '../../fixtures/mcpPlaywrightHelper';
 
 
 type pages = {
@@ -25,6 +27,8 @@ type pages = {
 
     supabaseQueries: SupabaseQueries
     planeActions: PlaneActions
+    aiTestUtilities: typeof AITestUtilities
+    mcpHelper: MCPPlaywrightHelper
 }
 
 
@@ -72,6 +76,21 @@ const testPages = base.extend<pages>({
     },
     planeActions: async ({page},use) => {
         await use(new PlaneActions());
+    },
+
+    // AI Test Utilities - Static class, no initialization needed
+    aiTestUtilities: async ({page}, use) => {
+        await use(AITestUtilities);
+    },
+
+    // MCP Helper - Initialize once per test
+    mcpHelper: async ({page}, use) => {
+        const helper = new MCPPlaywrightHelper();
+        // Initialize MCP only if explicitly used in test
+        // Tests can call helper.initialize() when needed
+        await use(helper);
+        // Cleanup
+        await helper.close();
     },
 
 
