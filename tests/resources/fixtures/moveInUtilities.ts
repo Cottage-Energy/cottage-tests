@@ -130,7 +130,7 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -276,7 +276,7 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -423,7 +423,7 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -556,7 +556,7 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -697,7 +697,7 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -839,7 +839,7 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -980,7 +980,7 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1102,7 +1102,7 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1223,7 +1223,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1364,7 +1364,7 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1505,7 +1505,7 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);

@@ -507,6 +507,22 @@ export class MoveInPage{
         await this.Move_In_Next_Button.click({timeout:10000});
     }
 
+    async Submit_Move_In_Button(){
+        // Try clicking Next button first, if not available or fails, click Submit button
+        try {
+            await expect(this.Move_In_Next_Button).toBeVisible({timeout:2000});
+            await expect(this.Move_In_Next_Button).toBeEnabled({timeout:2000});
+            await this.Move_In_Next_Button.hover({timeout:1000});
+            await this.Move_In_Next_Button.click({timeout:1000});
+            console.log("Clicked Next button after ID Info");
+        } catch (error) {
+            console.log("Next button not available, clicking Submit button");
+            await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:10000});
+            await this.Move_In_Submit_Button.hover({timeout:10000});
+            await this.Move_In_Submit_Button.click({timeout:10000});
+        }
+    }
+
 
     async Enter_Personal_Info(firstname:string, lastname:string, phone:string, email:string, day:string){
         await this.page.waitForLoadState('domcontentloaded');
