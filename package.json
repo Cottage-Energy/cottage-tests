@@ -24,6 +24,7 @@
     "@supabase/supabase-js": "^2.57.0",
     "axios": "^1.7.2",
     "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
     "inngest": "^3.40.2",
     "punycode": "^2.3.1",
     "sst": "^3.17.12"
