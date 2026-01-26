@@ -79,8 +79,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -96,8 +98,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -107,8 +111,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -117,6 +123,8 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
+        console.log("Electric Questions Present: " + electricQuestionsPresent);
+        console.log("Gas Questions Present: " + gasQuestionsPresent);
         await moveInpage.Next_Move_In_Button();
     }
 
@@ -218,8 +226,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -235,8 +245,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -246,8 +258,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -359,8 +373,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -376,8 +392,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -387,8 +405,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -486,8 +506,10 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -503,8 +525,10 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -514,8 +538,10 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -621,8 +647,10 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -638,8 +666,10 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -649,8 +679,10 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -757,8 +789,10 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -774,8 +808,10 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -785,8 +821,10 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -892,8 +930,10 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -909,8 +949,10 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -920,8 +962,10 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1008,8 +1052,10 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1025,8 +1071,10 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1036,8 +1084,10 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1123,8 +1173,10 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1140,8 +1192,10 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1151,8 +1205,10 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1259,8 +1315,10 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1276,8 +1334,10 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1287,8 +1347,10 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1394,8 +1456,10 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1411,8 +1475,10 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1422,8 +1488,10 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
