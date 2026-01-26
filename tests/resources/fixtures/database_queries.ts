@@ -112,6 +112,7 @@ export class SupabaseQueries{
         return ElectricAccountId?.toString() ?? null;
     }
 
+    
     async Get_Gas_Account_Id(cottageUserId: string) {
         const { data: GAccount } = await supabase
             .from('GasAccount')

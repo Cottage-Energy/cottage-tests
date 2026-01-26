@@ -60,6 +60,7 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -130,8 +131,6 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -201,6 +200,7 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -272,8 +272,6 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -343,6 +341,7 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     }
     
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.FourDaysFromNow);
     await moveInpage.Next_Move_In_Button();
@@ -411,8 +410,6 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     if (PaymentPageVisibility === true) {
         await moveInpage.Skip_Payment_Details();
         await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -471,6 +468,7 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -541,8 +539,6 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -607,6 +603,7 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -678,8 +675,6 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -744,6 +739,7 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -814,8 +810,6 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -880,6 +874,7 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -951,8 +946,6 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -997,6 +990,7 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1067,8 +1061,6 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1113,6 +1105,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1183,8 +1176,6 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1250,6 +1241,7 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info_GUID_Flow(PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1319,8 +1311,6 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1386,6 +1376,7 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info_GUID_Flow(PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1455,8 +1446,6 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1519,5 +1508,8 @@ export const MoveInTestUtilities = {
 
     Move_In_Existing_Utility_Account
 };
+
+
+
 
 

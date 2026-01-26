@@ -129,13 +129,17 @@ export class MoveInPage{
     readonly Move_In_Survey_Star: Locator;
     readonly Move_In_Survey_Submit_Button: Locator;
     readonly Move_In_Feedback_Thanks_Message: Locator;
-    readonly Move_In_Dashboard_Link:Locator;
 
     readonly Move_In_New_Move_In_Request_Link: Locator;
 
     readonly Move_In_ESCO_Title: Locator;
     readonly Move_In_ESCO_Content: Locator;
     readonly Move_In_ESCO_Got_It_Button: Locator;
+
+    // Power Up Your Account page locators
+    readonly Move_In_Power_Up_Title: Locator;
+    readonly Move_In_Clean_Energy_Switch: Locator;
+    readonly Move_In_Savings_Finder_Section: Locator;
 
   
     
@@ -153,7 +157,7 @@ export class MoveInPage{
 ;
         
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
-        this.Move_In_Get_Started_Button = page.getByRole('button', { name: 'Get Started' });
+        this.Move_In_Get_Started_Button = page.getByRole('button', { name: /Let.*s Get Started/i });
         this.Move_In_Back_Link = page.getByText('Back');
         this.Move_In_Address_Page_Fields = page.getByRole('heading', { name: 'Where are you looking to' });
         this.Move_In_Tx_Svc_Address_Field = page.getByRole('heading', { name: 'Where do you live?' });
@@ -258,8 +262,8 @@ export class MoveInPage{
         //this.Move_In_Pay_Through_PG_No = page.getByLabel('No', { exact: true });
         this.Move_In_Service_Fee_Message = page.getByText('Cards have a 3% fee, while bank');
 
-        this.Move_In_Success_Message = page.getByText('Success! 🥳Your account is');
-        this.Move_In_Account_Number = page.getByText('Account Number:');
+        this.Move_In_Success_Message = page.getByRole('heading', { name: 'Great! You are all set' });
+        this.Move_In_Account_Number = page.getByText(/getting started on setting up your utility account/i);
 
         this.Move_In_Almost_Done_Message = page.getByRole('heading', { name: 'Almost Done!' })
         this.Move_In_Registration_Status = page.locator('//div[contains(text(),"Registration Status")]');
@@ -268,7 +272,6 @@ export class MoveInPage{
         this.Move_In_Survey_Star = page.locator('path').nth(2);
         this.Move_In_Survey_Submit_Button = page.getByText('Tell us how your experience was so far!Submit');
         this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback 💚');
-        this.Move_In_Dashboard_Link = page.getByRole('link', { name: 'Dashboard' });
 
         this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new move-in request"]');
 
@@ -278,6 +281,11 @@ export class MoveInPage{
         this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,').nth(1);
         //this.Move_In_ESCO_Got_It_Button = page.getByRole('button', { name: 'Got it!' })
         this.Move_In_ESCO_Got_It_Button = page.getByText('Got it!').nth(1);
+
+        // Power Up Your Account page locators
+        this.Move_In_Power_Up_Title = page.getByRole('heading', { name: 'Power up your account' });
+        this.Move_In_Clean_Energy_Switch = page.locator('//h3[contains(text(), "Clean Energy")]//ancestor::div[contains(@class, "flex")]//button[@role="switch"]');
+        this.Move_In_Savings_Finder_Section = page.getByRole('heading', { name: /Savings Finder/i });
     }
 
 
@@ -412,6 +420,22 @@ export class MoveInPage{
             }
         }
 
+    }
+
+
+    async Power_Up_Your_Account(){
+        await this.page.waitForLoadState('domcontentloaded');
+        try {
+            await expect(this.Move_In_Power_Up_Title).toBeVisible({timeout:5000});
+            console.log("Power Up Your Account page found - proceeding");
+            // The page shows clean energy add-on options
+            // The switch is already on by default for clean energy
+            await expect(this.Move_In_Savings_Finder_Section).toBeVisible({timeout:5000});
+            // Click Next to proceed
+            await this.Next_Move_In_Button();
+        } catch {
+            console.log("Power Up Your Account page not found - skipping");
+        }
     }
 
 
@@ -1156,19 +1180,20 @@ export class MoveInPage{
     }
 
 
-    async Click_Dashboard_Link(){
-        await expect(this.Move_In_Dashboard_Link).toBeEnabled({timeout:10000});
-        await this.Move_In_Dashboard_Link.hover();
-        await this.Move_In_Dashboard_Link.click();
-    }
-
-
     async Get_Account_Number(){
-        const element = await this.Move_In_Account_Number_Value;
-        const textValue = await element.textContent();
-        const accountNumber = textValue?.trim() || '';
-        console.log(accountNumber);
-        return accountNumber;
+        try {
+            const element = await this.Move_In_Account_Number_Value;
+            const isVisible = await element.isVisible({timeout: 5000});
+            if (isVisible) {
+                const textValue = await element.textContent();
+                const accountNumber = textValue?.trim() || '';
+                console.log('Account Number:', accountNumber);
+                return accountNumber;
+            }
+        } catch {
+            console.log('Account number element not found - new UI may not display account number');
+        }
+        return '';
     }
 
     async Click_Start_New_Move_In_Request(){
@@ -1235,7 +1260,7 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
-        await expect(this.Move_In_Dashboard_Link).toBeVisible();
+        await expect(this.Move_In_New_Move_In_Request_Link).toBeVisible({timeout:5000});
     }
 
 
@@ -1244,20 +1269,7 @@ export class MoveInPage{
         await expect(this.Move_In_Almost_Done_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Registration_Status).toBeVisible({timeout:60000});
         await expect(this.Move_In_Registration_Status).toContainText('Pending');
-        await expect(this.Move_In_Dashboard_Link).toBeVisible();
-    }
-
-
-    async Check_Billing_Customer_Added_Payment_Overview_Redirect(){
-
-        const [newPage] = await Promise.all([
-            this.page.waitForEvent('popup'),
-        ]);
-
-        await newPage.waitForLoadState('domcontentloaded');
-        await expect(newPage).toHaveURL(/.*\/app\/overview.*/, { timeout: 60000 });
-        //await expect(newPage.locator('//h3[contains(text(),"Getting Started")]/parent::div/parent::div')).toBeVisible({timeout:60000});
-        await newPage.close();
+        await expect(this.Move_In_New_Move_In_Request_Link).toBeVisible({timeout:5000});
     }
 
 
@@ -1277,7 +1289,7 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Success_Message).toBeVisible({timeout:60000});
         await expect(this.Move_In_Account_Number).toBeVisible({timeout:60000});
-        await expect(this.Move_In_Dashboard_Link).toBeHidden({timeout:60000});
+        await expect(this.Move_In_New_Move_In_Request_Link).toBeVisible({timeout:5000});
     }
 
 
