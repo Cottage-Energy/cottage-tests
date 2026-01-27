@@ -992,10 +992,10 @@ export class MoveInPage{
         await CardTab?.click();
         await this.page.waitForTimeout(500);
     
-        const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="Field-numberInput"]');
-        const CardExpiration = await stripeFrame?.waitForSelector('[id ="Field-expiryInput"]');
-        const CardCVC = await stripeFrame?.waitForSelector('[id ="Field-cvcInput"]');
-        const CardCountry = await stripeFrame?.waitForSelector('[id ="Field-countryInput"]');
+        const CardNUmberInput = await stripeFrame?.waitForSelector('[id ="payment-numberInput"]');
+        const CardExpiration = await stripeFrame?.waitForSelector('[id ="payment-expiryInput"]');
+        const CardCVC = await stripeFrame?.waitForSelector('[id ="payment-cvcInput"]');
+        const CardCountry = await stripeFrame?.waitForSelector('[id ="payment-countryInput"]');
     
         await CardNUmberInput?.waitForElementState('visible');
         await CardNUmberInput?.fill(CCnumber,{timeout:10000});
@@ -1024,8 +1024,8 @@ export class MoveInPage{
         }
     
     
-        if((await stripeFrame?.isVisible('[id ="Field-postalCodeInput"]'))){
-            const CardZipCode = await stripeFrame?.waitForSelector('[id ="Field-postalCodeInput"]');
+        if((await stripeFrame?.isVisible('[id ="payment-postalCodeInput"]'))){
+            const CardZipCode = await stripeFrame?.waitForSelector('[id ="payment-postalCodeInput"]');
             await CardZipCode?.waitForElementState('visible');
             await CardZipCode?.fill(CCzip,{timeout:10000});
         }
@@ -1049,8 +1049,8 @@ export class MoveInPage{
         await BankAccountTab?.click();
         await this.page.waitForTimeout(500);
 
-        const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
-        const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
+        const EmailInput = await stripeFrame?.waitForSelector('[id ="payment-emailInput"]');
+        const NameInput = await stripeFrame?.waitForSelector('[id ="payment-nameInput"]');
         const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
 
         await EmailInput?.fill(Email);
@@ -1099,8 +1099,8 @@ export class MoveInPage{
         await BankAccountTab?.click();
         await this.page.waitForTimeout(500);
 
-        const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
-        const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
+        const EmailInput = await stripeFrame?.waitForSelector('[id ="payment-emailInput"]');
+        const NameInput = await stripeFrame?.waitForSelector('[id ="payment-nameInput"]');
         const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
 
         await EmailInput?.fill(Email);

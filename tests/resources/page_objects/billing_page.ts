@@ -58,8 +58,8 @@ export class BillingPage {
         await BankAccountTab?.click();
         await this.page.waitForTimeout(500);
 
-        const EmailInput = await stripeFrame?.waitForSelector('[id ="Field-emailInput"]');
-        const NameInput = await stripeFrame?.waitForSelector('[id ="Field-nameInput"]');
+        const EmailInput = await stripeFrame?.waitForSelector('[id ="payment-emailInput"]');
+        const NameInput = await stripeFrame?.waitForSelector('[id ="payment-nameInput"]');
         const TestInstButton = await stripeFrame?.waitForSelector('[data-testid ="featured-institution-default"]');
 
         await EmailInput?.fill(Email);
