@@ -105,7 +105,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"scheduled_for_payment"),
-            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -137,7 +137,7 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmountTotal,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActualTotal)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActualTotal)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -219,7 +219,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.GasAmountTotal,"scheduled_for_payment"),
-            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual),
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -251,7 +251,7 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.GasAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.GasAmountTotal,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.GasAmountActualTotal)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.GasAmountActualTotal)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -343,7 +343,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"scheduled_for_payment"),
-            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual),
+            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -378,7 +378,7 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActualTotal)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActualTotal)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -482,7 +482,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"scheduled_for_payment"),
-            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual),
+            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -536,7 +536,7 @@ export class PaymentUtilities {
         await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActualTotal)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActualTotal)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -621,7 +621,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmount,"scheduled_for_payment"),
-            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -654,7 +654,7 @@ export class PaymentUtilities {
         //await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.ElectricAmount);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.ElectricAmount,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -736,7 +736,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.GasAmount,"scheduled_for_payment"),
-            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual),
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -769,7 +769,7 @@ export class PaymentUtilities {
         //await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.GasAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.GasAmount,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -861,7 +861,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmount,"scheduled_for_payment"),
-            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual),
+            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -897,7 +897,7 @@ export class PaymentUtilities {
         //await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmount,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActual)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -1001,7 +1001,7 @@ export class PaymentUtilities {
 
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmount,"scheduled_for_payment"),
-            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual),
+            FastmailActions.Check_Electric_And_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActual),
         ]);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
@@ -1056,7 +1056,7 @@ export class PaymentUtilities {
         //await supabaseQueries.Check_Payment_Processing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
         await Promise.all([
             supabaseQueries.Check_Payment_Status(MoveIn.cottageUserId, PGuserUsage.CombinedAmount,"succeeded"),
-            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.PGUserEmail, PGuserUsage.CombinedAmountActual)
+            FastmailActions.Check_Bill_Payment_Confirmation(MoveIn.pgUserEmail, PGuserUsage.CombinedAmountActual)
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
@@ -1170,7 +1170,7 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Pending"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
-            FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+            FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
         ]);
         await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFee);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
@@ -1191,7 +1191,7 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
             supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee),
-            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal)
+            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountTotal)
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
@@ -1300,8 +1300,8 @@ export class PaymentUtilities {
           billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Pending"),
           billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
           billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
-          FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
-          FastmailActions.Check_Gas_Bill_Ready_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+          FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
+          FastmailActions.Check_Gas_Bill_Ready_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
       ]);
 
       await billingPage.Click_Electric_Bill_Pay_Button(PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFee);
@@ -1348,8 +1348,8 @@ export class PaymentUtilities {
           billingPage.Check_Gas_Bill_Fee(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
           supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, PGuserUsage.GasServiceFee),
 
-          FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal),
-          FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountTotal)
+          FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountTotal),
+          FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountTotal)
       ]);
       await sidebarChat.Goto_Overview_Page_Via_Icon();
           //check platform dashboard
@@ -1408,13 +1408,13 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
         ]);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "failed");
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, null);
+        await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, null);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -1431,7 +1431,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await profilePage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded");
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1450,7 +1450,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null)
         ]);
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual);
+        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
         await Promise.all([
@@ -1513,8 +1513,8 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
         ]);
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId),
@@ -1526,7 +1526,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "failed"),
         ]);
         await page.waitForTimeout(5000);
-        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
+        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -1548,7 +1548,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await profilePage.Check_Payment_Initiated_Message();
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "succeeded"),
@@ -1583,8 +1583,8 @@ export class PaymentUtilities {
         
         await page.waitForTimeout(5000);
         await Promise.all([
-            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual),
-            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
@@ -1638,13 +1638,13 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "failed");
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual, null);
+        await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual, null);
     
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -1661,7 +1661,7 @@ export class PaymentUtilities {
         await overviewPage.Check_Click_Failed_Payment_Update_Payment_Link();
         await profilePage.Go_to_Payment_Info_Tab();
         await profilePage.click_Edit_Payment_Button();
-        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await profilePage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await profilePage.Check_Payment_Initiated_Message();
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "succeeded");
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1680,7 +1680,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, null)
         ]);
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual);
+        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
         await Promise.all([
@@ -1736,13 +1736,13 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
         ]);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "failed");
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, null);
+        await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, null);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -1779,7 +1779,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee)
         ]);
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal);
+        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
         await Promise.all([
@@ -1842,8 +1842,8 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal),
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
         ]);
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId),
@@ -1855,7 +1855,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "failed"),
         ]);
         await page.waitForTimeout(5000);
-        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
+        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -1913,8 +1913,8 @@ export class PaymentUtilities {
         
         await page.waitForTimeout(5000);
         await Promise.all([
-            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountTotal),
-            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountTotal),
+            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountTotal)
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
@@ -1968,13 +1968,13 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "failed");
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual, null);
+        await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual, null);
     
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -2011,7 +2011,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, PGuserUsage.GasServiceFee)
         ]);
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountTotal);
+        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountTotal);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
         await Promise.all([
@@ -2067,13 +2067,13 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
         ]);
         await supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Electric_Bill_Status(ElectricAccountId, "failed");
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, null);
+        await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, null);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -2088,7 +2088,7 @@ export class PaymentUtilities {
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await billingPage.Click_Make_Payment_Button();
-        await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual);
         await billingPage.Click_Pay_Now_Button();
         await billingPage.Check_Payment_Initiated_Message();
@@ -2108,7 +2108,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Electric_Bill_Service_Fee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null)
         ]);
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual);
+        await FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
         await Promise.all([
@@ -2171,8 +2171,8 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
-            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
         ]);
         await Promise.all([
             supabaseQueries.Check_Electric_Bill_Processing(ElectricAccountId),
@@ -2184,7 +2184,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "failed"),
         ]);
         await page.waitForTimeout(5000);
-        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
+        //await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
 
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -2204,7 +2204,7 @@ export class PaymentUtilities {
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await billingPage.Click_Make_Payment_Button();
-        await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
         await billingPage.Click_Pay_Now_Button();
         await billingPage.Check_Payment_Initiated_Message();
@@ -2240,8 +2240,8 @@ export class PaymentUtilities {
         
         await page.waitForTimeout(5000);
         await Promise.all([
-            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.ElectricAmountActual),
-            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Electric_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
@@ -2295,13 +2295,13 @@ export class PaymentUtilities {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
-            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
         ]);
         await supabaseQueries.Check_Gas_Bill_Processing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await supabaseQueries.Check_Gas_Bill_Status(GasAccountId, "failed");
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Failed_Payment_Email(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual, null);
+        await FastmailActions.Check_Failed_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual, null);
     
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await page.waitForTimeout(1000);
@@ -2316,7 +2316,7 @@ export class PaymentUtilities {
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
         await billingPage.Click_Make_Payment_Button();
-        await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.PGUserEmail, MoveIn.PGUserName);
+        await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.GasAmountActual);
         await billingPage.Click_Pay_Now_Button();
         await billingPage.Check_Payment_Initiated_Message();
@@ -2336,7 +2336,7 @@ export class PaymentUtilities {
             supabaseQueries.Check_Gas_Bill_Service_Fee(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage, null)
         ]);
         await page.waitForTimeout(5000);
-        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.PGUserEmail, PGuserUsage.GasAmountActual);
+        await FastmailActions.Check_Gas_Bill_Payment_Success(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
             //check platform dashboard
         await Promise.all([

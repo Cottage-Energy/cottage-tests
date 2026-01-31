@@ -19,7 +19,7 @@ test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
   //await page.close();
 });
 
@@ -43,7 +43,7 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+      //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
       await moveInpage.Click_Start_New_Move_In_Request();
@@ -53,10 +53,10 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Setup_Account(true, true);
       await moveInpage.Next_Move_In_Button();
-      await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+      await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Check_Email_Registered_Message();
-      const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+      const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
         
       if (typeof OTP === 'string') {
         await moveInpage.Enter_OTP(OTP);
@@ -64,8 +64,8 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
         await moveInpage.Check_OTP_Confirmed_Message();
         await servicesPage.Services_Check_Page_Content();
         await page.waitForTimeout(10000);
-        await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED", null);
-        await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+        await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "COMED", null);
+        await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
       } else {
           throw new Error('Invalid OTP');
       }
@@ -84,7 +84,7 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+      //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
       await moveInpage.Click_Start_New_Move_In_Request();
@@ -94,10 +94,10 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Setup_Account(true, true);
       await moveInpage.Next_Move_In_Button();
-      await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+      await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Check_Email_Registered_Message();
-      const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+      const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
         
       if (typeof OTP === 'string') {
         await moveInpage.Enter_OTP(OTP);
@@ -105,8 +105,8 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
         await moveInpage.Check_OTP_Confirmed_Message();
         await servicesPage.Services_Check_Page_Content();
         await page.waitForTimeout(10000);
-        await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE", null);
-        await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+        await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "EVERSOURCE", null);
+        await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
       } else {
           throw new Error('Invalid OTP');
       }
@@ -125,7 +125,7 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
       await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
       await page.waitForTimeout(10000);
-      //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+      //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
       await moveInpage.Check_Successful_Move_In_Billing_Customer();
       await moveInpage.Click_Start_New_Move_In_Request();
@@ -136,10 +136,10 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await moveInpage.Setup_Account(true, true);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Read_ESCO_Conditions();
-      await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+      await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Check_Email_Registered_Message();
-      const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+      const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
         
       if (typeof OTP === 'string') {
         await moveInpage.Enter_OTP(OTP);
@@ -147,8 +147,8 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
         await moveInpage.Check_OTP_Confirmed_Message();
         await servicesPage.Services_Check_Page_Content();
         await page.waitForTimeout(10000);
-        await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON", null);
-        await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+        await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "CON-EDISON", null);
+        await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
       } else {
           throw new Error('Invalid OTP');
       }
@@ -173,7 +173,7 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -183,10 +183,10 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+    const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
@@ -194,8 +194,8 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
-      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "COMED", "COMED");
-      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "COMED", "COMED");
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
     } else {
         throw new Error('Invalid OTP');
     }
@@ -214,7 +214,7 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -225,10 +225,10 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
-    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+    const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
@@ -236,8 +236,8 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
-      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "EVERSOURCE", "EVERSOURCE");
-      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "EVERSOURCE", "EVERSOURCE");
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
     } else {
         throw new Error('Invalid OTP');
     }
@@ -256,7 +256,7 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -266,10 +266,10 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+    const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
@@ -277,8 +277,8 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
-      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "CON-EDISON", "CON-EDISON");
-      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "CON-EDISON", "CON-EDISON");
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
     } else {
         throw new Error('Invalid OTP');
     }
@@ -303,7 +303,7 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -313,10 +313,10 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+    const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
@@ -324,8 +324,8 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
-      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "COMED");
-      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "COMED");
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
 
     } else {
         throw new Error('Invalid OTP');
@@ -345,7 +345,7 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -356,10 +356,10 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
-    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+    const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
@@ -367,8 +367,8 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
-      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "EVERSOURCE");
-      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "EVERSOURCE");
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
     } else {
         throw new Error('Invalid OTP');
     }
@@ -387,7 +387,7 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Electric_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,1);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,1);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Check_Successful_Move_In_Billing_Customer();
     await moveInpage.Click_Start_New_Move_In_Request();
@@ -397,10 +397,10 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Setup_Account(true, true);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.PGUserEmail,PGuser.Today);
+    await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Check_Email_Registered_Message();
-    const OTP = await FastmailActions.Get_OTP(MoveIn.PGUserEmail);
+    const OTP = await FastmailActions.Get_OTP(MoveIn.pgUserEmail);
       
     if (typeof OTP === 'string') {
       await moveInpage.Enter_OTP(OTP);
@@ -408,8 +408,8 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(10000);
-      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, null, "CON-EDISON");
-      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+      await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "CON-EDISON");
+      await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
     } else {
         throw new Error('Invalid OTP');
     }

@@ -37,7 +37,7 @@ test.beforeEach(async ({ playwright, page, supabaseQueries},testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+    await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
     //await page.close();
 });
   
@@ -396,7 +396,7 @@ test.describe.fixme('Valid Bank Manual Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
     await overviewPage.Accept_New_Terms_And_Conditions();
     const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
@@ -434,7 +434,7 @@ test.describe.fixme('Valid Bank Manual Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
     await overviewPage.Accept_New_Terms_And_Conditions();
     const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
@@ -512,7 +512,7 @@ test.describe.fixme('Valid Bank Manual Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
     await overviewPage.Accept_New_Terms_And_Conditions();
     const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
@@ -626,7 +626,7 @@ test.describe.fixme('Valid Bank Manual Payment', () => {
     // Switch to the new tab
     await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.PGUserEmail, MoveIn.PGUserName);
+    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
     await overviewPage.Accept_New_Terms_And_Conditions();
     const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
     await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);

@@ -16,7 +16,7 @@ test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+  await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
   //await page.close();
 });
 
@@ -39,8 +39,8 @@ test.describe.skip('Short Code Referal', () => {
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber, "BGE", null);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "BGE", null);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
 
@@ -61,8 +61,8 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, "DTE", null, true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.PGUserEmail);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,0);
+    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
@@ -70,7 +70,7 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
-    //await linearActions.CountMoveInTicket(MoveIn.PGUserEmail,0);
+    //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,0);
     //No service confirmation email
     //check Account Status
   });
@@ -96,8 +96,8 @@ test.describe.skip('Non Short Code Referal', () => {
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.PGUserEmail, MoveIn.accountNumber);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
 

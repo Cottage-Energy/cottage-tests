@@ -20,7 +20,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    //await CleanUp.Test_User_Clean_Up(MoveIn.PGUserEmail);
+    //await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
     //await page.close();
 });
   
