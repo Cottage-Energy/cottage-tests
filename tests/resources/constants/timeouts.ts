@@ -19,6 +19,9 @@ export const TIMEOUTS = {
   /** Extra long timeout for complex flows */
   EXTRA_LONG: 120000,
   
+  /** Extended timeout for complex multi-step flows */
+  EXTENDED: 150000,
+  
   /** Test timeout for entire test execution */
   TEST: 600000,
   
@@ -56,6 +59,18 @@ export const RETRY_CONFIG = {
   
   /** Delay between charge account retries (ms) */
   CHARGE_ACCOUNT_RETRY_DELAY: 60000,
+
+  /** OTP email retry configuration */
+  OTP: {
+    maxRetries: 5,
+    delayMs: 15000,
+  },
+
+  /** Email confirmation retry configuration */
+  EMAIL_CONFIRMATION: {
+    maxRetries: 5,
+    delayMs: 15000,
+  },
 } as const;
 
 export type TimeoutKey = keyof typeof TIMEOUTS;

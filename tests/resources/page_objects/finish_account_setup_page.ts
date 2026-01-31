@@ -1,5 +1,5 @@
 import { type Page, type Locator, expect, FrameLocator } from '@playwright/test';
-import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+import { SupabaseQueries } from '../fixtures/database';
 import { format } from 'date-fns';
 
 const supabaseQueries = new SupabaseQueries();

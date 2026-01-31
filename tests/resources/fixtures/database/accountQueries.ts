@@ -141,7 +141,7 @@ export class AccountQueries {
     const maxRetries = 2;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let retries = 0;
-    let chargeAccount: any = null;
+    let chargeAccount: { id: string } | null = null;
 
     while (retries <= maxRetries) {
       try {

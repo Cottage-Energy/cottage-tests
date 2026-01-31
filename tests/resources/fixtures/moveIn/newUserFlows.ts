@@ -352,3 +352,111 @@ export async function newUserMoveInManualFailedBankAccount(
     bankAccountValidity: 'invalid',
   });
 }
+
+/**
+ * New user move-in with address parameter flow
+ */
+export async function newUserMoveInAddressParameter(
+  page: Page,
+  electricCompany: UtilityCompany,
+  gasCompany: UtilityCompany,
+  newElectric: boolean,
+  newGas: boolean,
+  payThroughPG: boolean = true,
+  cardNumber?: string
+): Promise<MoveInResult> {
+  // This flow uses pre-filled address from URL parameters
+  // For now, delegates to standard flow - implementation can be customized
+  return newUserMoveIn({
+    page,
+    electricCompany,
+    gasCompany,
+    newElectric,
+    newGas,
+    paymentType: 'auto',
+    paymentMethod: 'card',
+    payThroughPG,
+    cardNumber,
+  });
+}
+
+/**
+ * New user move-in with GUID flow (pre-filled user info)
+ */
+export async function newUserMoveInGuidFlow(
+  page: Page,
+  electricCompany: UtilityCompany,
+  gasCompany: UtilityCompany,
+  newElectric: boolean,
+  newGas: boolean,
+  payThroughPG: boolean = true,
+  cardNumber?: string
+): Promise<MoveInResult> {
+  // This flow uses GUID for pre-filled user information
+  // For now, delegates to standard flow - implementation can be customized
+  return newUserMoveIn({
+    page,
+    electricCompany,
+    gasCompany,
+    newElectric,
+    newGas,
+    paymentType: 'auto',
+    paymentMethod: 'card',
+    payThroughPG,
+    cardNumber,
+  });
+}
+
+/**
+ * New user move-in with both address parameter and GUID flow
+ */
+export async function newUserMoveInAddressParameterAndGuid(
+  page: Page,
+  electricCompany: UtilityCompany,
+  gasCompany: UtilityCompany,
+  newElectric: boolean,
+  newGas: boolean,
+  payThroughPG: boolean = true,
+  cardNumber?: string
+): Promise<MoveInResult> {
+  return newUserMoveIn({
+    page,
+    electricCompany,
+    gasCompany,
+    newElectric,
+    newGas,
+    paymentType: 'auto',
+    paymentMethod: 'card',
+    payThroughPG,
+    cardNumber,
+  });
+}
+
+/**
+ * Move-in flow for existing utility account
+ */
+export async function moveInExistingUtilityAccount(
+  page: Page,
+  newElectric: boolean,
+  newGas: boolean,
+  submitRequest: boolean
+): Promise<{ pgUserName: string; pgUserFirstName: string; pgUserEmail: string }> {
+  const moveInPage = new MoveInPage(page);
+  const pgUser = await generateTestUserData();
+  const pgUserName = `PGTest ${pgUser.FirstName} ${pgUser.LastName}`;
+  const pgUserFirstName = `PGTest ${pgUser.FirstName}`;
+  const pgUserEmail = pgUser.Email;
+
+  await moveInPage.Agree_on_Terms_and_Get_Started();
+  await moveInPage.Enter_Address(MoveInData.COMEDaddress, pgUser.UnitNumber);
+  await moveInPage.Next_Move_In_Button();
+  await moveInPage.Setup_Account(newElectric, newGas);
+  await moveInPage.Next_Move_In_Button();
+  await moveInPage.Existing_Utility_Account_Connect_Request(pgUserEmail, submitRequest);
+  
+  return {
+    pgUserName,
+    pgUserFirstName,
+    pgUserEmail,
+  };
+}

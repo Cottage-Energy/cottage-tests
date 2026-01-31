@@ -47,6 +47,10 @@ export const TEST_TAGS = {
   P1: '@p1',
   P2: '@p2',
   P3: '@p3',
+  
+  /** Combined tags */
+  ALL_REGRESSION: ['@regression1', '@regression2', '@regression3', '@regression4', '@regression5'],
+  SMOKE_REGRESSION1: ['@smoke', '@regression1'],
 } as const;
 
 /**

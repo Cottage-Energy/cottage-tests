@@ -8,7 +8,12 @@
     "test:ui": "npx playwright test --ui",
     "test:debug": "npx playwright test --debug",
     "test:report": "npx playwright show-report",
-    "test:install": "npx playwright install"
+    "test:install": "npx playwright install",
+    "lint": "eslint tests/**/*.ts",
+    "lint:fix": "eslint tests/**/*.ts --fix",
+    "format": "prettier --write tests/**/*.ts",
+    "format:check": "prettier --check tests/**/*.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +23,13 @@
     "@faker-js/faker": "^10.0.0",
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.3.0",
-    "dotenv": "^17.2.1"
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "dotenv": "^17.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-playwright": "^1.6.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.4.0"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",

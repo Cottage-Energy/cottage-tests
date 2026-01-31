@@ -1,46 +1,96 @@
 import { faker } from '@faker-js/faker';
 
-
+/**
+ * Test user data interface with all generated fields
+ * Used throughout the test suite for consistent test data
+ */
 interface TestUser {
+    /** User's first name */
     FirstName: string;
+    /** User's last name */
     LastName: string;
+    /** User's phone number (default: 111-111-1111) */
     PhoneNumber: string;
+    /** Generated email with PGTest prefix */
     Email: string;
+    /** Generated unit number */
     UnitNumber: string;
+    /** Today's date as day number string */
     Today: string;
+    /** Tomorrow's date as day number string */
     Tomorrow: string;
+    /** Date 4 days from now as day number string */
     FourDaysFromNow: string;
+    /** Date 2 days ago as day number string */
     TwoDaysAgo: string;
+    /** Birth date in ISO format (YYYY-MM-DD) */
     BirthDate: string;
+    /** 9-digit SSN for testing */
     SSN: string;
+    /** Card expiry in MM/YY format */
     CardExpiry: string;
+    /** Card CVC (3 digits) */
     CVC: string;
+    /** Country code */
     Country: string;
+    /** ZIP code */
     Zip: string;
+    /** Electric bill amount in cents */
     ElectricAmount: number;
+    /** Electric bill amount formatted as dollars */
     ElectricAmountActual: string;
+    /** Electric service fee in cents */
     ElectricServiceFee: number;
+    /** Electric service fee formatted as dollars */
     ElectricServiceFeeActual: string;
+    /** Total electric amount with fee in cents */
     ElectricAmountTotal: number;
+    /** Total electric amount with fee formatted as dollars */
     ElectricAmountActualTotal: string;
+    /** Electric usage in kWh */
     ElectricUsage: number;
+    /** Gas bill amount in cents */
     GasAmount: number;
+    /** Gas bill amount formatted as dollars */
     GasAmountActual: string;
+    /** Gas service fee in cents */
     GasServiceFee: number;
+    /** Gas service fee formatted as dollars */
     GasServiceFeeActual: string;
+    /** Total gas amount with fee in cents */
     GasAmountTotal: number;
+    /** Total gas amount with fee formatted as dollars */
     GasAmountActualTotal: string;
+    /** Gas usage in therms */
     GasUsage: number;
-    // New fields for combined amounts
+    /** Combined electric + gas amount in cents */
     CombinedAmount: number;
+    /** Combined amount formatted as dollars */
     CombinedAmountActual: string;
+    /** Combined service fee in cents */
     CombinedServiceFee: number;
+    /** Combined service fee formatted as dollars */
     CombinedServiceFeeActual: string;
+    /** Total combined amount with fee in cents */
     CombinedAmountTotal: number;
+    /** Total combined amount with fee formatted as dollars */
     CombinedAmountActualTotal: string;
 }
 
-
+/**
+ * Generates comprehensive test user data with randomized values
+ * 
+ * @param serviceFeePercentage - Optional service fee percentage (default: 0.03 for 3%)
+ * @returns Promise resolving to TestUser object with all fields populated
+ * 
+ * @example
+ * const user = await generateTestUserData();
+ * console.log(user.Email); // "PGTest+John_SmithABC123@joinpublicgrid.com"
+ * 
+ * @example
+ * // With custom service fee
+ * const user = await generateTestUserData(0.05); // 5% fee
+ */
 export async function generateTestUserData(serviceFeePercentage?: number): Promise<TestUser> {
     const firstname = faker.person.firstName();
     const lastname = faker.person.lastName();

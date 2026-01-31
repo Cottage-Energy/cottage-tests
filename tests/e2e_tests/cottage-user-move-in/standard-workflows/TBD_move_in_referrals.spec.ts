@@ -29,7 +29,7 @@ test.describe.skip('Short Code Referal', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries}) => {
     test.setTimeout(480000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     
@@ -53,7 +53,7 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page, supabaseQueries}) => {
     test.setTimeout(900000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", null);
     
@@ -86,7 +86,7 @@ test.describe.skip('Non Short Code Referal', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression3'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression3'],}, async ({moveInpage,page, supabaseQueries}) => {
     test.setTimeout(360000);
     await supabaseQueries.Update_Companies_to_Building("autotest", "NYS-EG", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);

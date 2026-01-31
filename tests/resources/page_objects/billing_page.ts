@@ -115,9 +115,9 @@ export class BillingPage {
 
 
     //assertions
-    async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
-        const electricAmount = parseFloat(ElectricAmount);
-        const gasAmount = parseFloat(GasAmount) || 0;
+    async Check_Outstanding_Balance_Amount(ElectricAmount: number | string, GasAmount?: number | string): Promise<string> {
+        const electricAmount = parseFloat(String(ElectricAmount));
+        const gasAmount = GasAmount ? parseFloat(String(GasAmount)) : 0;
         
         const totalAmount = (electricAmount + gasAmount);
 

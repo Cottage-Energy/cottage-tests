@@ -17,7 +17,7 @@ test.afterEach(async ({ page }, testInfo) => {
 test.describe.configure({ mode: "serial" });
 test.describe('Bill Upload Flow Tests', () => {
 
-  test('Bill Upload - Con Edison Utility', { tag: TEST_TAGS.SMOKE_REGRESSION1 }, async ({ billUploadPage, page }) => {
+  test('Bill Upload - Con Edison Utility', { tag: [...TEST_TAGS.SMOKE_REGRESSION1] }, async ({ billUploadPage, page }) => {
     test.setTimeout(TIMEOUTS.EXTENDED);
     
     const imgPath = path.join(__dirname, '../../../resources/data', 'PGLogo002.jpg');

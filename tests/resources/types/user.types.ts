@@ -115,3 +115,74 @@ export type RemittanceStatus =
  * Payment status options
  */
 export type PaymentStatus = 'processing' | 'succeeded' | 'failed' | 'pending';
+
+/**
+ * Bill amount and usage for payment checks
+ */
+export interface BillAmountUsage {
+  amount: number;
+  usage: number;
+}
+
+/**
+ * Move-in result data for payment tests
+ */
+export interface MoveInPaymentData {
+  accountNumber: string;
+  cottageUserId: string;
+  pgUserName: string;
+  pgUserFirstName: string;
+  pgUserEmail: string;
+  smsConsent: boolean;
+  electricAccountId?: string | null;
+  gasAccountId?: string | null;
+  electricBillId?: string | null;
+  gasBillId?: string | null;
+  chargeAccountId?: string | null;
+}
+
+/**
+ * User usage data for bill generation
+ */
+export interface UserUsageData {
+  electricAmount: number;
+  electricAmountActual: string;
+  electricServiceFee: number;
+  electricServiceFeeActual: string;
+  electricAmountTotal: number;
+  electricAmountActualTotal: string;
+  electricUsage: number;
+  gasAmount: number;
+  gasAmountActual: string;
+  gasServiceFee: number;
+  gasServiceFeeActual: string;
+  gasAmountTotal: number;
+  gasAmountActualTotal: string;
+  gasUsage: number;
+  combinedAmount: number;
+  combinedAmountActual: string;
+  combinedServiceFee: number;
+  combinedServiceFeeActual: string;
+  combinedAmountTotal: number;
+  combinedAmountActualTotal: string;
+}
+
+/**
+ * Card payment details
+ */
+export interface CardDetails {
+  cardNumber: string;
+  cardExpiry: string;
+  cardCvc: string;
+  cardCountry: string;
+  cardZip: string;
+}
+
+/**
+ * Bank account details for payment testing
+ */
+export interface BankAccountDetails {
+  routingNumber: string;
+  accountNumber: string;
+  accountType: 'checking' | 'savings';
+}

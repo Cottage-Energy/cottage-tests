@@ -1,6 +1,6 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import { SupabaseQueries } from '../../resources/fixtures/database_queries';
-import * as MoveIndata from '../../resources/data/move_in-data.json';
+import { SupabaseQueries } from '../fixtures/database';
+import * as MoveIndata from '../data/move_in-data.json';
 
 const supabaseQueries = new SupabaseQueries();
 
@@ -1070,7 +1070,8 @@ export class MoveInPage{
         await SuccessAccountButton?.waitForElementState('visible');
         await SuccessAccountButton?.click();
 
-        const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
+        // FailureAccountButton not clicked in success flow - just waiting for it to be available
+        await modalFrame?.waitForSelector('[data-testid ="failure"]');
         const ConfirmButton = await modalFrame?.waitForSelector('[data-testid ="select-button"]');
         await ConfirmButton?.waitForElementState('visible');
         await ConfirmButton?.click();
@@ -1116,7 +1117,8 @@ export class MoveInPage{
         await AgreeButton?.waitForElementState('visible');
         await AgreeButton?.click();
 
-        const SuccessAccountButton = await modalFrame?.waitForSelector('[data-testid ="success"]');
+        // SuccessAccountButton not clicked in failure flow - just waiting for it to be available
+        await modalFrame?.waitForSelector('[data-testid ="success"]');
 
         const FailureAccountButton = await modalFrame?.waitForSelector('[data-testid ="failure"]');
         await FailureAccountButton?.waitForElementState('visible');

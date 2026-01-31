@@ -1,5 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+import { SupabaseQueries } from '../fixtures/database';
 import { format } from 'date-fns';
 
 const supabaseQueries = new SupabaseQueries();
@@ -503,9 +503,9 @@ export class OverviewPage {
         await expect(this.Overview_Make_Payment_Button).toBeDisabled({timeout:10000});
     }
 
-    async Check_Outstanding_Balance_Amount(ElectricAmount: any, GasAmount?: any) {
-        const electricAmount = parseFloat(ElectricAmount);
-        const gasAmount = parseFloat(GasAmount) || 0;
+    async Check_Outstanding_Balance_Amount(ElectricAmount: number | string, GasAmount?: number | string): Promise<string | number> {
+        const electricAmount = parseFloat(String(ElectricAmount));
+        const gasAmount = GasAmount ? parseFloat(String(GasAmount)) : 0;
         
         const totalAmount = (electricAmount + gasAmount);
 
@@ -545,7 +545,7 @@ export class OverviewPage {
     }
 
 
-    async Check_Electricity_Card_Contain_Bill_Details(BillId: string, Amount: any, Usage: any) {
+    async Check_Electricity_Card_Contain_Bill_Details(BillId: string, Amount: number | string, Usage: number | string): Promise<void> {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
@@ -558,10 +558,10 @@ export class OverviewPage {
         const StartDateFormatted = format(Start, 'MMM dd');
         const EndDateFormatted = format(End, 'MMM dd');
 
-        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount2Dec = parseFloat(String(Amount)).toFixed(2);
         const amount = amount2Dec.toString();
 
-        const usage = Usage.toString();
+        const usage = String(Usage);
 
         console.log(StartDateFormatted);
         console.log(EndDateFormatted);
@@ -574,7 +574,7 @@ export class OverviewPage {
     }
 
 
-    async Check_Electricity_Card_Is_Clear(BillId: string, Amount: any, Usage: any) {
+    async Check_Electricity_Card_Is_Clear(BillId: string, Amount: number | string, Usage: number | string): Promise<void> {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
@@ -587,10 +587,10 @@ export class OverviewPage {
         const StartDateFormatted = format(Start, 'MMM dd');
         const EndDateFormatted = format(End, 'MMM dd');
 
-        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount2Dec = parseFloat(String(Amount)).toFixed(2);
         const amount = amount2Dec.toString();
 
-        const usage = Usage.toString();
+        const usage = String(Usage);
 
         console.log(StartDateFormatted);
         console.log(EndDateFormatted);
@@ -603,7 +603,7 @@ export class OverviewPage {
     }
 
 
-    async Check_Gas_Card_Contain_Bill_Details(BillId: string, Amount: any, Usage: any) {
+    async Check_Gas_Card_Contain_Bill_Details(BillId: string, Amount: number | string, Usage: number | string): Promise<void> {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
@@ -616,10 +616,10 @@ export class OverviewPage {
         const StartDateFormatted = format(Start, 'MMM dd');
         const EndDateFormatted = format(End, 'MMM dd');
 
-        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount2Dec = parseFloat(String(Amount)).toFixed(2);
         const amount = amount2Dec.toString();
 
-        const usage = Usage.toString();
+        const usage = String(Usage);
 
         console.log(StartDateFormatted);
         console.log(EndDateFormatted);
@@ -632,7 +632,7 @@ export class OverviewPage {
     }
 
 
-    async Check_Gas_Card_Is_Clear(BillId: string, Amount: any, Usage: any) {
+    async Check_Gas_Card_Is_Clear(BillId: string, Amount: number | string, Usage: number | string): Promise<void> {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
@@ -645,10 +645,10 @@ export class OverviewPage {
         const StartDateFormatted = format(Start, 'MMM dd');
         const EndDateFormatted = format(End, 'MMM dd');
 
-        const amount2Dec = parseFloat(Amount).toFixed(2);
+        const amount2Dec = parseFloat(String(Amount)).toFixed(2);
         const amount = amount2Dec.toString();
 
-        const usage = Usage.toString();
+        const usage = String(Usage);
 
         console.log(StartDateFormatted);
         console.log(EndDateFormatted);

@@ -80,8 +80,8 @@ export class PaymentQueries {
         if (['processing', 'succeeded', 'failed'].includes(paymentStatus)) {
           break;
         }
-      } catch (error: any) {
-        if (error?.message?.includes('Cannot coerce the result to a single JSON object')) {
+      } catch (error: unknown) {
+        if (error instanceof Error && error.message?.includes('Cannot coerce the result to a single JSON object')) {
           console.log(`No payment record found yet for user ${cottageUserId} with amount ${amount}`);
         } else {
           throw error;
@@ -107,7 +107,7 @@ export class PaymentQueries {
     const maxRetries = RETRY_CONFIG.UTILITY_REMITTANCE_MAX_RETRIES;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let retries = 0;
-    let utilityRemittance: any;
+    let utilityRemittance: { id: string } | null = null;
 
     while (retries < maxRetries) {
       try {
@@ -127,8 +127,8 @@ export class PaymentQueries {
           console.log('Utility Remittance ID:', utilityRemittance.id);
           break;
         }
-      } catch (error: any) {
-        if (error?.message?.includes('Cannot coerce the result to a single JSON object')) {
+      } catch (error: unknown) {
+        if (error instanceof Error && error.message?.includes('Cannot coerce the result to a single JSON object')) {
           console.log(
             `No utility remittance record found yet for charge account ${chargeAccountId} with amount ${amount} and status ${status}`
           );

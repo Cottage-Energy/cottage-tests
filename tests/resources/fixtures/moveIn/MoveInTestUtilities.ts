@@ -18,6 +18,10 @@ import {
   newUserMoveInManualBankAccount,
   newUserMoveInAutoFailedBankAccount,
   newUserMoveInManualFailedBankAccount,
+  newUserMoveInAddressParameter,
+  newUserMoveInGuidFlow,
+  newUserMoveInAddressParameterAndGuid,
+  moveInExistingUtilityAccount,
 } from './newUserFlows';
 import type { UtilityCompany } from '../../types/moveIn.types';
 
@@ -171,6 +175,116 @@ export class MoveInTestUtilities {
       newElectric,
       newGas,
       payThroughPG
+    );
+  }
+
+  /**
+   * @deprecated Use newUserMoveInAddressParameter() instead
+   */
+  static async New_User_Move_In_Address_Parameter_Flow(
+    page: Page,
+    electricCompany: string | null,
+    gasCompany: string | null,
+    newElectric: boolean,
+    newGas: boolean,
+    payThroughPG: boolean = true,
+    cardNumber?: string
+  ) {
+    return newUserMoveInAddressParameter(
+      page,
+      electricCompany as UtilityCompany,
+      gasCompany as UtilityCompany,
+      newElectric,
+      newGas,
+      payThroughPG,
+      cardNumber
+    );
+  }
+
+  /**
+   * @deprecated Use newUserMoveInGuidFlow() instead
+   */
+  static async New_User_Move_In_GUID_Flow(
+    page: Page,
+    electricCompany: string | null,
+    gasCompany: string | null,
+    newElectric: boolean,
+    newGas: boolean,
+    payThroughPG: boolean = true,
+    cardNumber?: string
+  ) {
+    return newUserMoveInGuidFlow(
+      page,
+      electricCompany as UtilityCompany,
+      gasCompany as UtilityCompany,
+      newElectric,
+      newGas,
+      payThroughPG,
+      cardNumber
+    );
+  }
+
+  /**
+   * @deprecated Use newUserMoveInAddressParameterAndGuid() instead
+   */
+  static async New_User_Move_In_Address_Parameter_And_GUID_Flow(
+    page: Page,
+    electricCompany: string | null,
+    gasCompany: string | null,
+    newElectric: boolean,
+    newGas: boolean,
+    payThroughPG: boolean = true,
+    cardNumber?: string
+  ) {
+    return newUserMoveInAddressParameterAndGuid(
+      page,
+      electricCompany as UtilityCompany,
+      gasCompany as UtilityCompany,
+      newElectric,
+      newGas,
+      payThroughPG,
+      cardNumber
+    );
+  }
+
+  /**
+   * @deprecated Use moveInExistingUtilityAccount() instead
+   */
+  static async Move_In_Existing_Utility_Account(
+    page: Page,
+    newElectric: boolean,
+    newGas: boolean,
+    submitRequest: boolean
+  ) {
+    return moveInExistingUtilityAccount(
+      page,
+      newElectric,
+      newGas,
+      submitRequest
+    );
+  }
+
+  /**
+   * New user move-in flow for fixing Texas deregulated address
+   */
+  static async New_User_Move_In_Fix_TX_DEREG_Address(
+    page: Page,
+    electricCompany: string | null,
+    gasCompany: string | null,
+    newElectric: boolean,
+    newGas: boolean,
+    payThroughPG: boolean = true,
+    cardNumber?: string
+  ) {
+    // This flow handles TX DEREG address corrections
+    return newUserMoveInAutoPayment(
+      page,
+      electricCompany as UtilityCompany,
+      gasCompany as UtilityCompany,
+      newElectric,
+      newGas,
+      payThroughPG,
+      cardNumber
     );
   }
 }
