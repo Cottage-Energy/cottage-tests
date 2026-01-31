@@ -1,5 +1,5 @@
-import { test, expect } from '../../resources/page_objects/base/pg_page_base';
-import { BillUploadTestUtilities } from '../../resources/fixtures/billUploadUtilities';
+import { test, expect } from '../../../resources/page_objects/base/pg_page_base';
+import { BillUploadTestUtilities } from '../../../resources/fixtures/billUploadUtilities';
 import { faker } from '@faker-js/faker';
 import path from 'path';
 
@@ -22,7 +22,7 @@ test.describe('Bill Upload Flow Tests', () => {
   test('Bill Upload - Con Edison Utility', { tag: ['@smoke', '@billupload', '@regression1'] }, async ({ billUploadPage, page }) => {
     test.setTimeout(600000);
     
-    const imgPath = path.join(__dirname, '../../resources/data', 'PGLogo002.jpg');
+    const imgPath = path.join(__dirname, '../../../resources/data', 'PGLogo002.jpg');
     const uniqueKey = faker.string.alphanumeric(10);
     const testEmail = `pgtest+billupload+coned+${uniqueKey}@joinpublicgrid.com`;
     
@@ -47,7 +47,7 @@ test.describe('Bill Upload Flow Tests', () => {
   test('Bill Upload - Manual Step by Step Flow', { tag: ['@regression3', '@billupload'] }, async ({ billUploadPage, page }) => {
     test.setTimeout(600000);
     
-    const imgPath = path.join(__dirname, '../../resources/data', 'PGLogo002.jpg');
+    const imgPath = path.join(__dirname, '../../../resources/data', 'PGLogo002.jpg');
     const uniqueKey = faker.string.alphanumeric(10);
     const testEmail = `pgtest+billupload+manual+${uniqueKey}@joinpublicgrid.com`;
     
@@ -66,7 +66,7 @@ test.describe('Bill Upload Flow Tests', () => {
   test('Bill Upload - Alternative File Format', { tag: ['@regression4', '@billupload'] }, async ({ billUploadPage, page }) => {
     test.setTimeout(600000);
     
-    const imgPath = path.join(__dirname, '../../resources/data', 'PGsample.pdf');
+    const imgPath = path.join(__dirname, '../../../resources/data', 'PGsample.pdf');
     const uniqueKey = faker.string.alphanumeric(10);
     const testEmail = `pgtest+billupload+pdf+${uniqueKey}@joinpublicgrid.com`;
     
