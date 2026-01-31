@@ -1,23 +1,41 @@
-import { SupabaseQueries } from '../../resources/fixtures/database_queries';
+import { userQueries } from './database/userQueries';
+import { accountQueries } from './database/accountQueries';
+import { cleanupQueries } from './database/cleanupQueries';
 
-const supabaseQueries = new SupabaseQueries();
-
-export async function Test_User_Clean_Up(Email: string) {
+/**
+ * Clean up test user and associated data after test execution
+ * @param email - The email address of the test user to clean up
+ */
+export async function Test_User_Clean_Up(email: string): Promise<void> {
+  const cottageUserId = await userQueries.getCottageUserId(email);
   
-  const cottageUserId = await supabaseQueries.Get_Cottage_User_Id(Email);
-  const ElectricPropertyID = await supabaseQueries.Get_Property_Id_by_Electric_Account(cottageUserId);
-  const GasPropertyID = await supabaseQueries.Get_Property_Id_by_Gas_Account(cottageUserId);
-  const ElectricAccountID = await supabaseQueries.Get_Electric_Account_Id(cottageUserId);
-  const GasAccountID = await supabaseQueries.Get_Gas_Account_Id(cottageUserId);
+  if (!cottageUserId) {
+    console.log('No cottage user found for cleanup:', email);
+    return;
+  }
 
+  // Get associated IDs
+  const electricPropertyId = await accountQueries.getPropertyIdByElectricAccount(cottageUserId);
+  const gasPropertyId = await accountQueries.getPropertyIdByGasAccount(cottageUserId);
+  const electricAccountId = await accountQueries.getElectricAccountId(cottageUserId);
+  const gasAccountId = await accountQueries.getGasAccountId(cottageUserId);
+
+  // Delete in correct order (dependencies first)
+  await cleanupQueries.deleteCottageUser(cottageUserId);
+  await cleanupQueries.deleteElectricAccount(electricAccountId);
+  await cleanupQueries.deleteGasAccount(gasAccountId);
   
-  await supabaseQueries.delete_Cottage_User(cottageUserId);
-  await supabaseQueries.delete_Electric_Account(ElectricAccountID);
-  await supabaseQueries.delete_Gas_Account(GasAccountID);
-  await supabaseQueries.delete_Property(parseInt(ElectricPropertyID));
-  await supabaseQueries.delete_Property(parseInt(GasPropertyID));
+  if (electricPropertyId) {
+    await cleanupQueries.deleteProperty(parseInt(electricPropertyId));
+  }
+  if (gasPropertyId) {
+    await cleanupQueries.deleteProperty(parseInt(gasPropertyId));
+  }
 }
 
+/**
+ * CleanUp namespace for backward compatibility
+ */
 export const CleanUp = {
-  Test_User_Clean_Up
+  Test_User_Clean_Up,
 };

@@ -1,10 +1,8 @@
-import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
-import { generateTestUserData } from '../../../resources/fixtures/test_user';
-import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
-import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
+import { test, expect } from '../../../resources/page_objects';
+import { MoveInTestUtilities, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
 import * as PaymentData from '../../../resources/data/payment-data.json';
-import { CleanUp } from '../../../resources/fixtures/userCleanUp';
 
 let MoveIn: any;
 

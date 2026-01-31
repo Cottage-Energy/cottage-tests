@@ -1,3 +1,32 @@
+/**
+ * Move-In Test Utilities - Backward Compatibility Layer
+ * 
+ * This file re-exports from the new modular structure.
+ * For new code, prefer importing directly from './moveIn'
+ * 
+ * @deprecated Import from './moveIn' instead for better organization
+ * @example
+ * // Old way (still works):
+ * import { New_User_Move_In_Auto_Payment_Added } from './moveInUtilities';
+ * 
+ * // New way (preferred):
+ * import { newUserMoveIn, MoveInTestUtilities } from './moveIn';
+ * const result = await newUserMoveIn(page, {
+ *   electricCompany: 'COMED',
+ *   paymentType: 'auto',
+ *   addPaymentMethod: true
+ * });
+ */
+
+// Re-export the new unified utilities
+export { 
+    MoveInTestUtilities,
+    newUserMoveIn,
+    type MoveInOptions,
+    type MoveInResult 
+} from './moveIn';
+
+// Keep the old imports for the legacy functions below
 import { generateTestUserData } from '../../resources/fixtures/test_user';
 import { SupabaseQueries } from '../../resources/fixtures/database_queries';
 import { MoveInPage } from '../../resources/page_objects/move_in_page';
@@ -13,6 +42,9 @@ const supabaseQueries = new SupabaseQueries();
 //Create a unified code block for all the move in flows
 //Move pay through PG here with default value of true
 
+/**
+ * @deprecated Use newUserMoveIn(page, { paymentType: 'auto', addPaymentMethod: true }) instead
+ */
 export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCompany: string | null, GasCompany: string | null, NewElectric: boolean, NewGas: boolean, PayThroughPG:boolean = true, CCcardNumber?: string) {
     const moveInpage = new MoveInPage(page);
     const PGuser = await generateTestUserData();

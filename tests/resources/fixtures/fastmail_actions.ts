@@ -1,22 +1,25 @@
 import { expect } from '@playwright/test';
-import {FastmailClient} from '../../resources/utils/fastmail/client';
+import { FastmailClient } from '../../resources/utils/fastmail/client';
+import { RETRY_CONFIG } from '../constants';
 
 const fastMail = new FastmailClient();
 
+/**
+ * Delay helper function
+ */
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function Get_OTP(Email: string) {
     const EmailLowerCase = Email.toLowerCase();
-    const maxRetries = 2;
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
 
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
+    for (let attempt = 0; attempt < RETRY_CONFIG.OTP.maxRetries; attempt++) {
         content = await fastMail.fetchEmails({to: EmailLowerCase, subject: "Public Grid: One Time Passcode", from: "Public Grid Team <support@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(RETRY_CONFIG.OTP.delayMs);
     }
 
     if (!content || content.length === 0) {
@@ -39,16 +42,14 @@ export async function Get_OTP(Email: string) {
 
 
 export async function Check_Start_Service_Confirmation(Email: string, AccountNumber: string, ElectricCompany?: string | null, GasCompany?: string | null) {
-    const maxRetries = 4;
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
+    for (let attempt = 0; attempt < RETRY_CONFIG.EMAIL_CONFIRMATION.maxRetries; attempt++) {
         content = await fastMail.fetchEmails({to: Email, subject: `Start Service Confirmation`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
         console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(30000); // delay
+        await delay(RETRY_CONFIG.EMAIL_CONFIRMATION.delayMs);
     }
     if (!content || content.length === 0) {
         throw new Error("Failed to fetch Start Service Confirmation email after multiple attempts.");

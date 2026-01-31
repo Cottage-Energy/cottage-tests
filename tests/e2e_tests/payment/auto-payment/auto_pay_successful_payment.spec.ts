@@ -1,14 +1,10 @@
 import { APIRequestContext } from '@playwright/test';
-import { test, expect } from '../../../resources/page_objects/base/pg_page_base';
-import { generateTestUserData } from '../../../resources/fixtures/test_user';
-import { SupabaseQueries } from '../../../resources/fixtures/database_queries';
-import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
-import { PaymentUtilities } from '../../../resources/fixtures/paymentUtilities';
+import { test, expect } from '../../../resources/page_objects';
+import { MoveInTestUtilities, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities, SupabaseQueries } from '../../../resources/fixtures';
+import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import { AdminApi } from '../../../resources/api/admin_api';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import * as PaymentData from '../../../resources/data/payment-data.json';
-import { CleanUp } from '../../../resources/fixtures/userCleanUp';
-import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
 
 
 let AdminApiContext: APIRequestContext;

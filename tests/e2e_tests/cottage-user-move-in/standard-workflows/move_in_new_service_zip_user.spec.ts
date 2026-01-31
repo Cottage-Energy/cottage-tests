@@ -1,8 +1,6 @@
-import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
-import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
-import { generateTestUserData } from '../../../resources/fixtures/test_user';
-import { CleanUp } from '../../../resources/fixtures/userCleanUp';
-import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
+import { test, expect } from '../../../resources/page_objects';
+import { MoveInTestUtilities, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
 let MoveIn: any;
@@ -31,8 +29,8 @@ test.describe.configure({mode: "serial"});
 test.describe('Move In New Service Zip User', () => {
 
 
-  test('COMED New User', {tag: ['@regression1'],}, async ({moveInpage, page, supabaseQueries}) => {
-    test.setTimeout(600000);
+  test('COMED New User', { tag: TEST_TAGS.REGRESSION1 }, async ({moveInpage, page, supabaseQueries}) => {
+    test.setTimeout(TIMEOUTS.EXTENDED);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,'COMED', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_isRegistrationComplete(MoveIn.cottageUserId);
@@ -46,8 +44,8 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Add Auto Payment', {tag: [ '@regression2'],}, async ({moveInpage, page, supabaseQueries}) => {
-    test.setTimeout(600000);
+  test('CON-EDISON New User Add Auto Payment', { tag: TEST_TAGS.REGRESSION2 }, async ({moveInpage, page, supabaseQueries}) => {
+    test.setTimeout(TIMEOUTS.EXTENDED);
     MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'CON-EDISON', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);

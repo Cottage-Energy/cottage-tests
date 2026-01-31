@@ -1,7 +1,6 @@
-import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
-import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
-import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
-import { CleanUp } from '../../../resources/fixtures/userCleanUp';
+import { test, expect } from '../../../resources/page_objects';
+import { MoveInTestUtilities, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 
 let MoveIn: any;
 
