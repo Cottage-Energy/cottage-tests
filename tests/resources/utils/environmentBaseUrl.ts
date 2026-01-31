@@ -6,16 +6,16 @@ export default{
     dev:{
         admin_api:'https://ojaryxuxdh.execute-api.us-east-1.amazonaws.com',
         home:'https://dev.publicgrid.energy',
-        pa_admin:'https://dev.publicgrid.co',
+        pg_admin:'https://dev.publicgrid.co',
     },
     staging:{
         admin_api:'',
         home:'https://staging.publicgrid.energy',
-        pa_admin:'https://staging.publicgrid.co',
+        pg_admin:'https://staging.publicgrid.co',
     },
     prod:{
         admin_api:'https://perzebrgr8.execute-api.us-east-1.amazonaws.com',
         home:'https://publicgrid.energy',
-        pa_admin:'https://publicgrid.co',
+        pg_admin:'https://publicgrid.co',
     },
 };

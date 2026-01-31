@@ -60,6 +60,7 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -78,8 +79,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -95,8 +98,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -106,8 +111,10 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -116,12 +123,14 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
     }
 
     if (electricQuestionsPresent === true || gasQuestionsPresent === true) {
+        console.log("Electric Questions Present: " + electricQuestionsPresent);
+        console.log("Gas Questions Present: " + gasQuestionsPresent);
         await moveInpage.Next_Move_In_Button();
     }
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -130,8 +139,6 @@ export async function New_User_Move_In_Auto_Payment_Added(page: any, ElectricCom
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -201,6 +208,7 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -218,8 +226,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -235,8 +245,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -246,8 +258,10 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -262,7 +276,7 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -272,8 +286,6 @@ export async function New_User_Move_In_Manual_Payment_Added(page: any, ElectricC
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -343,6 +355,7 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     }
     
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.FourDaysFromNow);
     await moveInpage.Next_Move_In_Button();
@@ -360,8 +373,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -377,8 +392,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -388,8 +405,10 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -404,15 +423,13 @@ export async function New_User_Move_In_Skip_Payment(page: any, ElectricCompany: 
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
     if (PaymentPageVisibility === true) {
         await moveInpage.Skip_Payment_Details();
         await moveInpage.Check_Almost_Done_Move_In_Billing_Customer()
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Skip_Payment_Finish_Account_Redirect();
     }
     else {
         await moveInpage.Check_Successful_Move_In_Non_Billing_Customer();
@@ -471,6 +488,7 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -488,8 +506,10 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -505,8 +525,10 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -516,8 +538,10 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -532,7 +556,7 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -541,8 +565,6 @@ export async function New_User_Move_In_Auto_Bank_Account_Added(page: any, Electr
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -607,6 +629,7 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -624,8 +647,10 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -641,8 +666,10 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -652,8 +679,10 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -668,7 +697,7 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -678,8 +707,6 @@ export async function New_User_Move_In_Manual_Bank_Account_Added(page: any, Elec
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Valid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -744,6 +771,7 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -761,8 +789,10 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -778,8 +808,10 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -789,8 +821,10 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -805,7 +839,7 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -814,8 +848,6 @@ export async function New_User_Move_In_Auto_Failed_Bank_Account_Added(page: any,
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -880,6 +912,7 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -897,8 +930,10 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -914,8 +949,10 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -925,8 +962,10 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -941,7 +980,7 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -951,8 +990,6 @@ export async function New_User_Move_In_Manual_Failed_Bank_Account_Added(page: an
         await moveInpage.Disable_Auto_Payment();
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Invalid_Bank_Details(PGuser.Email, PGUserName, PayThroughPG);
@@ -997,6 +1034,7 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1014,8 +1052,10 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1031,8 +1071,10 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1042,8 +1084,10 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1058,7 +1102,7 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1067,8 +1111,6 @@ export async function New_User_Move_In_Fix_TX_DEREG_Address(page: any, ElectricC
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1113,6 +1155,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1130,8 +1173,10 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1147,8 +1192,10 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1158,8 +1205,10 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1174,7 +1223,7 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1183,8 +1232,6 @@ export async function New_User_Move_In_Address_Parameter_Flow(page: any, Electri
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1250,6 +1297,7 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info_GUID_Flow(PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1267,8 +1315,10 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1284,8 +1334,10 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1295,8 +1347,10 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1310,7 +1364,7 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1319,8 +1373,6 @@ export async function New_User_Move_In_GUID_Flow(page: any, ElectricCompany: str
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1386,6 +1438,7 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     }
 
     await moveInpage.Next_Move_In_Button();
+    await moveInpage.Power_Up_Your_Account();
     await moveInpage.Read_ESCO_Conditions();
     const SMS = await moveInpage.Enter_Personal_Info_GUID_Flow(PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -1403,8 +1456,10 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     if (ElectricCompany === GasCompany) {
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             try{
@@ -1420,8 +1475,10 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
     else{
         try{
             const electricCompany = ElectricCompany ? ElectricCompany.replace(/-/g, '_') : null;
-            if (electricCompany) { await (moveInpage as any)[`${electricCompany}_Questions`](); }
-            electricQuestionsPresent = true;
+            if (electricCompany) { 
+                await (moveInpage as any)[`${electricCompany}_Questions`](); 
+                electricQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1431,8 +1488,10 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
         try{
             const gasCompany = GasCompany ? GasCompany.replace(/-/g, '_') : null;
-            if (gasCompany) { await (moveInpage as any)[`${gasCompany}_Questions`](); }
-            gasQuestionsPresent = true;
+            if (gasCompany) { 
+                await (moveInpage as any)[`${gasCompany}_Questions`](); 
+                gasQuestionsPresent = true;
+            }
         }
         catch(error){
             console.log(error);
@@ -1446,7 +1505,7 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, ElectricCompany, GasCompany);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(ElectricCompany, GasCompany);
     const PayThroughPGVisibility = await moveInpage.Check_PayThroughPG_Visibility(ElectricCompany, GasCompany);
@@ -1455,8 +1514,6 @@ export async function New_User_Move_In_Address_Parameter_And_GUID_Flow(page: any
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
         await moveInpage.Confirm_Payment_Details();
         await moveInpage.Check_Successful_Move_In_Billing_Customer();
-        await moveInpage.Click_Dashboard_Link();
-        await moveInpage.Check_Billing_Customer_Added_Payment_Overview_Redirect();
     }
     else if (PaymentPageVisibility === true && PayThroughPG === false) {
         await moveInpage.Enter_Card_Details(cardNumber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip, PayThroughPG);
@@ -1519,5 +1576,8 @@ export const MoveInTestUtilities = {
 
     Move_In_Existing_Utility_Account
 };
+
+
+
 
 
