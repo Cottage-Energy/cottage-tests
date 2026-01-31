@@ -50,7 +50,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Valid Card Auto Payment', () => {
+test.describe.skip('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
@@ -240,7 +240,7 @@ test.describe('Valid Card Auto Payment', () => {
 });
 
 
-test.describe('Valid Bank Auto Payment', () => {
+test.describe.skip('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     

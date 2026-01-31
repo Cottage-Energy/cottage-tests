@@ -49,7 +49,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe.skip('Invalid Card to Valid Card Auto Payment', () => {
+test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"}); 
 
     test('COMED COMED Electric Only Profile Added to Failed Message Update', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
@@ -274,7 +274,7 @@ test.describe.skip('Invalid Card to Valid Card Auto Payment', () => {
 });
 
 
-test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
+test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
 
     test('xxEVERSOURCE EVERSOURCE Electric Only Finish Account Added to Pay Button Update', {tag: [ '@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
@@ -499,7 +499,7 @@ test.describe.skip('xxInvalid Card to Valid Bank Auto Payment', () => {
 });
 
 
-test.describe.skip('Invalid Bank to Valid Bank Auto Payment', () => {
+test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     test('COMED Electric Move In Added to Failed Message Update', {tag: ['@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, finishAccountSetupPage}) => {
@@ -725,7 +725,7 @@ test.describe.skip('Invalid Bank to Valid Bank Auto Payment', () => {
 });
 
 
-test.describe.skip('xxInvalid Bank to Valid Card Auto Payment', () => {
+test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     test('NGMA NGMA Electric Profile Added to Pay Button Update', {tag: ['@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {

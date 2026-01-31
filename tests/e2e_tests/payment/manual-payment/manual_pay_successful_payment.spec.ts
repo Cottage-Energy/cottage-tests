@@ -50,7 +50,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe.skip('Valid Card Manual Payment', () => {
+test.describe.fixme('Valid Card Manual Payment', () => {
   test.describe.configure({mode: "serial"});
   
     
@@ -342,7 +342,7 @@ test.describe.skip('Valid Card Manual Payment', () => {
 });
 
 
-test.describe.skip('Valid Bank Manual Payment', () => {
+test.describe.fixme('Valid Bank Manual Payment', () => {
   test.describe.configure({mode: "serial"});
   
   
