@@ -22,3 +22,7 @@ export * from './billUploadUtilities';
 
 // Payment utilities
 export { PaymentUtilities } from './paymentUtilities';
+
+// Re-export utilities for convenience
+export { Logger, loggers, createLogger } from '../utils/logger';
+export { validateOTP, isValidOTP, retryAsync, waitForCondition, assertDefined } from '../utils/testHelpers';

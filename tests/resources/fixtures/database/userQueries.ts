@@ -1,5 +1,8 @@
 import { expect } from '@playwright/test';
 import { supabase } from '../../utils/supabase';
+import { loggers } from '../../utils/logger';
+
+const log = loggers.database.child('UserQueries');
 
 /**
  * Database queries for CottageUsers and LightUsers tables
@@ -10,7 +13,7 @@ export class UserQueries {
    */
   async checkCottageUserId(email: string, textConsent?: boolean): Promise<string> {
     const normalizedEmail = email.toLowerCase();
-    console.log('Checking cottage user:', normalizedEmail);
+    log.info('Checking cottage user', { email: normalizedEmail });
 
     const { data: cottageUser } = await supabase
       .from('CottageUsers')
@@ -23,9 +26,11 @@ export class UserQueries {
     const userDateOfTextConsent = cottageUser?.dateOfTextMessageConsent ?? null;
     const isAbleToSendText = cottageUser?.isAbleToSendTextMessages ?? null;
 
-    console.log('Cottage User ID:', cottageUserId);
-    console.log('Text Consent Date:', userDateOfTextConsent);
-    console.log('Can Send Text:', isAbleToSendText);
+    log.debug('Cottage user details', {
+      cottageUserId,
+      textConsentDate: userDateOfTextConsent,
+      canSendText: isAbleToSendText,
+    });
 
     await expect(cottageUserId).not.toBe('');
 
@@ -45,7 +50,7 @@ export class UserQueries {
    */
   async getCottageUserId(email: string): Promise<string> {
     const normalizedEmail = email.toLowerCase();
-    console.log('Getting cottage user:', normalizedEmail);
+    log.info('Getting cottage user', { email: normalizedEmail });
 
     const { data: cottageUser } = await supabase
       .from('CottageUsers')
@@ -54,7 +59,7 @@ export class UserQueries {
       .single();
 
     const cottageUserId = cottageUser?.id ?? '';
-    console.log('Cottage User ID:', cottageUserId);
+    log.debug('Retrieved cottage user', { cottageUserId });
     return cottageUserId;
   }
 
@@ -63,7 +68,7 @@ export class UserQueries {
    */
   async checkCottageUserIdNotPresent(email: string): Promise<void> {
     const normalizedEmail = email.toLowerCase();
-    console.log('Checking cottage user not present:', normalizedEmail);
+    log.info('Verifying cottage user does not exist', { email: normalizedEmail });
 
     const { data: cottageUser } = await supabase
       .from('CottageUsers')
@@ -89,7 +94,7 @@ export class UserQueries {
 
     const accountNumber = cottageUser?.accountNumber ?? '';
     await expect(accountNumber).not.toBeNull;
-    console.log('PG Account No.:', accountNumber.toString());
+    log.debug('Account number retrieved', { accountNumber: accountNumber.toString() });
     return accountNumber.toString();
   }
 
@@ -98,7 +103,7 @@ export class UserQueries {
    */
   async checkLightUserId(email: string): Promise<string> {
     const normalizedEmail = email.toLowerCase();
-    console.log('Checking light user:', normalizedEmail);
+    log.info('Checking light user', { email: normalizedEmail });
 
     const { data: lightUser } = await supabase
       .from('LightUsers')
@@ -108,7 +113,7 @@ export class UserQueries {
       .throwOnError();
 
     const lightUserId = lightUser?.id ?? '';
-    console.log('Light User ID:', lightUserId);
+    log.debug('Light user found', { lightUserId });
     await expect(lightUserId).not.toBe('');
 
     return lightUserId;
@@ -119,7 +124,7 @@ export class UserQueries {
    */
   async getLightUserId(email: string): Promise<string> {
     const normalizedEmail = email.toLowerCase();
-    console.log('Getting light user:', normalizedEmail);
+    log.info('Getting light user', { email: normalizedEmail });
 
     const { data: lightUser } = await supabase
       .from('LightUsers')
@@ -128,7 +133,7 @@ export class UserQueries {
       .single();
 
     const lightUserId = lightUser?.id ?? '';
-    console.log('Light User ID:', lightUserId);
+    log.debug('Retrieved light user', { lightUserId });
     return lightUserId;
   }
 
@@ -144,7 +149,7 @@ export class UserQueries {
       .throwOnError();
 
     const waitListId = waitList?.id ?? '';
-    console.log('Waitlist ID:', waitListId);
+    log.debug('Waitlist entry found', { waitListId });
     await expect(waitList).not.toBeNull();
   }
 
@@ -173,7 +178,7 @@ export class UserQueries {
       .throwOnError();
 
     const isRegistrationComplete = resident?.isRegistrationComplete ?? '';
-    console.log('Is Registration Complete:', isRegistrationComplete);
+    log.debug('Registration status', { isRegistrationComplete, expectedState: state });
     await expect(isRegistrationComplete).toBe(state);
   }
 }

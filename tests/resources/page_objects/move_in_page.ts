@@ -1,5 +1,6 @@
 import { type Page, type Locator, expect } from '@playwright/test';
 import { SupabaseQueries } from '../fixtures/database';
+import { TIMEOUTS } from '../constants';
 import * as MoveIndata from '../data/move_in-data.json';
 
 const supabaseQueries = new SupabaseQueries();
@@ -295,9 +296,9 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
         
-        await expect(this.Move_In_Terms_Logo).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Terms_PG_Description).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:1000})
+        await expect(this.Move_In_Terms_Logo).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+        await expect(this.Move_In_Terms_PG_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+        await expect(this.Move_In_Terms_Service_Description).toBeVisible({ timeout: TIMEOUTS.UI_STABILIZE });
 
         //try{
         //    await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:1000});
@@ -306,13 +307,13 @@ export class MoveInPage{
         //    await expect(this.Move_In_Tx_Svc_Service_Description).toBeVisible({timeout:10000});
         //}
 
-        await expect(this.Move_In_Terms_Payment_Description).toBeVisible({timeout:30000});
-        await expect(this.Move_In_Terms_Automation_Description).toBeVisible({timeout:30000});
-        await this.Move_In_Terms_Checkbox.hover({timeout:30000});
-        await this.Move_In_Terms_Checkbox.isEnabled({timeout:10000});
-        await this.Move_In_Terms_Checkbox.setChecked(true,{timeout:10000});
-        await this.Move_In_Get_Started_Button.hover({timeout:30000});
-        await this.Move_In_Get_Started_Button.isEnabled({timeout:10000});
+        await expect(this.Move_In_Terms_Payment_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+        await expect(this.Move_In_Terms_Automation_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+        await this.Move_In_Terms_Checkbox.hover({ timeout: TIMEOUTS.DEFAULT });
+        await this.Move_In_Terms_Checkbox.isEnabled({ timeout: TIMEOUTS.MEDIUM });
+        await this.Move_In_Terms_Checkbox.setChecked(true, { timeout: TIMEOUTS.MEDIUM });
+        await this.Move_In_Get_Started_Button.hover({ timeout: TIMEOUTS.DEFAULT });
+        await this.Move_In_Get_Started_Button.isEnabled({ timeout: TIMEOUTS.MEDIUM });
         await this.Move_In_Get_Started_Button.click();
     }
 
@@ -320,21 +321,21 @@ export class MoveInPage{
     async Enter_Address(address:string, unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
-            await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:3000});
+            await expect(this.Move_In_Address_Page_Fields).toBeVisible({ timeout: TIMEOUTS.SHORT });
         }
         catch{
-            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
+            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
         }
-        await this.page.waitForTimeout(1000);
-        await this.Move_In_Address_Field.click({timeout:10000});
-        await this.Move_In_Address_Field.pressSequentially(address,{delay:50});
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
+        await this.Move_In_Address_Field.click({ timeout: TIMEOUTS.MEDIUM });
+        await this.Move_In_Address_Field.pressSequentially(address, { delay: 50 });
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
         await this.Move_In_Address_Field.press('Backspace');
-        await this.Move_In_Address_Dropdown(address)?.waitFor({state: 'visible', timeout: 30000});
-        await this.Move_In_Address_Dropdown(address).click({timeout:10000});
+        await this.Move_In_Address_Dropdown(address)?.waitFor({ state: 'visible', timeout: TIMEOUTS.DEFAULT });
+        await this.Move_In_Address_Dropdown(address).click({ timeout: TIMEOUTS.MEDIUM });
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
         
     }
 
@@ -342,12 +343,12 @@ export class MoveInPage{
     async Enter_Address_GUID_Flow(address:string, unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
-            await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:3000});
+            await expect(this.Move_In_Address_Page_Fields).toBeVisible({ timeout: TIMEOUTS.SHORT });
         }
         catch{
-            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
+            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
         }
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
         await this.Move_In_Address_Field.click({timeout:10000});
         await this.Move_In_Address_Field.pressSequentially(address,{delay:50});
         await this.page.waitForTimeout(1000);

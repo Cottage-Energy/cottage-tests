@@ -1,29 +1,50 @@
 /**
  * Centralized timeout constants for consistent test timing
  * All values are in milliseconds
+ * 
+ * @example
+ * ```typescript
+ * // Use in test timeout
+ * test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
+ * 
+ * // Use in waitForTimeout
+ * await page.waitForTimeout(TIMEOUTS.MEDIUM);
+ * 
+ * // Use in expect assertions
+ * await expect(locator).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+ * ```
  */
 
 export const TIMEOUTS = {
-  /** Default timeout for most operations */
+  /** Default timeout for most operations (30s) */
   DEFAULT: 30000,
   
-  /** Short timeout for quick checks */
+  /** Short timeout for quick checks (5s) */
   SHORT: 5000,
   
-  /** Medium timeout for standard waits */
+  /** Medium timeout for standard waits (10s) */
   MEDIUM: 10000,
   
-  /** Long timeout for extended operations */
+  /** Long timeout for extended operations (60s) */
   LONG: 60000,
   
-  /** Extra long timeout for complex flows */
+  /** Extra long timeout for complex flows (120s / 2min) */
   EXTRA_LONG: 120000,
   
-  /** Extended timeout for complex multi-step flows */
+  /** Extended timeout for complex multi-step flows (150s / 2.5min) */
   EXTENDED: 150000,
   
-  /** Test timeout for entire test execution */
+  /** Test timeout for entire test execution (600s / 10min) */
   TEST: 600000,
+  
+  /** Test timeout for move-in flows (450s / 7.5min) */
+  TEST_MOVE_IN: 450000,
+  
+  /** Test timeout for payment flows (300s / 5min) */
+  TEST_PAYMENT: 300000,
+  
+  /** Test timeout for simple UI tests (180s / 3min) */
+  TEST_UI: 180000,
   
   /** Polling interval for retry loops */
   POLL_INTERVAL: 1000,
