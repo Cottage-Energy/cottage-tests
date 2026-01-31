@@ -470,7 +470,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, 'COMED', null);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email); // currently analyzing
@@ -557,7 +557,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress, null,"EVERSOURCE");
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
@@ -647,7 +647,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","EVERSOURCE");
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
@@ -740,7 +740,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","CON-EDISON");
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
@@ -804,7 +804,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
         console.log("No questions to answer for this Program Enrolled");
     }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
@@ -858,7 +858,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
         console.log("No questions to answer for this Program Enrolled");
     }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
@@ -914,7 +914,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"PSEG","PSEG");
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
@@ -969,7 +969,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     }
     await moveInpage.Enter_ID_Info(PGuser.BirthDate,PGuser.SSN);
     await moveInpage.Enter_ID_Info_Prev_Add(MoveIndata.COMEDaddress,"EVERSOURCE","DTE");
-    await moveInpage.Next_Move_In_Button();
+    await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
     const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
