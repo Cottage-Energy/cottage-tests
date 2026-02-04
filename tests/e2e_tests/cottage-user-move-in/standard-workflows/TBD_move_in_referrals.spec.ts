@@ -1,5 +1,5 @@
 import { test, expect } from '../../../resources/page_objects';
-import { MoveInTestUtilities, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 
 let MoveIn: any;
@@ -34,7 +34,7 @@ test.describe.skip('Short Code Referal', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, "BGE", null, true, true);
+    MoveIn = await newUserMoveInAutoPayment(page, "BGE", null, true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -58,7 +58,7 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, "DTE", null, true, true);
+    MoveIn = await newUserMoveInSkipPayment(page, "DTE", null, true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,0);
@@ -91,7 +91,7 @@ test.describe.skip('Non Short Code Referal', () => {
     await supabaseQueries.Update_Companies_to_Building("autotest", "NYS-EG", null);
     await supabaseQueries.Update_Building_Billing("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, "NYS-EG", null, true, true);
+    MoveIn = await newUserMoveInAutoPayment(page, "NYS-EG", null, true, true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -102,3 +102,4 @@ test.describe.skip('Non Short Code Referal', () => {
 
 
 });
+

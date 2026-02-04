@@ -1,5 +1,5 @@
 import { test, expect } from '../../../resources/page_objects';
-import { MoveInTestUtilities, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { newUserMoveInAutoPayment, newUserMoveInManualPayment, newUserMoveInSkipPayment, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
@@ -31,7 +31,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('COMED New User', { tag: TEST_TAGS.REGRESSION1 }, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(TIMEOUTS.EXTENDED);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,'COMED', null, true,true);
+    MoveIn = await newUserMoveInAutoPayment(page,'COMED', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await supabaseQueries.Check_isRegistrationComplete(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
@@ -46,7 +46,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('CON-EDISON New User Add Auto Payment', { tag: TEST_TAGS.REGRESSION2 }, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(TIMEOUTS.EXTENDED);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page, 'CON-EDISON', null, true,true);
+    MoveIn = await newUserMoveInAutoPayment(page, 'CON-EDISON', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
@@ -61,7 +61,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression3'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,'EVERSOURCE', null, true,true);
+    MoveIn = await newUserMoveInAutoPayment(page,'EVERSOURCE', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
@@ -75,7 +75,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression4'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(page, 'CON-EDISON', null, true,true);
+    MoveIn = await newUserMoveInManualPayment(page, 'CON-EDISON', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
@@ -90,7 +90,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Manual_Payment_Added(page, 'EVERSOURCE', null, true,true);
+    MoveIn = await newUserMoveInManualPayment(page, 'EVERSOURCE', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
@@ -104,7 +104,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('CON-EDISON New User Skip Add Payment', {tag: [ '@smoke','@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, page}) => {
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, 'CON-EDISON', null, true,true);
+    MoveIn = await newUserMoveInSkipPayment(page, 'CON-EDISON', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
@@ -129,7 +129,7 @@ test.describe('Move In New Service Zip User', () => {
     const PGuserUsage = await generateTestUserData();
 
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page, 'EVERSOURCE', null, true,true);
+    MoveIn = await newUserMoveInSkipPayment(page, 'EVERSOURCE', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
@@ -152,7 +152,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, page}) => {
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,'CON-EDISON', null, true,true);
+    MoveIn = await newUserMoveInSkipPayment(page,'CON-EDISON', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
@@ -174,7 +174,7 @@ test.describe('Move In New Service Zip User', () => {
     const PGuserUsage = await generateTestUserData();
 
     test.setTimeout(600000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Skip_Payment(page,'EVERSOURCE', null, true,true);
+    MoveIn = await newUserMoveInSkipPayment(page,'EVERSOURCE', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
@@ -193,7 +193,7 @@ test.describe('Move In New Service Zip User', () => {
 
   test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page, supabaseQueries}) => {
     test.setTimeout(300000);
-    MoveIn = await MoveInTestUtilities.New_User_Move_In_Auto_Payment_Added(page,'TX-DEREG', null, true,true);
+    MoveIn = await newUserMoveInAutoPayment(page,'TX-DEREG', null, true,true);
     await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
     await page.waitForTimeout(30000);
 
@@ -208,4 +208,6 @@ test.describe('Move In New Service Zip User', () => {
 
 
 });
+
+
 

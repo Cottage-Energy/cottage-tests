@@ -4,6 +4,3 @@
 
 export * from './newUserFlows';
 export * from './helpers';
-
-// Export the MoveInTestUtilities for backward compatibility
-export { MoveInTestUtilities } from './MoveInTestUtilities';

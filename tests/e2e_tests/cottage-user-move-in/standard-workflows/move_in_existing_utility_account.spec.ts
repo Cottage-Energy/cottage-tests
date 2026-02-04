@@ -1,5 +1,5 @@
 import { test, expect } from '../../../resources/page_objects';
-import { MoveInTestUtilities, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { moveInExistingUtilityAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
@@ -35,7 +35,7 @@ test.describe('Move In Existing Utility Account', () => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, true);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
@@ -50,7 +50,7 @@ test.describe('Move In Existing Utility Account', () => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, false);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
@@ -67,7 +67,7 @@ test.describe('Move In Existing Utility Account', () => {
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, true);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
@@ -84,7 +84,7 @@ test.describe('Move In Existing Utility Account', () => {
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, false);
     
     await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
@@ -97,4 +97,6 @@ test.describe('Move In Existing Utility Account', () => {
 
 
 });
+
+
 
