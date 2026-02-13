@@ -1,8 +1,6 @@
-import { test,expect } from '../../../resources/page_objects/base/pg_page_base';
-import { MoveInTestUtilities } from '../../../resources/fixtures/moveInUtilities';
-import { generateTestUserData } from '../../../resources/fixtures/test_user';
-import { CleanUp } from '../../../resources/fixtures/userCleanUp';
-import { FastmailActions } from '../../../resources/fixtures/fastmail_actions';
+import { test, expect } from '../../../resources/page_objects';
+import { moveInExistingUtilityAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
 let MoveIn: any;
@@ -37,14 +35,14 @@ test.describe('Move In Existing Utility Account', () => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, true);
     
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
-    await supabaseQueries.Check_Waitlist(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Waitlist(MoveIn.pgUserEmail);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
   });
 
 
@@ -52,14 +50,14 @@ test.describe('Move In Existing Utility Account', () => {
     test.setTimeout(150000);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, false);
     
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
-    await supabaseQueries.Check_Waitlist_Not_Present(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Waitlist_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
   });
 
 
@@ -69,14 +67,14 @@ test.describe('Move In Existing Utility Account', () => {
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, true);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, true);
     
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
-    await supabaseQueries.Check_Waitlist(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Waitlist(MoveIn.pgUserEmail);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
   });
 
 
@@ -86,17 +84,19 @@ test.describe('Move In Existing Utility Account', () => {
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await MoveInTestUtilities.Move_In_Existing_Utility_Account(page,false,false, false);
+    MoveIn = await moveInExistingUtilityAccount(page,false,false, false);
     
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Cottage_User_Id_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(5000);
-    await supabaseQueries.Check_Waitlist_Not_Present(MoveIn.PGUserEmail);
+    await supabaseQueries.Check_Waitlist_Not_Present(MoveIn.pgUserEmail);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.PGUserEmail);
+    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
   });
 
 
 
 });
+
+
 

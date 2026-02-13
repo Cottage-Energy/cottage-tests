@@ -56,11 +56,46 @@ The tests can run against different environments:
 - `ENV=production` - Production environment
 
 ### Test Structure
-- `tests/e2e_tests/` - End-to-end test files
-- `tests/resources/` - Shared utilities, fixtures, and page objects
-- `tests/resources/page_objects/` - Page Object Model classes
-- `tests/resources/fixtures/` - Test utilities and helpers
-- `tests/resources/data/` - Test data files
+
+```
+tests/
+├── e2e_tests/              # End-to-end test specs
+│   ├── connect-account/    # Account connection tests
+│   ├── cottage-user-move-in/ # Move-in flow tests
+│   ├── homepage/           # Homepage tests
+│   ├── light-user-move-in/ # Light user tests
+│   └── payment/            # Payment tests
+│
+└── resources/              # Shared test resources
+    ├── api/                # API utilities
+    ├── data/               # Test data files (JSON)
+    ├── documentation/      # Test documentation
+    │
+    ├── types/              # TypeScript type definitions
+    │   ├── index.ts        # Barrel export
+    │   ├── moveIn.types.ts # Move-in types
+    │   ├── user.types.ts   # User/payment types
+    │   └── database.types.ts # DB record types
+    │
+    ├── constants/          # Centralized constants
+    │   ├── index.ts        # Barrel export
+    │   ├── timeouts.ts     # Timeout values
+    │   ├── testTags.ts     # Test tag arrays
+    │   └── companies.ts    # Utility companies
+    │
+    ├── fixtures/           # Test utilities & fixtures
+    │   ├── index.ts        # Central exports
+    │   ├── database/       # Modular DB queries
+    │   ├── moveIn/         # Modular move-in utils
+    │   └── *.ts            # Other utilities
+    │
+    ├── page_objects/       # Page Object Model
+    │   ├── index.ts        # Central exports
+    │   ├── base/           # Base fixtures
+    │   └── *_page.ts       # Page classes
+    │
+    └── utils/              # General utilities
+```
 
 ### Key Features
 - Multi-browser testing (Chrome, Firefox, Safari)
@@ -69,3 +104,7 @@ The tests can run against different environments:
 - HTML test reports
 - Database integration via Supabase
 - Email testing via Fastmail
+- Modular, type-safe architecture
+
+### Migration Guide
+See [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for information about the new modular architecture and how to update existing tests.

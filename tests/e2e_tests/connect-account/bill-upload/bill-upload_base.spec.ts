@@ -1,28 +1,26 @@
-import { test, expect } from '../../resources/page_objects/base/pg_page_base';
-import { BillUploadTestUtilities } from '../../resources/fixtures/billUploadUtilities';
+import { test, expect } from '../../../resources/page_objects';
+import { BillUploadTestUtilities } from '../../../resources/fixtures/billUploadUtilities';
+import { TEST_TAGS, TIMEOUTS } from '../../../resources/constants';
 import { faker } from '@faker-js/faker';
 import path from 'path';
 
 let BillUpload: any;
 
 test.beforeEach(async ({ page }, testInfo) => {
-  // Navigate to base URL if needed
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
 test.afterEach(async ({ page }, testInfo) => {
-  // Clean up test data if needed
-  // await CleanUp.Test_User_Clean_Up(BillUpload?.testEmail);
   await page.close();
 });
 
 test.describe.configure({ mode: "serial" });
 test.describe('Bill Upload Flow Tests', () => {
 
-  test('Bill Upload - Con Edison Utility', { tag: ['@smoke', '@billupload', '@regression1'] }, async ({ billUploadPage, page }) => {
-    test.setTimeout(600000);
+  test('Bill Upload - Con Edison Utility', { tag: [...TEST_TAGS.SMOKE_REGRESSION1] }, async ({ billUploadPage, page }) => {
+    test.setTimeout(TIMEOUTS.EXTENDED);
     
-    const imgPath = path.join(__dirname, '../../resources/data', 'PGLogo002.jpg');
+    const imgPath = path.join(__dirname, '../../../resources/data', 'PGLogo002.jpg');
     const uniqueKey = faker.string.alphanumeric(10);
     const testEmail = `pgtest+billupload+coned+${uniqueKey}@joinpublicgrid.com`;
     
@@ -32,7 +30,7 @@ test.describe('Bill Upload Flow Tests', () => {
   });
 
   test('Bill Upload Using Utilities - Con Edison', { tag: ['@regression2', '@billupload'] }, async ({ page }) => {
-    test.setTimeout(600000);
+    test.setTimeout(TIMEOUTS.EXTENDED);
     
     BillUpload = await BillUploadTestUtilities.completeBillUploadFlow(page, '12249', 'Con Edison');
     
@@ -45,9 +43,9 @@ test.describe('Bill Upload Flow Tests', () => {
   });
 
   test('Bill Upload - Manual Step by Step Flow', { tag: ['@regression3', '@billupload'] }, async ({ billUploadPage, page }) => {
-    test.setTimeout(600000);
+    test.setTimeout(TIMEOUTS.EXTENDED);
     
-    const imgPath = path.join(__dirname, '../../resources/data', 'PGLogo002.jpg');
+    const imgPath = path.join(__dirname, '../../../resources/data', 'PGLogo002.jpg');
     const uniqueKey = faker.string.alphanumeric(10);
     const testEmail = `pgtest+billupload+manual+${uniqueKey}@joinpublicgrid.com`;
     
@@ -64,9 +62,9 @@ test.describe('Bill Upload Flow Tests', () => {
   });
 
   test('Bill Upload - Alternative File Format', { tag: ['@regression4', '@billupload'] }, async ({ billUploadPage, page }) => {
-    test.setTimeout(600000);
+    test.setTimeout(TIMEOUTS.EXTENDED);
     
-    const imgPath = path.join(__dirname, '../../resources/data', 'PGsample.pdf');
+    const imgPath = path.join(__dirname, '../../../resources/data', 'PGsample.pdf');
     const uniqueKey = faker.string.alphanumeric(10);
     const testEmail = `pgtest+billupload+pdf+${uniqueKey}@joinpublicgrid.com`;
     
