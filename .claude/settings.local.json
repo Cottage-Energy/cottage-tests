@@ -6,7 +6,8 @@
       "Bash(taskkill:*)",
       "Bash(npx @anthropic-ai/mcp-test@latest:*)",
       "Bash(node:*)",
-      "Bash(npx ts-node:*)"
+      "Bash(npx ts-node:*)",
+      "Bash(claude mcp add:*)"
     ]
   }
 }
