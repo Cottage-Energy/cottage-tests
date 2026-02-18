@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright test:*)",
+      "Bash(wc:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx @anthropic-ai/mcp-test@latest:*)",
+      "Bash(node:*)",
+      "Bash(npx ts-node:*)"
+    ]
+  }
+}
