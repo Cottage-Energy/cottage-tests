@@ -8,7 +8,6 @@
       "Bash(node:*)",
       "Bash(npx ts-node:*)",
       "Bash(claude mcp add:*)",
-      "Bash(cmd /c npx -y @supabase/mcp-server-supabase@latest --access-token sbp_a76976ea59e9ee50434035ae2b0116f41683b981)",
       "Bash(npx:*)",
       "Bash(npm install:*)"
     ]
