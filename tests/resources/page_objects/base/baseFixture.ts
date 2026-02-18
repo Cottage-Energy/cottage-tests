@@ -8,7 +8,6 @@ import { BillingPage } from '../billing_page';
 import { ServicesPage } from '../services_page';
 import { ProfilePage } from '../account_profile_page';
 import { BillUploadPage } from '../bill_upload_page';
-import { SupabaseQueries } from '../../fixtures/database/SupabaseQueries';
 
 /**
  * Page object fixtures type definition
@@ -23,7 +22,6 @@ interface PageFixtures {
   servicesPage: ServicesPage;
   profilePage: ProfilePage;
   billUploadPage: BillUploadPage;
-  supabaseQueries: SupabaseQueries;
 }
 
 /**
@@ -64,11 +62,6 @@ const testPages = base.extend<PageFixtures>({
 
   billUploadPage: async ({ page }, use) => {
     await use(new BillUploadPage(page));
-  },
-
-  // Note: supabaseQueries doesn't need page - removed unused dependency
-  supabaseQueries: async ({}, use) => {
-    await use(new SupabaseQueries());
   },
 });
 

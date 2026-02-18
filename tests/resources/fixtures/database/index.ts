@@ -8,6 +8,3 @@ export * from './billQueries';
 export * from './paymentQueries';
 export * from './utilityQueries';
 export * from './cleanupQueries';
-
-// Re-export the combined class for backward compatibility
-export { SupabaseQueries } from './SupabaseQueries';

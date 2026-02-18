@@ -1,7 +1,7 @@
-import { Page } from '@playwright/test';
+﻿import { Page } from '@playwright/test';
 import { MoveInPage } from '../../page_objects/move_in_page';
 import { generateTestUserData } from '../test_user';
-import { SupabaseQueries } from '../database/SupabaseQueries';
+import { userQueries } from '../database';
 import * as MoveInData from '../../data/move_in-data.json';
 import * as PaymentData from '../../data/payment-data.json';
 import type { 
@@ -17,7 +17,7 @@ import {
   handleAccountSetupOrTexasAgreement 
 } from './helpers';
 
-const supabaseQueries = new SupabaseQueries();
+
 
 /**
  * Unified new user move-in flow with options pattern
@@ -114,11 +114,11 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
 
   // Step 10: Get results
   const accountNumber = paymentType === 'skip' 
-    ? await supabaseQueries.Check_Cottage_User_Account_Number(pgUserEmail)
+    ? await userQueries.checkCottageUserAccountNumber(pgUserEmail)
     : await moveInPage.Get_Account_Number();
     
-  const cottageUserId = await supabaseQueries.Check_Cottage_User_Id(pgUser.Email, smsConsent);
-  await supabaseQueries.Check_Cottage_User_Account_Number(pgUserEmail);
+  const cottageUserId = await userQueries.checkCottageUserId(pgUser.Email, smsConsent);
+  await userQueries.checkCottageUserAccountNumber(pgUserEmail);
 
   return {
     accountNumber,

@@ -1,12 +1,12 @@
-import { test, expect } from '../../resources/page_objects';
-import { newUserMoveInAutoPayment, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities, SupabaseQueries } from '../../resources/fixtures';
+﻿import { test, expect } from '../../resources/page_objects';
+import { newUserMoveInAutoPayment, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities } from '../../resources/fixtures';
+import { accountQueries, billQueries } from '../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../resources/constants';
 import { AdminApi } from '../../resources/api/admin_api';
 import environmentBaseUrl from '../../resources/utils/environmentBaseUrl';
 import * as PaymentData from '../../resources/data/payment-data.json';
 
 
-const supabaseQueries = new SupabaseQueries();
 const paymentUtilities = new PaymentUtilities();
 let MoveIn: any;
 
@@ -41,13 +41,13 @@ test.describe('Valid Card Auto Payment', () => {
       
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page, 'COMED', null, true, true);
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
 
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);      
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
     });
   }
 
@@ -61,13 +61,13 @@ test.describe('Valid Card Auto Payment', () => {
       
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page, 'EVERSOURCE', null, true, true);
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
 
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
     });
   }
 
@@ -81,13 +81,13 @@ test.describe('Valid Card Auto Payment', () => {
       
       await page.goto('/move-in?gasCompany=BGE',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page, null, 'BGE', true, true);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
 
-      await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
+      await billQueries.insertApprovedGasBill(GasAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
+      await billQueries.insertApprovedGasBill(GasAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
+      await billQueries.insertApprovedGasBill(GasAccountId);
     });
   }
 
@@ -101,14 +101,14 @@ test.describe('Valid Card Auto Payment', () => {
       
       await page.goto('/move-in?electricCompany=DELMARVA&gasCompany=DELMARVA',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page, 'DELMARVA', 'DELMARVA', true, true);
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
 
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
+      await billQueries.insertApprovedGasBill(GasAccountId);
     });
   }
 
@@ -123,14 +123,14 @@ test.describe('Valid Card Auto Payment', () => {
 
       await page.goto('/move-in?electricCompany=NGMA&gasCompany=NGMA',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page, 'NGMA', 'NGMA', true, true);
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
 
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
+      await billQueries.insertApprovedGasBill(GasAccountId);
     });
   }
 
@@ -145,14 +145,14 @@ test.describe('Valid Card Auto Payment', () => {
 
       await page.goto('/move-in?electricCompany=PGE&gasCompany=PSEG',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page, 'PGE', 'PSEG', true, true);
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
 
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Electric_Bill(ElectricAccountId);
+      await billQueries.insertApprovedElectricBill(ElectricAccountId);
       await page.waitForTimeout(500);
-      await supabaseQueries.Insert_Approved_Gas_Bill(GasAccountId);
+      await billQueries.insertApprovedGasBill(GasAccountId);
     });
   }
 

@@ -1,9 +1,7 @@
-import { type Page, type Locator, expect } from '@playwright/test';
-import { SupabaseQueries } from '../fixtures/database';
+﻿import { type Page, type Locator, expect } from '@playwright/test';
+import { utilityQueries } from '../fixtures/database';
 import { TIMEOUTS } from '../constants';
 import * as MoveIndata from '../data/move_in-data.json';
-
-const supabaseQueries = new SupabaseQueries();
 
 export class MoveInPage{
     //variables
@@ -191,7 +189,7 @@ export class MoveInPage{
 
         this.Move_In_Email_Registered_Message = page.getByText('That email is already');
         this.Move_In_OTP_Field = page.locator('input[name="otpCode"]');
-        this.Move_In_OTP_Confirmed_Message = page.getByText('OTP Confirmed ✅', { exact: true });
+        this.Move_In_OTP_Confirmed_Message = page.getByText('OTP Confirmed âœ…', { exact: true });
         this.Move_In_Signing_In_Message = page.getByText('Signing in...', { exact: true });
 
         this.Move_In_Next_Button = page.getByRole('button', { name: 'Next', exact: true });
@@ -272,7 +270,7 @@ export class MoveInPage{
         this.Move_In_Account_Number_Value = page.locator("//div[contains(@class,'callout-text')]//child::b");
         this.Move_In_Survey_Star = page.locator('path').nth(2);
         this.Move_In_Survey_Submit_Button = page.getByText('Tell us how your experience was so far!Submit');
-        this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback 💚');
+        this.Move_In_Feedback_Thanks_Message = page.getByText('Thanks for the feedback ðŸ’š');
 
         this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new move-in request"]');
 
@@ -793,14 +791,14 @@ export class MoveInPage{
         let isVisible
 
         if(ElectricCompany === null){
-            isVisible = await supabaseQueries.Get_isPriorAddressRequired_Utility(GasCompany || '');
+            isVisible = await utilityQueries.getIsPriorAddressRequiredUtility(GasCompany || '');
         }
         else if(GasCompany === null){
-            isVisible = await supabaseQueries.Get_isPriorAddressRequired_Utility(ElectricCompany || '');
+            isVisible = await utilityQueries.getIsPriorAddressRequiredUtility(ElectricCompany || '');
         }
         else{
-            const vis1 = await supabaseQueries.Get_isPriorAddressRequired_Utility(ElectricCompany || '');
-            const vis2 = await supabaseQueries.Get_isPriorAddressRequired_Utility(GasCompany || '');
+            const vis1 = await utilityQueries.getIsPriorAddressRequiredUtility(ElectricCompany || '');
+            const vis2 = await utilityQueries.getIsPriorAddressRequiredUtility(GasCompany || '');
             isVisible = vis1 || vis2;
         }
 
@@ -830,18 +828,18 @@ export class MoveInPage{
         console.log('shortCode value:', shortCodeValue);
 
         if(hasShortCode === true){
-            isVisible = await supabaseQueries.Get_isHandledBilling_Building(shortCodeValue || '');
+            isVisible = await utilityQueries.getIsHandledBillingBuilding(shortCodeValue || '');
         }
         else{
             if(ElectricCompany === null){
-                isVisible = await supabaseQueries.Get_isHandledBilling_Utility(GasCompany || '');
+                isVisible = await utilityQueries.getIsHandledBillingUtility(GasCompany || '');
             }
             else if(GasCompany === null){
-                isVisible = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
+                isVisible = await utilityQueries.getIsHandledBillingUtility(ElectricCompany || '');
             }
             else{
-                const vis1 = await supabaseQueries.Get_isHandledBilling_Utility(ElectricCompany || '');
-                const vis2 = await supabaseQueries.Get_isHandledBilling_Utility(GasCompany || '');
+                const vis1 = await utilityQueries.getIsHandledBillingUtility(ElectricCompany || '');
+                const vis2 = await utilityQueries.getIsHandledBillingUtility(GasCompany || '');
                 isVisible = vis1 || vis2;
             }
         }
@@ -857,14 +855,14 @@ export class MoveInPage{
         let isVisible;
         
         if(ElectricCompany === null){
-            isVisible = await supabaseQueries.Get_isBillingRequired_Utility(GasCompany || '');
+            isVisible = await utilityQueries.getIsBillingRequiredUtility(GasCompany || '');
         }
         else if(GasCompany === null){
-            isVisible = await supabaseQueries.Get_isBillingRequired_Utility(ElectricCompany || '');
+            isVisible = await utilityQueries.getIsBillingRequiredUtility(ElectricCompany || '');
         }
         else{
-            const vis1 = await supabaseQueries.Get_isBillingRequired_Utility(ElectricCompany || '');
-            const vis2 = await supabaseQueries.Get_isBillingRequired_Utility(GasCompany || '');
+            const vis1 = await utilityQueries.getIsBillingRequiredUtility(ElectricCompany || '');
+            const vis2 = await utilityQueries.getIsBillingRequiredUtility(GasCompany || '');
             isVisible = vis1 || vis2;
         }
         

@@ -1,5 +1,6 @@
-import { test, expect } from '../../../resources/page_objects';
+﻿import { test, expect } from '../../../resources/page_objects';
 import { newUserMoveInAutoPayment, newUserMoveInManualPayment, newUserMoveInSkipPayment, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { accountQueries, userQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
@@ -29,11 +30,11 @@ test.describe.configure({mode: "serial"});
 test.describe('Move In New Service Zip User', () => {
 
 
-  test('COMED New User', { tag: TEST_TAGS.REGRESSION1 }, async ({moveInpage, page, supabaseQueries}) => {
+  test('COMED New User', { tag: TEST_TAGS.REGRESSION1 }, async ({moveInpage, page}) => {
     test.setTimeout(TIMEOUTS.EXTENDED);
     MoveIn = await newUserMoveInAutoPayment(page,'COMED', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Check_isRegistrationComplete(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+    await userQueries.checkIsRegistrationComplete(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
     //add query to check if the user is added to the UtilityCredentials table
@@ -44,10 +45,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Add Auto Payment', { tag: TEST_TAGS.REGRESSION2 }, async ({moveInpage, page, supabaseQueries}) => {
+  test('CON-EDISON New User Add Auto Payment', { tag: TEST_TAGS.REGRESSION2 }, async ({moveInpage, page}) => {
     test.setTimeout(TIMEOUTS.EXTENDED);
     MoveIn = await newUserMoveInAutoPayment(page, 'CON-EDISON', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
     //add query to check if the user is added to the UtilityCredentials table
@@ -59,10 +60,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression3'],}, async ({moveInpage, page, supabaseQueries}) => {
+  test('EVERSOURCE New User Add Auto Payment', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
     test.setTimeout(600000);
     MoveIn = await newUserMoveInAutoPayment(page,'EVERSOURCE', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
     //add query to check if the user is added to the UtilityCredentials table
@@ -73,10 +74,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression4'],}, async ({moveInpage, page, supabaseQueries}) => {
+  test('CON-EDISON New User Add Manual Payment', {tag: [ '@regression4'],}, async ({moveInpage, page}) => {
     test.setTimeout(600000);
     MoveIn = await newUserMoveInManualPayment(page, 'CON-EDISON', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
     //add query to check if the user is added to the UtilityCredentials table
@@ -88,10 +89,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page, supabaseQueries}) => {
+  test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page}) => {
     test.setTimeout(600000);
     MoveIn = await newUserMoveInManualPayment(page, 'EVERSOURCE', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
     //add query to check if the user is added to the UtilityCredentials table
@@ -102,10 +103,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', {tag: [ '@smoke','@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, page}) => {
+  test('CON-EDISON New User Skip Add Payment', {tag: [ '@smoke','@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(600000);
     MoveIn = await newUserMoveInSkipPayment(page, 'CON-EDISON', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
@@ -124,13 +125,13 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression7'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, page}) => {
+  test('EVERSOURCE New User Skip Add Payment', {tag: [ '@regression7'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
 
     const PGuserUsage = await generateTestUserData();
 
     test.setTimeout(600000);
     MoveIn = await newUserMoveInSkipPayment(page, 'EVERSOURCE', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
@@ -150,10 +151,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, page}) => {
+  test('CON-EDISON New User Skip And Cancel Registration', {tag: [ '@regression1'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
     test.setTimeout(600000);
     MoveIn = await newUserMoveInSkipPayment(page,'CON-EDISON', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
@@ -169,13 +170,13 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Skip And Cancel Registration', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries, page}) => {
+  test('EVERSOURCE New User Skip And Cancel Registration', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
 
     const PGuserUsage = await generateTestUserData();
 
     test.setTimeout(600000);
     MoveIn = await newUserMoveInSkipPayment(page,'EVERSOURCE', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
@@ -191,10 +192,10 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page, supabaseQueries}) => {
+  test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
     test.setTimeout(300000);
     MoveIn = await newUserMoveInAutoPayment(page,'TX-DEREG', null, true,true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(30000);
 
     //add query to check if the user is added to the UtilityCredentials table

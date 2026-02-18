@@ -42,7 +42,7 @@ export class ModuleQueries {
 }
 ```
 
-After creating, register in `tests/resources/fixtures/database/SupabaseQueries.ts` and export from `tests/resources/fixtures/database/index.ts`.
+After creating, export from `tests/resources/fixtures/database/index.ts`.
 
 ### B. Test Utility Fixture
 Place in `tests/resources/fixtures/{name}Utilities.ts`

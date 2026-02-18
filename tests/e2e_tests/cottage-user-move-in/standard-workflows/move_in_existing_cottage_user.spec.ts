@@ -1,5 +1,6 @@
-import { test, expect } from '../../../resources/page_objects';
+﻿import { test, expect } from '../../../resources/page_objects';
 import { newUserMoveInAutoPayment, newUserMoveInManualPayment, generateTestUserData, CleanUp, FastmailActions, validateOTP } from '../../../resources/fixtures';
+import { utilityQueries, accountQueries, userQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import type { MoveInResult } from '../../../resources/types/moveIn.types';
 import * as MoveIndata from '../../../resources/data/move_in-data.json';
@@ -22,10 +23,10 @@ let moveInResult: (MoveInResult & CleanupResult) | CleanupResult | null = null;
 
 });*/
 
-test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
-    await supabaseQueries.Update_Building_Billing("autotest",true);
-    await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
-    await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
+test.beforeEach(async ({ page },testInfo) => {
+    await utilityQueries.updateBuildingBilling("autotest",true);
+    await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
+    await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
     await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
 
@@ -44,17 +45,17 @@ test.afterEach(async ({ page }, testInfo) => {
 test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () => {
   test.describe.configure({mode: "serial"});
   
-    test('COMED Cottageuser & ElectricAccount Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+    test('COMED Cottageuser & ElectricAccount Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
       const PGuser = await generateTestUserData();
 
-      await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+      await utilityQueries.updateCompaniesToBuilding("autotest","COMED","COMED");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       moveInResult = await newUserMoveInAutoPayment(page,"COMED","COMED", true, false);
-      await supabaseQueries.Check_Get_Electric_Account_Id(moveInResult.cottageUserId!);
-      await supabaseQueries.Check_Gas_Account_Id_Not_Present(moveInResult.cottageUserId!);
+      await accountQueries.checkGetElectricAccountId(moveInResult.cottageUserId!);
+      await accountQueries.checkGasAccountIdNotPresent(moveInResult.cottageUserId!);
       await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -81,17 +82,17 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
     });
 
 
-    test('Eversource Cottageuser & ElectricAccount Exist', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+    test('Eversource Cottageuser & ElectricAccount Exist', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
       const PGuser = await generateTestUserData();
 
-      await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+      await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       moveInResult = await newUserMoveInAutoPayment(page, "EVERSOURCE","EVERSOURCE" ,true, false);
-      await supabaseQueries.Check_Get_Electric_Account_Id(moveInResult.cottageUserId!);
-      await supabaseQueries.Check_Gas_Account_Id_Not_Present(moveInResult.cottageUserId!);
+      await accountQueries.checkGetElectricAccountId(moveInResult.cottageUserId!);
+      await accountQueries.checkGasAccountIdNotPresent(moveInResult.cottageUserId!);
       await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -118,17 +119,17 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
     });
 
 
-    test('CON EDISON Cottageuser & ElectricAccount Exist', {tag: [TEST_TAGS.REGRESSION3],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+    test('CON EDISON Cottageuser & ElectricAccount Exist', {tag: [TEST_TAGS.REGRESSION3],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
       const PGuser = await generateTestUserData();
 
-      await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
+      await utilityQueries.updateCompaniesToBuilding("autotest","CON-EDISON","CON-EDISON");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       moveInResult = await newUserMoveInManualPayment(page,"CON-EDISON","CON-EDISON", true, false);
-      await supabaseQueries.Check_Get_Electric_Account_Id(moveInResult.cottageUserId!);
-      await supabaseQueries.Check_Gas_Account_Id_Not_Present(moveInResult.cottageUserId!);
+      await accountQueries.checkGetElectricAccountId(moveInResult.cottageUserId!);
+      await accountQueries.checkGasAccountIdNotPresent(moveInResult.cottageUserId!);
       await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
       await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -162,17 +163,17 @@ test.describe('Move In Existing User: Cottageuser & ElectricAccount Exist', () =
 test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('COMED Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+    await utilityQueries.updateCompaniesToBuilding("autotest","COMED","COMED");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     moveInResult = await newUserMoveInAutoPayment(page,"COMED","COMED", true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(moveInResult.cottageUserId!);
-    await supabaseQueries.Check_Get_Gas_Account_Id(moveInResult.cottageUserId!);
+    await accountQueries.checkGetElectricAccountId(moveInResult.cottageUserId!);
+    await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -199,17 +200,17 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
   });
 
 
-  test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION5],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION5],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     moveInResult = await newUserMoveInAutoPayment(page,"EVERSOURCE","EVERSOURCE", true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(moveInResult.cottageUserId!);
-    await supabaseQueries.Check_Get_Gas_Account_Id(moveInResult.cottageUserId!);
+    await accountQueries.checkGetElectricAccountId(moveInResult.cottageUserId!);
+    await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -241,17 +242,17 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
   });
 
 
-  test('CON EDISON Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('CON EDISON Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
+    await utilityQueries.updateCompaniesToBuilding("autotest","CON-EDISON","CON-EDISON");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     moveInResult = await newUserMoveInManualPayment(page,"CON-EDISON","CON-EDISON", true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(moveInResult.cottageUserId!);
-    await supabaseQueries.Check_Get_Gas_Account_Id(moveInResult.cottageUserId!);
+    await accountQueries.checkGetElectricAccountId(moveInResult.cottageUserId!);
+    await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -288,17 +289,17 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount & GasAccount 
 test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('COMED Cottageuser & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+    await utilityQueries.updateCompaniesToBuilding("autotest","COMED","COMED");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     moveInResult = await newUserMoveInAutoPayment(page,"COMED","COMED", false, true);
-    await supabaseQueries.Check_Get_Gas_Account_Id(moveInResult.cottageUserId!);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(moveInResult.cottageUserId!);
+    await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
+    await accountQueries.checkElectricAccountIdNotPresent(moveInResult.cottageUserId!);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -330,17 +331,17 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   });
 
 
-  test('Eversource Cottageuser & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('Eversource Cottageuser & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     moveInResult = await newUserMoveInAutoPayment(page,"EVERSOURCE","EVERSOURCE", false, true);
-    await supabaseQueries.Check_Get_Gas_Account_Id(moveInResult.cottageUserId!);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(moveInResult.cottageUserId!);
+    await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
+    await accountQueries.checkElectricAccountIdNotPresent(moveInResult.cottageUserId!);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -372,17 +373,17 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
   });
 
 
-  test('CON EDISON Cottageuser & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('CON EDISON Cottageuser & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
+    await utilityQueries.updateCompaniesToBuilding("autotest","CON-EDISON","CON-EDISON");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     moveInResult = await newUserMoveInManualPayment(page,"CON-EDISON","CON-EDISON", false, true);
-    await supabaseQueries.Check_Get_Gas_Account_Id(moveInResult.cottageUserId!);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(moveInResult.cottageUserId!);
+    await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
+    await accountQueries.checkElectricAccountIdNotPresent(moveInResult.cottageUserId!);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -419,7 +420,7 @@ test.describe('Move In Existing User: Cottageuser & GasAccount Exist', () => {
 test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
-  test('COMED Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION3],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('COMED Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION3],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
@@ -436,7 +437,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(PGuser.Email);
+    await userQueries.checkCottageUserIdNotPresent(PGuser.Email);
 
     //check if the user will be able to login - suppose to be not
  
@@ -473,7 +474,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email); // currently analyzing
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email); // currently analyzing
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility('COMED', null);
 
@@ -492,8 +493,8 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     }
 
     const accountNumber = await moveInpage.Get_Account_Number();
-    await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Electric_Account_Id(cottageUserID);
+    await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetElectricAccountId(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, "COMED", null);
@@ -506,14 +507,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
     let PayThroughPG: boolean = true;
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -525,7 +526,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(PGuser.Email);
+    await userQueries.checkCottageUserIdNotPresent(PGuser.Email);
 
     //check if the user will be able to login - suppose to be not a directed move-in again
     await page.goto('/move-in?gasCompany=EVERSOURCE',{ waitUntil: 'domcontentloaded' });
@@ -560,7 +561,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility(null,"EVERSOURCE");
 
@@ -580,9 +581,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 
     const accountNumber = await moveInpage.Get_Account_Number();
 
-    await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetGasAccountId(cottageUserID);
+    await accountQueries.checkElectricAccountIdNotPresent(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, null, "EVERSOURCE");
@@ -595,14 +596,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION5],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('EVERSOURCE EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION5],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
     let PayThroughPG: boolean = true;
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -614,7 +615,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(PGuser.Email);
+    await userQueries.checkCottageUserIdNotPresent(PGuser.Email);
 
     //check if the user will be able to login - suppose to be not a directed move-in again
     
@@ -650,7 +651,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility("EVERSOURCE","EVERSOURCE");
 
@@ -670,9 +671,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
  
     const accountNumber = await moveInpage.Get_Account_Number();
 
-    await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetGasAccountId(cottageUserID);
+    await accountQueries.checkElectricAccountIdNotPresent(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, null, "EVERSOURCE");
@@ -685,14 +686,14 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
   });
 
 
-  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage, supabaseQueries}) => {
+  test('EVERSOURCE CON-EDISON Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
     const PGuser = await generateTestUserData();
     const AltPGuser = await generateTestUserData();
     let PayThroughPG: boolean = true;
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","CON-EDISON");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","CON-EDISON");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -705,7 +706,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Next_Move_In_Button();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(30000);
-    await supabaseQueries.Check_Cottage_User_Id_Not_Present(PGuser.Email);
+    await userQueries.checkCottageUserIdNotPresent(PGuser.Email);
 
     //check if the user will be able to login - suppose to be not a directed move-in again
 
@@ -743,7 +744,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await moveInpage.Submit_Move_In_Button();
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
 
     const PaymentPageVisibility = await moveInpage.Check_Payment_Page_Visibility("EVERSOURCE","CON-EDISON");
 
@@ -762,9 +763,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     }
     const accountNumber = await moveInpage.Get_Account_Number();
 
-    await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
-    await supabaseQueries.Check_Get_Electric_Account_Id(cottageUserID);
+    await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetGasAccountId(cottageUserID);
+    await accountQueries.checkGetElectricAccountId(cottageUserID);
     await page.waitForTimeout(30000);
 
     await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, "EVERSOURCE", "CON-EDISON");
@@ -782,7 +783,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
-  test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, supabaseQueries, finishAccountSetupPage, overviewPage}) => {
+  test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, finishAccountSetupPage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -807,8 +808,8 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Electric_Account_Id(cottageUserID);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetElectricAccountId(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
     const paymentVis = await moveInpage.Check_Payment_Page_Visibility('EVERSOURCE', null);
@@ -833,12 +834,12 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('NGMA Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
+  test('NGMA Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest",null,"NGMA");
+    await utilityQueries.updateCompaniesToBuilding("autotest",null,"NGMA");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -861,9 +862,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetGasAccountId(cottageUserID);
+    await accountQueries.checkElectricAccountIdNotPresent(cottageUserID);
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});
@@ -889,12 +890,12 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('PSEG PSEG Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
+  test('PSEG PSEG Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","PSEG","PSEG");
+    await utilityQueries.updateCompaniesToBuilding("autotest","PSEG","PSEG");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     await moveInpage.Agree_on_Terms_and_Get_Started()
@@ -917,9 +918,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
-    await supabaseQueries.Check_Electric_Account_Id_Not_Present(cottageUserID);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetGasAccountId(cottageUserID);
+    await accountQueries.checkElectricAccountIdNotPresent(cottageUserID);
 
  
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
@@ -946,7 +947,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage, supabaseQueries}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -972,9 +973,9 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await moveInpage.Submit_Move_In_Button();
     await page.waitForTimeout(30000);
     await page.waitForLoadState('domcontentloaded');
-    const cottageUserID = await supabaseQueries.Check_Cottage_User_Id(PGuser.Email);
-    await supabaseQueries.Check_Get_Gas_Account_Id(cottageUserID);
-    await supabaseQueries.Check_Get_Electric_Account_Id(cottageUserID);
+    const cottageUserID = await userQueries.checkCottageUserId(PGuser.Email);
+    await accountQueries.checkGetGasAccountId(cottageUserID);
+    await accountQueries.checkGetElectricAccountId(cottageUserID);
 
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
     await page.goto('/move-in',{ waitUntil: 'domcontentloaded'});

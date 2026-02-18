@@ -1,8 +1,6 @@
-import { type Page, type Locator, expect } from '@playwright/test';
-import { SupabaseQueries } from '../fixtures/database';
+﻿import { type Page, type Locator, expect } from '@playwright/test';
+import { billQueries } from '../fixtures/database';
 import { format } from 'date-fns';
-
-const supabaseQueries = new SupabaseQueries();
 
 export class OverviewPage {
 
@@ -54,7 +52,7 @@ export class OverviewPage {
 
         this.Overview_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
-        this.Overview_Success_Message = page.getByText('🥳 Success', { exact: true });
+        this.Overview_Success_Message = page.getByText('ðŸ¥³ Success', { exact: true });
 
         this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
         this.Overview_Profile_Button = page.getByRole('menuitem', { name: 'Profile' });
@@ -549,8 +547,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(BillId);
+        const startDate = await billQueries.getElectricBillStartDate(BillId);
+        const endDate = await billQueries.getElectricBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -578,8 +576,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(BillId);
+        const startDate = await billQueries.getElectricBillStartDate(BillId);
+        const endDate = await billQueries.getElectricBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -607,8 +605,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(BillId);
+        const startDate = await billQueries.getGasBillStartDate(BillId);
+        const endDate = await billQueries.getGasBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -636,8 +634,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(BillId);
+        const startDate = await billQueries.getGasBillStartDate(BillId);
+        const endDate = await billQueries.getGasBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);

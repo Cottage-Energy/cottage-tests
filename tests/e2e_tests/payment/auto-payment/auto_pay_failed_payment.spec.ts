@@ -1,6 +1,7 @@
-import { APIRequestContext } from '@playwright/test';
+﻿import { APIRequestContext } from '@playwright/test';
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, newUserMoveInAutoFailedBankAccount, generateTestUserData, CleanUp, PaymentUtilities, SupabaseQueries } from '../../../resources/fixtures';
+import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, newUserMoveInAutoFailedBankAccount, generateTestUserData, CleanUp, PaymentUtilities } from '../../../resources/fixtures';
+import { utilityQueries, accountQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import { AdminApi } from '../../../resources/api/admin_api';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
@@ -8,7 +9,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
 
 
 let AdminApiContext: APIRequestContext;
-const supabaseQueries = new SupabaseQueries();
 const paymentUtilities = new PaymentUtilities();
 let MoveIn: any;
 
@@ -17,7 +17,7 @@ let MoveIn: any;
     
 //});
 
-test.beforeEach(async ({ playwright, page, supabaseQueries },testInfo) => {
+test.beforeEach(async ({ playwright, page },testInfo) => {
   /*const env = process.env.ENV || 'dev';
   const baseUrl = environmentBaseUrl[env].admin_api;
   const adminToken = process.env.ADMIN_TOKEN;
@@ -30,9 +30,9 @@ test.beforeEach(async ({ playwright, page, supabaseQueries },testInfo) => {
     },
   });*/
 
-  await supabaseQueries.Update_Building_Billing("autotest",true);
-  await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
-  await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
+  await utilityQueries.updateBuildingBilling("autotest",true);
+  await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
+  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
   
@@ -55,7 +55,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","COMED","COMED");
+        await utilityQueries.updateCompaniesToBuilding("autotest","COMED","COMED");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"COMED","COMED", true, false);
@@ -80,7 +80,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
         await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Accept_New_Terms_And_Conditions();
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
         await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
@@ -93,7 +93,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
   
       const PGuserUsage = await generateTestUserData();
       
-      await supabaseQueries.Update_Companies_to_Building("autotest","CON-EDISON","CON-EDISON");
+      await utilityQueries.updateCompaniesToBuilding("autotest","CON-EDISON","CON-EDISON");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInAutoPayment(page,"CON-EDISON","CON-EDISON", true, true, true, PaymentData.InvalidCardNumber);
@@ -116,8 +116,8 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
       // Switch to the new tab
       await newPage.bringToFront();*/
       await overviewPage.Accept_New_Terms_And_Conditions();
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
       await Promise.all([
           AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -133,7 +133,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","BGE","COMED");
+        await utilityQueries.updateCompaniesToBuilding("autotest","BGE","COMED");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoPayment(page,"BGE","COMED", false, true, true, PaymentData.InvalidCardNumber);
@@ -156,7 +156,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
         await paymentUtilities.Card_Auto_Payment_Failed_Card_Alert_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
@@ -181,7 +181,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
     
         await newTab.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
         await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -194,7 +194,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
   
       const PGuserUsage = await generateTestUserData();
       
-      await supabaseQueries.Update_Companies_to_Building("autotest","COMED","EVERSOURCE");
+      await utilityQueries.updateCompaniesToBuilding("autotest","COMED","EVERSOURCE");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInSkipPayment(page,"COMED","EVERSOURCE", true, true);
@@ -219,8 +219,8 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
       await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await overviewPage.Accept_New_Terms_And_Conditions();
       await sidebarChat.Goto_Overview_Page_Via_Icon();
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
       await Promise.all([
           AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -236,7 +236,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
   
       const PGuserUsage = await generateTestUserData();
       
-      await supabaseQueries.Update_Companies_to_Building("autotest", null, "COMED");
+      await utilityQueries.updateCompaniesToBuilding("autotest", null, "COMED");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInSkipPayment(page, null, "COMED", true, true);
@@ -262,7 +262,7 @@ test.describe.fixme('Invalid Card to Valid Card Auto Payment', () => {
       
       await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.InvalidCardNumber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await overviewPage.Accept_New_Terms_And_Conditions();
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
       await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
       await page.waitForTimeout(500);
       await paymentUtilities.Card_Auto_Payment_Failed_Card_Pay_Bill_Link_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
@@ -280,7 +280,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+        await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, false);
@@ -306,7 +306,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -319,7 +319,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
   
       const PGuserUsage = await generateTestUserData();
       
-      await supabaseQueries.Update_Companies_to_Building("autotest","COMED","BGE");
+      await utilityQueries.updateCompaniesToBuilding("autotest","COMED","BGE");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
       MoveIn = await newUserMoveInSkipPayment(page,"COMED","BGE", true, true);
@@ -344,8 +344,8 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
       
       await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
       await overviewPage.Accept_New_Terms_And_Conditions();
-      const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-      const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+      const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
       await Promise.all([
           AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
           AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -361,7 +361,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","BGE","CON-EDISON");
+        await utilityQueries.updateCompaniesToBuilding("autotest","BGE","CON-EDISON");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoPayment(page,"BGE","CON-EDISON", false, true);
@@ -384,7 +384,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
@@ -409,7 +409,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         await newTab.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -422,7 +422,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
+        await utilityQueries.updateCompaniesToBuilding("autotest","NGMA","NGMA");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoPayment(page,"NGMA","NGMA", true, true);
@@ -445,8 +445,8 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -462,7 +462,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", null, "CON-EDISON");
+        await utilityQueries.updateCompaniesToBuilding("autotest", null, "CON-EDISON");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, null, "CON-EDISON", true, true);
@@ -487,7 +487,7 @@ test.describe.fixme('xxInvalid Card to Valid Bank Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Card_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
@@ -505,7 +505,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
+        await utilityQueries.updateCompaniesToBuilding("autotest", "COMED", null);
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoFailedBankAccount(page,"COMED", null, true, false);
@@ -519,7 +519,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         await newTab.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, ElectricAccountId);
@@ -532,7 +532,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","DTE","DTE");
+        await utilityQueries.updateCompaniesToBuilding("autotest","DTE","DTE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoFailedBankAccount(page,"DTE","DTE", true, true);
@@ -555,8 +555,8 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -572,7 +572,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "NGMA");
+        await utilityQueries.updateCompaniesToBuilding("autotest", "EVERSOURCE", "NGMA");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, "EVERSOURCE", "NGMA", false, true);
@@ -597,7 +597,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Alert_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, profilePage, PGuserUsage, GasAccountId);
@@ -610,7 +610,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","PSEG","PSEG");
+        await utilityQueries.updateCompaniesToBuilding("autotest","PSEG","PSEG");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"PSEG","PSEG", true, false);
@@ -635,7 +635,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -648,7 +648,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","CON-EDISON");
+        await utilityQueries.updateCompaniesToBuilding("autotest","NGMA","CON-EDISON");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"NGMA","CON-EDISON", true, true);
@@ -672,8 +672,8 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         await newPage.bringToFront();*/
         await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -689,7 +689,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", null, "NGMA");
+        await utilityQueries.updateCompaniesToBuilding("autotest", null, "NGMA");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, null, "NGMA", true, true);
@@ -713,7 +713,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         await newPage.bringToFront();*/
         await finishAccountSetupPage.Enter_Auto_Payment_Invalid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
@@ -731,7 +731,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
+        await utilityQueries.updateCompaniesToBuilding("autotest","NGMA","NGMA");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"NGMA","NGMA", true, false);
@@ -756,7 +756,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -769,7 +769,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","COMED");
+        await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","COMED");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","COMED", true, true);
@@ -794,8 +794,8 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -811,7 +811,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
+        await utilityQueries.updateCompaniesToBuilding("autotest", null, "BGE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, null, "BGE", true, true);
@@ -836,7 +836,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
@@ -849,7 +849,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
+        await utilityQueries.updateCompaniesToBuilding("autotest", "COMED", null);
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoBankAccount(page, "COMED", null, true, true);
@@ -863,7 +863,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         await newTab.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Electric_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
@@ -876,7 +876,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","BGE","BGE");
+        await utilityQueries.updateCompaniesToBuilding("autotest","BGE","BGE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoBankAccount(page,"BGE","BGE", true, true);
@@ -899,8 +899,8 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
         // Switch to the new tab
         await newPage.bringToFront();*/
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const ElectricAccountId = await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await Promise.all([
             AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage),
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
@@ -916,7 +916,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", "EVERSOURCE", "CON-EDISON");
+        await utilityQueries.updateCompaniesToBuilding("autotest", "EVERSOURCE", "CON-EDISON");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, "EVERSOURCE", "CON-EDISON", false, true);
@@ -941,7 +941,7 @@ test.describe.fixme('xxInvalid Bank to Valid Card Auto Payment', () => {
         
         await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Accept_New_Terms_And_Conditions();
-        const GasAccountId = await supabaseQueries.Check_Get_Gas_Account_Id(MoveIn.cottageUserId);
+        const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
