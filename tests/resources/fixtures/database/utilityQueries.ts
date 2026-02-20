@@ -66,12 +66,12 @@ export class UtilityQueries {
 
     const { data: building } = await supabase
       .from('Building')
-      .select('setupPaymentDuringOnboarding')
+      .select('setUpPaymentDuringOnboarding')
       .eq('shortCode', shortCode)
       .single()
       .throwOnError();
 
-    const setupPayment = building?.setupPaymentDuringOnboarding ?? false;
+    const setupPayment = building?.setUpPaymentDuringOnboarding ?? false;
     log.debug('setupPaymentDuringOnboarding (Building)', { shortCode, setupPayment });
     return setupPayment;
   }
@@ -85,12 +85,12 @@ export class UtilityQueries {
 
     const { data: utility } = await supabase
       .from('UtilityCompany')
-      .select('setupPaymentDuringOnboarding')
+      .select('setUpPaymentDuringOnboarding')
       .eq('id', utilityId)
       .single()
       .throwOnError();
 
-    const setupPayment = utility?.setupPaymentDuringOnboarding ?? false;
+    const setupPayment = utility?.setUpPaymentDuringOnboarding ?? false;
     log.debug('setupPaymentDuringOnboarding (Utility)', { utilityId, setupPayment });
     return setupPayment;
   }
@@ -109,6 +109,38 @@ export class UtilityQueries {
     const isBillingRequired = utility?.isBillingRequired ?? false;
     log.debug('Is Billing Required', { utilityId, isBillingRequired });
     return isBillingRequired;
+  }
+
+  /**
+   * Check if autopay is required for a utility
+   */
+  async getIsAutopayRequiredUtility(utilityId: string): Promise<boolean> {
+    const { data: utility } = await supabase
+      .from('UtilityCompany')
+      .select('isAutopayRequired')
+      .eq('id', utilityId)
+      .single()
+      .throwOnError();
+
+    const isAutopayRequired = utility?.isAutopayRequired ?? false;
+    log.debug('Is Autopay Required', { utilityId, isAutopayRequired });
+    return isAutopayRequired;
+  }
+
+  /**
+   * Check if autopay is required for a building
+   */
+  async getIsAutopayRequiredBuilding(shortCode: string): Promise<boolean> {
+    const { data: building } = await supabase
+      .from('Building')
+      .select('isAutopayRequired')
+      .eq('shortCode', shortCode)
+      .single()
+      .throwOnError();
+
+    const isAutopayRequired = building?.isAutopayRequired ?? false;
+    log.debug('Is Autopay Required (Building)', { shortCode, isAutopayRequired });
+    return isAutopayRequired;
   }
 
   /**

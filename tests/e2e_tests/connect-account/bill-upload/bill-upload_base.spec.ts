@@ -26,7 +26,7 @@ test.describe('Bill Upload Flow Tests', () => {
     
     await billUploadPage.completeBillUploadFlow('12249', imgPath, testEmail, 'Con Edison');
     
-    console.log(`Bill Upload test completed for Con Edison with email: ${testEmail}`);
+    // Bill upload completed for Con Edison
   });
 
   test('Bill Upload Using Utilities - Con Edison', { tag: ['@regression2', '@billupload'] }, async ({ page }) => {
@@ -39,7 +39,7 @@ test.describe('Bill Upload Flow Tests', () => {
     expect(BillUpload.zipCode).toBe('12249');
     expect(BillUpload.utility).toBe('Con Edison');
     
-    console.log(`Bill Upload Utilities test completed for email: ${BillUpload.testEmail}`);
+    // Bill upload utilities test completed
   });
 
   test('Bill Upload - Manual Step by Step Flow', { tag: ['@regression3', '@billupload'] }, async ({ billUploadPage, page }) => {
@@ -52,13 +52,12 @@ test.describe('Bill Upload Flow Tests', () => {
     // Test each step individually for better debugging
     await billUploadPage.navigateToConnectAccount();
     await billUploadPage.fillZipCodeAndSelectUtility('12249', 'Con Edison');
-    await billUploadPage.clickLetsGetStarted();
-    await billUploadPage.proceedFromNeighborhood();
-    await billUploadPage.uploadBillFile(imgPath);
+    await billUploadPage.clickCheckAvailability();
+    await billUploadPage.fillEmailAndUploadBill(testEmail, imgPath);
     await billUploadPage.waitForBillProcessing();
-    await billUploadPage.fillEmailAndFinish(testEmail);
+    await billUploadPage.verifySuccess();
     
-    console.log(`Manual step-by-step test completed for email: ${testEmail}`);
+    // Manual step-by-step test completed
   });
 
   test('Bill Upload - Alternative File Format', { tag: ['@regression4', '@billupload'] }, async ({ billUploadPage, page }) => {
@@ -70,7 +69,7 @@ test.describe('Bill Upload Flow Tests', () => {
     
     await billUploadPage.completeBillUploadFlow('12249', imgPath, testEmail, 'Con Edison');
     
-    console.log(`PDF upload test completed for email: ${testEmail}`);
+    // PDF upload test completed
   });
 
 });

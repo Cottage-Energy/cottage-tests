@@ -170,16 +170,36 @@ export class UserQueries {
    * Check if registration is complete for a user
    */
   async checkIsRegistrationComplete(cottageUserId: string, state: boolean = true): Promise<void> {
-    const { data: resident } = await supabase
+    const maxRetries = 5;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      const { data: resident } = await supabase
+        .from('Resident')
+        .select('isRegistrationComplete')
+        .eq('cottageUserID', cottageUserId)
+        .single()
+        .throwOnError();
+
+      const isRegistrationComplete = resident?.isRegistrationComplete;
+      log.debug('Registration status', { isRegistrationComplete, expectedState: state, attempt });
+
+      if (isRegistrationComplete === state) {
+        await expect(isRegistrationComplete).toBe(state);
+        return;
+      }
+
+      if (attempt < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
+
+    // Final assertion to fail with clear message
+    const { data: finalResident } = await supabase
       .from('Resident')
       .select('isRegistrationComplete')
       .eq('cottageUserID', cottageUserId)
       .single()
       .throwOnError();
-
-    const isRegistrationComplete = resident?.isRegistrationComplete ?? '';
-    log.debug('Registration status', { isRegistrationComplete, expectedState: state });
-    await expect(isRegistrationComplete).toBe(state);
+    await expect(finalResident?.isRegistrationComplete ?? '').toBe(state);
   }
 }
 

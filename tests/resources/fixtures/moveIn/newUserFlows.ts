@@ -58,17 +58,14 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   await moveInPage.Enter_Address(addressType, pgUser.UnitNumber);
   await moveInPage.Next_Move_In_Button();
 
-  // Step 3: Account Setup or Texas Agreement
+  // Step 3: Account Setup or Texas Agreement + ESCO Conditions
   await handleAccountSetupOrTexasAgreement(moveInPage, newElectric, newGas);
   await moveInPage.Next_Move_In_Button();
 
-  // Step 4: Power Up Account
-  await moveInPage.Power_Up_Your_Account();
-
-  // Step 5: ESCO Conditions
+  // ESCO dialog may appear after clicking Continue on Utility Setup
   await moveInPage.Read_ESCO_Conditions();
 
-  // Step 6: Personal Info
+  // Step 4: Personal Info (includes Start Service Date)
   const dateField = pgUser[moveInDateField as keyof typeof pgUser] as string;
   const smsConsent = await moveInPage.Enter_Personal_Info(
     `PGTest ${pgUser.FirstName}`,
@@ -79,7 +76,7 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   );
   await moveInPage.Next_Move_In_Button();
 
-  // Step 7: Company Questions
+  // Step 5: Company Questions (conditional based on company)
   const { electricQuestionsPresent, gasQuestionsPresent } = await handleCompanyQuestions(
     moveInPage,
     electricCompany,
@@ -91,12 +88,12 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
     await moveInPage.Next_Move_In_Button();
   }
 
-  // Step 8: ID Info
+  // Step 6: ID Info
   await moveInPage.Enter_ID_Info(pgUser.BirthDate, pgUser.SSN);
   await moveInPage.Enter_ID_Info_Prev_Add(MoveInData.COMEDaddress, electricCompany, gasCompany);
   await moveInPage.Submit_Move_In_Button();
 
-  // Step 9: Payment Handling
+  // Step 7: Payment Handling
   const paymentPageVisible = await moveInPage.Check_Payment_Page_Visibility(electricCompany, gasCompany);
 
   if (paymentPageVisible) {
@@ -114,7 +111,7 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
     await moveInPage.Check_Successful_Move_In_Non_Billing_Customer();
   }
 
-  // Step 10: Get results
+  // Get results
   const accountNumber = paymentType === 'skip' 
     ? await userQueries.checkCottageUserAccountNumber(pgUserEmail)
     : await moveInPage.Get_Account_Number();
@@ -147,7 +144,7 @@ async function handlePayment(
 ): Promise<void> {
   if (paymentType === 'skip') {
     await moveInPage.Skip_Payment_Details();
-    await moveInPage.Check_Almost_Done_Move_In_Billing_Customer();
+    await moveInPage.Check_Successful_Move_In_Billing_Customer();
     return;
   }
 
@@ -453,7 +450,8 @@ export async function moveInExistingUtilityAccount(
   await moveInPage.Enter_Address(MoveInData.COMEDaddress, pgUser.UnitNumber);
   await moveInPage.Next_Move_In_Button();
   await moveInPage.Setup_Account(newElectric, newGas);
-  await moveInPage.Next_Move_In_Button();
+  // Click "I will do the setup myself" to trigger existing utility account flow
+  await moveInPage.Click_Self_Setup();
   await moveInPage.Existing_Utility_Account_Connect_Request(pgUserEmail, submitRequest);
   
   return {

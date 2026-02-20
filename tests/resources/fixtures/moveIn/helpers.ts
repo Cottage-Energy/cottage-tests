@@ -17,7 +17,7 @@ export function getAddressForCompany(
   electricCompany: UtilityCompany,
   gasCompany: UtilityCompany
 ): string {
-  const defaultAddress = MoveInData.COMEDaddress;
+  const defaultAddress = MoveInData.BGEaddress;
 
   if (electricCompany === null && gasCompany !== null) {
     const gasKey = normalizeCompanyName(gasCompany);
@@ -35,7 +35,7 @@ export function getAddressForCompany(
     }
   }
 
-  log.debug('Using default COMED address');
+  log.debug('Using default BGE address');
   return defaultAddress;
 }
 
@@ -51,16 +51,7 @@ export async function handleCompanyQuestions(
   let electricQuestionsPresent = false;
   let gasQuestionsPresent = false;
 
-  // Try program enrolled questions first
-  try {
-    await moveInPage.Program_Enrolled_Questions();
-    electricQuestionsPresent = true;
-    gasQuestionsPresent = true;
-  } catch {
-    log.debug('No questions to answer for Program Enrolled');
-  }
-
-  // Handle company-specific questions
+  // Handle company-specific questions (includes "How long staying" for BGE/TX_DEREG/COSERV)
   const normalizedElectric = normalizeCompanyName(electricCompany);
   const normalizedGas = normalizeCompanyName(gasCompany);
 
@@ -103,6 +94,15 @@ export async function handleCompanyQuestions(
     }
   }
 
+  // Try program enrolled questions (appears after company-specific questions)
+  try {
+    await moveInPage.Program_Enrolled_Questions();
+    electricQuestionsPresent = true;
+    gasQuestionsPresent = true;
+  } catch {
+    log.debug('No questions to answer for Program Enrolled');
+  }
+
   return { electricQuestionsPresent, gasQuestionsPresent };
 }
 
@@ -117,13 +117,19 @@ async function callCompanyQuestions(moveInPage: MoveInPage, companyKey: string):
     'CON_EDISON_Questions': () => moveInPage.CON_EDISON_Questions(),
     'BGE_Questions': () => moveInPage.BGE_Questions(),
     'TX_DEREG_Questions': () => moveInPage.TX_DEREG_Questions(),
+    'COSERV_Questions': () => moveInPage.COSERV_Questions(),
   };
 
   const method = questionMethods[methodName];
   if (method) {
     await method();
   } else {
-    throw new Error(`No question method found for ${companyKey}`);
+    // Universal fallback: try "How long staying" question for any company
+    try {
+      await moveInPage.Length_of_Staying_Questions();
+    } catch {
+      throw new Error(`No question method found for ${companyKey}`);
+    }
   }
 }
 

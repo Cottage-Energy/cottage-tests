@@ -169,15 +169,15 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
   });
 
 
-  test('Move In Invalid Parameter Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => { // Use BGE and NGMA
+  test('Move In Invalid Parameter Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => { // Use BGE address (COMED/IL no longer in service area)
     test.setTimeout(360000);
     await page.goto('/move-in?gasCompany=XXX',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoPayment(page, null, 'COMED', true, true);
+    MoveIn = await newUserMoveInAutoPayment(page, null, 'BGE', true, true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "COMED");
+    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "BGE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
