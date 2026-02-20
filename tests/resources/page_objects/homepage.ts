@@ -25,16 +25,16 @@ export class HomePage{
         this.HowItWorks_Link = page.getByRole('navigation').getByRole('link', { name: 'How it Works' });
         this.HowItWorks_Title = page.getByRole('heading', { name: 'How it works' });
         this.About_Link = page.getByRole('navigation').getByRole('link', { name: 'About' });
-        this.About_Content = page.locator('div').filter({ hasText: 'Climate change is not new news.There is a whole list of things that we all' }).nth(2);
+        this.About_Content = page.getByRole('heading', { name: 'Our values' });
         this.Resources_Link = page.getByRole('navigation').getByRole('link', { name: 'Resources' });
         this.Resources_Title =  page.getByRole('heading', { name: 'Resources' });
         this.Developers_Link = page.getByRole('navigation').getByRole('link', { name: 'Developers' });
         this.Developers_Title = page.getByText('BETABUILD WITH YOURELECTRIC');
         
         this.Sign_In_Button = page.getByRole('navigation').getByText('Sign In');
-        this.Sign_In_Title = page.getByRole('heading', { name: 'Welcome Back 👋' });
+        this.Sign_In_Title = page.getByText('Welcome back', { exact: false });
         this.Sign_In_Email_Field = page.locator('//input[@name="email"]');
-        this.Sign_In_OTP_Button = page.getByRole('button', { name: 'Sign in with OTP' });
+        this.Sign_In_OTP_Button = page.getByRole('button', { name: 'Sign in with one-time code' });
     }
 
 

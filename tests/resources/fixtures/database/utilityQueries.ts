@@ -1,4 +1,7 @@
 import { supabase } from '../../utils/supabase';
+import { loggers } from '../../utils/logger';
+
+const log = loggers.database.child('UtilityQueries');
 
 /**
  * Database queries for utility company and building configurations
@@ -8,8 +11,8 @@ export class UtilityQueries {
    * Check if prior address is required for a utility
    */
   async getIsPriorAddressRequiredUtility(utilityId: string): Promise<boolean> {
-    console.log('Checking prior address required for utility:', utilityId);
-    
+    log.debug('Checking prior address required for utility', { utilityId });
+
     const { data: utility } = await supabase
       .from('UtilityCompany')
       .select('isPriorAddressRequired')
@@ -32,7 +35,7 @@ export class UtilityQueries {
       .throwOnError();
 
     const isHandledBilling = building?.isHandleBilling ?? false;
-    console.log('Is Handled Billing (Building):', isHandledBilling);
+    log.debug('Is Handled Billing (Building)', { shortCode, isHandledBilling });
     return isHandledBilling;
   }
 
@@ -40,8 +43,8 @@ export class UtilityQueries {
    * Check if billing is handled for a utility
    */
   async getIsHandledBillingUtility(utilityId: string): Promise<boolean> {
-    console.log('Checking handled billing for utility:', utilityId);
-    
+    log.debug('Checking handled billing for utility', { utilityId });
+
     const { data: utility } = await supabase
       .from('UtilityCompany')
       .select('isHandleBilling')
@@ -50,8 +53,46 @@ export class UtilityQueries {
       .throwOnError();
 
     const isHandledBilling = utility?.isHandleBilling ?? false;
-    console.log('Is Handled Billing (Utility):', isHandledBilling);
+    log.debug('Is Handled Billing (Utility)', { utilityId, isHandledBilling });
     return isHandledBilling;
+  }
+
+  /**
+   * Check if setupPaymentDuringOnboarding is enabled for a building
+   * Building-level flag takes priority when shortCode is present
+   */
+  async getSetupPaymentDuringOnboardingBuilding(shortCode: string): Promise<boolean> {
+    log.debug('Checking setupPaymentDuringOnboarding for building', { shortCode });
+
+    const { data: building } = await supabase
+      .from('Building')
+      .select('setupPaymentDuringOnboarding')
+      .eq('shortCode', shortCode)
+      .single()
+      .throwOnError();
+
+    const setupPayment = building?.setupPaymentDuringOnboarding ?? false;
+    log.debug('setupPaymentDuringOnboarding (Building)', { shortCode, setupPayment });
+    return setupPayment;
+  }
+
+  /**
+   * Check if setupPaymentDuringOnboarding is enabled for a utility company
+   * Used when no shortCode is present (fallback to utility-level)
+   */
+  async getSetupPaymentDuringOnboardingUtility(utilityId: string): Promise<boolean> {
+    log.debug('Checking setupPaymentDuringOnboarding for utility', { utilityId });
+
+    const { data: utility } = await supabase
+      .from('UtilityCompany')
+      .select('setupPaymentDuringOnboarding')
+      .eq('id', utilityId)
+      .single()
+      .throwOnError();
+
+    const setupPayment = utility?.setupPaymentDuringOnboarding ?? false;
+    log.debug('setupPaymentDuringOnboarding (Utility)', { utilityId, setupPayment });
+    return setupPayment;
   }
 
   /**
@@ -66,7 +107,7 @@ export class UtilityQueries {
       .throwOnError();
 
     const isBillingRequired = utility?.isBillingRequired ?? false;
-    console.log('Is Billing Required:', isBillingRequired);
+    log.debug('Is Billing Required', { utilityId, isBillingRequired });
     return isBillingRequired;
   }
 
@@ -121,8 +162,8 @@ export class UtilityQueries {
       .select()
       .throwOnError();
 
-    console.log('Updated Building Companies:', data);
-    if (error) console.log('Error:', error);
+    log.debug('Updated Building Companies', { shortCode, data });
+    if (error) log.error('Update Building Companies failed', { error: String(error) });
   }
 
   /**
@@ -136,8 +177,8 @@ export class UtilityQueries {
       .select()
       .throwOnError();
 
-    console.log('Updated Building Billing:', data);
-    if (error) console.log('Error:', error);
+    log.debug('Updated Building Billing', { shortCode, isHandledBilling, data });
+    if (error) log.error('Update Building Billing failed', { error: String(error) });
   }
 
   /**
@@ -154,8 +195,8 @@ export class UtilityQueries {
       .select()
       .throwOnError();
 
-    console.log('Updated Building Encouraged Conversion:', data);
-    if (error) console.log('Error:', error);
+    log.debug('Updated Building Encouraged Conversion', { shortCode, useEncourageConversion, data });
+    if (error) log.error('Update Building Encouraged Conversion failed', { error: String(error) });
   }
 
   /**
@@ -172,8 +213,8 @@ export class UtilityQueries {
       .select()
       .throwOnError();
 
-    console.log('Updated Partner Encouraged Conversion:', data);
-    if (error) console.log('Error:', error);
+    log.debug('Updated Partner Encouraged Conversion', { partnerName, useEncourageConversion, data });
+    if (error) log.error('Update Partner Encouraged Conversion failed', { error: String(error) });
   }
 }
 

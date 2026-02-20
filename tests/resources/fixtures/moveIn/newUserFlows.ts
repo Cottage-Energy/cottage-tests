@@ -4,18 +4,21 @@ import { generateTestUserData } from '../test_user';
 import { userQueries } from '../database';
 import * as MoveInData from '../../data/move_in-data.json';
 import * as PaymentData from '../../data/payment-data.json';
-import type { 
-  MoveInOptions, 
-  MoveInResult, 
-  PaymentType, 
+import { loggers } from '../../utils/logger';
+import type {
+  MoveInOptions,
+  MoveInResult,
+  PaymentType,
   PaymentMethod,
-  UtilityCompany 
+  UtilityCompany
 } from '../../types/moveIn.types';
-import { 
-  getAddressForCompany, 
-  handleCompanyQuestions, 
-  handleAccountSetupOrTexasAgreement 
+import {
+  getAddressForCompany,
+  handleCompanyQuestions,
+  handleAccountSetupOrTexasAgreement
 } from './helpers';
+
+const log = loggers.moveIn.child('NewUserFlows');
 
 
 
@@ -84,8 +87,7 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   );
 
   if (electricQuestionsPresent || gasQuestionsPresent) {
-    console.log(`Electric Questions Present: ${electricQuestionsPresent}`);
-    console.log(`Gas Questions Present: ${gasQuestionsPresent}`);
+    log.debug('Company questions present', { electricQuestionsPresent, gasQuestionsPresent });
     await moveInPage.Next_Move_In_Button();
   }
 

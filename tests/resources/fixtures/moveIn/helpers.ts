@@ -1,8 +1,10 @@
-import { Page } from '@playwright/test';
 import { MoveInPage } from '../../page_objects/move_in_page';
 import * as MoveInData from '../../data/move_in-data.json';
 import { normalizeCompanyName } from '../../constants/companies';
-import type { MoveInOptions, UtilityCompany } from '../../types/moveIn.types';
+import { loggers } from '../../utils/logger';
+import type { UtilityCompany } from '../../types/moveIn.types';
+
+const log = loggers.moveIn.child('Helpers');
 
 /**
  * Helper functions for move-in flows
@@ -33,7 +35,7 @@ export function getAddressForCompany(
     }
   }
 
-  console.log('Using default COMED address');
+  log.debug('Using default COMED address');
   return defaultAddress;
 }
 
@@ -55,7 +57,7 @@ export async function handleCompanyQuestions(
     electricQuestionsPresent = true;
     gasQuestionsPresent = true;
   } catch {
-    console.log('No questions to answer for Program Enrolled');
+    log.debug('No questions to answer for Program Enrolled');
   }
 
   // Handle company-specific questions
@@ -75,7 +77,7 @@ export async function handleCompanyQuestions(
             await callCompanyQuestions(moveInPage, normalizedGas);
             gasQuestionsPresent = true;
           } catch {
-            console.log('No questions to answer for these companies');
+            log.debug('No questions to answer for these companies');
           }
         }
       }
@@ -87,7 +89,7 @@ export async function handleCompanyQuestions(
         await callCompanyQuestions(moveInPage, normalizedElectric);
         electricQuestionsPresent = true;
       } catch {
-        console.log('No questions to answer for Electric company');
+        log.debug('No questions to answer for Electric company');
       }
     }
 
@@ -96,7 +98,7 @@ export async function handleCompanyQuestions(
         await callCompanyQuestions(moveInPage, normalizedGas);
         gasQuestionsPresent = true;
       } catch {
-        console.log('No questions to answer for Gas company');
+        log.debug('No questions to answer for Gas company');
       }
     }
   }
@@ -136,7 +138,7 @@ export async function handleAccountSetupOrTexasAgreement(
   try {
     await moveInPage.Setup_Account(newElectric, newGas);
   } catch {
-    console.log('TX-DEREG Service Zip Agreement');
+    log.debug('TX-DEREG Service Zip Agreement');
     await moveInPage.Texas_Service_Agreement();
   }
 }

@@ -1,32 +1,31 @@
 ﻿import { type Page, type Locator, expect } from '@playwright/test';
 import { utilityQueries } from '../fixtures/database';
 import { TIMEOUTS } from '../constants';
+import { loggers } from '../utils/logger';
 import * as MoveIndata from '../data/move_in-data.json';
+
+const log = loggers.moveIn.child('MoveInPage');
 
 export class MoveInPage{
     //variables
     readonly page: Page;
     readonly Move_In_Terms_Logo: Locator;
-    readonly Move_In_Terms_PG_Description: Locator;
-    readonly Move_In_Terms_Service_Description: Locator;
-    //readonly Move_In_Tx_Svc_Service_Description: Locator;
-    readonly Move_In_Terms_Payment_Description: Locator;
-    readonly Move_In_Terms_Automation_Description: Locator;
+    readonly Move_In_Welcome_Title: Locator;
+    readonly Move_In_Welcome_Description: Locator;
     readonly Move_In_Terms_Checkbox: Locator;
     readonly Move_In_Get_Started_Button: Locator;
  
-    readonly Move_In_Address_Page_Fields: Locator;
+    readonly Move_In_Address_Page_Title: Locator;
     readonly Move_In_Tx_Svc_Address_Field: Locator;
     readonly Move_In_Back_Link: Locator;
     readonly Move_In_Address_Field: Locator;
     readonly Move_In_Address_Dropdown: (address: string) => Locator;
     readonly Move_In_Unit_Field: Locator;
 
-    readonly Move_In_Account_Setup_Fields: Locator;
-    readonly Move_In_Electric_New_Button: Locator;
-    readonly Move_In_Electric_Existing_Button: Locator;
-    readonly Move_In_Gas_New_Button: Locator;
-    readonly Move_In_Gas_Existing_Button: Locator;
+    readonly Move_In_Utility_Setup_Title: Locator;
+    readonly Move_In_PG_Handles_Setup_Option: Locator;
+    readonly Move_In_Self_Setup_Button: Locator;
+    readonly Move_In_Renewable_Energy_Switch: Locator;
 
     readonly Move_In_Existing_Account_Page_Title: Locator;
     readonly Move_In_Existing_Account_Page_Content: Locator;
@@ -50,11 +49,11 @@ export class MoveInPage{
     readonly Move_In_OTP_Confirmed_Message: Locator;
     readonly Move_In_Signing_In_Message: Locator;
 
-    readonly Move_In_Next_Button: Locator;
+    readonly Move_In_Continue_Button: Locator;
     readonly Move_In_Cannot_Find_Address_Link: Locator;
     readonly Move_In_Address_Not_Listed_Message: Locator;
 
-    readonly Move_In_About_You_Title: Locator
+    readonly Move_In_About_You_Title: Locator;
     readonly Move_In_First_Name_Field: Locator;
     readonly Move_In_Last_Name_Field: Locator;
     readonly Move_In_First_Name_Null_Message: Locator;
@@ -69,6 +68,7 @@ export class MoveInPage{
     readonly Move_In_Date_Selector: (day: string) => Locator;
     readonly Move_In_Next_Month_Button: Locator;
     readonly Move_In_Prev_Month_Button: Locator;
+    readonly Move_In_Date_Calendar_Button: Locator;
 
     readonly Move_In_CON_ED_Questions_Title: Locator;
     readonly Move_In_CON_ED_Life_Support_Yes_Button: Locator;
@@ -148,27 +148,28 @@ export class MoveInPage{
     constructor(page: Page) {
         this.page = page;
         this.Move_In_Terms_Logo = page.locator('[alt="Public Grid Logo"]');
-        this.Move_In_Terms_PG_Description = page.getByText('Public Grid is a free');
-        this.Move_In_Terms_Service_Description = page.getByText('Open up an account with');
-        //this.Move_In_Tx_Svc_Service_Description = page.getByText('Service is guaranteed by your');
-        this.Move_In_Terms_Payment_Description = page.getByText('Skip the utility. We create');
-        this.Move_In_Terms_Automation_Description = page.getByText('Your energy on auto-pilot. We');
-;
-        
+        this.Move_In_Welcome_Title = page.getByRole('heading', { name: 'Utilities on Autopilot' });
+        this.Move_In_Welcome_Description = page.getByText('Public Grid activates your utility account');
+
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
-        this.Move_In_Get_Started_Button = page.getByRole('button', { name: /Let.*s Get Started/i });
+        this.Move_In_Get_Started_Button = page.getByRole('button', { name: /Let.*s get started/i });
         this.Move_In_Back_Link = page.getByText('Back');
-        this.Move_In_Address_Page_Fields = page.getByRole('heading', { name: 'Where are you looking to' });
-        this.Move_In_Tx_Svc_Address_Field = page.getByRole('heading', { name: 'Where do you live?' });
+        this.Move_In_Address_Page_Title = page.getByText('Enter your address');
+        this.Move_In_Tx_Svc_Address_Field = page.getByText('Where do you live?');
         this.Move_In_Address_Field = page.locator('#address');
-        this.Move_In_Address_Dropdown = (address: string) => page.getByText(address);
+        this.Move_In_Address_Dropdown = (address: string) => {
+            // Google autocomplete splits addresses into street/city parts
+            // Extract street portion (boundary: lowercase/digit → uppercase without space)
+            const parts = address.match(/^(.*[a-z\d])(?=[A-Z])/);
+            const streetText = parts ? parts[1] : address;
+            return page.getByText(streetText).first();
+        };
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
 
-        this.Move_In_Account_Setup_Fields = page.getByRole('heading', { name: 'What can we set up for you' });
-        this.Move_In_Electric_New_Button = page.locator('//label[@id = "Electric-new"]');
-        this.Move_In_Electric_Existing_Button = page.locator('//label[@id = "Electric-existing"]');
-        this.Move_In_Gas_New_Button = page.locator('//label[@id = "Gas-new"]');
-        this.Move_In_Gas_Existing_Button = page.locator('//label[@id = "Gas-existing"]');
+        this.Move_In_Utility_Setup_Title = page.getByRole('heading', { name: 'Choose how to start service' });
+        this.Move_In_PG_Handles_Setup_Option = page.getByText('Public Grid handles setup');
+        this.Move_In_Self_Setup_Button = page.getByRole('button', { name: 'I will do the setup myself' });
+        this.Move_In_Renewable_Energy_Switch = page.getByRole('switch');
 
         this.Move_In_Existing_Account_Page_Title = page.getByRole('heading', { name: 'You are all set!' });
         this.Move_In_Existing_Account_Page_Content = page.getByText('Looks like you\'re already set');
@@ -192,26 +193,27 @@ export class MoveInPage{
         this.Move_In_OTP_Confirmed_Message = page.getByText('OTP Confirmed âœ…', { exact: true });
         this.Move_In_Signing_In_Message = page.getByText('Signing in...', { exact: true });
 
-        this.Move_In_Next_Button = page.getByRole('button', { name: 'Next', exact: true });
-        this.Move_In_Cannot_Find_Address_Link = page.getByRole('button', { name: 'I cannot find my address' });
+        this.Move_In_Continue_Button = page.getByRole('button', { name: 'Continue' });
+        this.Move_In_Cannot_Find_Address_Link = page.getByText("Can't find your address?");
         this.Move_In_Address_Not_Listed_Message = page.getByRole('heading', { name: 'Address not listed in the' });
 
-        this.Move_In_About_You_Title = page.getByRole('heading', { name: 'Tell us a little about you' });
+        this.Move_In_About_You_Title = page.getByText('About you', { exact: true });
         this.Move_In_First_Name_Field = page.locator('input[name="firstName"]');
         this.Move_In_Last_Name_Field = page.locator('input[name="lastName"]');
         this.Move_In_First_Name_Null_Message = page.locator('[id="\\:r5\\:-form-item-message"]');
         this.Move_In_Last_Name_Null_Message = page.locator('[id="\\:r6\\:-form-item-message"]');
         this.Move_In_Phone_Field = page.locator('input[name="phone"]');
         this.Move_In_Phone_Invalid_Message = page.getByText('Phone number must be in 000-');
-        this.Move_In_Receive_Text_Checkbox = page.getByLabel('I agree to receive text');
+        this.Move_In_Receive_Text_Checkbox = page.getByLabel('I agree to receive order updates via SMS');
         this.Move_In_Email_Field = page.locator('input[name="email"]');
         this.Move_In_Email_Invalid_Message = page.getByText('Email address must be valid.');
         
-        this.Move_In_Date_Field = page.locator('//p[contains(text(),"Date")]//following::div[@type="button"]');
-        this.Move_In_Date_Selector = (day: string) => page.locator('//button[text()='+ day +' and not(contains(@class, "text-muted-foreground opacity-50"))]');
+        this.Move_In_Date_Field = page.getByRole('textbox', { name: 'MM / DD / YYYY' });
+        this.Move_In_Date_Calendar_Button = page.getByRole('textbox', { name: 'MM / DD / YYYY' });
+        this.Move_In_Date_Selector = (day: string) => page.getByRole('gridcell', { name: day, exact: true }).filter({ hasNot: page.locator('[disabled]') });
         this.Move_In_Next_Month_Button = page.getByLabel('Go to next month');
         this.Move_In_Prev_Month_Button = page.getByLabel('Go to previous month');
-        this.Move_In_Identity_Info_Title = page.getByRole('heading', { name: 'Identity Information' });
+        this.Move_In_Identity_Info_Title = page.getByText('Identity Information', { exact: true });
 
         this.Move_In_CON_ED_Questions_Title =  page.getByRole('heading', { name: 'A couple of quick questions' });
         this.Move_In_CON_ED_Life_Support_Yes_Button = page.locator('//p[contains(text(),"life-support")]//parent::div//div//label[contains(@for, "Yes")]');
@@ -220,18 +222,18 @@ export class MoveInPage{
         this.Move_In_CON_ED_62_years_No_Button = page.locator('//p[contains(text(),"62 years")]//parent::div//div//label[contains(@for, "No")]');
 
         this.Move_In_BGE_Employment_Status_Title = page.getByText('Employment Status');
-        this.Move_In_BGE_Employment_Status_Dropdown = page.locator('//p[contains(text(),"Employment Status")]//parent::div//button');
-        this.Move_In_BGE_Employment_Selection = (selection: string) => page.locator(`//span[contains(text(),"${selection}")]`);
+        this.Move_In_BGE_Employment_Status_Dropdown = page.getByRole('combobox').filter({ hasText: /Select an option|Employed|Retired|Receives|Other/ }).last();
+        this.Move_In_BGE_Employment_Selection = (selection: string) => page.getByRole('option', { name: selection });
 
         this.Move_In_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
-        this.Move_In_Lenght_of_Staying_Dropdown = page.locator('//p[contains(text(),"How long are you planning on staying at your current address?")]//parent::div//button');
-        this.Move_In_Lenght_of_Staying_Selection = (selection: string) => page.getByText(selection, { exact: true });
+        this.Move_In_Lenght_of_Staying_Dropdown = page.getByRole('combobox').first();
+        this.Move_In_Lenght_of_Staying_Selection = (selection: string) => page.getByRole('option', { name: selection });
         this.Move_In_Texas_Thermostat_Question = page.getByText('Do you own a smart thermostat?');
         this.Move_In_Texas_Thermostat_Yes_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "Yes")]');
         this.Move_In_Texas_Thermostat_No_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "No")]');
 
-        this.Move_In_Program_Enrolled_Question = page.locator('//p[text()="Are you enrolled in any of the programs below? If so, you might qualify for additional savings on your bill."]');
-        this.Move_In_Program_Enrolled_Options = (option: string) => page.locator(`//p[text()="Are you enrolled in any of the programs below? If so, you might qualify for additional savings on your bill."]//parent::div//..//label[contains(@for, "${option}")]`);
+        this.Move_In_Program_Enrolled_Question = page.getByText('Are you enrolled in any of the programs below?');
+        this.Move_In_Program_Enrolled_Options = (option: string) => page.getByRole('radio', { name: option });
 
         this.Move_In_Birthdate_Field = page.locator('input[name="dateOfBirth"]');
         this.Move_In_Birthdate_Required_Message = page.getByText('Date of Birth Required');
@@ -241,7 +243,7 @@ export class MoveInPage{
         this.Move_In_State_Dropdown = page.getByText('Select State');
         this.Move_In_ID_Number_Field = page.locator('//input[@name = "identityNumber"]');
         this.Move_In_CON_ED_ID_Number_Field = page.locator('//input[@name = "identityNumber"]');
-        this.Move_In_Identify_Info_Message = page.getByText('This information is never');
+        this.Move_In_Identify_Info_Message = page.getByText('This information is used to verify your identity');
         this.Move_In_Prev_Address_Field = page.locator('#onboardingAddress')
 
         this.Move_In_Auto_Payment_Checbox = page.getByLabel('Enable auto-pay (bill is paid');
@@ -253,13 +255,10 @@ export class MoveInPage{
         this.Move_In_Confirm_Skip_Payment_Add_Now_Button = page.getByRole('button', { name: 'Add a payment method now' });
         this.Move_In_Confirm_Skip_Payment_Add_Later_Button = page.getByRole('button', { name: 'I will add my payment later' });
 
-        //this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: 'Add a payment method for your' });
-        this.Move_In_Payment_Details_Title = page.getByRole('heading', { name: /Add a payment method/i });
-        this.Move_In_Pay_Through_PG_Title = page.getByText('Pay your bill through Public');
-        this.Move_In_Pay_Through_PG_Switch = page.getByRole('switch');
-        //this.Move_In_Pay_Through_PG_Yes = page.getByLabel('Yes');
-        //this.Move_In_Pay_Through_PG_No = page.getByLabel('No', { exact: true });
-        this.Move_In_Service_Fee_Message = page.getByText('Cards have a 3% fee, while bank');
+        this.Move_In_Payment_Details_Title = page.getByText('Set up autopay to finish');
+        this.Move_In_Pay_Through_PG_Title = page.getByText('Public Grid handles everything');
+        this.Move_In_Pay_Through_PG_Switch = page.getByRole('radio', { name: /Public Grid handles everything/ });
+        this.Move_In_Service_Fee_Message = page.getByText('Cards have a 3% fee');
 
         this.Move_In_Success_Message = page.getByRole('heading', { name: 'Great! You are all set' });
         this.Move_In_Account_Number = page.getByText(/getting started on setting up your utility account/i);
@@ -274,17 +273,14 @@ export class MoveInPage{
 
         this.Move_In_New_Move_In_Request_Link = page.locator('//button[text() = "Start a new move-in request"]');
 
-        //this.Move_In_ESCO_Title = page.getByRole('heading', { name: 'Because you live in New York' });
-        this.Move_In_ESCO_Title = page.getByText('Because you live in New York').nth(1);
-        //this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,')
-        this.Move_In_ESCO_Content = page.getByText('Public Grid is not an ESCO,').nth(1);
-        //this.Move_In_ESCO_Got_It_Button = page.getByRole('button', { name: 'Got it!' })
-        this.Move_In_ESCO_Got_It_Button = page.getByText('Got it!').nth(1);
+        this.Move_In_ESCO_Title = page.getByRole('alertdialog').getByRole('heading', { name: 'Because you live in New York' });
+        this.Move_In_ESCO_Content = page.getByRole('alertdialog').getByText("Public Grid isn't an Energy Services Company");
+        this.Move_In_ESCO_Got_It_Button = page.getByRole('alertdialog').getByRole('button', { name: 'Got it!' });
 
-        // Power Up Your Account page locators
-        this.Move_In_Power_Up_Title = page.getByRole('heading', { name: 'Power up your account' });
-        this.Move_In_Clean_Energy_Switch = page.locator('//h3[contains(text(), "Clean Energy")]//ancestor::div[contains(@class, "flex")]//button[@role="switch"]');
-        this.Move_In_Savings_Finder_Section = page.getByRole('heading', { name: /Savings Finder/i });
+        // Power Up / Renewable Energy - now part of Utility Setup step
+        this.Move_In_Power_Up_Title = page.getByRole('heading', { name: 'Choose how to start service' });
+        this.Move_In_Clean_Energy_Switch = page.getByRole('switch');
+        this.Move_In_Savings_Finder_Section = page.getByText('Typical savings');
     }
 
 
@@ -293,20 +289,10 @@ export class MoveInPage{
     async Agree_on_Terms_and_Get_Started() {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        
-        await expect(this.Move_In_Terms_Logo).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-        await expect(this.Move_In_Terms_PG_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-        await expect(this.Move_In_Terms_Service_Description).toBeVisible({ timeout: TIMEOUTS.UI_STABILIZE });
 
-        //try{
-        //    await expect(this.Move_In_Terms_Service_Description).toBeVisible({timeout:1000});
-        //}
-        //catch{
-        //    await expect(this.Move_In_Tx_Svc_Service_Description).toBeVisible({timeout:10000});
-        //}
+        await expect(this.Move_In_Welcome_Title).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+        await expect(this.Move_In_Welcome_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
-        await expect(this.Move_In_Terms_Payment_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-        await expect(this.Move_In_Terms_Automation_Description).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
         await this.Move_In_Terms_Checkbox.hover({ timeout: TIMEOUTS.DEFAULT });
         await this.Move_In_Terms_Checkbox.isEnabled({ timeout: TIMEOUTS.MEDIUM });
         await this.Move_In_Terms_Checkbox.setChecked(true, { timeout: TIMEOUTS.MEDIUM });
@@ -319,7 +305,7 @@ export class MoveInPage{
     async Enter_Address(address:string, unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
-            await expect(this.Move_In_Address_Page_Fields).toBeVisible({ timeout: TIMEOUTS.SHORT });
+            await expect(this.Move_In_Address_Page_Title).toBeVisible({ timeout: TIMEOUTS.SHORT });
         }
         catch{
             await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
@@ -341,7 +327,7 @@ export class MoveInPage{
     async Enter_Address_GUID_Flow(address:string, unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
-            await expect(this.Move_In_Address_Page_Fields).toBeVisible({ timeout: TIMEOUTS.SHORT });
+            await expect(this.Move_In_Address_Page_Title).toBeVisible({ timeout: TIMEOUTS.SHORT });
         }
         catch{
             await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
@@ -363,7 +349,7 @@ export class MoveInPage{
     async Parameterized_Address_GUID_Flow(unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
-            await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:3000});
+            await expect(this.Move_In_Address_Page_Title).toBeVisible({timeout:3000});
         }
         catch{
             await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
@@ -380,7 +366,7 @@ export class MoveInPage{
     async Enter_Unit(unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
-            await expect(this.Move_In_Address_Page_Fields).toBeVisible({timeout:3000});
+            await expect(this.Move_In_Address_Page_Title).toBeVisible({timeout:3000});
         }
         catch{
             await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
@@ -393,48 +379,21 @@ export class MoveInPage{
     }
 
 
-    async Setup_Account(Electric_New: boolean, Gas_New: boolean){ 
-        await expect(this.Move_In_Account_Setup_Fields).toBeVisible({timeout:15000});
-        if(await this.Move_In_Electric_New_Button.isVisible()){
-            if(Electric_New == true){
-                await this.Move_In_Electric_New_Button.hover();
-                await this.Move_In_Electric_New_Button.click();
-            }
-            else{
-                await this.Move_In_Electric_Existing_Button.hover();
-                await this.Move_In_Electric_Existing_Button.click();
-            }
-        }
-
-        
-
-        if(await this.Move_In_Gas_New_Button.isVisible()){
-            if(Gas_New == true){
-                await this.Move_In_Gas_New_Button.hover();
-                await this.Move_In_Gas_New_Button.click();
-            }
-            else{
-                await this.Move_In_Gas_Existing_Button.hover();
-                await this.Move_In_Gas_Existing_Button.click();
-            }
-        }
-
+    async Setup_Account(Electric_New: boolean, Gas_New: boolean){
+        await expect(this.Move_In_Utility_Setup_Title).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        // New UI: "Public Grid handles setup" is selected by default
+        // "I will do the setup myself" is the alternative
+        // The Electric_New/Gas_New params are kept for interface compatibility
+        // but the new UI no longer has separate radio buttons per utility type
+        await expect(this.Move_In_PG_Handles_Setup_Option).toBeVisible({ timeout: TIMEOUTS.SHORT });
     }
 
 
     async Power_Up_Your_Account(){
-        await this.page.waitForLoadState('domcontentloaded');
-        try {
-            await expect(this.Move_In_Power_Up_Title).toBeVisible({timeout:5000});
-            console.log("Power Up Your Account page found - proceeding");
-            // The page shows clean energy add-on options
-            // The switch is already on by default for clean energy
-            await expect(this.Move_In_Savings_Finder_Section).toBeVisible({timeout:5000});
-            // Click Next to proceed
-            await this.Next_Move_In_Button();
-        } catch {
-            console.log("Power Up Your Account page not found - skipping");
-        }
+        // Renewable energy option is now embedded in the Utility Setup step (Step 3)
+        // The switch is visible on that step, no separate "Power Up" page exists
+        // This method is kept for interface compatibility but is now a no-op
+        // The renewable energy switch is handled within the Utility Setup step
     }
 
 
@@ -475,14 +434,14 @@ export class MoveInPage{
             await expect(this.Move_In_Tx_Svc_Electric_Service).toBeVisible({timeout:1500});
         }
         catch{
-            console.log("No Electric Service");
+            log.debug('No Electric Service');
         }
 
         try{
             await expect(this.Move_In_Tx_Svc_Gas_Service).toBeVisible({timeout:1500});
         }
         catch{
-            console.log("No Gas Service");
+            log.debug('No Gas Service');
         }
         
         await expect(this.Move_In_Tx_Svc_Content).toBeVisible({timeout:10000});
@@ -501,21 +460,19 @@ export class MoveInPage{
 
     
     async Next_Move_In_Button(){
-        await expect(this.Move_In_Next_Button).toBeEnabled({timeout:10000});
-        await this.Move_In_Next_Button.hover({timeout:10000});
-        await this.Move_In_Next_Button.click({timeout:10000});
+        await expect(this.Move_In_Continue_Button).toBeEnabled({timeout:10000});
+        await this.Move_In_Continue_Button.hover({timeout:10000});
+        await this.Move_In_Continue_Button.click({timeout:10000});
     }
 
     async Submit_Move_In_Button(){
-        // Try clicking Next button first, if not available or fails, click Submit button
+        // Try clicking Continue button first, if not available or fails, click Submit button
         try {
-            await expect(this.Move_In_Next_Button).toBeVisible({timeout:2000});
-            await expect(this.Move_In_Next_Button).toBeEnabled({timeout:2000});
-            await this.Move_In_Next_Button.hover({timeout:1000});
-            await this.Move_In_Next_Button.click({timeout:1000});
-            console.log("Clicked Next button after ID Info");
+            await expect(this.Move_In_Continue_Button).toBeVisible({timeout:2000});
+            await expect(this.Move_In_Continue_Button).toBeEnabled({timeout:2000});
+            await this.Move_In_Continue_Button.hover({timeout:1000});
+            await this.Move_In_Continue_Button.click({timeout:1000});
         } catch (error) {
-            console.log("Next button not available, clicking Submit button");
             await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:10000});
             await this.Move_In_Submit_Button.hover({timeout:10000});
             await this.Move_In_Submit_Button.click({timeout:10000});
@@ -536,20 +493,24 @@ export class MoveInPage{
         await this.Move_In_Phone_Field.fill(phone);
         await this.Move_In_Email_Field.click();
         await this.Move_In_Email_Field.fill(email);
-        await this.Move_In_Date_Field.click({timeout:10000});
 
+        // Date picker: click the textbox to open calendar, then select day
+        await this.Move_In_Date_Field.click({timeout:10000});
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         if (await this.Move_In_Date_Selector(day).isVisible()){
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);
-            await this.Move_In_About_You_Title.click();
         }
         else{
             await this.Move_In_Next_Month_Button.click();
+            await this.page.waitForTimeout(500);
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);
-            await this.Move_In_About_You_Title.click();
         }
+
+        // Close calendar by clicking outside
+        await this.Move_In_About_You_Title.click();
 
         await expect(this.Move_In_Receive_Text_Checkbox).toBeVisible({timeout:10000});
         await expect(this.Move_In_Receive_Text_Checkbox).toBeChecked();
@@ -563,7 +524,6 @@ export class MoveInPage{
             await this.Move_In_Receive_Text_Checkbox.setChecked(false, { timeout: 10000 });
         }
 
-        console.log('Receive Text:', shouldCheck);
         return shouldCheck;
     }
 
@@ -588,19 +548,24 @@ export class MoveInPage{
         await expect(this.Move_In_Email_Field).not.toHaveAttribute('value', '');
         await this.Move_In_Email_Field.click();
         await this.Move_In_Email_Field.fill(email);
+
+        // Date picker: click to open calendar, then select day
         await this.Move_In_Date_Field.click({timeout:10000});
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         if (await this.Move_In_Date_Selector(day).isVisible()){
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);
-            await this.Move_In_About_You_Title.click();
         }
         else{
             await this.Move_In_Next_Month_Button.click();
+            await this.page.waitForTimeout(500);
             await this.Move_In_Date_Selector(day).click();
             await this.page.waitForTimeout(500);
-            await this.Move_In_About_You_Title.click();
         }
+
+        // Close calendar by clicking outside
+        await this.Move_In_About_You_Title.click();
 
         await expect(this.Move_In_Receive_Text_Checkbox).toBeVisible({timeout:10000});
         await expect(this.Move_In_Receive_Text_Checkbox).toBeChecked();
@@ -614,7 +579,6 @@ export class MoveInPage{
             await this.Move_In_Receive_Text_Checkbox.setChecked(false, { timeout: 10000 });
         }
 
-        console.log('Receive Text:', shouldCheck);
         return shouldCheck;
     }
 
@@ -637,7 +601,7 @@ export class MoveInPage{
         const Q1randomOption = Q1options[Math.floor(Math.random() * Q1options.length)];
         const Q1randomOptionText = await Q1randomOption.textContent();
         await Q1randomOption.click(); 
-        console.log(Q1randomOptionText);
+        log.debug('CON_ED Q1 answer', { answer: Q1randomOptionText ?? '' });
 
         const Q2options = [
             this.Move_In_CON_ED_62_years_Yes_Button,
@@ -647,7 +611,7 @@ export class MoveInPage{
         const Q2randomOption = Q2options[Math.floor(Math.random() * Q2options.length)];
         const Q2randomOptionText = await Q2randomOption.textContent();
         await Q2randomOption.click(); 
-        console.log(Q2randomOptionText);
+        log.debug('CON_ED Q2 answer', { answer: Q2randomOptionText ?? '' });
 
         return {
             Q1randomOptionText,
@@ -665,16 +629,11 @@ export class MoveInPage{
         ];
         const Q1randomIndex = Math.floor(Math.random() * Q1options.length);
         const Q1randomOption = Q1options[Q1randomIndex];
-        console.log(Q1randomOption);
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Dropdown.hover();
-        await this.page.waitForTimeout(500);
         await this.Move_In_Lenght_of_Staying_Dropdown.click();
         await this.page.waitForTimeout(500);
         await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(500);
-        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).hover({timeout:5000});  
         await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
 
         const Q2options = [
@@ -686,16 +645,11 @@ export class MoveInPage{
         ];
         const Q2randomIndex = Math.floor(Math.random() * Q2options.length);
         const Q2randomOption = Q2options[Q2randomIndex];
-        console.log(Q2randomOption);
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_BGE_Employment_Status_Title).toBeVisible({timeout:30000});
-        await this.Move_In_BGE_Employment_Status_Dropdown.hover();
-        await this.page.waitForTimeout(500);
         await this.Move_In_BGE_Employment_Status_Dropdown.click();
         await this.page.waitForTimeout(500);
         await expect(this.Move_In_BGE_Employment_Selection(Q2randomOption)).toBeVisible({timeout:30000});
-        await this.page.waitForTimeout(500);
-        await this.Move_In_BGE_Employment_Selection(Q2randomOption).hover({timeout:5000});
         await this.Move_In_BGE_Employment_Selection(Q2randomOption).click({timeout:5000});
 
         return {
@@ -714,13 +668,11 @@ export class MoveInPage{
           ];
         const Q1randomIndex = Math.floor(Math.random() * Q1options.length);
         const Q1randomOption = Q1options[Q1randomIndex];
-        console.log(Q1randomOption);
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Dropdown.hover();
         await this.Move_In_Lenght_of_Staying_Dropdown.click();
         await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});  
+        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});
         await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:10000});
 
         await this.page.waitForTimeout(500);
@@ -729,12 +681,11 @@ export class MoveInPage{
             this.Move_In_Texas_Thermostat_Yes_Button,
             this.Move_In_Texas_Thermostat_No_Button
           ];
-        
+
         await expect(this.Move_In_Texas_Thermostat_Question).toBeVisible({timeout:30000});
         const Q2randomOption = Q2options[Math.floor(Math.random() * Q2options.length)];
         const Q2randomOptionText = await Q2randomOption.textContent();
-        await Q2randomOption.click(); 
-        console.log(Q2randomOptionText);
+        await Q2randomOption.click();
         return {
             Q1randomOption,
             Q2randomOptionText
@@ -750,12 +701,10 @@ export class MoveInPage{
           ];
         const Q1randomIndex = Math.floor(Math.random() * Q1options.length);
         const Q1randomOption = Q1options[Q1randomIndex];
-        console.log("Program Enrolled: ", Q1randomOption);
         await this.page.waitForLoadState('domcontentloaded');
 
         await expect(this.Move_In_Program_Enrolled_Question).toBeVisible({timeout:10000});
-        await expect(this.Move_In_Program_Enrolled_Options(Q1randomOption)).toBeVisible({timeout:10000});  
-        await this.Move_In_Program_Enrolled_Options(Q1randomOption).hover({timeout:10000});
+        await expect(this.Move_In_Program_Enrolled_Options(Q1randomOption)).toBeVisible({timeout:10000});
         await this.Move_In_Program_Enrolled_Options(Q1randomOption).click({timeout:10000});
 
         return Q1randomOption
@@ -802,7 +751,7 @@ export class MoveInPage{
             isVisible = vis1 || vis2;
         }
 
-        console.log('isPriorAddressRequired:', isVisible);
+        log.debug('isPriorAddressRequired', { isVisible });
 
         if (isVisible === true){
             await this.Move_In_Prev_Address_Field.click({timeout:30000});
@@ -822,29 +771,34 @@ export class MoveInPage{
         const url = new URL(this.page.url());
         const hasShortCode = url.searchParams.has('shortCode');
         const shortCodeValue = url.searchParams.get('shortCode');
-        let isVisible
-        
-        console.log('Has shortCode:', hasShortCode);
-        console.log('shortCode value:', shortCodeValue);
+        let isHandleBilling = false;
+        let setupPaymentDuringOnboarding = false;
 
         if(hasShortCode === true){
-            isVisible = await utilityQueries.getIsHandledBillingBuilding(shortCodeValue || '');
+            isHandleBilling = await utilityQueries.getIsHandledBillingBuilding(shortCodeValue || '');
+            setupPaymentDuringOnboarding = await utilityQueries.getSetupPaymentDuringOnboardingBuilding(shortCodeValue || '');
         }
         else{
             if(ElectricCompany === null){
-                isVisible = await utilityQueries.getIsHandledBillingUtility(GasCompany || '');
+                isHandleBilling = await utilityQueries.getIsHandledBillingUtility(GasCompany || '');
+                setupPaymentDuringOnboarding = await utilityQueries.getSetupPaymentDuringOnboardingUtility(GasCompany || '');
             }
             else if(GasCompany === null){
-                isVisible = await utilityQueries.getIsHandledBillingUtility(ElectricCompany || '');
+                isHandleBilling = await utilityQueries.getIsHandledBillingUtility(ElectricCompany || '');
+                setupPaymentDuringOnboarding = await utilityQueries.getSetupPaymentDuringOnboardingUtility(ElectricCompany || '');
             }
             else{
                 const vis1 = await utilityQueries.getIsHandledBillingUtility(ElectricCompany || '');
                 const vis2 = await utilityQueries.getIsHandledBillingUtility(GasCompany || '');
-                isVisible = vis1 || vis2;
+                isHandleBilling = vis1 || vis2;
+                const pay1 = await utilityQueries.getSetupPaymentDuringOnboardingUtility(ElectricCompany || '');
+                const pay2 = await utilityQueries.getSetupPaymentDuringOnboardingUtility(GasCompany || '');
+                setupPaymentDuringOnboarding = pay1 || pay2;
             }
         }
 
-        console.log('paymentIsVisible:', isVisible);
+        // Payment visible only if BOTH flags are true
+        const isVisible = isHandleBilling && setupPaymentDuringOnboarding;
         return isVisible;
     }
 
@@ -867,15 +821,14 @@ export class MoveInPage{
         }
         
 
-        console.log('payThroughIsVisible:', !isVisible);
+        log.debug('payThroughIsVisible', { isVisible: !isVisible });
         return !isVisible;
     }
 
     async Enter_Card_Details(CCnumber:string, CCexpiry:string, CCcvc:string, CCcountry:string, CCzip:string, PayThroughPG:boolean = true){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-    
-        
+
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
         await this.page.waitForTimeout(3000);
@@ -883,26 +836,22 @@ export class MoveInPage{
 
         if(PayThroughPGVisible){
             if(PayThroughPG == true){
-                await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
-                //await this.Move_In_Pay_Through_PG_Yes.hover();
-                //await this.Move_In_Pay_Through_PG_Yes.click();
-
-                console.log("Pay through PG:", PayThroughPG);
-
+                // "Public Grid handles everything" radio is default selected
+                await this.Move_In_Pay_Through_PG_Switch.check({ timeout: 5000 });
+                // Click Continue to proceed to payment form
+                await this.Next_Move_In_Button();
                 await this.Enter_Payment_Details(CCnumber, CCexpiry, CCcvc, CCcountry, CCzip);
             }
             else{
-                await this.Move_In_Pay_Through_PG_Switch.setChecked(false, { timeout: 5000 });
-                //await this.Move_In_Pay_Through_PG_No.hover();
-                //await this.Move_In_Pay_Through_PG_No.click();
-
-                console.log("Pay through PG:", PayThroughPG);
+                // Select "I will manage payments myself"
+                const selfManageOption = this.page.getByRole('radio', { name: /I will manage payments myself/ });
+                await selfManageOption.check({ timeout: 5000 });
             }
         }
         else{
             await this.Enter_Payment_Details(CCnumber, CCexpiry, CCcvc, CCcountry, CCzip);
         }
-        
+
     }
 
     async Enter_Valid_Bank_Details(Email:string, FullName:string, PayThroughPG:boolean = true){
@@ -915,26 +864,22 @@ export class MoveInPage{
 
         if(PayThroughPGVisible){
             if(PayThroughPG == true){
-                await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
-                //await this.Move_In_Pay_Through_PG_Yes.hover();
-                //await this.Move_In_Pay_Through_PG_Yes.click();
-
-                console.log("Pay through PG:", PayThroughPG);
-
+                // "Public Grid handles everything" radio
+                await this.Move_In_Pay_Through_PG_Switch.check({ timeout: 5000 });
+                // Click Continue to proceed to payment form
+                await this.Next_Move_In_Button();
                 await this.Enter_Sucessful_Bank_Details(Email, FullName);
             }
             else{
-                await this.Move_In_Pay_Through_PG_Switch.setChecked(false, { timeout: 5000 });
-                //await this.Move_In_Pay_Through_PG_No.hover();
-                //await this.Move_In_Pay_Through_PG_No.click();
-
-                console.log("Pay through PG:", PayThroughPG);
+                // Select "I will manage payments myself"
+                const selfManageOption = this.page.getByRole('radio', { name: /I will manage payments myself/ });
+                await selfManageOption.check({ timeout: 5000 });
             }
         }
         else{
             await this.Enter_Sucessful_Bank_Details(Email, FullName);
         }
-        
+
     }
 
 
@@ -946,29 +891,24 @@ export class MoveInPage{
         await this.page.waitForTimeout(3000);
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
-
         if(PayThroughPGVisible){
             if(PayThroughPG == true){
-                await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
-                //await this.Move_In_Pay_Through_PG_Yes.hover();
-                //await this.Move_In_Pay_Through_PG_Yes.click();
-
-                console.log("Pay through PG:", PayThroughPG);
-
+                // "Public Grid handles everything" radio
+                await this.Move_In_Pay_Through_PG_Switch.check({ timeout: 5000 });
+                // Click Continue to proceed to payment form
+                await this.Next_Move_In_Button();
                 await this.Enter_Failed_Bank_Details(Email, FullName);
             }
             else{
-                await this.Move_In_Pay_Through_PG_Switch.setChecked(false, { timeout: 5000 });
-                //await this.Move_In_Pay_Through_PG_No.hover();
-                //await this.Move_In_Pay_Through_PG_No.click();
-
-                console.log("Pay through PG:", PayThroughPG);
+                // Select "I will manage payments myself"
+                const selfManageOption = this.page.getByRole('radio', { name: /I will manage payments myself/ });
+                await selfManageOption.check({ timeout: 5000 });
             }
         }
         else{
             await this.Enter_Failed_Bank_Details(Email, FullName);
         }
-        
+
     }
 
     //consider if Pay Through PG is visible
@@ -1014,9 +954,9 @@ export class MoveInPage{
                 success = true; // If the operation succeeds, set success to true
             } catch (error) {
                 attempt++;
-                console.error(`Attempt ${attempt} failed: ${error}`);
+                log.error(`Card country select attempt ${attempt} failed`, { error: String(error) });
                 if (attempt >= maxRetries) {
-                    console.error(`Failed to select option after ${maxRetries} attempts`);
+                    log.error(`Failed to select card country after ${maxRetries} attempts`);
                     break;
                 }
             }
@@ -1165,35 +1105,24 @@ export class MoveInPage{
         const PayThroughPGVisible = await this.Move_In_Pay_Through_PG_Title.isVisible({ timeout: 3000 });
 
         if(PayThroughPGVisible){
-            await this.Move_In_Pay_Through_PG_Switch.setChecked(true, { timeout: 5000 });
+            // "Public Grid handles everything" radio
+            await this.Move_In_Pay_Through_PG_Switch.check({ timeout: 5000 });
+            // Click Continue to proceed to payment form
+            await this.Next_Move_In_Button();
+        }
 
-            await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
-            await this.Move_In_Skip_Button.hover();
-            await this.Move_In_Skip_Button.click();
-    
-            await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
-            
-            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
-            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
-        }
-        else{
-            await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
-            await this.Move_In_Skip_Button.hover();
-            await this.Move_In_Skip_Button.click();
-    
-            await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
-            await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
-            
-            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
-            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();   
-        }
+        await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
+        await this.Move_In_Skip_Button.hover();
+        await this.Move_In_Skip_Button.click();
+
+        await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Question_Link).toBeEnabled({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeVisible({timeout:30000});
+        await expect(this.Move_In_Confirm_Skip_Payment_Add_Now_Button).toBeEnabled({timeout:30000});
+
+        await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.hover({timeout:30000});
+        await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
     }
 
 
@@ -1204,11 +1133,11 @@ export class MoveInPage{
             if (isVisible) {
                 const textValue = await element.textContent();
                 const accountNumber = textValue?.trim() || '';
-                console.log('Account Number:', accountNumber);
+                log.info('Account number retrieved', { accountNumber });
                 return accountNumber;
             }
         } catch {
-            console.log('Account number element not found - new UI may not display account number');
+            log.debug('Account number element not found - new UI may not display account number');
         }
         return '';
     }
@@ -1240,7 +1169,7 @@ export class MoveInPage{
             await new Promise(resolve => setTimeout(resolve, 500)); // wait for 0.5 seconds
         }
         
-        console.log("ESCO Terms:",vis);
+        log.debug('ESCO Terms visibility', { visible: vis });
 
         if(vis == true){
             await expect(this.Move_In_ESCO_Title).toBeVisible({timeout:30000});

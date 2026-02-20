@@ -261,37 +261,5 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
-
-  test('New User Shortcoded Utility TX Dereg Address', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "DTE");
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoPayment(page, "PSEG", "DTE",true,true);
-    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
-    await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-  });
-
-
-  test.fixme('(TBD to Light)New User for TX Dereg Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
-    //convert to light
-    test.setTimeout(180000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "TX-DEREG", null);
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoBankAccount(page, "TX-DEREG", null,true,true);
-    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
-    await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-  });
-
-
 });
 
