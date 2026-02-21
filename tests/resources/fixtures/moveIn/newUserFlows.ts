@@ -58,10 +58,32 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   await moveInPage.Enter_Address(addressType, pgUser.UnitNumber);
   await moveInPage.Next_Move_In_Button();
 
+  // Ensure we've left the address step (address validation can be slow, retry if needed)
+  const addressTitle = moveInPage.page.getByText('Enter your address');
+  for (let retry = 0; retry < 3; retry++) {
+    try {
+      await addressTitle.waitFor({ state: 'hidden', timeout: 15000 });
+      break;
+    } catch {
+      log.debug('Still on address page, retrying Continue click', { retry: retry + 1 });
+      await moveInPage.Next_Move_In_Button();
+    }
+  }
+
   // Step 3: Account Setup or Texas Agreement (may not appear for zip-based flows)
   const setupStepPresent = await handleAccountSetupOrTexasAgreement(moveInPage, newElectric, newGas);
   if (setupStepPresent) {
     await moveInPage.Next_Move_In_Button();
+  }
+
+  // For Texas companies, Texas Service Agreement may appear after Utility Setup
+  const texasAfterSetup = moveInPage.page.getByText('Public Grid starts service for');
+  try {
+    await texasAfterSetup.waitFor({ state: 'visible', timeout: 5000 });
+    await moveInPage.Texas_Service_Agreement();
+    await moveInPage.Next_Move_In_Button();
+  } catch {
+    // No Texas agreement — continue
   }
 
   // ESCO dialog may appear after clicking Continue on Utility Setup (NY companies)

@@ -1187,9 +1187,11 @@ export class MoveInPage{
 
         await this.page.waitForTimeout(3000);
 
-        await expect(this.Move_In_Skip_Button).toBeEnabled({timeout:30000});
-        await this.Move_In_Skip_Button.hover();
-        await this.Move_In_Skip_Button.click();
+        // New UI: No "Skip for now" button. Select "I will manage payments myself" and click Continue
+        const selfManageOption = this.page.getByText('I will manage payments myself');
+        await selfManageOption.click();
+        await this.page.waitForTimeout(2000);
+        await this.Move_In_Continue_Button.click();
     }
 
 

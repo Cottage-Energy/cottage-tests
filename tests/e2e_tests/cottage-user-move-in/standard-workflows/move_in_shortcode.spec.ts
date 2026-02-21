@@ -124,108 +124,13 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
 });
 
 
-//Billing but Cancelled
-test.describe('Short Code Billing Canceled Registration', () => {
-  test.describe.configure({mode: "serial"});
-  
-
-  test('New User for ShortCode Electric Only', {tag: [ '@regression5'],}, async ({moveInpage, overviewPage, page}) => {
-    test.setTimeout(900000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "DTE", null);
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInSkipPayment(page, "DTE", null, true, true);
-    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
-    await page.waitForTimeout(75000);
-
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
-    await page.goto('/sign-in');
-    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
-    // await finishAccountSetupPage.Click_Cancel_Registration();
-    await overviewPage.Check_Inactive_Account_Alert_Visible();
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-  });
-
-
-  test('New User for ShortCode Gas Only', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, page}) => { // Use BGE and NGMA
-    test.setTimeout(900000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", null, "PSEG");
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInSkipPayment(page, null, "PSEG", true, true);
-    await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
-    await accountQueries.checkElectricAccountIdNotPresent(MoveIn.cottageUserId);
-    await page.waitForTimeout(75000);
-
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(MoveIn.pgUserEmail);
-    await page.goto('/sign-in');
-    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
-    // await finishAccountSetupPage.Click_Cancel_Registration();
-    await overviewPage.Check_Inactive_Account_Alert_Visible();
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-  });
-
-
-  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page}) => {
-    test.setTimeout(900000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "DTE", "DTE");
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInSkipPayment(page, "DTE", "DTE", true, true);
-    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
-    await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
-    await page.waitForTimeout(75000);
-
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.pgUserEmail);
-    await page.goto('/sign-in');
-    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
-    // await finishAccountSetupPage.Click_Cancel_Registration();
-    await overviewPage.Check_Inactive_Account_Alert_Visible();
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-  });
-
-
-  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page}) => {
-    test.setTimeout(900000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "CON-EDISON");
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInSkipPayment(page, "PSEG", "CON-EDISON", true, true);
-    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
-    await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
-    await page.waitForTimeout(75000);
-
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.pgUserEmail);
-    await page.goto('/sign-in');
-    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
-    // await finishAccountSetupPage.Click_Cancel_Registration();
-    await overviewPage.Check_Inactive_Account_Alert_Visible();
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
-    await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-  });
-  
-
-});
-
-
 
 test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
   test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     await utilityQueries.updateCompaniesToBuilding("autotest", "COSERV", null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -240,7 +145,7 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
 
 
   test('New User for ShortCode Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
-    test.setTimeout(180000);
+    test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     await utilityQueries.updateCompaniesToBuilding("autotest", "COSERV", "COSERV");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });

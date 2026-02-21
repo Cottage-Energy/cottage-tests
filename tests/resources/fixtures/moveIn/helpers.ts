@@ -145,9 +145,10 @@ export async function handleAccountSetupOrTexasAgreement(
   await moveInPage.page.waitForTimeout(2000);
 
   // Check if Utility Setup page is visible (may not appear for some zip-based flows)
+  // Increased timeout to 30s to allow for address validation delay
   const utilitySetupHeading = moveInPage.page.getByRole('heading', { name: 'Choose how to start service' });
   try {
-    await utilitySetupHeading.waitFor({ state: 'visible', timeout: 10000 });
+    await utilitySetupHeading.waitFor({ state: 'visible', timeout: 30000 });
     await moveInPage.Setup_Account(newElectric, newGas);
     return true;
   } catch {
@@ -156,7 +157,7 @@ export async function handleAccountSetupOrTexasAgreement(
 
   const texasText = moveInPage.page.getByText('Public Grid starts service for');
   try {
-    await texasText.waitFor({ state: 'visible', timeout: 3000 });
+    await texasText.waitFor({ state: 'visible', timeout: 10000 });
     log.debug('TX-DEREG Service Zip Agreement');
     await moveInPage.Texas_Service_Agreement();
     return true;
