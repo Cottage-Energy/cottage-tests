@@ -31,7 +31,7 @@ test.describe('Move In New Service Zip User', () => {
 
 
   test('COMED New User', { tag: TEST_TAGS.REGRESSION1 }, async ({moveInpage, page}) => {
-    test.setTimeout(TIMEOUTS.EXTENDED);
+    test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     MoveIn = await newUserMoveInAutoPayment(page,'COMED', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await userQueries.checkIsRegistrationComplete(MoveIn.cottageUserId);
@@ -46,7 +46,7 @@ test.describe('Move In New Service Zip User', () => {
 
 
   test('CON-EDISON New User Add Auto Payment', { tag: TEST_TAGS.REGRESSION2 }, async ({moveInpage, page}) => {
-    test.setTimeout(TIMEOUTS.EXTENDED);
+    test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     MoveIn = await newUserMoveInAutoPayment(page, 'CON-EDISON', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
