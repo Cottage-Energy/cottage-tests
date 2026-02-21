@@ -58,11 +58,13 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   await moveInPage.Enter_Address(addressType, pgUser.UnitNumber);
   await moveInPage.Next_Move_In_Button();
 
-  // Step 3: Account Setup or Texas Agreement + ESCO Conditions
-  await handleAccountSetupOrTexasAgreement(moveInPage, newElectric, newGas);
-  await moveInPage.Next_Move_In_Button();
+  // Step 3: Account Setup or Texas Agreement (may not appear for zip-based flows)
+  const setupStepPresent = await handleAccountSetupOrTexasAgreement(moveInPage, newElectric, newGas);
+  if (setupStepPresent) {
+    await moveInPage.Next_Move_In_Button();
+  }
 
-  // ESCO dialog may appear after clicking Continue on Utility Setup
+  // ESCO dialog may appear after clicking Continue on Utility Setup (NY companies)
   await moveInPage.Read_ESCO_Conditions();
 
   // Step 4: Personal Info (includes Start Service Date)
