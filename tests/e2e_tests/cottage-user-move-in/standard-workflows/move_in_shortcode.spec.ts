@@ -129,7 +129,7 @@ test.describe('Short Code Billing Canceled Registration', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression5'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression5'],}, async ({moveInpage, overviewPage, page}) => {
     test.setTimeout(900000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "DTE", null);
     
@@ -140,19 +140,17 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
-    //add query to check if the user is added to the UtilityCredentials table
-    //add check in DB fro question answers
-    await finishAccountSetupPage.Click_Cancel_Registration();
+    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
 
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-    //check Account Status
   });
 
 
-  test('New User for ShortCode Gas Only', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => { // Use BGE and NGMA
+  test('New User for ShortCode Gas Only', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, page}) => { // Use BGE and NGMA
     test.setTimeout(900000);
     await utilityQueries.updateCompaniesToBuilding("autotest", null, "PSEG");
     
@@ -164,19 +162,17 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
-    //add query to check if the user is added to the UtilityCredentials table
-    //add check in DB fro question answers
-    await finishAccountSetupPage.Click_Cancel_Registration();
+    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
 
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-    //check Account Status
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page}) => {
     test.setTimeout(900000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "DTE", "DTE");
     
@@ -188,19 +184,17 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
-    //add query to check if the user is added to the UtilityCredentials table
-    //add check in DB fro question answers
-    await finishAccountSetupPage.Click_Cancel_Registration();
+    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
 
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-    //check Account Status
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page}) => {
     test.setTimeout(900000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "CON-EDISON");
     
@@ -212,15 +206,13 @@ test.describe('Short Code Billing Canceled Registration', () => {
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
-    //add query to check if the user is added to the UtilityCredentials table
-    //add check in DB fro question answers
-    await finishAccountSetupPage.Click_Cancel_Registration();
+    // TODO: New post-sign-in cancel flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Check_Inactive_Account_Alert_Visible();
     await page.waitForTimeout(10000);
 
     await FastmailActions.Check_Start_Service_Confirmation_Not_Present(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
-    //check Account Status
   });
   
 

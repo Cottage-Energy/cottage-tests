@@ -783,7 +783,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
-  test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, finishAccountSetupPage, overviewPage}) => {
+  test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -834,7 +834,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('NGMA Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
+  test('NGMA Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -874,7 +874,8 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
@@ -890,7 +891,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('PSEG PSEG Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
+  test('PSEG PSEG Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -931,7 +932,8 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
@@ -947,7 +949,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -985,7 +987,8 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
 
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();

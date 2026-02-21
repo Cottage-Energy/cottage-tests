@@ -17,7 +17,7 @@ export function getAddressForCompany(
   electricCompany: UtilityCompany,
   gasCompany: UtilityCompany
 ): string {
-  const defaultAddress = MoveInData.BGEaddress;
+  const defaultAddress = MoveInData.COMEDaddress;
 
   if (electricCompany === null && gasCompany !== null) {
     const gasKey = normalizeCompanyName(gasCompany);
@@ -35,7 +35,7 @@ export function getAddressForCompany(
     }
   }
 
-  log.debug('Using default BGE address');
+  log.debug('Using default COMED address');
   return defaultAddress;
 }
 

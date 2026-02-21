@@ -712,7 +712,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
 test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
   test.describe.configure({mode: "serial"});
     
-  test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression7'],}, async ({page, moveInpage, finishAccountSetupPage, overviewPage}) => {
+  test('EVERSOURCE Cottageuser Exist Only', {tag: [ '@regression7'],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -739,7 +739,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     //await linearActions.CountMoveInTicket(PGuser.Email,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -754,7 +754,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
   });
 
 
-  test('NGMA CON-EDISON Cottageuser Exist Only', {tag: [ '@regression1'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
+  test('NGMA CON-EDISON Cottageuser Exist Only', {tag: [ '@regression1'],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -788,7 +788,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     //await linearActions.CountMoveInTicket(PGuser.Email,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
+    // await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -803,7 +803,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
   });
 
 
-  test('PSEG PSEG Cottageuser Exist Only', {tag: [ '@regression2'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
+  test('PSEG PSEG Cottageuser Exist Only', {tag: [ '@regression2'],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -835,7 +835,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     //await linearActions.CountMoveInTicket(PGuser.Email,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
+    // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -850,7 +850,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@regression3'],}, async ({page, moveInpage, overviewPage, finishAccountSetupPage}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: ['@regression3'],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();
@@ -882,7 +882,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     //await linearActions.CountMoveInTicket(PGuser.Email,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(PGuser.Email);
     await page.goto('/sign-in');
-    await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
+    // await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(PGuser.Email, `PGtest ${PGuser.FirstName}`);
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);

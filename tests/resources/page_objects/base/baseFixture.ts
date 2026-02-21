@@ -1,6 +1,5 @@
 import { test as base } from '@playwright/test';
 import { MoveInPage } from '../move_in_page';
-import { FinishAccountSetupPage } from '../finish_account_setup_page';
 import { HomePage } from '../homepage';
 import { SidebarChat } from '../sidebar_chat';
 import { OverviewPage } from '../overview_dashboard_page';
@@ -16,7 +15,6 @@ interface PageFixtures {
   homepage: HomePage;
   sidebarChat: SidebarChat;
   moveInpage: MoveInPage;
-  finishAccountSetupPage: FinishAccountSetupPage;
   overviewPage: OverviewPage;
   billingPage: BillingPage;
   servicesPage: ServicesPage;
@@ -38,10 +36,6 @@ const testPages = base.extend<PageFixtures>({
 
   moveInpage: async ({ page }, use) => {
     await use(new MoveInPage(page));
-  },
-
-  finishAccountSetupPage: async ({ page }, use) => {
-    await use(new FinishAccountSetupPage(page));
   },
 
   overviewPage: async ({ page }, use) => {

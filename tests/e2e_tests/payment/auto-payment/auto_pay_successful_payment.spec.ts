@@ -50,7 +50,7 @@ test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
-  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -62,24 +62,10 @@ test.describe('Valid Card Auto Payment', () => {
     MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, false);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // After sign-in, user is prompted to add payment method inline
+    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -124,7 +110,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -136,24 +122,10 @@ test.describe('Valid Card Auto Payment', () => {
     MoveIn = await newUserMoveInSkipPayment(page,"SDGE","SCE", true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // After sign-in, user is prompted to add payment method inline
+    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -266,7 +238,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -278,24 +250,10 @@ test.describe('Valid Bank Auto Payment', () => {
         MoveIn = await newUserMoveInSkipPayment(page,"DELMARVA","DELMARVA", true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
         
-        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
+        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+        // After sign-in, user is prompted to add payment method inline
+        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -338,7 +296,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
 
-    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -350,24 +308,10 @@ test.describe('Valid Bank Auto Payment', () => {
         MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
         
-        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
+        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+        // After sign-in, user is prompted to add payment method inline
+        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -375,7 +319,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
 
-    test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -387,24 +331,10 @@ test.describe('Valid Bank Auto Payment', () => {
         MoveIn = await newUserMoveInSkipPayment(page, null, "BGE", true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
         
-        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
+        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+        // After sign-in, user is prompted to add payment method inline
+        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
