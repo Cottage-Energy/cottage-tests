@@ -1187,10 +1187,22 @@ export class MoveInPage{
 
         await this.page.waitForTimeout(3000);
 
-        // New UI: No "Skip for now" button. Select "I will manage payments myself" and click Continue
-        const selfManageOption = this.page.getByText('I will manage payments myself');
-        await selfManageOption.click();
+        // New UI: Click the "I will manage payments myself" card container
+        const selfManageCard = this.page.locator('text=I will manage payments myself').first();
+        await selfManageCard.click({ force: true });
         await this.page.waitForTimeout(2000);
+
+        // Verify Stripe iframe is NOT visible (self-manage hides it)
+        const stripeFrame = this.page.frameLocator('iframe[title="Secure payment input frame"]');
+        try {
+            await this.page.locator('iframe[title="Secure payment input frame"]').waitFor({ state: 'hidden', timeout: 5000 });
+        } catch {
+            // Stripe still visible — try clicking again on the radio directly
+            const selfManageRadio = this.page.getByRole('radio', { name: /I will manage payments myself/ }).first();
+            await selfManageRadio.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+
         await this.Move_In_Continue_Button.click();
     }
 

@@ -67,11 +67,11 @@ export class OverviewPage {
 
         this.Overview_Inactive_Account_Alert = page.getByText('Inactive Account: Service at');
 
-        this.Overview_Setup_Password_Title = page.getByRole('heading', { name: 'Set Up Your Password' });
-        this.Overview_Setup_Password_Description = page.getByText('To keep your account secure');
+        this.Overview_Setup_Password_Title = page.getByText(/Set up your new password|Set Up Your Password/i);
+        this.Overview_Setup_Password_Description = page.getByText(/To keep your account secure|password was recently reset/i);
         this.Overview_Setup_Password_Field = page.locator('input[name="password"]');
         this.Overview_Setup_Password_Confirm_Password_Field = page.locator('input[name="confirmPassword"]');
-        this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: 'Set Password' });
+        this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: /Set (new )?password/i });
     }
 
     //methods
