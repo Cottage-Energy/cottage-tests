@@ -26,7 +26,7 @@ test.describe.configure({mode: "serial", retries: 0});
 test.describe('Move In Existing Utility Account', () => {
 
 
-  test.describe('Without ShortCode', () => {
+  test.describe('Setup Myself Service Zip', () => {
 
     test('Requested - Save Toggle Disabled', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
       test.setTimeout(150000);
@@ -76,7 +76,7 @@ test.describe('Move In Existing Utility Account', () => {
   });
 
 
-  test.describe('With ShortCode', () => {
+  test.describe('Setup Myself With ShortCode', () => {
 
     test('Requested - Save Toggle Disabled', {tag: ['@regression3'],}, async ({moveInpage, page}) => {
       test.setTimeout(150000);
@@ -127,6 +127,40 @@ test.describe('Move In Existing Utility Account', () => {
       // Known bug: gas account not created even when gas company is present on building
       // Uncomment when bug is fixed:
       // await accountQueries.checkGetGasAccountId(cottageUserId);
+
+      // Cleanup created user data
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    });
+
+
+    test('Requested - Save Toggle Enabled (Electric Only)', {tag: ['@regression6'],}, async ({moveInpage, page}) => {
+      test.setTimeout(180000);
+      await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", null);
+      
+      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, true, true);
+
+      await page.waitForTimeout(5000);
+      const cottageUserId = await userQueries.getCottageUserId(MoveIn.pgUserEmail);
+      await accountQueries.checkGetElectricAccountId(cottageUserId);
+
+      // Cleanup created user data
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    });
+
+
+    test('Requested - Save Toggle Enabled (Gas Only)', {tag: ['@regression6'],}, async ({moveInpage, page}) => {
+      test.setTimeout(180000);
+      await utilityQueries.updateCompaniesToBuilding("autotest", null, "PSEG");
+      
+      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, true, true);
+
+      await page.waitForTimeout(5000);
+      const cottageUserId = await userQueries.getCottageUserId(MoveIn.pgUserEmail);
+      await accountQueries.checkGetGasAccountId(cottageUserId);
 
       // Cleanup created user data
       await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
