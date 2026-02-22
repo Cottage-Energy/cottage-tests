@@ -40,11 +40,25 @@ export class OverviewPage {
     //locators
     constructor(page: Page) {
         this.page = page;
-        this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div/parent::div');
-        this.Overview_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
+        // Balance section: new UI shows $X.XX amount + "Invoice autopay" in a card
+        // Use hasNotText to exclude parent containers that also include utility cards
+        this.Overview_Outstanding_Balance = page.locator('div')
+            .filter({ hasText: /^\$\d+\.\d{2}/ })
+            .filter({ hasNotText: 'Electricity' })
+            .first();
+        this.Overview_Make_Payment_Button = page.getByRole('button', { name: /Make a Payment|Pay bill/ });
 
-        this.Overview_Electricity_Card = page.locator('//span[text()="Electricity"]/parent::h3/parent::div/parent::div');
-        this.Overview_Gas_Card = page.locator('//span[text()="Gas"]/parent::h3/parent::div/parent::div');
+        // Utility cards: find the header div starting with the utility name, then go up to card container
+        this.Overview_Electricity_Card = page.locator('div')
+            .filter({ hasText: /^Electricity/ })
+            .filter({ hasNotText: /\bGas\b/ })
+            .first()
+            .locator('..');
+        this.Overview_Gas_Card = page.locator('div')
+            .filter({ hasText: /^Gas/ })
+            .filter({ hasNotText: /\bElectricity\b/ })
+            .first()
+            .locator('..');
 
 
         this.Overview_Add_Payment_Title = page.getByRole('heading', { name: 'Add Payment Method' });

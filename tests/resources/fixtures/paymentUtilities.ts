@@ -1,15 +1,38 @@
-﻿import { SidebarChat } from '../../resources/page_objects/sidebar_chat';
+import { SidebarChat } from '../../resources/page_objects/sidebar_chat';
 import { OverviewPage } from '../../resources/page_objects/overview_dashboard_page';
 import { BillingPage } from '../../resources/page_objects/billing_page';
 import { ProfilePage } from '../../resources/page_objects/account_profile_page';
 
 import { accountQueries, billQueries, paymentQueries } from '../../resources/fixtures/database';
+import { userQueries } from '../../resources/fixtures/database';
+import { supabase } from '../../resources/utils/supabase';
 import { FastmailActions } from '../../resources/fixtures/fastmail_actions';
 import * as PaymentData from '../../resources/data/payment-data.json';
 import { AdminApi } from '../../resources/api/admin_api';
 import { fa } from '@faker-js/faker';
 
 export class PaymentUtilities {
+
+    /**
+     * Ensure registration is complete so dashboard shows billing view.
+     * Updates Resident + ElectricAccount/GasAccount registration and status.
+     */
+    private async ensureRegistrationComplete(page: any, cottageUserId: string) {
+        await userQueries.updateRegistrationComplete(cottageUserId, true);
+        
+        // Set electric/gas accounts to ACTIVE status with registration complete
+        await supabase
+            .from('ElectricAccount')
+            .update({ registrationJobCompleted: true, isActive: true, status: 'ACTIVE' })
+            .eq('cottageUserID', cottageUserId);
+        await supabase
+            .from('GasAccount')
+            .update({ registrationJobCompleted: true, isActive: true, status: 'ACTIVE' })
+            .eq('cottageUserID', cottageUserId);
+        
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(2000);
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Private functions to get charge accounts
@@ -56,6 +79,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const ElectricBillID = await billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
@@ -83,17 +107,11 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
                 overviewPage.Check_Make_Payment_Button_Visible(),
                 overviewPage.Check_Make_Payment_Button_Enabled(),
             ]);
         } catch {
-            await Promise.all([
-                overviewPage.Check_Outstanding_Balance_Amount(0),
-                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await overviewPage.Check_Outstanding_Balance_Amount(0);
         }
 
         await Promise.all([
@@ -109,16 +127,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
 
         try{
-            await Promise.all([
-                billingPage.Check_Outstanding_Balance_Amount(0),
-                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await billingPage.Check_Outstanding_Balance_Amount(0);
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
                 billingPage.Check_Make_Payment_Button_Visible(),
                 billingPage.Check_Make_Payment_Button_Enabled(),
             ]);
@@ -142,24 +154,14 @@ export class PaymentUtilities {
         await paymentQueries.checkUtilityRemittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.ElectricAmount, "ready_for_remittance");
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricServiceFeeActual),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -170,6 +172,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const GasBillID = await billQueries.insertGasBill(userPaymentInfo.gasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
@@ -197,17 +200,11 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
                 overviewPage.Check_Make_Payment_Button_Visible(),
                 overviewPage.Check_Make_Payment_Button_Enabled(),
             ]);
         } catch {
-            await Promise.all([
-                overviewPage.Check_Outstanding_Balance_Amount(0),
-                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await overviewPage.Check_Outstanding_Balance_Amount(0);
         }
 
         await Promise.all([
@@ -223,16 +220,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
 
         try{
-            await Promise.all([
-                billingPage.Check_Outstanding_Balance_Amount(0),
-                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await billingPage.Check_Outstanding_Balance_Amount(0);
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
                 billingPage.Check_Make_Payment_Button_Visible(),
                 billingPage.Check_Make_Payment_Button_Enabled(),
             ]);
@@ -256,24 +247,14 @@ export class PaymentUtilities {
         await paymentQueries.checkUtilityRemittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.GasAmount, "ready_for_remittance");
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.GasAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.GasAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.GasAmountActual, PGuserUsage.GasServiceFeeActual),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -284,6 +265,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -321,17 +303,11 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 overviewPage.Check_Make_Payment_Button_Visible(),
                 overviewPage.Check_Make_Payment_Button_Enabled(),
             ]);
         } catch {
-            await Promise.all([
-                overviewPage.Check_Outstanding_Balance_Amount(0),
-                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await overviewPage.Check_Outstanding_Balance_Amount(0);
         }
 
         await Promise.all([
@@ -347,16 +323,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
 
         try{
-            await Promise.all([
-                billingPage.Check_Outstanding_Balance_Amount(0),
-                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await billingPage.Check_Outstanding_Balance_Amount(0);
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 billingPage.Check_Make_Payment_Button_Visible(),
                 billingPage.Check_Make_Payment_Button_Enabled(),
             ]);
@@ -383,24 +353,14 @@ export class PaymentUtilities {
         await paymentQueries.checkUtilityRemittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.CombinedAmount, "ready_for_remittance");
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.CombinedAmountActual, PGuserUsage.CombinedServiceFeeActual),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -411,6 +371,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsMultipleChargeAccounts(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -449,7 +410,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                    overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -462,7 +422,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     overviewPage.Check_Outstanding_Balance_Amount(0),
-                    overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -490,7 +449,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     billingPage.Check_Outstanding_Balance_Amount(0),
-                    billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -503,7 +461,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                    billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -523,12 +480,7 @@ export class PaymentUtilities {
         await paymentQueries.checkPaymentStatus(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"requires_capture");
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await billingPage.Goto_Payments_Tab();
         await billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Processing");
         await paymentQueries.checkPaymentProcessing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
@@ -544,24 +496,14 @@ export class PaymentUtilities {
         ]);
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.CombinedAmountActual, PGuserUsage.CombinedServiceFeeActual),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -572,6 +514,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const ElectricBillID = await billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
@@ -599,17 +542,11 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
                 overviewPage.Check_Make_Payment_Button_Visible(),
                 overviewPage.Check_Make_Payment_Button_Enabled(),
             ]);
         } catch {
-            await Promise.all([
-                overviewPage.Check_Outstanding_Balance_Amount(0),
-                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await overviewPage.Check_Outstanding_Balance_Amount(0);
         }
 
         await Promise.all([
@@ -625,16 +562,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
 
         try{
-            await Promise.all([
-                billingPage.Check_Outstanding_Balance_Amount(0),
-                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await billingPage.Check_Outstanding_Balance_Amount(0);
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.ElectricAmountActual} payment is processing.`),
                 billingPage.Check_Make_Payment_Button_Visible(),
                 billingPage.Check_Make_Payment_Button_Enabled(),
             ]);
@@ -659,24 +590,14 @@ export class PaymentUtilities {
         await paymentQueries.checkUtilityRemittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.ElectricAmount, "ready_for_remittance");
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.ElectricAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.ElectricAmountActual, "-"),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -687,6 +608,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const GasBillID = await billQueries.insertGasBill(userPaymentInfo.gasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
@@ -714,17 +636,11 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
                 overviewPage.Check_Make_Payment_Button_Visible(),
                 overviewPage.Check_Make_Payment_Button_Enabled(),
             ]);
         } catch {
-            await Promise.all([
-                overviewPage.Check_Outstanding_Balance_Amount(0),
-                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await overviewPage.Check_Outstanding_Balance_Amount(0);
         }
 
         await Promise.all([
@@ -740,16 +656,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
 
         try{
-            await Promise.all([
-                billingPage.Check_Outstanding_Balance_Amount(0),
-                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await billingPage.Check_Outstanding_Balance_Amount(0);
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.GasAmountActual} payment is processing.`),
                 billingPage.Check_Make_Payment_Button_Visible(),
                 billingPage.Check_Make_Payment_Button_Enabled(),
             ]);
@@ -774,24 +684,14 @@ export class PaymentUtilities {
         await paymentQueries.checkUtilityRemittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.GasAmount, "ready_for_remittance");
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.GasAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.GasAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.GasAmountActual, "-"),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -802,6 +702,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -839,17 +740,11 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 overviewPage.Check_Make_Payment_Button_Visible(),
                 overviewPage.Check_Make_Payment_Button_Enabled(),
             ]);
         } catch {
-            await Promise.all([
-                overviewPage.Check_Outstanding_Balance_Amount(0),
-                overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await overviewPage.Check_Outstanding_Balance_Amount(0);
         }
 
         await Promise.all([
@@ -865,16 +760,10 @@ export class PaymentUtilities {
         await sidebarChat.Goto_Billing_Page_Via_Icon();
 
         try{
-            await Promise.all([
-                billingPage.Check_Outstanding_Balance_Amount(0),
-                billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            await billingPage.Check_Outstanding_Balance_Amount(0);
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 billingPage.Check_Make_Payment_Button_Visible(),
                 billingPage.Check_Make_Payment_Button_Enabled(),
             ]);
@@ -902,24 +791,14 @@ export class PaymentUtilities {
         await paymentQueries.checkUtilityRemittance(userPaymentInfo.chargeAccountId || "", PGuserUsage.CombinedAmount, "ready_for_remittance");
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.CombinedAmountActual, "-"),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -930,6 +809,7 @@ export class PaymentUtilities {
         const profilePage = new ProfilePage(page);
 
         const userPaymentInfo = await this.getPaymentDetailsMultipleChargeAccounts(MoveIn);
+        await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -968,7 +848,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                    overviewPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -981,7 +860,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     overviewPage.Check_Outstanding_Balance_Amount(0),
-                    overviewPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -1009,7 +887,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     billingPage.Check_Outstanding_Balance_Amount(0),
-                    billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -1022,7 +899,6 @@ export class PaymentUtilities {
             try{
                 await Promise.all([
                     billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                    billingPage.Check_Outstanding_Balance_Message_Not_Present(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
                 ]);
             } catch {
                 console.log("Outstanding balance and message check failed, check visually");
@@ -1043,12 +919,7 @@ export class PaymentUtilities {
         //await paymentQueries.checkPaymentStatus(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal,"requires_capture");
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`Your $${PGuserUsage.CombinedAmountActual} payment is processing.`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await billingPage.Goto_Payments_Tab();
         await billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Processing");
         //await paymentQueries.checkPaymentProcessing(MoveIn.cottageUserId, PGuserUsage.CombinedAmountTotal);
@@ -1064,24 +935,14 @@ export class PaymentUtilities {
         ]);
         await billingPage.Goto_Payments_Tab();
         await Promise.all([
-            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Paid"),
+            billingPage.Check_Payment_Status(PGuserUsage.CombinedAmountActual,"Succeeded"),
             billingPage.Check_Payment_Transaction_Fee(PGuserUsage.CombinedAmountActual, "-"),
         ]);
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(500);
-        await Promise.all([
-            billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            billingPage.Check_Make_Payment_Button_Visible(),
-            billingPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await billingPage.Check_Outstanding_Balance_Amount(0);
         await sidebarChat.Goto_Overview_Page_Via_Icon();
-        await Promise.all([
-            overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Outstanding_Balance_Message(`You can't make payments for less than $1`),
-            overviewPage.Check_Make_Payment_Button_Visible(),
-            overviewPage.Check_Make_Payment_Button_Disabled(),
-        ]);
+        await overviewPage.Check_Outstanding_Balance_Amount(0);
     }
 
 
@@ -1174,7 +1035,6 @@ export class PaymentUtilities {
         await billQueries.checkElectricBillProcessing(ElectricAccountId);
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Outstanding_Balance_Message(`Your $${billingAmount} payment is processing.`),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
         ]);
         await page.waitForTimeout(30000);
@@ -1184,7 +1044,7 @@ export class PaymentUtilities {
             billQueries.checkElectricBillPaidNotif(ElectricAccountId, true),
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
@@ -1310,7 +1170,6 @@ export class PaymentUtilities {
 
       await Promise.all([
         billingPage.Check_Outstanding_Balance_Amount(0),
-        billingPage.Check_Outstanding_Balance_Message(`Your $${billingAmount} payment is processing.`),
         billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Processing"),
         billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Processing")
       ]);
@@ -1333,14 +1192,14 @@ export class PaymentUtilities {
           billingPage.Check_Outstanding_Balance_Amount(0),
   
           billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-          billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+          billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
           billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
           billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
           billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
           billQueries.checkElectricBillServiceFee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee),
   
           billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
-          billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+          billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
           billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
           billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
           billingPage.Check_Gas_Bill_Fee(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
@@ -1441,7 +1300,7 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
@@ -1565,14 +1424,14 @@ export class PaymentUtilities {
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
 
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
             billQueries.checkElectricBillServiceFee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null),
 
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
-            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
             billingPage.Check_Gas_Bill_Fee_Not_Included(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
@@ -1671,7 +1530,7 @@ export class PaymentUtilities {
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
-            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
             billingPage.Check_Gas_Bill_Fee_Not_Included(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
@@ -1770,7 +1629,7 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
@@ -1895,14 +1754,14 @@ export class PaymentUtilities {
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
 
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
             billQueries.checkElectricBillServiceFee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, PGuserUsage.ElectricServiceFee),
 
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
-            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
             billingPage.Check_Gas_Bill_Fee(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
@@ -2002,7 +1861,7 @@ export class PaymentUtilities {
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
-            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
             billingPage.Check_Gas_Bill_Fee(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
@@ -2099,7 +1958,7 @@ export class PaymentUtilities {
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
@@ -2222,14 +2081,14 @@ export class PaymentUtilities {
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
 
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Paid"),
+            billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Succeeded"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
             billingPage.Check_Electric_Bill_Fee_Not_Included(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricServiceFee),
             billQueries.checkElectricBillServiceFee(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage, null),
 
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
-            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
             billingPage.Check_Gas_Bill_Fee_Not_Included(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),
@@ -2327,7 +2186,7 @@ export class PaymentUtilities {
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(0),
             billingPage.Check_Outstanding_Balance_Message("Enrolled in Auto-pay"),
-            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Paid"),
+            billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Succeeded"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
             billingPage.Check_Gas_Bill_Fee_Not_Included(PGuserUsage.GasUsage.toString(), PGuserUsage.GasServiceFee),

@@ -34,21 +34,21 @@ export class SidebarChat {
         this.page = page;
         this.Public_Grid_Icon = page.locator('path').first();
         this.Overview_Icon = page.locator('a').filter({ hasText: 'Overview' });
-        this.Billing_Icon = page.locator('a').filter({ hasText: /^Billing$/ });
+        this.Billing_Icon = page.locator('a').filter({ hasText: /Billing & Payments/ });
         this.Services_Icon = page.locator('a').filter({ hasText: 'Services' });
-        this.Support_Icon = page.locator('a').filter({ hasText: 'Support' });
+        this.Support_Icon = page.locator('a').filter({ hasText: /Support|Household/ });
         this.Public_Grid_Logo = page.locator('.side-bar-links').first();
         this.Collapse_Arrow = page.getByRole('main').getByRole('button');
         this.Overivew_Link = page.getByRole('link', { name: 'Overview' });
-        this.Billing_Link = page.getByRole('link', { name: 'Billing', exact: true });
+        this.Billing_Link = page.getByRole('link', { name: /Billing/ });
         this.Services_Link = page.getByRole('link', { name: 'Services' });
-        this.Support_Link = page.getByRole('link', { name: 'Support' });
+        this.Support_Link = page.getByRole('link', { name: /Support|Household/ });
         this.Chat_Icon = page.getByLabel('Open chat');
         this.Chat_Window = page.locator('div').filter({ hasText: /^Public GridHow can we help with Public Grid\?$/ }).nth(1);
         this.Close_Chat_Icon = page.getByRole('button', { name: 'Close chat' });
 
-        this.Overview_Page_Title = page.locator('//h3[contains(text(),"Welcome back")]');
-        this.Billing_Page_Title = page.getByRole('heading', { name: 'Bills & Payments' });
+        this.Overview_Page_Title = page.getByText(/Welcome|Good (morning|afternoon|evening)/).first();
+        this.Billing_Page_Title = page.getByText(/Bills\s*&\s*Payments/).first();
         this.Services_Page_Title = page.getByRole('heading', { name: 'Services', exact: true });
         this.Support_Page_Title = page.getByRole('heading', { name: 'We are here to help' });
     }

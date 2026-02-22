@@ -162,7 +162,7 @@ export class AccountQueries {
           query = query.is('gasAccountID', null);
         }
 
-        const { data } = await query.single().throwOnError();
+        const { data } = await query.order('id', { ascending: false }).limit(1).single().throwOnError();
         chargeAccount = data;
         break;
       } catch (error) {

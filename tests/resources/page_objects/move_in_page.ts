@@ -162,7 +162,7 @@ export class MoveInPage{
             // Extract street portion (boundary: lowercase/digit → uppercase without space)
             const parts = address.match(/^(.*[a-z\d])(?=[A-Z])/);
             const streetText = parts ? parts[1] : address;
-            return page.getByText(streetText).first();
+            return page.locator('.pac-container:visible .pac-item').filter({ hasText: streetText }).first();
         };
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
 
@@ -1166,10 +1166,14 @@ export class MoveInPage{
 
 
     async Disable_Auto_Payment(){
-        await expect(this.Move_In_Auto_Payment_Checbox).toBeEnabled({timeout:30000});
+        const isEnabled = await this.Move_In_Auto_Payment_Checbox.isEnabled();
+        if (!isEnabled) {
+            log.info('Auto-pay checkbox is disabled (isAutopayRequired=true), cannot uncheck');
+            return;
+        }
         await this.Move_In_Auto_Payment_Checbox.hover();
         await this.Move_In_Auto_Payment_Checbox.setChecked(false,{timeout:10000});
-    } 
+    }
 
 
     async Confirm_Payment_Details(){

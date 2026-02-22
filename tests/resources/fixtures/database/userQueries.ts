@@ -201,6 +201,17 @@ export class UserQueries {
       .throwOnError();
     await expect(finalResident?.isRegistrationComplete ?? '').toBe(state);
   }
+  /**
+   * Update registration complete status for a user
+   */
+  async updateRegistrationComplete(cottageUserId: string, state: boolean = true): Promise<void> {
+    log.info('Updating registration complete', { cottageUserId, state });
+    await supabase
+      .from('Resident')
+      .update({ isRegistrationComplete: state })
+      .eq('cottageUserID', cottageUserId)
+      .throwOnError();
+  }
 }
 
 export const userQueries = new UserQueries();
