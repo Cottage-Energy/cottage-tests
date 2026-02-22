@@ -26,108 +26,112 @@ test.describe.configure({mode: "serial", retries: 0});
 test.describe('Move In Existing Utility Account', () => {
 
 
-  // ── Save Toggle DISABLED (no user/account created → waitlist) ──
+  test.describe('Without ShortCode', () => {
 
-  test('Move-in New User Existing Utility Account Requested - Save Toggle Disabled', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
-    await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+    test('Requested - Save Toggle Disabled', {tag: ['@regression1'],}, async ({moveInpage, page}) => {
+      test.setTimeout(150000);
+      await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await moveInExistingUtilityAccount(page, false, false, true, false);
-    
-    await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
-    await page.waitForTimeout(5000);
-    await userQueries.checkWaitlist(MoveIn.pgUserEmail);
-    await page.waitForTimeout(10000);
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, true, false);
+      
+      await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
+      await page.waitForTimeout(5000);
+      await userQueries.checkWaitlist(MoveIn.pgUserEmail);
+      await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
+      await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
+    });
+
+
+    test('Skip', {tag: ['@regression2'],}, async ({moveInpage, page}) => {
+      test.setTimeout(150000);
+      await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, false);
+      
+      await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
+      await page.waitForTimeout(5000);
+      await userQueries.checkWaitlistNotPresent(MoveIn.pgUserEmail);
+      await page.waitForTimeout(10000);
+
+      await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
+    });
+
+
+    test('Requested - Save Toggle Enabled (Electric Only)', {tag: ['@regression5'],}, async ({moveInpage, page}) => {
+      test.setTimeout(180000);
+      await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, true, true);
+
+      // With save toggle enabled, a cottageUser and ElectricAccount should be created
+      await page.waitForTimeout(5000);
+      const cottageUserId = await userQueries.getCottageUserId(MoveIn.pgUserEmail);
+      await accountQueries.checkGetElectricAccountId(cottageUserId);
+
+      // Cleanup created user data
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    });
+
   });
 
 
-  test('Move-in New User Existing Utility Account Skip', {tag: ['@regression2'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
-    await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
+  test.describe('With ShortCode', () => {
 
-    MoveIn = await moveInExistingUtilityAccount(page, false, false, false);
-    
-    await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
-    await page.waitForTimeout(5000);
-    await userQueries.checkWaitlistNotPresent(MoveIn.pgUserEmail);
-    await page.waitForTimeout(10000);
+    test('Requested - Save Toggle Disabled', {tag: ['@regression3'],}, async ({moveInpage, page}) => {
+      test.setTimeout(150000);
+      await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "PSEG");
+      
+      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
-  });
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, true, false);
+      
+      await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
+      await page.waitForTimeout(5000);
+      await userQueries.checkWaitlist(MoveIn.pgUserEmail);
+      await page.waitForTimeout(10000);
 
-
-  test('Move-in ShortCode Existing Utility Account Requested - Save Toggle Disabled', {tag: ['@regression3'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "PSEG");
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-
-    MoveIn = await moveInExistingUtilityAccount(page, false, false, true, false);
-    
-    await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
-    await page.waitForTimeout(5000);
-    await userQueries.checkWaitlist(MoveIn.pgUserEmail);
-    await page.waitForTimeout(10000);
-
-    await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
-  });
+      await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
+    });
 
 
-  test('Move-in ShortCode Existing Utility Account Skip', {tag: ['@regression4'],}, async ({moveInpage, page}) => {
-    test.setTimeout(150000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "CON-EDISON", "NYS-EG" );
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    test('Skip', {tag: ['@regression4'],}, async ({moveInpage, page}) => {
+      test.setTimeout(150000);
+      await utilityQueries.updateCompaniesToBuilding("autotest", "CON-EDISON", "NYS-EG" );
+      
+      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await moveInExistingUtilityAccount(page, false, false, false);
-    
-    await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
-    await page.waitForTimeout(5000);
-    await userQueries.checkWaitlistNotPresent(MoveIn.pgUserEmail);
-    await page.waitForTimeout(10000);
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, false);
+      
+      await userQueries.checkCottageUserIdNotPresent(MoveIn.pgUserEmail);
+      await page.waitForTimeout(5000);
+      await userQueries.checkWaitlistNotPresent(MoveIn.pgUserEmail);
+      await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
-  });
-
-
-  // ── Save Toggle ENABLED (creates cottageUser + ElectricAccount/GasAccount) ──
-
-  test('Move-in New User Existing Utility Account Requested - Save Toggle Enabled (Electric Only)', {tag: ['@regression5'],}, async ({moveInpage, page}) => {
-    test.setTimeout(180000);
-    await page.goto('/move-in',{ waitUntil: 'domcontentloaded' });
-
-    MoveIn = await moveInExistingUtilityAccount(page, false, false, true, true);
-
-    // With save toggle enabled, a cottageUser and ElectricAccount should be created
-    await page.waitForTimeout(5000);
-    const cottageUserId = await userQueries.getCottageUserId(MoveIn.pgUserEmail);
-    await accountQueries.checkGetElectricAccountId(cottageUserId);
-
-    // Cleanup created user data
-    await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
-  });
+      await FastmailActions.Check_Utility_Account_OTW_Not_Present(MoveIn.pgUserEmail);
+    });
 
 
-  test('Move-in ShortCode Existing Utility Account Requested - Save Toggle Enabled (Electric & Gas)', {tag: ['@regression6'],}, async ({moveInpage, page}) => {
-    test.setTimeout(180000);
-    await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "PSEG");
-    
-    await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
+    test('Requested - Save Toggle Enabled (Electric & Gas)', {tag: ['@regression6'],}, async ({moveInpage, page}) => {
+      test.setTimeout(180000);
+      await utilityQueries.updateCompaniesToBuilding("autotest", "PSEG", "PSEG");
+      
+      await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
 
-    MoveIn = await moveInExistingUtilityAccount(page, false, false, true, true);
+      MoveIn = await moveInExistingUtilityAccount(page, false, false, true, true);
 
-    // With save toggle enabled and shortCode with gas company, both accounts should be created
-    await page.waitForTimeout(5000);
-    const cottageUserId = await userQueries.getCottageUserId(MoveIn.pgUserEmail);
-    await accountQueries.checkGetElectricAccountId(cottageUserId);
-    // Known bug: gas account not created even when gas company is present on building
-    // Uncomment when bug is fixed:
-    // await accountQueries.checkGetGasAccountId(cottageUserId);
+      // With save toggle enabled and shortCode with gas company, both accounts should be created
+      await page.waitForTimeout(5000);
+      const cottageUserId = await userQueries.getCottageUserId(MoveIn.pgUserEmail);
+      await accountQueries.checkGetElectricAccountId(cottageUserId);
+      // Known bug: gas account not created even when gas company is present on building
+      // Uncomment when bug is fixed:
+      // await accountQueries.checkGetGasAccountId(cottageUserId);
 
-    // Cleanup created user data
-    await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+      // Cleanup created user data
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    });
+
   });
 
 
