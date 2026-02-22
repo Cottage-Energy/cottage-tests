@@ -77,7 +77,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount &/or GasAccou
       await moveInpage.Check_OTP_Confirmed_Message();
       await servicesPage.Services_Check_Page_Content();
       await page.waitForTimeout(TIMEOUTS.MEDIUM);
-      await FastmailActions.Check_Start_Service_Confirmation(moveInResult.pgUserEmail, moveInResult.accountNumber!, "COMED", null);
+      await FastmailActions.Check_Utility_Account_OTW(moveInResult.pgUserEmail, "COMED", null);
       await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     });
 
@@ -116,7 +116,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount &/or GasAccou
         await moveInpage.Check_OTP_Confirmed_Message();
         await servicesPage.Services_Check_Page_Content();
         await page.waitForTimeout(TIMEOUTS.MEDIUM);
-        await FastmailActions.Check_Start_Service_Confirmation(moveInResult.pgUserEmail, moveInResult.accountNumber!, "EVERSOURCE", "EVERSOURCE");
+        await FastmailActions.Check_Utility_Account_OTW(moveInResult.pgUserEmail, "EVERSOURCE", "EVERSOURCE");
         await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
       } else {
           throw new Error('Invalid OTP');
@@ -157,7 +157,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount &/or GasAccou
         await moveInpage.Check_OTP_Confirmed_Message();
         await servicesPage.Services_Check_Page_Content();
         await page.waitForTimeout(TIMEOUTS.MEDIUM);
-        await FastmailActions.Check_Start_Service_Confirmation(moveInResult.pgUserEmail, moveInResult.accountNumber!, "CON-EDISON", "CON-EDISON");
+        await FastmailActions.Check_Utility_Account_OTW(moveInResult.pgUserEmail, "CON-EDISON", "CON-EDISON");
         await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
       } else {
           throw new Error('Invalid OTP');
@@ -198,7 +198,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount &/or GasAccou
         await moveInpage.Check_OTP_Confirmed_Message();
         await servicesPage.Services_Check_Page_Content();
         await page.waitForTimeout(TIMEOUTS.MEDIUM);
-        await FastmailActions.Check_Start_Service_Confirmation(moveInResult.pgUserEmail, moveInResult.accountNumber!, null, "COMED");
+        await FastmailActions.Check_Utility_Account_OTW(moveInResult.pgUserEmail, null, "COMED");
         await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
 
       } else {
@@ -288,7 +288,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await accountQueries.checkGetElectricAccountId(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, "COMED", null);
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, "COMED", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -376,7 +376,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await accountQueries.checkElectricAccountIdNotPresent(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, null, "EVERSOURCE");
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, null, "EVERSOURCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -465,7 +465,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await accountQueries.checkElectricAccountIdNotPresent(cottageUserID);
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, null, "EVERSOURCE");
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, null, "EVERSOURCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -556,7 +556,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
     await accountQueries.checkGetElectricAccountId(cottageUserID);
     await page.waitForTimeout(30000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, accountNumber, "EVERSOURCE", "CON-EDISON");
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, "EVERSOURCE", "CON-EDISON");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -612,7 +612,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    //await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", "EVERSOURCE");
+    //await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, "PENDING", "EVERSOURCE");
     //await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -669,7 +669,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", null,"NGMA");
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, null,"NGMA");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -727,7 +727,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "PENDING", "PSEG");
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, "PENDING", "PSEG");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,
@@ -782,7 +782,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Start_Service_Confirmation(PGuser.Email, "EVERSOURCE", "DTE");
+    await FastmailActions.Check_Utility_Account_OTW(PGuser.Email, "EVERSOURCE", "DTE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(PGuser.Email);
     const localMoveIn: CleanupResult = {
       cottageUserId: cottageUserID,

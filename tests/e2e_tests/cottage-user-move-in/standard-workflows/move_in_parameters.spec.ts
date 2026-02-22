@@ -38,7 +38,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "DOMINION", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "DOMINION", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -51,7 +51,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkElectricAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "EVERGY");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, null, "EVERGY");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -64,7 +64,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "DELMARVA", "DELMARVA");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "DELMARVA", "DELMARVA");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail); 
   });
 
@@ -77,7 +77,7 @@ test.describe('Move In Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "PGE", "PSEG");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "PGE", "PSEG");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -99,7 +99,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "ACE", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "ACE", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -114,7 +114,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await accountQueries.checkElectricAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "FPL");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, null, "FPL");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -129,7 +129,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "XCEL-ENERGY", "XCEL-ENERGY");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "XCEL-ENERGY", "XCEL-ENERGY");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -144,7 +144,7 @@ test.describe('Move In Parameter & shortCode New User Electric &/or Gas', () => 
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "PSEG-LI", "LA-DWP");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "PSEG-LI", "LA-DWP");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -164,7 +164,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "COMED", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "COMED", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -177,7 +177,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "COMED");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, null, "COMED");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -190,7 +190,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "SCE");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, null, "SCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -203,7 +203,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "SDGE", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "SDGE", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -216,7 +216,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "COSERV", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "COSERV", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -237,7 +237,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -250,7 +250,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await accountQueries.checkElectricAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -263,7 +263,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, "SCE");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, null, "SCE");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -276,7 +276,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "SDGE", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "SDGE", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -289,7 +289,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, null, null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, null, null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -302,7 +302,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "PECO", "PEPCO");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "PECO", "PEPCO");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 

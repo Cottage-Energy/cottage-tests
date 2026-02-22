@@ -118,11 +118,10 @@ async function generateTestCasesExcel() {
             { step: 3, description: 'Complete new user move-in flow for COMED', expectedResult: 'New user created with COMED utility' },
             { step: 4, description: 'Add auto payment details', expectedResult: 'Payment method added successfully' },
             { step: 5, description: 'Get electric account ID from database', expectedResult: 'Electric account ID retrieved' },
-            { step: 6, description: 'Verify registration is complete', expectedResult: 'isRegistrationComplete returns true' },
-            { step: 7, description: 'Wait 10 seconds for processing', expectedResult: 'Processing time elapsed' },
-            { step: 8, description: 'Check Start Service Confirmation email', expectedResult: 'Email received with account number for COMED' },
-            { step: 9, description: 'Check Welcome to PG email', expectedResult: 'Welcome email received' },
-            { step: 10, description: 'Clean up test user data', expectedResult: 'Test user removed from database' }
+            { step: 6, description: 'Wait 10 seconds for processing', expectedResult: 'Processing time elapsed' },
+            { step: 7, description: 'Check Start Service Confirmation email', expectedResult: 'Email received with account number for COMED' },
+            { step: 8, description: 'Check Welcome to PG email', expectedResult: 'Welcome email received' },
+            { step: 9, description: 'Clean up test user data', expectedResult: 'Test user removed from database' }
           ]
         },
         {
