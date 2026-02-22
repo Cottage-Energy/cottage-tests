@@ -248,6 +248,42 @@ export class UtilityQueries {
     log.debug('Updated Partner Encouraged Conversion', { partnerName, useEncourageConversion, data });
     if (error) log.error('Update Partner Encouraged Conversion failed', { error: String(error) });
   }
+
+  /**
+   * Update isUtilityVerificationEnabled on a Building (used when shortCode is present)
+   */
+  async updateBuildingUtilityVerification(
+    shortCode: string,
+    isEnabled: boolean
+  ): Promise<void> {
+    const { data, error } = await supabase
+      .from('Building')
+      .update({ isUtilityVerificationEnabled: isEnabled })
+      .eq('shortCode', shortCode)
+      .select()
+      .throwOnError();
+
+    log.debug('Updated Building Utility Verification', { shortCode, isEnabled, data });
+    if (error) log.error('Update Building Utility Verification failed', { error: String(error) });
+  }
+
+  /**
+   * Update isUtilityVerificationEnabled on a MoveInPartner (used when no shortCode)
+   */
+  async updatePartnerUtilityVerification(
+    partnerName: string,
+    isEnabled: boolean
+  ): Promise<void> {
+    const { data, error } = await supabase
+      .from('MoveInPartner')
+      .update({ isUtilityVerificationEnabled: isEnabled })
+      .eq('name', partnerName)
+      .select()
+      .throwOnError();
+
+    log.debug('Updated MoveInPartner Utility Verification', { partnerName, isEnabled, data });
+    if (error) log.error('Update MoveInPartner Utility Verification failed', { error: String(error) });
+  }
 }
 
 export const utilityQueries = new UtilityQueries();

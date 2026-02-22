@@ -34,6 +34,7 @@ export class MoveInPage{
     readonly Move_In_Existing_Account_Submit_Message: Locator;
     readonly Move_In_Existing_Account_Skip_Button: Locator;
     readonly Move_In_Existing_Account_Skip_Message: Locator;
+    readonly Move_In_Save_On_Bill_Toggle: Locator;
 
     readonly Move_In_Tx_Svc_Title: Locator;
     readonly Move_In_Tx_Svc_Electric_Service: Locator;
@@ -178,6 +179,7 @@ export class MoveInPage{
         this.Move_In_Existing_Account_Submit_Message = page.getByText('Awesome! We will be in touch');
         this.Move_In_Existing_Account_Skip_Button = page.getByRole('button', { name: 'Skip' });
         this.Move_In_Existing_Account_Skip_Message = page.getByText('We hope you had a safe and');
+        this.Move_In_Save_On_Bill_Toggle = page.getByText(/save on my bill/i).locator('..').getByRole('switch');
 
         this.Move_In_Tx_Svc_Title = page.getByRole('heading', { name: 'Good news! We are in your' });
         this.Move_In_Tx_Svc_Electric_Service = page.locator('div').filter({ hasText: /^ElectricityService with$/ }).nth(1);
@@ -421,12 +423,26 @@ export class MoveInPage{
     }
 
 
-    async Existing_Utility_Account_Connect_Request(email: string|null, submit: boolean){
+    async Existing_Utility_Account_Connect_Request(email: string|null, submit: boolean, enableSaveToggle?: boolean){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(3000);
 
         await expect(this.Move_In_Existing_Account_Page_Title).toBeVisible({timeout:30000});
         await expect(this.Move_In_Existing_Account_Page_Content).toBeVisible({timeout:30000});
+
+        // Handle "Let me know whenever there's a chance to save on my bill!" toggle (role="switch")
+        if (enableSaveToggle !== undefined) {
+            const toggleVisible = await this.Move_In_Save_On_Bill_Toggle.isVisible({ timeout: 5000 }).catch(() => false);
+            if (toggleVisible) {
+                const isChecked = await this.Move_In_Save_On_Bill_Toggle.isChecked();
+                if (enableSaveToggle && !isChecked) {
+                    await this.Move_In_Save_On_Bill_Toggle.click();
+                } else if (!enableSaveToggle && isChecked) {
+                    await this.Move_In_Save_On_Bill_Toggle.click();
+                }
+                await this.page.waitForTimeout(1000);
+            }
+        }
 
         if(email != null){
             // Email field may use floating label, try multiple selectors

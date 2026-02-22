@@ -462,7 +462,8 @@ export async function moveInExistingUtilityAccount(
   page: Page,
   newElectric: boolean,
   newGas: boolean,
-  submitRequest: boolean
+  submitRequest: boolean,
+  enableSaveToggle?: boolean
 ): Promise<{ pgUserName: string; pgUserFirstName: string; pgUserEmail: string }> {
   const moveInPage = new MoveInPage(page);
   const pgUser = await generateTestUserData();
@@ -476,7 +477,7 @@ export async function moveInExistingUtilityAccount(
   await moveInPage.Setup_Account(newElectric, newGas);
   // Click "I will do the setup myself" to trigger existing utility account flow
   await moveInPage.Click_Self_Setup();
-  await moveInPage.Existing_Utility_Account_Connect_Request(pgUserEmail, submitRequest);
+  await moveInPage.Existing_Utility_Account_Connect_Request(pgUserEmail, submitRequest, enableSaveToggle);
   
   return {
     pgUserName,
