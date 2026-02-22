@@ -126,7 +126,7 @@ test.describe('Move In Existing Utility Account', () => {
       await accountQueries.checkGetElectricAccountId(cottageUserId);
       // Known bug: gas account not created even when gas company is present on building
       // Uncomment when bug is fixed:
-      // await accountQueries.checkGetGasAccountId(cottageUserId);
+      await accountQueries.checkGetGasAccountId(cottageUserId);
 
       // Cleanup created user data
       await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
