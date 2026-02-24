@@ -45,6 +45,9 @@ export const TIMEOUTS = {
   
   /** Test timeout for simple UI tests (180s / 3min) */
   TEST_UI: 180000,
+
+  /** Test timeout for exploratory tests (300s / 5min) */
+  TEST_EXPLORATORY: 300000,
   
   /** Polling interval for retry loops */
   POLL_INTERVAL: 1000,

@@ -170,10 +170,10 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount &/or GasAccou
 
       const PGuser = await generateTestUserData();
 
-      await utilityQueries.updateCompaniesToBuilding("autotest","COMED","COMED");
+      await utilityQueries.updateCompaniesToBuilding("autotest",null,"COMED");
       
       await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-      moveInResult = await newUserMoveInAutoPayment(page,"COMED","COMED", false, true);
+      moveInResult = await newUserMoveInAutoPayment(page,null,"COMED", false, true);
       await accountQueries.checkGetGasAccountId(moveInResult.cottageUserId!);
       await accountQueries.checkElectricAccountIdNotPresent(moveInResult.cottageUserId!);
       await page.waitForTimeout(TIMEOUTS.MEDIUM);
