@@ -1,8 +1,8 @@
-﻿import { test, expect } from '../../../resources/page_objects';
-import { moveInExistingUtilityAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
-import { utilityQueries, userQueries, accountQueries } from '../../../resources/fixtures/database';
-import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
-import * as PaymentData from '../../../resources/data/payment-data.json';
+﻿import { test, expect } from '../../../../resources/page_objects';
+import { moveInExistingUtilityAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../../resources/fixtures';
+import { utilityQueries, userQueries, accountQueries } from '../../../../resources/fixtures/database';
+import { TIMEOUTS, TEST_TAGS } from '../../../../resources/constants';
+import * as PaymentData from '../../../../resources/data/payment-data.json';
 
 let MoveIn: any;
 
