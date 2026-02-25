@@ -75,6 +75,8 @@ export async function handleCompanyQuestions(
     }
   } else {
     // Different companies - try each separately
+    // Note: Utility profile page shows one set of questions, not per-company.
+    // If electric questions succeed, gas company shares the same answered questions.
     if (normalizedElectric) {
       try {
         await callCompanyQuestions(moveInPage, normalizedElectric);
@@ -84,7 +86,8 @@ export async function handleCompanyQuestions(
       }
     }
 
-    if (normalizedGas) {
+    // Only try gas questions if electric didn't have any
+    if (!electricQuestionsPresent && normalizedGas) {
       try {
         await callCompanyQuestions(moveInPage, normalizedGas);
         gasQuestionsPresent = true;

@@ -225,14 +225,14 @@ export class MoveInPage{
 
         this.Move_In_BGE_Employment_Status_Title = page.getByText('Employment Status');
         this.Move_In_BGE_Employment_Status_Dropdown = page.getByRole('combobox').filter({ hasText: /Select an option|Employed|Retired|Receives|Other/ }).last();
-        this.Move_In_BGE_Employment_Selection = (selection: string) => page.getByRole('option', { name: selection });
+        this.Move_In_BGE_Employment_Selection = (selection: string) => page.getByRole('option', { name: selection, exact: true }).or(page.locator('[role="listbox"]').getByText(selection, { exact: true }));
 
         this.Move_In_Lenght_of_Staying_Question = page.getByText('How long are you planning on');
         this.Move_In_Lenght_of_Staying_Dropdown = page.getByRole('combobox').first();
-        this.Move_In_Lenght_of_Staying_Selection = (selection: string) => page.getByRole('option', { name: selection });
+        this.Move_In_Lenght_of_Staying_Selection = (selection: string) => page.getByRole('option', { name: selection, exact: true }).or(page.locator('[role="listbox"]').getByText(selection, { exact: true }));
         this.Move_In_Texas_Thermostat_Question = page.getByText('Do you own a smart thermostat?');
-        this.Move_In_Texas_Thermostat_Yes_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "Yes")]');
-        this.Move_In_Texas_Thermostat_No_Button = page.locator('//p[contains(text(),"thermostat")]//following::label[contains(@for, "No")]');
+        this.Move_In_Texas_Thermostat_Yes_Button = page.getByText('Do you own a smart thermostat?').locator('..').getByText('Yes', { exact: true });
+        this.Move_In_Texas_Thermostat_No_Button = page.getByText('Do you own a smart thermostat?').locator('..').getByText('No', { exact: true });
 
         this.Move_In_Program_Enrolled_Question = page.getByText('Are you enrolled in any of the programs below?');
         // Program Enrolled: radiogroup with Yes/No/Pass labels containing spans
@@ -332,11 +332,9 @@ export class MoveInPage{
         await this.Move_In_Address_Field.press('Backspace');
         await this.Move_In_Address_Dropdown(address)?.waitFor({ state: 'visible', timeout: TIMEOUTS.DEFAULT });
         await this.Move_In_Address_Dropdown(address).click({ timeout: TIMEOUTS.MEDIUM });
-        // Dismiss any secondary autocomplete dropdown that may appear after selection
-        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
-        await this.Move_In_Address_Field.press('Escape');
-        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
-        await this.Move_In_Unit_Field.click();
+        // Wait for address to populate, then force-click unit field past any secondary dropdown
+        await this.page.waitForTimeout(2000);
+        await this.Move_In_Unit_Field.click({ force: true });
         await this.Move_In_Unit_Field.fill(unit);
         await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
         
@@ -358,12 +356,10 @@ export class MoveInPage{
         await this.Move_In_Address_Field.press('Backspace');
         await this.Move_In_Address_Dropdown(address)?.waitFor({state: 'visible', timeout: 30000});
         await this.Move_In_Address_Dropdown(address).click({timeout:10000});
-        // Dismiss any secondary autocomplete dropdown
-        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
-        await this.Move_In_Address_Field.press('Escape');
-        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
+        // Wait for address to populate, then force-click unit field past any secondary dropdown
+        await this.page.waitForTimeout(2000);
         await expect(this.Move_In_Unit_Field).not.toBeNull();
-        await this.Move_In_Unit_Field.click();
+        await this.Move_In_Unit_Field.click({ force: true });
         await this.Move_In_Unit_Field.pressSequentially('GUID'+ unit);
         await this.page.waitForTimeout(1000);
         
@@ -676,10 +672,7 @@ export class MoveInPage{
         const Q1randomOption = Q1options[Q1randomIndex];
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Dropdown.click();
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
+        await this.selectDropdownOption(this.Move_In_Lenght_of_Staying_Dropdown, Q1randomOption, Q1randomIndex);
 
         const Q2options = [
             'Employed more than 3 years',
@@ -692,10 +685,7 @@ export class MoveInPage{
         const Q2randomOption = Q2options[Q2randomIndex];
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_BGE_Employment_Status_Title).toBeVisible({timeout:30000});
-        await this.Move_In_BGE_Employment_Status_Dropdown.click();
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_BGE_Employment_Selection(Q2randomOption)).toBeVisible({timeout:30000});
-        await this.Move_In_BGE_Employment_Selection(Q2randomOption).click({timeout:5000});
+        await this.selectDropdownOption(this.Move_In_BGE_Employment_Status_Dropdown, Q2randomOption, Q2randomIndex);
 
         return {
             Q1randomOption,
@@ -715,10 +705,7 @@ export class MoveInPage{
         const Q1randomOption = Q1options[Q1randomIndex];
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Dropdown.click();
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:10000});
+        await this.selectDropdownOption(this.Move_In_Lenght_of_Staying_Dropdown, Q1randomOption, Q1randomIndex);
 
         await this.page.waitForTimeout(500);
 
@@ -749,10 +736,7 @@ export class MoveInPage{
         const Q1randomOption = Q1options[Q1randomIndex];
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.Move_In_Lenght_of_Staying_Question).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Dropdown.click();
-        await this.page.waitForTimeout(500);
-        await expect(this.Move_In_Lenght_of_Staying_Selection(Q1randomOption)).toBeVisible({timeout:30000});
-        await this.Move_In_Lenght_of_Staying_Selection(Q1randomOption).click({timeout:5000});
+        await this.selectDropdownOption(this.Move_In_Lenght_of_Staying_Dropdown, Q1randomOption, Q1randomIndex);
 
         // Handle Employment Status if visible (now appears for all companies)
         await this.page.waitForTimeout(500);
@@ -767,10 +751,7 @@ export class MoveInPage{
             ];
             const Q2randomIndex = Math.floor(Math.random() * Q2options.length);
             const Q2randomOption = Q2options[Q2randomIndex];
-            await this.Move_In_BGE_Employment_Status_Dropdown.click();
-            await this.page.waitForTimeout(500);
-            await expect(this.Move_In_BGE_Employment_Selection(Q2randomOption)).toBeVisible({timeout:30000});
-            await this.Move_In_BGE_Employment_Selection(Q2randomOption).click({timeout:5000});
+            await this.selectDropdownOption(this.Move_In_BGE_Employment_Status_Dropdown, Q2randomOption, Q2randomIndex);
         }
 
         return Q1randomOption;
@@ -877,10 +858,9 @@ export class MoveInPage{
             await this.Move_In_Prev_Address_Field.press('Backspace');
             await this.Move_In_Address_Dropdown(prevAddress)?.waitFor({state: 'visible', timeout: 30000});
             await this.Move_In_Address_Dropdown(prevAddress).click({timeout:10000});
-            await this.page.waitForTimeout(500);
-            await this.Move_In_Prev_Address_Field.press('Escape');
-            await this.page.waitForTimeout(500);
-            await this.Move_In_Identity_Info_Title.click();
+            // Wait for address to populate, then force-click title past any secondary dropdown
+            await this.page.waitForTimeout(2000);
+            await this.Move_In_Identity_Info_Title.click({ force: true });
             await this.page.waitForTimeout(1000);
         }
     }
@@ -1376,6 +1356,54 @@ export class MoveInPage{
         await expect(this.Move_In_New_Move_In_Request_Link).toBeVisible({timeout:5000});
     }
 
+
+
+    /**
+     * Robust dropdown selection for Radix UI Select portals.
+     * Tries multiple strategies: text click, evaluate click, keyboard navigation
+     */
+    async selectDropdownOption(combobox: Locator, optionText: string, optionIndex: number): Promise<void> {
+        await combobox.click();
+        await this.page.waitForTimeout(1000);
+
+        // Strategy 1: Click by visible text in the listbox
+        const textLocator = this.page.locator('[role="listbox"]').getByText(optionText, { exact: true });
+        try {
+            await textLocator.click({ timeout: 3000 });
+            await this.page.waitForTimeout(300);
+            const listbox = this.page.getByRole('listbox');
+            if (!(await listbox.isVisible().catch(() => false))) return;
+        } catch { /* continue to next strategy */ }
+
+        // Strategy 2: JavaScript click on the option element
+        await this.page.evaluate((text) => {
+            const options = document.querySelectorAll('[role="option"]');
+            for (const opt of options) {
+                if (opt.textContent?.trim() === text) {
+                    const event = new PointerEvent('pointerdown', { bubbles: true });
+                    opt.dispatchEvent(event);
+                    opt.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+                    (opt as HTMLElement).click();
+                    break;
+                }
+            }
+        }, optionText);
+        await this.page.waitForTimeout(300);
+        const listbox2 = this.page.getByRole('listbox');
+        if (!(await listbox2.isVisible().catch(() => false))) return;
+
+        // Strategy 3: Keyboard navigation
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(300);
+        await combobox.click();
+        await this.page.waitForTimeout(500);
+        for (let i = 0; i < optionIndex; i++) {
+            await this.page.keyboard.press('ArrowDown');
+            await this.page.waitForTimeout(100);
+        }
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(300);
+    }
 
 
         

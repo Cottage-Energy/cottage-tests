@@ -245,7 +245,7 @@ test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
   test('Move In TX Dereg Parameter Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => { // Use BGE and NGMA
     test.setTimeout(360000);
     await page.goto('/move-in?gasCompany=TX-DEREG',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoPayment(page, 'TX-DEREG', null, true, true);
+    MoveIn = await newUserMoveInAutoPayment(page, null, 'TX-DEREG', true, true);
     await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
     await accountQueries.checkElectricAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
