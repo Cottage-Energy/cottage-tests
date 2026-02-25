@@ -33,3 +33,9 @@ Thumbs.db
 
 # Claude Code temp files
 tmpclaude-*-cwd
+
+# Debug and temp files
+debug-*.js
+ss-*.png
+screenshot-*.png
+listDevices.*
