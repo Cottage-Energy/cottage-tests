@@ -150,7 +150,7 @@ export class MoveInPage{
         this.page = page;
         this.Move_In_Terms_Logo = page.locator('[alt="Public Grid Logo"]');
         this.Move_In_Welcome_Title = page.getByRole('heading', { name: 'Utilities on Autopilot' });
-        this.Move_In_Welcome_Description = page.getByText('Public Grid activates your utility account');
+        this.Move_In_Welcome_Description = page.getByText(/setting up your utilities.*a breeze/);
 
         this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
         this.Move_In_Get_Started_Button = page.getByRole('button', { name: /Let.*s get started/i });
@@ -159,11 +159,11 @@ export class MoveInPage{
         this.Move_In_Tx_Svc_Address_Field = page.getByText('Where do you live?');
         this.Move_In_Address_Field = page.locator('#address');
         this.Move_In_Address_Dropdown = (address: string) => {
-            // Google autocomplete splits addresses into street/city parts
-            // Extract street portion (boundary: lowercase/digit → uppercase without space)
+            // Custom autocomplete dropdown: extract street portion from concatenated address string
+            // e.g. "808 Chicago AveDixon, IL" → "808 Chicago Ave"
             const parts = address.match(/^(.*[a-z\d])(?=[A-Z])/);
             const streetText = parts ? parts[1] : address;
-            return page.locator('.pac-container:visible .pac-item').filter({ hasText: streetText }).first();
+            return page.locator('div.cursor-pointer div.leading-tight').filter({ hasText: streetText }).first();
         };
         this.Move_In_Unit_Field = page.locator('input[name="unitNumber"]');
 
@@ -332,6 +332,10 @@ export class MoveInPage{
         await this.Move_In_Address_Field.press('Backspace');
         await this.Move_In_Address_Dropdown(address)?.waitFor({ state: 'visible', timeout: TIMEOUTS.DEFAULT });
         await this.Move_In_Address_Dropdown(address).click({ timeout: TIMEOUTS.MEDIUM });
+        // Dismiss any secondary autocomplete dropdown that may appear after selection
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
+        await this.Move_In_Address_Field.press('Escape');
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.fill(unit);
         await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
@@ -354,6 +358,10 @@ export class MoveInPage{
         await this.Move_In_Address_Field.press('Backspace');
         await this.Move_In_Address_Dropdown(address)?.waitFor({state: 'visible', timeout: 30000});
         await this.Move_In_Address_Dropdown(address).click({timeout:10000});
+        // Dismiss any secondary autocomplete dropdown
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
+        await this.Move_In_Address_Field.press('Escape');
+        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
         await expect(this.Move_In_Unit_Field).not.toBeNull();
         await this.Move_In_Unit_Field.click();
         await this.Move_In_Unit_Field.pressSequentially('GUID'+ unit);
@@ -394,13 +402,28 @@ export class MoveInPage{
     }
 
 
-    async Setup_Account(Electric_New: boolean, Gas_New: boolean){
+    async Choose_Start_Service(): Promise<{ renewableEnabled: boolean }> {
         await expect(this.Move_In_Utility_Setup_Title).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
-        // New UI: "Public Grid handles setup" is selected by default
-        // "I will do the setup myself" is the alternative
-        // The Electric_New/Gas_New params are kept for interface compatibility
-        // but the new UI no longer has separate radio buttons per utility type
         await expect(this.Move_In_PG_Handles_Setup_Option).toBeVisible({ timeout: TIMEOUTS.SHORT });
+
+        // Handle renewable energy toggle if visible (depends on offerRenewableEnergy flag in DB)
+        let renewableEnabled = false;
+        const toggleVisible = await this.Move_In_Renewable_Energy_Switch.isVisible({ timeout: 3000 }).catch(() => false);
+        if (toggleVisible) {
+            // Randomly enable or disable renewable energy
+            const shouldEnable = Math.random() > 0.5;
+            const isChecked = await this.Move_In_Renewable_Energy_Switch.isChecked().catch(() => false);
+            if (shouldEnable !== isChecked) {
+                await this.Move_In_Renewable_Energy_Switch.click();
+                await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
+            }
+            renewableEnabled = shouldEnable;
+            log.debug('Renewable energy toggle', { visible: true, enabled: renewableEnabled });
+        } else {
+            log.debug('Renewable energy toggle not visible (offerRenewableEnergy may be false)');
+        }
+
+        return { renewableEnabled };
     }
 
     async Click_Self_Setup(){
@@ -415,12 +438,6 @@ export class MoveInPage{
     }
 
 
-    async Power_Up_Your_Account(){
-        // Renewable energy option is now embedded in the Utility Setup step (Step 3)
-        // The switch is visible on that step, no separate "Power Up" page exists
-        // This method is kept for interface compatibility but is now a no-op
-        // The renewable energy switch is handled within the Utility Setup step
-    }
 
 
     async Existing_Utility_Account_Connect_Request(email: string|null, submit: boolean, enableSaveToggle?: boolean){
@@ -860,6 +877,8 @@ export class MoveInPage{
             await this.Move_In_Prev_Address_Field.press('Backspace');
             await this.Move_In_Address_Dropdown(prevAddress)?.waitFor({state: 'visible', timeout: 30000});
             await this.Move_In_Address_Dropdown(prevAddress).click({timeout:10000});
+            await this.page.waitForTimeout(500);
+            await this.Move_In_Prev_Address_Field.press('Escape');
             await this.page.waitForTimeout(500);
             await this.Move_In_Identity_Info_Title.click();
             await this.page.waitForTimeout(1000);

@@ -51,7 +51,7 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await moveInpage.Agree_on_Terms_and_Get_Started()
       await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
       await moveInpage.Next_Move_In_Button();
-      await moveInpage.Setup_Account(true, true);
+      await moveInpage.Choose_Start_Service();
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
       await moveInpage.Next_Move_In_Button();
@@ -92,7 +92,7 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await moveInpage.Agree_on_Terms_and_Get_Started()
       await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
       await moveInpage.Next_Move_In_Button();
-      await moveInpage.Setup_Account(true, true);
+      await moveInpage.Choose_Start_Service();
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
       await moveInpage.Next_Move_In_Button();
@@ -133,7 +133,7 @@ test.describe.skip('Move In Existing User: Cottageuser & ElectricAccount Exist',
       await moveInpage.Agree_on_Terms_and_Get_Started()
       await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
       await moveInpage.Next_Move_In_Button();
-      await moveInpage.Setup_Account(true, true);
+      await moveInpage.Choose_Start_Service();
       await moveInpage.Next_Move_In_Button();
       await moveInpage.Read_ESCO_Conditions();
       await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
@@ -181,7 +181,7 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -222,7 +222,7 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
@@ -264,7 +264,7 @@ test.describe.skip('Move In Existing User: Cottageuser, ElectricAccount & GasAcc
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -311,7 +311,7 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -353,7 +353,7 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
@@ -395,7 +395,7 @@ test.describe.skip('Move In Existing User: Cottageuser & GasAccount Exist', () =
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,MoveIn.pgUserEmail,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -432,7 +432,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -448,7 +448,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -506,7 +506,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, false);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -523,7 +523,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.COMEDaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, false);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -577,7 +577,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(false, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -594,7 +594,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(false, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -646,7 +646,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -664,7 +664,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Early Drop Off
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,AltPGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + AltPGuser.FirstName,AltPGuser.LastName,AltPGuser.PhoneNumber,PGuser.Email,AltPGuser.Today);
@@ -721,7 +721,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -765,7 +765,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.CON_EDISONaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, false);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Read_ESCO_Conditions();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
@@ -814,7 +814,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(false, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();
@@ -861,7 +861,7 @@ test.describe.skip('Move In Existing User: Cottageuser Exist Only Late Drop Off'
     await moveInpage.Agree_on_Terms_and_Get_Started()
     await moveInpage.Enter_Address(MoveIndata.EVERSOURCEaddress,PGuser.UnitNumber);
     await moveInpage.Next_Move_In_Button();
-    await moveInpage.Setup_Account(true, true);
+    await moveInpage.Choose_Start_Service();
     await moveInpage.Next_Move_In_Button();
     await moveInpage.Enter_Personal_Info("PGTest " + PGuser.FirstName,PGuser.LastName,PGuser.PhoneNumber,PGuser.Email,PGuser.Today);
     await moveInpage.Next_Move_In_Button();

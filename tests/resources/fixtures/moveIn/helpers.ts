@@ -149,7 +149,7 @@ export async function handleAccountSetupOrTexasAgreement(
   const utilitySetupHeading = moveInPage.page.getByRole('heading', { name: 'Choose how to start service' });
   try {
     await utilitySetupHeading.waitFor({ state: 'visible', timeout: 30000 });
-    await moveInPage.Setup_Account(newElectric, newGas);
+    await moveInPage.Choose_Start_Service();
     return true;
   } catch {
     // Not visible — check for Texas Service Agreement

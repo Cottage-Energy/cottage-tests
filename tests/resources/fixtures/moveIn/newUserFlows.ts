@@ -474,7 +474,7 @@ export async function moveInExistingUtilityAccount(
   await moveInPage.Agree_on_Terms_and_Get_Started();
   await moveInPage.Enter_Address(MoveInData.COMEDaddress, pgUser.UnitNumber);
   await moveInPage.Next_Move_In_Button();
-  await moveInPage.Setup_Account(newElectric, newGas);
+  await moveInPage.Choose_Start_Service();
   // Click "I will do the setup myself" to trigger existing utility account flow
   await moveInPage.Click_Self_Setup();
   await moveInPage.Existing_Utility_Account_Connect_Request(pgUserEmail, submitRequest, enableSaveToggle);
