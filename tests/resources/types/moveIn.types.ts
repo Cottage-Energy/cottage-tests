@@ -45,6 +45,7 @@ export type UtilityCompany =
   | 'PSE'
   | 'DUKE'
   | 'NYS-EG'
+  | 'AEP-OHIO'
   | null;
 
 /**
