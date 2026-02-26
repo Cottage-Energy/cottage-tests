@@ -111,8 +111,6 @@ export interface AddressData {
   EVERSOURCEaddress: string;
   TX_DEREGaddress: string;
   COSERVaddress: string;
-  GUID1: string;
-  GUID2: string;
   [key: string]: string;
 }
 

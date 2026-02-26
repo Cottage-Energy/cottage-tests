@@ -341,47 +341,6 @@ export class MoveInPage{
     }
 
 
-    async Enter_Address_GUID_Flow(address:string, unit:string) {
-        await this.page.waitForLoadState('domcontentloaded');
-        try{
-            await expect(this.Move_In_Address_Page_Title).toBeVisible({ timeout: TIMEOUTS.SHORT });
-        }
-        catch{
-            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
-        }
-        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
-        await this.Move_In_Address_Field.click({timeout:10000});
-        await this.Move_In_Address_Field.pressSequentially(address,{delay:50});
-        await this.page.waitForTimeout(1000);
-        await this.Move_In_Address_Field.press('Backspace');
-        await this.Move_In_Address_Dropdown(address)?.waitFor({state: 'visible', timeout: 30000});
-        await this.Move_In_Address_Dropdown(address).click({timeout:10000});
-        // Wait for address to populate, then force-click unit field past any secondary dropdown
-        await this.page.waitForTimeout(2000);
-        await expect(this.Move_In_Unit_Field).not.toBeNull();
-        await this.Move_In_Unit_Field.click({ force: true });
-        await this.Move_In_Unit_Field.pressSequentially('GUID'+ unit);
-        await this.page.waitForTimeout(1000);
-        
-    }
-
-    async Parameterized_Address_GUID_Flow(unit:string) {
-        await this.page.waitForLoadState('domcontentloaded');
-        try{
-            await expect(this.Move_In_Address_Page_Title).toBeVisible({timeout:3000});
-        }
-        catch{
-            await expect(this.Move_In_Tx_Svc_Address_Field).toBeVisible({timeout:10000});
-        }
-        await this.page.waitForTimeout(1000);
-        await expect(this.Move_In_Address_Field).not.toHaveAttribute('value', '');
-        await expect(this.Move_In_Unit_Field).not.toBeNull();
-        await this.Move_In_Unit_Field.click();
-        await this.Move_In_Unit_Field.pressSequentially('GUID'+ unit);
-        await this.page.waitForTimeout(1000);
-        
-    }
-
     async Enter_Unit(unit:string) {
         await this.page.waitForLoadState('domcontentloaded');
         try{
@@ -554,50 +513,6 @@ export class MoveInPage{
         await this.Move_In_Last_Name_Field.fill(lastname);
         await this.Move_In_Phone_Field.click();
         await this.Move_In_Phone_Field.fill(phone);
-        await this.Move_In_Email_Field.click();
-        await this.Move_In_Email_Field.fill(email);
-
-        // Start Service Date: masked input (MM/DD/YYYY) - enter via pressSequentially
-        await this.Move_In_Date_Field.click({timeout:10000});
-        await this.page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
-        await this.Move_In_Date_Field.pressSequentially(day, {delay: 50});
-        await this.page.keyboard.press('Escape');
-        await this.page.waitForTimeout(500);
-
-        await expect(this.Move_In_Receive_Text_Checkbox).toBeVisible({timeout:10000});
-        await expect(this.Move_In_Receive_Text_Checkbox).toBeChecked();
-
-        // Randomize whether to check the checkbox or not
-        const shouldCheck = Math.random() < 0.5;
-
-        if (shouldCheck) {
-            await this.Move_In_Receive_Text_Checkbox.setChecked(true, { timeout: 10000 });
-        } else {
-            await this.Move_In_Receive_Text_Checkbox.setChecked(false, { timeout: 10000 });
-        }
-
-        return shouldCheck;
-    }
-
-    async Enter_Personal_Info_GUID_Flow(phone:string, email:string, day:string){
-        const url = new URL(this.page.url());
-        const guidValue = url.searchParams.get('guid');
-
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_About_You_Title).toBeVisible({timeout:30000});
-        await expect(this.Move_In_First_Name_Field).not.toHaveAttribute('value', '');
-        await expect(this.Move_In_Last_Name_Field).not.toHaveAttribute('value', '');
-
-        if (guidValue === MoveIndata.GUID1) {
-            await expect(this.Move_In_Phone_Field).not.toHaveAttribute('value', '');
-        }
-        else if (guidValue === MoveIndata.GUID2) {
-            await expect(this.Move_In_Phone_Field).toHaveAttribute('value', '');
-            await this.Move_In_Phone_Field.click({timeout:10000});
-            await this.Move_In_Phone_Field.fill(phone);
-        }
-
-        await expect(this.Move_In_Email_Field).not.toHaveAttribute('value', '');
         await this.Move_In_Email_Field.click();
         await this.Move_In_Email_Field.fill(email);
 

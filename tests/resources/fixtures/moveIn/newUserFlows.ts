@@ -403,57 +403,6 @@ export async function newUserMoveInAddressParameter(
   });
 }
 
-/**
- * New user move-in with GUID flow (pre-filled user info)
- */
-export async function newUserMoveInGuidFlow(
-  page: Page,
-  electricCompany: UtilityCompany,
-  gasCompany: UtilityCompany,
-  newElectric: boolean,
-  newGas: boolean,
-  payThroughPG: boolean = true,
-  cardNumber?: string
-): Promise<MoveInResult> {
-  // This flow uses GUID for pre-filled user information
-  // For now, delegates to standard flow - implementation can be customized
-  return newUserMoveIn({
-    page,
-    electricCompany,
-    gasCompany,
-    newElectric,
-    newGas,
-    paymentType: 'auto',
-    paymentMethod: 'card',
-    payThroughPG,
-    cardNumber,
-  });
-}
-
-/**
- * New user move-in with both address parameter and GUID flow
- */
-export async function newUserMoveInAddressParameterAndGuid(
-  page: Page,
-  electricCompany: UtilityCompany,
-  gasCompany: UtilityCompany,
-  newElectric: boolean,
-  newGas: boolean,
-  payThroughPG: boolean = true,
-  cardNumber?: string
-): Promise<MoveInResult> {
-  return newUserMoveIn({
-    page,
-    electricCompany,
-    gasCompany,
-    newElectric,
-    newGas,
-    paymentType: 'auto',
-    paymentMethod: 'card',
-    payThroughPG,
-    cardNumber,
-  });
-}
 
 /**
  * Move-in flow for existing utility account
