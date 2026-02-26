@@ -1,3 +1,10 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "chat.mcp.serverSampling": {
+        "cottage-tests/.vscode/mcp.json: com.supabase/mcp": {
+            "allowedModels": [
+                "copilot/auto"
+            ]
+        }
+    }
 }
