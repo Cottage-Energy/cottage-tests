@@ -1283,19 +1283,13 @@ export class MoveInPage{
             if (!(await listbox.isVisible().catch(() => false))) return;
         } catch { /* continue to next strategy */ }
 
-        // Strategy 2: JavaScript click on the option element
-        await this.page.evaluate((text) => {
-            const options = document.querySelectorAll('[role="option"]');
-            for (const opt of options) {
-                if (opt.textContent?.trim() === text) {
-                    const event = new PointerEvent('pointerdown', { bubbles: true });
-                    opt.dispatchEvent(event);
-                    opt.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
-                    (opt as HTMLElement).click();
-                    break;
-                }
-            }
-        }, optionText);
+        // Strategy 2: Dispatch pointer events on the option element
+        const optionLocator = this.page.locator(`[role="option"]:has-text("${optionText}")`).first();
+        try {
+            await optionLocator.dispatchEvent('pointerdown', { bubbles: true });
+            await optionLocator.dispatchEvent('pointerup', { bubbles: true });
+            await optionLocator.click({ timeout: 2000 });
+        } catch { /* option not found, continue to next strategy */ }
         await this.page.waitForTimeout(300);
         const listbox2 = this.page.getByRole('listbox');
         if (!(await listbox2.isVisible().catch(() => false))) return;
