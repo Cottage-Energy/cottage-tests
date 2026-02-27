@@ -1,5 +1,8 @@
 import { expect } from '@playwright/test';
 import { supabase } from '../../utils/supabase';
+import { loggers } from '../../utils/logger';
+
+const log = loggers.database.child('AccountQueries');
 
 /**
  * Database queries for Electric and Gas account tables
@@ -17,7 +20,7 @@ export class AccountQueries {
       .throwOnError();
 
     const electricAccountId = account?.id ?? '';
-    console.log('Electric Account ID:', electricAccountId.toString());
+    log.debug('Electric Account ID', { electricAccountId: electricAccountId.toString() });
     await expect(electricAccountId).not.toBe('');
     return electricAccountId.toString();
   }
@@ -32,7 +35,7 @@ export class AccountQueries {
       .eq('cottageUserID', cottageUserId)
       .maybeSingle();
 
-    console.log('Error:', error);
+    if (error) log.debug('Electric account check error', { error: String(error) });
     await expect(account).toBeNull();
   }
 
@@ -48,7 +51,7 @@ export class AccountQueries {
       .throwOnError();
 
     const electricAccountId = account?.id ?? null;
-    console.log('Electric Account ID:', electricAccountId?.toString() ?? 'null');
+    log.debug('Electric Account ID', { electricAccountId: electricAccountId?.toString() ?? 'null' });
     return electricAccountId?.toString() ?? null;
   }
 
@@ -64,7 +67,7 @@ export class AccountQueries {
       .throwOnError();
 
     const gasAccountId = account?.id ?? '';
-    console.log('Gas Account ID:', gasAccountId.toString());
+    log.debug('Gas Account ID', { gasAccountId: gasAccountId.toString() });
     await expect(gasAccountId).not.toBe('');
     return gasAccountId.toString();
   }
@@ -79,7 +82,7 @@ export class AccountQueries {
       .eq('cottageUserID', cottageUserId)
       .maybeSingle();
 
-    console.log('Error:', error);
+    if (error) log.debug('Gas account check error', { error: String(error) });
     await expect(account).toBeNull();
   }
 
@@ -95,7 +98,7 @@ export class AccountQueries {
       .throwOnError();
 
     const gasAccountId = account?.id ?? null;
-    console.log('Gas Account ID:', gasAccountId?.toString() ?? 'null');
+    log.debug('Gas Account ID', { gasAccountId: gasAccountId?.toString() ?? 'null' });
     return gasAccountId?.toString() ?? null;
   }
 
@@ -111,7 +114,7 @@ export class AccountQueries {
       .throwOnError();
 
     const propertyId = account?.propertyID ?? '';
-    console.log('Property ID (Electric):', propertyId.toString());
+    log.debug('Property ID (Electric)', { propertyId: propertyId.toString() });
     return propertyId.toString();
   }
 
@@ -127,7 +130,7 @@ export class AccountQueries {
       .throwOnError();
 
     const propertyId = account?.propertyID ?? '';
-    console.log('Property ID (Gas):', propertyId.toString());
+    log.debug('Property ID (Gas)', { propertyId: propertyId.toString() });
     return propertyId.toString();
   }
 
@@ -159,13 +162,13 @@ export class AccountQueries {
           query = query.is('gasAccountID', null);
         }
 
-        const { data } = await query.single().throwOnError();
+        const { data } = await query.order('id', { ascending: false }).limit(1).single().throwOnError();
         chargeAccount = data;
         break;
       } catch (error) {
         if (retries < maxRetries) {
           retries++;
-          console.log(`Retrying Get_Check_Charge_Account... (${retries}/${maxRetries})`);
+          log.warn(`Retrying Get_Check_Charge_Account`, { retry: retries, maxRetries });
           await delay(60000);
         } else {
           throw error;
@@ -175,7 +178,7 @@ export class AccountQueries {
 
     const chargeAccountId = chargeAccount?.id ?? '';
     expect(chargeAccount).not.toBeNull();
-    console.log('Charge Account ID:', chargeAccountId.toString());
+    log.debug('Charge Account ID', { chargeAccountId: chargeAccountId.toString() });
     return chargeAccountId.toString();
   }
 }

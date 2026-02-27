@@ -1,6 +1,7 @@
-import { APIRequestContext } from '@playwright/test';
+﻿import { APIRequestContext } from '@playwright/test';
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities, SupabaseQueries } from '../../../resources/fixtures';
+import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities } from '../../../resources/fixtures';
+import { utilityQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import { AdminApi } from '../../../resources/api/admin_api';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
@@ -8,7 +9,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
 
 
 let AdminApiContext: APIRequestContext;
-const supabaseQueries = new SupabaseQueries();
 const paymentUtilities = new PaymentUtilities();
 let MoveIn: any;
 
@@ -17,7 +17,7 @@ let MoveIn: any;
     
 //});
 
-test.beforeEach(async ({ playwright, page, supabaseQueries },testInfo) => {
+test.beforeEach(async ({ playwright, page },testInfo) => {
   /*const env = process.env.ENV || 'dev';
   const baseUrl = environmentBaseUrl[env].admin_api;
   const adminToken = process.env.ADMIN_TOKEN;
@@ -30,9 +30,9 @@ test.beforeEach(async ({ playwright, page, supabaseQueries },testInfo) => {
     },
   });*/
   
-  await supabaseQueries.Update_Building_Billing("autotest",true);
-  await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
-  await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
+  await utilityQueries.updateBuildingBilling("autotest",true);
+  await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
+  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
   
@@ -46,40 +46,26 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe.skip('Valid Card Auto Payment', () => {
+test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
-  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
-    await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, false);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // After sign-in, user is prompted to add payment method inline
+    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -95,7 +81,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
 
     const PGuserUsage = await generateTestUserData();
     
-    await supabaseQueries.Update_Companies_to_Building("autotest","PSEG","PSEG");
+    await utilityQueries.updateCompaniesToBuilding("autotest","PSEG","PSEG");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page,"PSEG","PSEG", true, true);
@@ -124,36 +110,22 @@ test.describe.skip('Valid Card Auto Payment', () => {
   });
 
 
-  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","SDGE","SCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","SDGE","SCE");
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInSkipPayment(page,"SDGE","SCE", true, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
     
-    await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuserUsage.CardExpiry,PGuserUsage.CVC,PGuserUsage.Country,PGuserUsage.Zip);
+    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+    // After sign-in, user is prompted to add payment method inline
+    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -169,7 +141,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
 
     const PGuserUsage = await generateTestUserData();
     
-    await supabaseQueries.Update_Companies_to_Building("autotest","NGMA","NGMA");
+    await utilityQueries.updateCompaniesToBuilding("autotest","NGMA","NGMA");
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page,"NGMA","NGMA", true, true);
@@ -204,7 +176,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
 
     const PGuserUsage = await generateTestUserData();
 
-    await supabaseQueries.Update_Companies_to_Building("autotest","DUKE","CON-EDISON");
+    await utilityQueries.updateCompaniesToBuilding("autotest","DUKE","CON-EDISON");
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page,"DUKE","CON-EDISON", false, true);
@@ -236,7 +208,7 @@ test.describe.skip('Valid Card Auto Payment', () => {
 });
 
 
-test.describe.skip('Valid Bank Auto Payment', () => {
+test.describe('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     
@@ -246,7 +218,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", "COMED", null);
+        await utilityQueries.updateCompaniesToBuilding("autotest", "COMED", null);
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoBankAccount(page, "COMED", null, true, true);
@@ -266,36 +238,22 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     });
 
 
-    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","DELMARVA","DELMARVA");
+        await utilityQueries.updateCompaniesToBuilding("autotest","DELMARVA","DELMARVA");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"DELMARVA","DELMARVA", true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
         
-        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
+        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+        // After sign-in, user is prompted to add payment method inline
+        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -309,7 +267,7 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","BGE","DTE");
+        await utilityQueries.updateCompaniesToBuilding("autotest","BGE","DTE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoBankAccount(page,"BGE","DTE", true, true);
@@ -338,36 +296,22 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     });
     
 
-    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest","EVERSOURCE","EVERSOURCE");
+        await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
         
-        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
+        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+        // After sign-in, user is prompted to add payment method inline
+        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -375,36 +319,22 @@ test.describe.skip('Valid Bank Auto Payment', () => {
     });
     
 
-    test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context, finishAccountSetupPage}) => {
+    test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
         const PGuserUsage = await generateTestUserData();
         
-        await supabaseQueries.Update_Companies_to_Building("autotest", null, "BGE");
+        await utilityQueries.updateCompaniesToBuilding("autotest", null, "BGE");
         
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, null, "BGE", true, true);
     
         await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
         
-        await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
+        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
+        // After sign-in, user is prompted to add payment method inline
+        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 

@@ -32,6 +32,7 @@ export const UTILITY_COMPANIES = {
   PSE: 'PSE',
   DUKE: 'DUKE',
   NYS_EG: 'NYS-EG',
+  AEP_OHIO: 'AEP-OHIO',
 } as const;
 
 /**
@@ -71,6 +72,8 @@ export const COMPANY_KEY_MAP: Record<string, string> = {
   'DUKE': 'DUKE',
   'NYS-EG': 'NYS_EG',
   'NYS_EG': 'NYS_EG',
+  'AEP-OHIO': 'AEP_OHIO',
+  'AEP_OHIO': 'AEP_OHIO',
 };
 
 /**
@@ -80,6 +83,7 @@ export const COMPANIES_WITH_QUESTIONS = [
   UTILITY_COMPANIES.CON_EDISON,
   UTILITY_COMPANIES.BGE,
   UTILITY_COMPANIES.TX_DEREG,
+  UTILITY_COMPANIES.COSERV,
 ] as const;
 
 /**

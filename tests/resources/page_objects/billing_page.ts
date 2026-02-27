@@ -20,15 +20,15 @@ export class BillingPage {
     //locators
     constructor(page: Page) {
         this.page = page;
-        this.Billing_Electric_Usage_Row = (electric_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${electric_usage} kWh")]/ancestor::tr`)
-        this.Billing_Gas_Usage_Row = (gas_usage: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"${gas_usage} therms")]/ancestor::tr`)
-        this.Payment_Row = (amount: string) => page.locator(`//div[@class = "hidden md:block"]//span[contains(text(),"$${amount}")]/ancestor::tr`);
-        this.Billing_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div/parent::div');
+        this.Billing_Electric_Usage_Row = (electric_usage: string) => page.getByRole('row').filter({ hasText: `${electric_usage} kWh` });
+        this.Billing_Gas_Usage_Row = (gas_usage: string) => page.getByRole('row').filter({ hasText: `${gas_usage} therms` });
+        this.Payment_Row = (amount: string) => page.getByRole('row').filter({ hasText: `$${amount}` });
+        this.Billing_Outstanding_Balance = page.locator('div').filter({ hasText: /Outstanding/ }).filter({ hasText: /\$\d/ }).last();
 
-        this.Billing_Bills_History_Tab = page.getByRole('tab', { name: 'Bills History' });
+        this.Billing_Bills_History_Tab = page.getByRole('tab', { name: /Bill.*History/ });
         this.Billing_Payments_Tab = page.getByRole('tab', { name: 'Payments' });
 
-        this.Billing_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
+        this.Billing_Make_Payment_Button = page.getByRole('button', { name: /Make a Payment|Pay bill/ });
 
         this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });
@@ -175,7 +175,7 @@ export class BillingPage {
 
     async Check_Electric_Bill_View_Button(electric_usage: string) {
         const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
-        const ViewLocator = rowLocator.locator(`//a[text() = "View"]`);
+        const ViewLocator = rowLocator.getByRole('link', { name: 'View' });
         await expect(ViewLocator).toBeVisible({timeout:30000});
         await expect(ViewLocator).toBeEnabled({timeout:30000});
     }
@@ -202,7 +202,7 @@ export class BillingPage {
 
     async Check_Gas_Bill_View_Button(gas_usage: string) {
         const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
-        const ViewLocator = rowLocator.locator(`//a[text() = "View"]`);
+        const ViewLocator = rowLocator.getByRole('link', { name: 'View' });
         await expect(ViewLocator).toBeVisible({timeout:30000});
         await expect(ViewLocator).toBeEnabled({timeout:30000});
     }
@@ -218,8 +218,7 @@ export class BillingPage {
     //Payments Assertions
     async Check_Payment_Status(amount: string, status: string) {
         const rowLocator = this.Payment_Row(amount);
-        const StatusLocator = rowLocator.locator(`//div[text() = "${status}"]`);
-        await expect(StatusLocator).toBeVisible({timeout:30000});
+        await expect(rowLocator.getByText(status, { exact: true })).toBeVisible({timeout:30000});
     }
 
     async Check_Payment_Transaction_Fee(amount: string, ExpectedFee: string) {

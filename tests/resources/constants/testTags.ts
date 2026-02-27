@@ -42,6 +42,7 @@ export const TEST_TAGS = {
   UI: '@ui',
   API: '@api',
   E2E: '@e2e',
+  EXPLORATORY: '@exploratory',
   
   /** Priority tags */
   P1: '@p1',

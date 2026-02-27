@@ -129,8 +129,8 @@ import type { MoveInResult } from '../../../resources/types/moveIn.types';
 /** Stores result for cleanup */
 let result: MoveInResult | null = null;
 
-test.beforeEach(async ({ page, supabaseQueries }) => {
-  // Setup logic
+test.beforeEach(async ({ page }) => {
+  // Setup logic using individual query modules (e.g., utilityQueries, accountQueries)
 });
 
 test.afterEach(async ({ page }) => {

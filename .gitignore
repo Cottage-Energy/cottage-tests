@@ -33,3 +33,13 @@ Thumbs.db
 
 # Claude Code temp files
 tmpclaude-*-cwd
+.claude/
+
+# Playwright MCP logs
+.playwright-mcp/
+
+# Debug and temp files
+debug-*.js
+ss-*.png
+screenshot-*.png
+listDevices.*

@@ -8,61 +8,43 @@ export class BillUploadPage {
     readonly energySavingsHeading: Locator;
     readonly zipCodeTextbox: Locator;
     readonly utilityCombobox: Locator;
-    readonly conEdisonOption: Locator;
-    readonly letsGetStartedButton: Locator;
-    
-    // Neighborhood Page elements
-    readonly neighborhoodHeading: Locator;
-    readonly continueButton: Locator;
+    readonly checkAvailabilityButton: Locator;
     
     // Upload Bill Page elements
     readonly uploadBillHeading: Locator;
+    readonly emailTextbox: Locator;
     readonly fileInput: Locator;
-    readonly agreeAndContinueButton: Locator;
+    readonly uploadBillButton: Locator;
     
     // Processing Page elements
     readonly scanningBillHeading: Locator;
-    readonly goodNewsHeading: Locator;
     
-    // Finish Setup Page elements
-    readonly emailTextboxFinal: Locator;
-    readonly autoEnrollText: Locator;
-    readonly autoEnrollSwitch: Locator;
-    readonly finishButton: Locator;
-    readonly gotItButton: Locator;
-    readonly wayToGoHeading: Locator;
+    // Success Page elements
+    readonly successHeading: Locator;
+    readonly continueToAccountButton: Locator;
 
     // Constructor
     constructor(page: Page) {
         this.page = page;
         
         // Connect Account Page
-        this.energySavingsHeading = page.getByRole('heading', { name: 'Energy savings starts here' });
+        this.energySavingsHeading = page.getByRole('heading', { name: 'Stop overpaying for electricity' });
         this.zipCodeTextbox = page.getByRole('textbox').first();
         this.utilityCombobox = page.getByRole('combobox');
-        this.conEdisonOption = page.getByLabel('Con Edison');
-        this.letsGetStartedButton = page.getByRole('button', { name: 'Let\'s Get Started' });
-        
-        // Neighborhood Page
-        this.neighborhoodHeading = page.getByRole('heading', { name: 'We are in your neighborhood' });
-        this.continueButton = page.getByRole('button', { name: 'Continue' });
+        this.checkAvailabilityButton = page.getByRole('button', { name: /Check availability/i });
         
         // Upload Bill Page
         this.uploadBillHeading = page.getByRole('heading', { name: 'Upload your bill' });
+        this.emailTextbox = page.getByRole('textbox');
         this.fileInput = page.locator('input[type="file"]');
-        this.agreeAndContinueButton = page.getByRole('button', { name: 'Agree and Continue' });
+        this.uploadBillButton = page.getByRole('button', { name: /Upload bill/i });
         
         // Processing Page
-        this.scanningBillHeading = page.getByRole('heading', { name: 'Hold tight, scanning your bill...' });
-        this.goodNewsHeading = page.getByRole('heading', { name: 'Good news 🎉 Your account has untapped savings!' });
+        this.scanningBillHeading = page.getByRole('heading', { name: /Scanning bill/i });
         
-        // Finish Setup Page - Using last() to get the email textbox after processing
-        this.emailTextboxFinal = page.getByRole('textbox').last();
-        this.autoEnrollText = page.getByText('Auto-enroll in savings');
-        this.autoEnrollSwitch = page.getByRole('switch');
-        this.finishButton = page.getByRole('button', { name: 'Finish' });
-        this.gotItButton = page.getByRole('button', { name: 'Got it!' });
-        this.wayToGoHeading = page.getByRole('heading', { name: 'Way to Go 🥳' });
+        // Success Page
+        this.successHeading = page.getByRole('heading', { name: /You're all set/i });
+        this.continueToAccountButton = page.getByRole('button', { name: /Continue to My Account/i });
     }
 
     // Methods
@@ -72,78 +54,57 @@ export class BillUploadPage {
     }
 
     async fillZipCodeAndSelectUtility(zipCode: string, utility: string = 'Con Edison') {
-        await expect(this.energySavingsHeading).toBeVisible();
+        await expect(this.energySavingsHeading).toBeVisible({ timeout: 10000 });
         await this.zipCodeTextbox.click();
         await this.zipCodeTextbox.fill(zipCode);
-        await expect(this.utilityCombobox).toBeVisible();
-        await this.utilityCombobox.click();
-        
-        // Wait a moment for dropdown to populate
-        await this.page.waitForTimeout(1000);
-        
-        // Support multiple utilities
-        switch (utility.toUpperCase()) {
-            case 'CON EDISON':
-            case 'CON-EDISON':
-            case 'CONED':
-                await expect(this.page.getByLabel('Con Edison')).toBeVisible();
-                await this.page.getByLabel('Con Edison').click();
-                break;
-            case 'EVERSOURCE':
-                await expect(this.page.getByLabel('Eversource')).toBeVisible();
-                await this.page.getByLabel('Eversource').click();
-                break;
-            case 'COMED':
-            case 'COMMONWEALTH EDISON':
-                await expect(this.page.getByLabel('ComEd')).toBeVisible();
-                await this.page.getByLabel('ComEd').click();
-                break;
-            default:
-                // Default to Con Edison if utility not found
-                await expect(this.conEdisonOption).toBeVisible();
-                await this.conEdisonOption.click();
-                break;
+        await this.page.waitForTimeout(2000);
+
+        // Select utility from dropdown if combobox appears
+        const hasCombobox = await this.utilityCombobox.isVisible({ timeout: 5000 }).catch(() => false);
+        if (hasCombobox) {
+            await this.utilityCombobox.click();
+            await this.page.waitForTimeout(1000);
+            
+            const option = this.page.getByRole('option', { name: new RegExp(utility, 'i') });
+            await expect(option).toBeVisible({ timeout: 5000 });
+            await option.click();
+            await this.page.waitForTimeout(500);
         }
     }
 
-    async clickLetsGetStarted() {
-        await this.letsGetStartedButton.click();
-        await expect(this.neighborhoodHeading).toBeVisible();
+    async clickCheckAvailability() {
+        await expect(this.checkAvailabilityButton).toBeVisible({ timeout: 5000 });
+        await this.checkAvailabilityButton.click();
+        await expect(this.uploadBillHeading).toBeVisible({ timeout: 15000 });
     }
 
-    async proceedFromNeighborhood() {
-        await this.continueButton.click();
-        await expect(this.uploadBillHeading).toBeVisible();
-    }
-
-    async uploadBillFile(filePath: string) {
+    async fillEmailAndUploadBill(email: string, filePath: string) {
+        await expect(this.uploadBillHeading).toBeVisible({ timeout: 10000 });
+        await this.emailTextbox.click();
+        await this.emailTextbox.fill(email);
         await this.fileInput.setInputFiles(filePath);
-        await this.agreeAndContinueButton.click();
+        await this.page.waitForTimeout(1000);
+        await expect(this.uploadBillButton).toBeEnabled({ timeout: 5000 });
+        await this.uploadBillButton.click();
     }
 
     async waitForBillProcessing() {
-        await expect(this.scanningBillHeading).toBeVisible({ timeout: 90000 });
-        await expect(this.goodNewsHeading).toBeVisible({ timeout: 90000 });
+        await expect(this.scanningBillHeading).toBeVisible({ timeout: 30000 });
+        await expect(this.successHeading).toBeVisible({ timeout: 90000 });
     }
 
-    async fillEmailAndFinish(email: string) {
-        await this.emailTextboxFinal.click();
-        await this.emailTextboxFinal.fill(email);
-        await expect(this.autoEnrollText).toBeVisible();
-        await expect(this.autoEnrollSwitch).toBeVisible();
-        await this.finishButton.click();
-        await this.gotItButton.click();
-        await expect(this.wayToGoHeading).toBeVisible({ timeout: 60000 });
+    async verifySuccess() {
+        await expect(this.successHeading).toBeVisible({ timeout: 10000 });
+        await expect(this.continueToAccountButton).toBeVisible({ timeout: 10000 });
     }
 
     async completeBillUploadFlow(zipCode: string, filePath: string, email: string, utility: string = 'Con Edison') {
         await this.navigateToConnectAccount();
         await this.fillZipCodeAndSelectUtility(zipCode, utility);
-        await this.clickLetsGetStarted();
-        await this.proceedFromNeighborhood();
-        await this.uploadBillFile(filePath);
+        await this.clickCheckAvailability();
+        await this.fillEmailAndUploadBill(email, filePath);
         await this.waitForBillProcessing();
-        await this.fillEmailAndFinish(email);
+        await this.verifySuccess();
     }
 }
 

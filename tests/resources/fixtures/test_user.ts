@@ -15,13 +15,13 @@ interface TestUser {
     Email: string;
     /** Generated unit number */
     UnitNumber: string;
-    /** Today's date as day number string */
+    /** Today's date as MMDDYYYY string for masked input */
     Today: string;
-    /** Tomorrow's date as day number string */
+    /** Tomorrow's date as MMDDYYYY string for masked input */
     Tomorrow: string;
-    /** Date 4 days from now as day number string */
+    /** Date 4 days from now as MMDDYYYY string for masked input */
     FourDaysFromNow: string;
-    /** Date 2 days ago as day number string */
+    /** Date 2 days ago as MMDDYYYY string for masked input */
     TwoDaysAgo: string;
     /** Birth date in ISO format (YYYY-MM-DD) */
     BirthDate: string;
@@ -144,15 +144,15 @@ export async function generateTestUserData(serviceFeePercentage?: number): Promi
       PhoneNumber: "111-111-1111",
       Email: faker.internet.email({ firstName: 'PGTest+' + firstname, lastName: lastname + uniqueKey, provider: 'joinpublicgrid.com'}),
       UnitNumber: faker.location.buildingNumber() + faker.string.alpha({ length: 1 }),
-      Today: today.getDate().toString(),
-      Tomorrow: tomorrow.getDate().toString(),
-      FourDaysFromNow: fourDaysFromNow.getDate().toString(),
-      TwoDaysAgo: twoDaysAgo.getDate().toString(),
+      Today: `${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}${today.getFullYear()}`,
+      Tomorrow: `${String(tomorrow.getMonth() + 1).padStart(2, '0')}${String(tomorrow.getDate()).padStart(2, '0')}${tomorrow.getFullYear()}`,
+      FourDaysFromNow: `${String(fourDaysFromNow.getMonth() + 1).padStart(2, '0')}${String(fourDaysFromNow.getDate()).padStart(2, '0')}${fourDaysFromNow.getFullYear()}`,
+      TwoDaysAgo: `${String(twoDaysAgo.getMonth() + 1).padStart(2, '0')}${String(twoDaysAgo.getDate()).padStart(2, '0')}${twoDaysAgo.getFullYear()}`,
       BirthDate: faker.date.birthdate({ min: 18, max: 99, mode: 'age' }).toISOString().split('T')[0],
       SSN: faker.string.numeric({ length: 9 }),
       CardExpiry: cardExpiry,
       CVC: faker.finance.creditCardCVV(),
-      Country: faker.location.countryCode(),
+      Country: 'US',
       Zip: faker.location.zipCode(),
       ElectricAmount: parseInt(AmountElectric),
       ElectricAmountActual: electricAmountActual,

@@ -1,8 +1,10 @@
-import { Page } from '@playwright/test';
 import { MoveInPage } from '../../page_objects/move_in_page';
 import * as MoveInData from '../../data/move_in-data.json';
 import { normalizeCompanyName } from '../../constants/companies';
-import type { MoveInOptions, UtilityCompany } from '../../types/moveIn.types';
+import { loggers } from '../../utils/logger';
+import type { UtilityCompany } from '../../types/moveIn.types';
+
+const log = loggers.moveIn.child('Helpers');
 
 /**
  * Helper functions for move-in flows
@@ -33,7 +35,7 @@ export function getAddressForCompany(
     }
   }
 
-  console.log('Using default COMED address');
+  log.debug('Using default COMED address');
   return defaultAddress;
 }
 
@@ -49,16 +51,7 @@ export async function handleCompanyQuestions(
   let electricQuestionsPresent = false;
   let gasQuestionsPresent = false;
 
-  // Try program enrolled questions first
-  try {
-    await moveInPage.Program_Enrolled_Questions();
-    electricQuestionsPresent = true;
-    gasQuestionsPresent = true;
-  } catch {
-    console.log('No questions to answer for Program Enrolled');
-  }
-
-  // Handle company-specific questions
+  // Handle company-specific questions (includes "How long staying" for BGE/TX_DEREG/COSERV)
   const normalizedElectric = normalizeCompanyName(electricCompany);
   const normalizedGas = normalizeCompanyName(gasCompany);
 
@@ -75,30 +68,42 @@ export async function handleCompanyQuestions(
             await callCompanyQuestions(moveInPage, normalizedGas);
             gasQuestionsPresent = true;
           } catch {
-            console.log('No questions to answer for these companies');
+            log.debug('No questions to answer for these companies');
           }
         }
       }
     }
   } else {
     // Different companies - try each separately
+    // Note: Utility profile page shows one set of questions, not per-company.
+    // If electric questions succeed, gas company shares the same answered questions.
     if (normalizedElectric) {
       try {
         await callCompanyQuestions(moveInPage, normalizedElectric);
         electricQuestionsPresent = true;
       } catch {
-        console.log('No questions to answer for Electric company');
+        log.debug('No questions to answer for Electric company');
       }
     }
 
-    if (normalizedGas) {
+    // Only try gas questions if electric didn't have any
+    if (!electricQuestionsPresent && normalizedGas) {
       try {
         await callCompanyQuestions(moveInPage, normalizedGas);
         gasQuestionsPresent = true;
       } catch {
-        console.log('No questions to answer for Gas company');
+        log.debug('No questions to answer for Gas company');
       }
     }
+  }
+
+  // Try program enrolled questions (appears after company-specific questions)
+  try {
+    await moveInPage.Program_Enrolled_Questions();
+    electricQuestionsPresent = true;
+    gasQuestionsPresent = true;
+  } catch {
+    log.debug('No questions to answer for Program Enrolled');
   }
 
   return { electricQuestionsPresent, gasQuestionsPresent };
@@ -115,13 +120,19 @@ async function callCompanyQuestions(moveInPage: MoveInPage, companyKey: string):
     'CON_EDISON_Questions': () => moveInPage.CON_EDISON_Questions(),
     'BGE_Questions': () => moveInPage.BGE_Questions(),
     'TX_DEREG_Questions': () => moveInPage.TX_DEREG_Questions(),
+    'COSERV_Questions': () => moveInPage.COSERV_Questions(),
   };
 
   const method = questionMethods[methodName];
   if (method) {
     await method();
   } else {
-    throw new Error(`No question method found for ${companyKey}`);
+    // Universal fallback: try "How long staying" question for any company
+    try {
+      await moveInPage.Length_of_Staying_Questions();
+    } catch {
+      throw new Error(`No question method found for ${companyKey}`);
+    }
   }
 }
 
@@ -132,11 +143,32 @@ export async function handleAccountSetupOrTexasAgreement(
   moveInPage: MoveInPage,
   newElectric: boolean,
   newGas: boolean
-): Promise<void> {
+): Promise<boolean> {
+  // Wait for page to stabilize after address step
+  await moveInPage.page.waitForTimeout(2000);
+
+  // Check if Utility Setup page is visible (may not appear for some zip-based flows)
+  // Increased timeout to 30s to allow for address validation delay
+  const utilitySetupHeading = moveInPage.page.getByRole('heading', { name: 'Choose how to start service' });
   try {
-    await moveInPage.Setup_Account(newElectric, newGas);
+    await utilitySetupHeading.waitFor({ state: 'visible', timeout: 30000 });
+    await moveInPage.Choose_Start_Service();
+    return true;
   } catch {
-    console.log('TX-DEREG Service Zip Agreement');
-    await moveInPage.Texas_Service_Agreement();
+    // Not visible — check for Texas Service Agreement
   }
+
+  const texasText = moveInPage.page.getByText('Public Grid starts service for');
+  try {
+    await texasText.waitFor({ state: 'visible', timeout: 10000 });
+    log.debug('TX-DEREG Service Zip Agreement');
+    await moveInPage.Texas_Service_Agreement();
+    return true;
+  } catch {
+    // Not visible either
+  }
+
+  // Neither visible — zip-based flow skips utility setup step
+  log.debug('No utility setup or Texas agreement step — zip-based flow');
+  return false;
 }

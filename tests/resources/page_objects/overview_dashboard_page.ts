@@ -1,8 +1,6 @@
-import { type Page, type Locator, expect } from '@playwright/test';
-import { SupabaseQueries } from '../fixtures/database';
+﻿import { type Page, type Locator, expect } from '@playwright/test';
+import { billQueries } from '../fixtures/database';
 import { format } from 'date-fns';
-
-const supabaseQueries = new SupabaseQueries();
 
 export class OverviewPage {
 
@@ -42,11 +40,25 @@ export class OverviewPage {
     //locators
     constructor(page: Page) {
         this.page = page;
-        this.Overview_Outstanding_Balance = page.locator('//h3[contains(text(),"Outstanding Balance")]/parent::div/parent::div');
-        this.Overview_Make_Payment_Button = page.getByRole('button', { name: 'Make a Payment' });
+        // Balance section: new UI shows $X.XX amount + "Invoice autopay" in a card
+        // Use hasNotText to exclude parent containers that also include utility cards
+        this.Overview_Outstanding_Balance = page.locator('div')
+            .filter({ hasText: /^\$\d+\.\d{2}/ })
+            .filter({ hasNotText: 'Electricity' })
+            .first();
+        this.Overview_Make_Payment_Button = page.getByRole('button', { name: /Make a Payment|Pay bill/ });
 
-        this.Overview_Electricity_Card = page.locator('//span[text()="Electricity"]/parent::h3/parent::div/parent::div');
-        this.Overview_Gas_Card = page.locator('//span[text()="Gas"]/parent::h3/parent::div/parent::div');
+        // Utility cards: find the header div starting with the utility name, then go up to card container
+        this.Overview_Electricity_Card = page.locator('div')
+            .filter({ hasText: /^Electricity/ })
+            .filter({ hasNotText: /\bGas\b/ })
+            .first()
+            .locator('..');
+        this.Overview_Gas_Card = page.locator('div')
+            .filter({ hasText: /^Gas/ })
+            .filter({ hasNotText: /\bElectricity\b/ })
+            .first()
+            .locator('..');
 
 
         this.Overview_Add_Payment_Title = page.getByRole('heading', { name: 'Add Payment Method' });
@@ -54,7 +66,7 @@ export class OverviewPage {
 
         this.Overview_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
         this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
-        this.Overview_Success_Message = page.getByText('🥳 Success', { exact: true });
+        this.Overview_Success_Message = page.getByText('ðŸ¥³ Success', { exact: true });
 
         this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
         this.Overview_Profile_Button = page.getByRole('menuitem', { name: 'Profile' });
@@ -69,11 +81,11 @@ export class OverviewPage {
 
         this.Overview_Inactive_Account_Alert = page.getByText('Inactive Account: Service at');
 
-        this.Overview_Setup_Password_Title = page.getByRole('heading', { name: 'Set Up Your Password' });
-        this.Overview_Setup_Password_Description = page.getByText('To keep your account secure');
+        this.Overview_Setup_Password_Title = page.getByText(/Set up your new password|Set Up Your Password/i);
+        this.Overview_Setup_Password_Description = page.getByText(/To keep your account secure|password was recently reset/i);
         this.Overview_Setup_Password_Field = page.locator('input[name="password"]');
         this.Overview_Setup_Password_Confirm_Password_Field = page.locator('input[name="confirmPassword"]');
-        this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: 'Set Password' });
+        this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: /Set (new )?password/i });
     }
 
     //methods
@@ -549,8 +561,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(BillId);
+        const startDate = await billQueries.getElectricBillStartDate(BillId);
+        const endDate = await billQueries.getElectricBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -578,8 +590,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Electricity_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Electric_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Electric_Bill_End_Date(BillId);
+        const startDate = await billQueries.getElectricBillStartDate(BillId);
+        const endDate = await billQueries.getElectricBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -607,8 +619,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(BillId);
+        const startDate = await billQueries.getGasBillStartDate(BillId);
+        const endDate = await billQueries.getGasBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);
@@ -636,8 +648,8 @@ export class OverviewPage {
 
         await expect(this.Overview_Gas_Card).toBeVisible();
 
-        const startDate = await supabaseQueries.Get_Gas_Bill_Start_Date(BillId);
-        const endDate = await supabaseQueries.Get_Gas_Bill_End_Date(BillId);
+        const startDate = await billQueries.getGasBillStartDate(BillId);
+        const endDate = await billQueries.getGasBillEndDate(BillId);
         
         const Start = new Date(startDate);
         const End = new Date(endDate);

@@ -1,6 +1,7 @@
 import { test, expect } from '../../../resources/page_objects';
 import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import { utilityQueries, accountQueries } from '../../../resources/fixtures/database';
 
 let MoveIn: any;
 
@@ -8,10 +9,10 @@ let MoveIn: any;
 
 });*/
 
-test.beforeEach(async ({ page, supabaseQueries },testInfo) => {
-  await supabaseQueries.Update_Building_Billing("autotest",true);
-  await supabaseQueries.Update_Building_Use_Encourage_Conversion("autotest", false);
-  await supabaseQueries.Update_Partner_Use_Encourage_Conversion("Moved", false);
+test.beforeEach(async ({ page },testInfo) => {
+  await utilityQueries.updateBuildingBilling("autotest",true);
+  await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
+  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
 
@@ -29,17 +30,17 @@ test.describe.skip('Short Code Referal', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page, supabaseQueries}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
     test.setTimeout(480000);
-    await supabaseQueries.Update_Companies_to_Building("autotest", "BGE", null);
+    await utilityQueries.updateCompaniesToBuilding("autotest", "BGE", null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page, "BGE", null, true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+    await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber, "BGE", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "BGE", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
@@ -53,20 +54,20 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, finishAccountSetupPage, page, supabaseQueries}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page}) => {
     test.setTimeout(900000);
-    await supabaseQueries.Update_Companies_to_Building("autotest", "DTE", null);
+    await utilityQueries.updateCompaniesToBuilding("autotest", "DTE", null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInSkipPayment(page, "DTE", null, true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,0);
     await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers
-    await finishAccountSetupPage.Click_Cancel_Registration();
+    // await finishAccountSetupPage.Click_Cancel_Registration();
     await overviewPage.Accept_New_Terms_And_Conditions();
     //await overviewPage.Check_Get_Started_Widget_Visible();
     await page.waitForTimeout(10000);
@@ -86,17 +87,17 @@ test.describe.skip('Non Short Code Referal', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression3'],}, async ({moveInpage,page, supabaseQueries}) => {
+  test('New User for ShortCode Electric Only', {tag: [ '@regression3'],}, async ({moveInpage,page}) => {
     test.setTimeout(360000);
-    await supabaseQueries.Update_Companies_to_Building("autotest", "NYS-EG", null);
-    await supabaseQueries.Update_Building_Billing("autotest",false);
+    await utilityQueries.updateCompaniesToBuilding("autotest", "NYS-EG", null);
+    await utilityQueries.updateBuildingBilling("autotest",false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page, "NYS-EG", null, true, true);
-    await supabaseQueries.Check_Get_Electric_Account_Id(MoveIn.cottageUserId);
-    await supabaseQueries.Check_Gas_Account_Id_Not_Present(MoveIn.cottageUserId);
+    await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+    await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Start_Service_Confirmation(MoveIn.pgUserEmail, MoveIn.accountNumber);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 

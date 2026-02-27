@@ -116,6 +116,16 @@ export default defineConfig({
       name: 'Regression7',
       grep: /@regression7/,
     },
+    {
+      name: 'Exploratory',
+      grep: /@exploratory/,
+      use: {
+        ...devices['Desktop Chrome'],
+        screenshot: 'on',
+        video: 'on',
+        trace: 'on',
+      },
+    },
 
     /* Test against branded browsers. */
     // {
