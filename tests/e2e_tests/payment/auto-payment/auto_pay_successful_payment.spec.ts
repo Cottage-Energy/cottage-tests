@@ -57,10 +57,10 @@ test.describe('Valid Card Auto Payment', () => {
 
     const PGuserUsage = await generateTestUserData();
     
-    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE",null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, false);
+    MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE", null, true, false);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     
