@@ -490,16 +490,16 @@ export class MoveInPage{
     }
 
     async Submit_Move_In_Button(){
-        // Try clicking Continue button first, if not available or fails, click Submit button
+        // UI uses Continue button; Submit is legacy fallback
         try {
-            await expect(this.Move_In_Continue_Button).toBeVisible({timeout:2000});
-            await expect(this.Move_In_Continue_Button).toBeEnabled({timeout:2000});
-            await this.Move_In_Continue_Button.hover({timeout:1000});
-            await this.Move_In_Continue_Button.click({timeout:1000});
+            await expect(this.Move_In_Continue_Button).toBeVisible({timeout:TIMEOUTS.DEFAULT});
+            await expect(this.Move_In_Continue_Button).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
+            await this.Move_In_Continue_Button.hover({timeout:TIMEOUTS.MEDIUM});
+            await this.Move_In_Continue_Button.click({timeout:TIMEOUTS.MEDIUM});
         } catch (error) {
-            await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:10000});
-            await this.Move_In_Submit_Button.hover({timeout:10000});
-            await this.Move_In_Submit_Button.click({timeout:10000});
+            await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
+            await this.Move_In_Submit_Button.hover({timeout:TIMEOUTS.MEDIUM});
+            await this.Move_In_Submit_Button.click({timeout:TIMEOUTS.MEDIUM});
         }
     }
 
