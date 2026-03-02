@@ -113,6 +113,7 @@ export class MoveInPage{
     readonly Move_In_Auto_Payment_Checbox: Locator;
     readonly Move_In_Submit_Button: Locator;
     readonly Move_In_Skip_Button: Locator;
+    readonly Move_In_Self_Manage_Option: Locator;
 
     readonly Move_In_Confirm_Skip_Payment_Title: Locator;
     readonly Move_In_Confirm_Skip_Payment_Question_Link: Locator;
@@ -252,6 +253,7 @@ export class MoveInPage{
         this.Move_In_Auto_Payment_Checbox = page.getByRole('checkbox', { name: 'Enable auto-pay (bill is paid' });
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit', exact: true });
         this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now' });
+        this.Move_In_Self_Manage_Option = page.getByText('I will manage payments myself');
 
         this.Move_In_Confirm_Skip_Payment_Title = page.getByRole('heading', { name: 'We need a payment method on' });
         this.Move_In_Confirm_Skip_Payment_Question_Link = page.getByText('Questions? Chat with us so we');
@@ -1126,17 +1128,26 @@ export class MoveInPage{
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
         await this.page.waitForTimeout(3000);
 
-        // Click "Skip for now" button
-        await this.Move_In_Skip_Button.click();
-        await this.page.waitForTimeout(2000);
+        // Try "Skip for now" button first (visible when "Public Grid handles everything" is selected)
+        const skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+        if (skipVisible) {
+            await this.Move_In_Skip_Button.click();
+            await this.page.waitForTimeout(2000);
 
-        // Handle confirmation dialog if it appears
-        try {
-            await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({ timeout: 5000 });
-            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
-        } catch {
-            // No confirmation dialog — proceed
+            // Handle confirmation dialog if it appears
+            try {
+                await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({ timeout: 5000 });
+                await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
+            } catch {
+                // No confirmation dialog — proceed
+            }
+            return;
         }
+
+        // Otherwise select "I will manage payments myself" and click Continue
+        await this.Move_In_Self_Manage_Option.click();
+        await this.page.waitForTimeout(1000);
+        await this.Move_In_Continue_Button.click();
     }
 
 
