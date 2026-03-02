@@ -232,6 +232,42 @@ export class UtilityQueries {
   }
 
   /**
+   * Update offerRenewableEnergy on a Building by shortCode
+   */
+  async updateBuildingOfferRenewableEnergy(
+    shortCode: string,
+    offerRenewableEnergy: boolean
+  ): Promise<void> {
+    const { data, error } = await supabase
+      .from('Building')
+      .update({ offerRenewableEnergy })
+      .eq('shortCode', shortCode)
+      .select()
+      .throwOnError();
+
+    log.debug('Updated Building offerRenewableEnergy', { shortCode, offerRenewableEnergy, data });
+    if (error) log.error('Update Building offerRenewableEnergy failed', { error: String(error) });
+  }
+
+  /**
+   * Update offerRenewableEnergy on a UtilityCompany by name
+   */
+  async updateUtilityCompanyOfferRenewableEnergy(
+    companyName: string,
+    offerRenewableEnergy: boolean
+  ): Promise<void> {
+    const { data, error } = await supabase
+      .from('UtilityCompany')
+      .update({ offerRenewableEnergy })
+      .eq('name', companyName)
+      .select()
+      .throwOnError();
+
+    log.debug('Updated UtilityCompany offerRenewableEnergy', { companyName, offerRenewableEnergy, data });
+    if (error) log.error('Update UtilityCompany offerRenewableEnergy failed', { error: String(error) });
+  }
+
+  /**
    * Update partner encouraged conversion setting
    */
   async updatePartnerUseEncourageConversion(
