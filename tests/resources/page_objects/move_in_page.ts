@@ -1128,8 +1128,15 @@ export class MoveInPage{
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
         await this.page.waitForTimeout(3000);
 
-        // Try "Skip for now" button first (visible when "Public Grid handles everything" is selected)
-        const skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+        // "Skip for now" only appears when "Public Grid handles everything" is selected.
+        // If not already visible, select the PG radio first to reveal it.
+        let skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+        if (!skipVisible) {
+            await this.Move_In_Pay_Through_PG_Switch.check();
+            await this.page.waitForTimeout(3000);
+            skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+        }
+
         if (skipVisible) {
             await this.Move_In_Skip_Button.click();
             await this.page.waitForTimeout(2000);
@@ -1141,13 +1148,7 @@ export class MoveInPage{
             } catch {
                 // No confirmation dialog — proceed
             }
-            return;
         }
-
-        // Otherwise select "I will manage payments myself" and click Continue
-        await this.Move_In_Self_Manage_Option.click();
-        await this.page.waitForTimeout(1000);
-        await this.Move_In_Continue_Button.click();
     }
 
 
