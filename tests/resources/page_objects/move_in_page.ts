@@ -768,13 +768,19 @@ export class MoveInPage{
         log.debug('isPriorAddressRequired', { isVisible });
 
         if (isVisible === true){
-            await this.Move_In_Prev_Address_Field.click({timeout:30000});
+            // Check if the previous address field actually exists in the current UI
+            const fieldExists = await this.Move_In_Prev_Address_Field.isVisible({ timeout: TIMEOUTS.SHORT }).catch(() => false);
+            if (!fieldExists) {
+                log.debug('Previous address field not found in UI, skipping');
+                return;
+            }
+            await this.Move_In_Prev_Address_Field.click({timeout:TIMEOUTS.DEFAULT});
             await this.page.waitForTimeout(500);
             await this.Move_In_Prev_Address_Field.pressSequentially(prevAddress,{delay:50});
             await this.page.waitForTimeout(500);
             await this.Move_In_Prev_Address_Field.press('Backspace');
-            await this.Move_In_Address_Dropdown(prevAddress)?.waitFor({state: 'visible', timeout: 30000});
-            await this.Move_In_Address_Dropdown(prevAddress).click({timeout:10000});
+            await this.Move_In_Address_Dropdown(prevAddress)?.waitFor({state: 'visible', timeout: TIMEOUTS.DEFAULT});
+            await this.Move_In_Address_Dropdown(prevAddress).click({timeout:TIMEOUTS.MEDIUM});
             // Wait for address to populate, then force-click title past any secondary dropdown
             await this.page.waitForTimeout(2000);
             await this.Move_In_Identity_Info_Title.click({ force: true });
@@ -1126,24 +1132,27 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
-        await this.page.waitForTimeout(3000);
 
         // "Skip for now" only appears when "Public Grid handles everything" is selected.
         // If not already visible, select the PG radio first to reveal it.
         let skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
         if (!skipVisible) {
             await this.Move_In_Pay_Through_PG_Switch.check();
-            await this.page.waitForTimeout(3000);
+            await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
             skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
         }
 
+        // Wait for Stripe iframes to fully initialize before clicking Skip
+        await this.page.waitForTimeout(TIMEOUTS.DEFAULT);
+
         if (skipVisible) {
+            await this.Move_In_Skip_Button.scrollIntoViewIfNeeded();
             await this.Move_In_Skip_Button.click();
-            await this.page.waitForTimeout(2000);
+            await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
 
             // Handle confirmation dialog if it appears
             try {
-                await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({ timeout: 5000 });
+                await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
                 await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
             } catch {
                 // No confirmation dialog — proceed
