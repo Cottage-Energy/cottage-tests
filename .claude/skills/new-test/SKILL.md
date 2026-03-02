@@ -2,7 +2,6 @@
 name: new-test
 description: Scaffold a new Playwright e2e test spec following project conventions
 user-invocable: true
-allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Create a New Test Spec
@@ -47,7 +46,61 @@ test.describe('Feature: Description', () => {
 });
 ```
 
-## 4. Rules (never violate)
+## 4. Create Page Objects as Needed
+If the test interacts with a page that doesn't have a POM yet, create one:
+- Place in `tests/resources/page_objects/{page_name}_page.ts`
+- All locators as `readonly` class properties
+- Locator preference: `getByRole` > `getByText` > `getByLabel` > `getByTestId` > `locator('css')` (last resort)
+- Use `TIMEOUTS` constants for any timeout values
+- All methods must have explicit return types
+- Register it: export from `tests/resources/page_objects/index.ts` AND add to `tests/resources/page_objects/base/baseFixture.ts`
+
+```typescript
+import { type Page, type Locator, expect } from '@playwright/test';
+import { TIMEOUTS } from '../constants';
+
+export class ExamplePage {
+  readonly page: Page;
+  readonly submitButton: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.submitButton = page.getByRole('button', { name: 'Submit' });
+  }
+
+  async clickSubmit(): Promise<void> {
+    await this.submitButton.click({ timeout: TIMEOUTS.MEDIUM });
+  }
+}
+```
+
+## 5. Create Fixtures / Query Modules as Needed
+If the test needs database queries or utilities that don't exist yet:
+
+**Database query module** — place in `tests/resources/fixtures/database/{name}Queries.ts`:
+```typescript
+import { createClient } from '../../utils/supabase';
+import { createLogger } from '../../utils/logger';
+
+const log = createLogger('ModuleQueries');
+
+export class ModuleQueries {
+  private supabase;
+  constructor() { this.supabase = createClient(); }
+
+  async getRecord(id: string): Promise<RecordType> {
+    log.info('Fetching record', { id });
+    const { data, error } = await this.supabase.from('table').select('*').eq('id', id).single();
+    if (error) { log.error('Failed', { id, error: error.message }); throw error; }
+    return data;
+  }
+}
+```
+Export from `tests/resources/fixtures/database/index.ts`.
+
+**Test utility** — place in `tests/resources/fixtures/{name}Utilities.ts`, follow patterns from `paymentUtilities.ts` or `billUploadUtilities.ts`.
+
+## 6. Rules (never violate)
 - Use `TEST_TAGS` constants for tags — never raw strings like `'@smoke'`
 - Use `TIMEOUTS` constants — never magic numbers like `30000`
 - Use structured logger — never `console.log`
@@ -56,6 +109,14 @@ test.describe('Feature: Description', () => {
 - Use `test.describe.configure({ mode: "serial" })` only if tests share state
 - Use page objects for all UI interactions — never raw selectors in test files
 
-## 5. After Creating
-- Read `CODE_STANDARDS.md` to verify compliance
+## 7. Validate Before Done
+After creating the test (and any supporting POMs/fixtures), run a standards check:
+- No `any` types in any created/modified file
+- All timeouts use `TIMEOUTS` constants
+- All tags use `TEST_TAGS` constants
+- Logger used instead of `console.log`
+- Proper type imports
+- Cleanup in `afterEach`
+- No magic numbers
+- No raw selectors in spec files — all through page objects
 - Check existing tests in the same feature folder for patterns to follow

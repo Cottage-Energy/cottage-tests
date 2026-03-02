@@ -2,7 +2,6 @@
 name: exploratory-test
 description: Scaffold a lightweight exploratory test for investigating behavior, edge cases, or bug reproduction
 user-invocable: true
-allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Create an Exploratory Test

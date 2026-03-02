@@ -13,8 +13,9 @@ test.afterEach(async ({ page }, testInfo) => {
   await page.close();
 });
 
-test.describe.configure({ mode: "serial" });
+
 test.describe('Homepage Navigation', () => {
+  test.describe.configure({ mode: "serial" });
   
   test('Go to About', { tag: [...TEST_TAGS.ALL_REGRESSION] }, async ({ page }) => {
     await homePage.click_About();

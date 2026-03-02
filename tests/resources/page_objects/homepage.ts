@@ -23,7 +23,7 @@ export class HomePage{
         this.About_Link = page.getByRole('link', { name: 'About', exact: true }).first();
         this.About_Content = page.getByText('Our Community', { exact: true }).first();
         this.Resources_Link = page.getByRole('link', { name: 'Resources', exact: true }).first();
-        this.Resources_Title = page.getByText('RESOURCES');
+        this.Resources_Title = page.getByRole('heading', { name: 'Resources' });
         this.Support_Link = page.getByRole('link', { name: 'Support', exact: true }).first();
         this.ForProperties_Link = page.getByRole('link', { name: 'For Properties', exact: true }).first();
         
