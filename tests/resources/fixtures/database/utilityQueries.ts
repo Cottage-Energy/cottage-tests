@@ -214,6 +214,21 @@ export class UtilityQueries {
   }
 
   /**
+   * Update isAutopayRequired on a Building by shortCode
+   */
+  async updateBuildingAutopayRequired(shortCode: string, isAutopayRequired: boolean): Promise<void> {
+    const { data, error } = await supabase
+      .from('Building')
+      .update({ isAutopayRequired })
+      .eq('shortCode', shortCode)
+      .select()
+      .throwOnError();
+
+    log.debug('Updated Building isAutopayRequired', { shortCode, isAutopayRequired, data });
+    if (error) log.error('Update Building isAutopayRequired failed', { error: String(error) });
+  }
+
+  /**
    * Update building encouraged conversion setting
    */
   async updateBuildingUseEncourageConversion(
