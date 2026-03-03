@@ -9,7 +9,10 @@
       "Bash(npx ts-node:*)",
       "Bash(claude mcp add:*)",
       "Bash(npx:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "mcp__linear__get_issue",
+      "mcp__github__get_pull_request",
+      "Bash(gh pr view 1038 --repo Cottage-Energy/cottage-nextjs --json title,body,state,labels,files,url)"
     ]
   },
   "enabledMcpjsonServers": [
