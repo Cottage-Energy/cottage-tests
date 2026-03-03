@@ -51,7 +51,7 @@ test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
-  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -171,16 +171,16 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('DUKE CON-EDISON Gas Only Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('DUKE Gas Only Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
 
-    await utilityQueries.updateCompaniesToBuilding("autotest","DUKE","CON-EDISON");
+    await utilityQueries.updateCompaniesToBuilding("autotest", null, "DUKE");
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoPayment(page,"DUKE","CON-EDISON", false, true);
+    MoveIn = await newUserMoveInAutoPayment(page, null,"DUKE", false, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
