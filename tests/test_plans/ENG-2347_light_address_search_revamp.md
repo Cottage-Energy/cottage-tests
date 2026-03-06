@@ -18,7 +18,11 @@
 | AC7 Specific Address | TC-050 | 1 | 0 | 0 | 1 | 0 |
 | UI / Visual (AC6) | TC-060 – TC-061 | 0 | 2 | 0 | 0 | 2 |
 | Regression (Existing Flows) | TC-070 – TC-073 | 2 | 1 | 0 | 3 | 0 |
-| **Totals** | **45** | **11** | **18** | **6** | **21** | **14** |
+| **[GAP]** Valid shortCode × Pre-fill State | TC-080 – TC-083 | 1 | 2 | 1 | 3 | 1 |
+| **[GAP]** Valid shortCode + encouragedConversion × Pre-fill State | TC-090 – TC-093 | 1 | 2 | 1 | 3 | 1 |
+| **[GAP]** Non-valid shortCode × Pre-fill State | TC-100 – TC-103 | 1 | 2 | 1 | 2 | 2 |
+| **[GAP]** No shortCode × Pre-fill State | TC-110 – TC-113 | 1 | 2 | 1 | 3 | 1 |
+| **Totals** | **61** | **15** | **26** | **10** | **32** | **17** |
 
 ## Scope
 
@@ -121,20 +125,70 @@
 | TC-072 | Existing encouraged-conversion flow still works | Encouraged-conversion building | 1. Run `move_in_via_bldg_shortcode.spec.ts` | Test passes with any new modal interactions handled | P0 | Yes (update existing) |
 | TC-073 | Service zip flow unaffected for non-TX | Non-TX service zip | 1. Run `move_in_new_service_zip_user.spec.ts` | Test passes. No gate logic interference | P1 | Yes (existing) |
 
+---
+
+> **Gap Coverage Note**: The sections below (TC-080 – TC-113) were added to fill the shortCode validity × pre-filled address state matrix that was unaddressed in the original plan. Each group tests how the address search initialises when a value is already present in the address field on page load — behaviour that differs meaningfully from the empty-field path.
+
+### [GAP] Valid shortCode × Pre-filled Address State (TC-080 – TC-083)
+
+**Context**: A valid TX-DEREG/LIGHT shortCode causes Light autocomplete to activate. These tests verify that the initial address field state (empty, normal, valid Light, or ineligible Light) is handled correctly on load and does not silently skip validation or incorrectly gate the user.
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-080 | Valid shortCode — no pre-filled address → Light search active, empty field | Building with `electricCompanyID` = TX-DEREG or LIGHT | 1. Navigate to `/move-in?shortCode=<tx-dereg-building>` with no address query params | Light autocomplete is active. Address field is empty. User can type to search normally | P0 | Yes |
+| TC-081 | Valid shortCode — pre-filled normal address → displayed, not auto-confirmed | Same building; normal (non-Light-eligible) address in query params (e.g. `address=123+Main+St,+Boston,+MA`) | 1. Navigate to `/move-in?shortCode=<tx-dereg-building>&address=<normal-address>` | Light autocomplete is active. Pre-filled address is shown in the field. No confirmation modal fires automatically. Full-address-search is not triggered until the user submits | P1 | Yes |
+| TC-082 | Valid shortCode — pre-filled valid Light address → confirmation modal offered on load | Same building; ESID-yielding TX address in query params (e.g. `14100 Will Clayton Pkwy, Humble, TX 77346`) | 1. Navigate to `/move-in?shortCode=<tx-dereg-building>&address=<esid-address>&unit=21308` | Pre-filled address is populated. Full-address-search fires (or is triggered on first render). Confirmation modal appears prompting the user to accept the matched ESID address | P1 | Yes |
+| TC-083 | Valid shortCode — pre-filled non-valid eligible Light address → no confirmation modal, Light search active | Same building; TX address that is eligible (correct zip) but returns 0 ESID results | 1. Navigate to `/move-in?shortCode=<tx-dereg-building>&address=<tx-no-esid-address>` | Pre-filled address shown. Full-address-search returns null. No confirmation modal fires. Light autocomplete remains available for the user to refine the address | P2 | Exploratory |
+
+### [GAP] Valid shortCode + encouragedConversion === true × Pre-filled Address State (TC-090 – TC-093)
+
+**Context**: `encouragedConversion` buildings present a slightly different UI flow. These tests confirm that the encouragedConversion path handles pre-filled address states the same way as the standard path — specifically that the confirmation modal and Light gate still behave correctly.
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-090 | encouragedConversion shortCode — no pre-filled address → Light active, empty field | Building with `encouragedConversion = true` and TX-DEREG/LIGHT company ID | 1. Navigate to `/move-in?shortCode=<encouraged-building>` | Light autocomplete active. Address field empty. encouragedConversion UI elements visible (e.g. promotional copy). No unexpected modal | P0 | Yes |
+| TC-091 | encouragedConversion shortCode — pre-filled normal address → shown, no auto-confirmation | Same building; non-TX or non-ESID address in query params | 1. Navigate to `/move-in?shortCode=<encouraged-building>&address=<normal-address>` | Pre-filled address displayed in field. No confirmation modal on load. encouragedConversion UI unaffected. User can edit or proceed | P1 | Yes |
+| TC-092 | encouragedConversion shortCode — pre-filled valid Light address → confirmation modal offered | Same building; valid ESID-yielding TX address in query params | 1. Navigate to `/move-in?shortCode=<encouraged-building>&address=<esid-address>&unit=21308` | Confirmation modal appears with matched ESID. "Yes" → Light flow with encouragedConversion context preserved. "No" → regular sign-up, encouragedConversion context preserved | P1 | Yes |
+| TC-093 | encouragedConversion shortCode — pre-filled non-valid eligible Light address → no modal, search active | Same building; TX-eligible address with no ESID in query params | 1. Navigate to `/move-in?shortCode=<encouraged-building>&address=<tx-no-esid-address>` | No confirmation modal. Light autocomplete active. Pre-filled address shown. encouragedConversion UI intact | P2 | Exploratory |
+
+### [GAP] Non-valid shortCode × Pre-filled Address State (TC-100 – TC-103)
+
+**Context**: A shortCode that does not correspond to any building (typo, deleted record, wrong env) should fail gracefully. These tests verify that invalid shortCodes do not cause unhandled errors and fall back to a safe default state regardless of what address is pre-filled.
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-100 | Non-valid shortCode — no pre-filled address → graceful fallback | Use a shortCode that does not exist in the database (e.g. `shortCode=INVALID_XYZ`) | 1. Navigate to `/move-in?shortCode=INVALID_XYZ` | No JS error or crash. Page loads with a sensible fallback — either Google autocomplete or an error state. No Light gate triggered | P0 | Yes |
+| TC-101 | Non-valid shortCode — pre-filled normal address → shown, no Light gate | Same invalid shortCode; normal address in query params | 1. Navigate to `/move-in?shortCode=INVALID_XYZ&address=<normal-address>` | Page loads. Pre-filled address shown (or cleared). Google autocomplete active (fallback). No confirmation modal. No Light-specific behaviour | P1 | Yes |
+| TC-102 | Non-valid shortCode — pre-filled valid Light address → no confirmation modal triggered | Same invalid shortCode; ESID-yielding TX address in query params | 1. Navigate to `/move-in?shortCode=INVALID_XYZ&address=<esid-address>&unit=21308` | Page loads without error. Because the shortCode is invalid, Light gate is off. No full-address-search fired. No confirmation modal. Google autocomplete shown | P1 | Exploratory |
+| TC-103 | Non-valid shortCode — pre-filled non-valid eligible Light address → no Light behaviour | Same invalid shortCode; TX-eligible no-ESID address in query params | 1. Navigate to `/move-in?shortCode=INVALID_XYZ&address=<tx-no-esid-address>` | Same as TC-102: no Light gate, no ESID lookup, Google autocomplete, no modal | P2 | Exploratory |
+
+### [GAP] No shortCode × Pre-filled Address State (TC-110 – TC-113)
+
+**Context**: When there is no shortCode the gate is determined purely by state/zip params. These tests confirm that pre-filled address query params are surfaced correctly in the field and that the Light/Google decision plus confirmation modal logic is not disrupted by the presence of pre-filled data.
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-110 | No shortCode — no pre-filled address, TX eligible zip → Light active, empty field | No shortCode; `state=TX&zipCode=<eligible-zip>` only | 1. Navigate to `/move-in?state=TX&zipCode=77346` | Light autocomplete active. Address field empty. Matches and extends TC-035 with an explicit assertion that the field starts empty | P0 | Yes |
+| TC-111 | No shortCode — pre-filled normal address, TX eligible zip → shown, no auto-confirmation | No shortCode; TX eligible zip; non-ESID address in params | 1. Navigate to `/move-in?state=TX&zipCode=77346&address=<normal-address>` | Light autocomplete active. Pre-filled normal address shown in field. No confirmation modal on load. Full-address-search not triggered until user submits | P1 | Yes |
+| TC-112 | No shortCode — pre-filled valid Light address, TX eligible zip → confirmation modal offered | No shortCode; TX eligible zip; ESID-yielding address in params | 1. Navigate to `/move-in?state=TX&zipCode=77346&address=14100+Will+Clayton+Pkwy&unit=21308` | Pre-filled address populated. Full-address-search returns single ESID. Confirmation modal appears. "Yes" → Light flow; "No" → normal flow | P1 | Yes |
+| TC-113 | No shortCode — pre-filled non-valid eligible Light address, TX eligible zip → no modal | No shortCode; TX eligible zip; TX address that returns 0 ESIDs | 1. Navigate to `/move-in?state=TX&zipCode=77346&address=<tx-no-esid-address>` | Pre-filled address shown. Full-address-search returns null. No confirmation modal. Light autocomplete available for user to refine | P2 | Exploratory |
+
 ## Automation Plan
 
 | Suite | Test Cases | Notes |
 |-------|-----------|-------|
 | **Smoke** | TC-001, TC-010, TC-011, TC-013, TC-050 | Core modal flows — must work every deploy |
-| **Regression** | TC-002, TC-003, TC-005, TC-006, TC-012, TC-014, TC-016, TC-030, TC-032, TC-035, TC-037, TC-038, TC-040, TC-043 | Full coverage of automatable scenarios |
-| **Exploratory only** | TC-004, TC-015, TC-020, TC-033, TC-034, TC-036, TC-041, TC-042, TC-044, TC-045, TC-060, TC-061 | Require manual inspection, network manipulation, or DB-specific setup |
+| **Regression** | TC-002, TC-003, TC-005, TC-006, TC-012, TC-014, TC-016, TC-030, TC-032, TC-035, TC-037, TC-038, TC-040, TC-043 | Full coverage of original automatable scenarios |
+| **Gap — Smoke** | TC-080, TC-090, TC-100, TC-110 | One no-pre-fill baseline per shortCode group |
+| **Gap — Regression** | TC-081, TC-082, TC-091, TC-092, TC-101, TC-111, TC-112 | Pre-filled normal and valid Light address paths |
+| **Exploratory only** | TC-004, TC-015, TC-020, TC-033, TC-034, TC-036, TC-041, TC-042, TC-044, TC-045, TC-060, TC-061, TC-083, TC-093, TC-102, TC-103, TC-113 | Require manual inspection, network manipulation, or DB-specific setup |
 | **Update existing** | TC-071, TC-072 | Existing TX-DEREG tests need to handle the new confirmation modal |
 
 ### New artifacts needed
 - **Page objects**: Address confirmation modal, "Can't find your address" fallback modal (new locators in `move_in_page.ts`)
-- **Test data**: TX eligible zip codes, ESID-yielding addresses, buildings with/without company IDs
-- **Spec files**: New spec in `tests/e2e_tests/cottage-user-move-in/ui/` for modal interactions
-- **Fixture updates**: May need helper to handle the confirmation modal (Yes/No) as reusable step
+- **Test data**: TX eligible zip codes, ESID-yielding addresses, buildings with/without company IDs, invalid shortCodes, pre-fill address query param fixtures
+- **Spec files**: New spec in `tests/e2e_tests/cottage-user-move-in/ui/` for modal interactions; new spec for shortCode × pre-fill matrix
+- **Fixture updates**: May need helper to handle the confirmation modal (Yes/No) as reusable step; helper to construct URLs with address/unit query params
 
 ### Locators to add (move_in_page.ts)
 - Fallback modal container
@@ -152,3 +206,6 @@
 - **Two-modal sequence timing**: The fallback → spinner → confirmation sequence may have timing issues. Need appropriate waits between modals
 - **`address-autocomplete.tsx` had 125 lines deleted**: The Google autocomplete component was significantly simplified — verify that non-TX Google flows still work correctly
 - **`Move_In_Cannot_Find_Address_Link` locator** already exists in POM but the behavior behind it changed completely (modal vs. inline message)
+- **Pre-fill address query param format**: Confirm whether the app reads address state from query params, URL segments, or sessionStorage before automating TC-081–083, TC-091–093, TC-111–113. If there is no supported pre-fill mechanism, these cases become exploratory
+- **Invalid shortCode behaviour is undefined in the spec**: TC-100–103 assume a graceful fallback to Google autocomplete; verify the actual error handling path in the app before writing assertions
+- **On-load ESID lookup timing**: TC-082, TC-092, TC-112 assume the full-address-search fires automatically when a pre-filled address is detected. If the search only fires on explicit user submit, the confirmation modal will not appear on load — adjust expected results accordingly

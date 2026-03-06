@@ -12,7 +12,13 @@
       "Bash(npm install:*)",
       "mcp__linear__get_issue",
       "mcp__github__get_pull_request",
-      "Bash(gh pr view 1038 --repo Cottage-Energy/cottage-nextjs --json title,body,state,labels,files,url)"
+      "Bash(gh pr view 1038 --repo Cottage-Energy/cottage-nextjs --json title,body,state,labels,files,url)",
+      "Bash(gh pr view 1050 --repo Cottage-Energy/cottage-nextjs --json title,state,body,files,additions,deletions,changedFiles,url,headRefName,baseRefName)",
+      "mcp__figma__get_design_context",
+      "Bash(gh api repos/Cottage-Energy/cottage-nextjs/contents/docs/plans/ENG-2373.md --jq '.content')",
+      "Bash(gh api repos/Cottage-Energy/cottage-nextjs/contents/docs/plans/ENG-2373.md)",
+      "Bash(gh api \"repos/Cottage-Energy/cottage-nextjs/contents/docs/plans/ENG-2373.md?ref=dev\" --jq '.content')",
+      "Bash(gh api \"repos/Cottage-Energy/cottage-nextjs/contents/docs/plans/ENG-2373.md?ref=dev\")"
     ]
   },
   "enabledMcpjsonServers": [
