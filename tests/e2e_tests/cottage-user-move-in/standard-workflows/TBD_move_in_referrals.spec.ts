@@ -63,7 +63,7 @@ test.describe.skip('Short Code Referal Canceled Registration', () => {
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
     //await linearActions.CountMoveInTicket(MoveIn.pgUserEmail,0);
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
+    await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
     //add query to check if the user is added to the UtilityCredentials table
     //add check in DB fro question answers

@@ -101,13 +101,13 @@ export async function Check_Utility_Account_OTW_Not_Present(Email: string) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Payment Method Reminder Emails
 
-export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Email: string) {
+export async function Check_Quick_Reminder_Add_Your_Payment_Method(Email: string) {
     console.log("Email:", Email);
     const maxRetries = 7;
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     let content: any[] = [];
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Action Required: Need Payment Method to Start Electricity Service`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        content = await fastMail.fetchEmails({to: Email, subject: `Quick reminder: Add your payment method`, from: "Public Grid Team <welcome@onepublicgrid.com>"});
         if (content && content.length > 0) {
             break;
         }
@@ -119,67 +119,10 @@ export async function Check_Need_Payment_Method_to_Start_Electricity_Service(Ema
     }
     const firstKey = Object.keys(content[0].bodyValues)[0];
     const email_body = content[0].bodyValues[firstKey].value;
-    try{
-        await expect(content.length).toEqual(2);
-        console.log("two emails found");
-    }catch {
-        await expect(content.length).toEqual(1);
-    }
+
+    await expect(content.length).toEqual(1);
 }
 
-
-export async function Check_Need_Payment_Method_to_Start_Gas_Service(Email: string) {
-    console.log("Email:", Email);
-    const maxRetries = 7;
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-    let content: any[] = [];
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Action Required: Need Payment Method to Start Gas Service`, from: "Public Grid Team <support@onepublicgrid.com>"});
-        if (content && content.length > 0) {
-            break;
-        }
-        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(15000); // delay
-    }
-    if (!content || content.length === 0) {
-        throw new Error("Failed to fetch email after multiple attempts.");
-    }
-    const firstKey = Object.keys(content[0].bodyValues)[0];
-    const email_body = content[0].bodyValues[firstKey].value;
-    try{
-        await expect(content.length).toEqual(2);
-        console.log("two emails found");
-    }catch {
-        await expect(content.length).toEqual(1);
-    }
-}
-
-
-export async function Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service(Email: string) {
-    console.log("Email:", Email);
-    const maxRetries = 7;
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-    let content: any[] = [];
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-        content = await fastMail.fetchEmails({to: Email, subject: `Action Required: Need Payment Method to Start Electricity and Gas Service`, from: "Public Grid Team <support@onepublicgrid.com>"});
-        if (content && content.length > 0) {
-            break;
-        }
-        console.log(`Attempt ${attempt + 1} failed. Retrying...`);
-        await delay(15000); // delay
-    }
-    if (!content || content.length === 0) {
-        throw new Error("Failed to fetch email after multiple attempts.");
-    }
-    const firstKey = Object.keys(content[0].bodyValues)[0];
-    const email_body = content[0].bodyValues[firstKey].value;
-    try{
-        await expect(content.length).toEqual(2);
-        console.log("two emails found");
-    }catch {
-        await expect(content.length).toEqual(1);
-    }
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Payment Emails
@@ -393,9 +336,7 @@ export const FastmailActions = {
     Check_Utility_Account_OTW,
     Check_Welcome_to_PG_Lets_Get_Started,
     Check_Utility_Account_OTW_Not_Present,
-    Check_Need_Payment_Method_to_Start_Electricity_Service,
-    Check_Need_Payment_Method_to_Start_Gas_Service,
-    Check_Need_Payment_Method_to_Start_Electricity_and_Gas_Service,
+    Check_Quick_Reminder_Add_Your_Payment_Method,
     Check_Electric_Bill_Is_Ready,
     Check_Gas_Bill_Is_Ready,
     Check_Electric_And_Gas_Bill_Is_Ready,

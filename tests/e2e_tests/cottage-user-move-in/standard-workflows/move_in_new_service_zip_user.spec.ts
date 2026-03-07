@@ -79,7 +79,7 @@ test.describe('Move In New Service Zip User', () => {
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await page.waitForTimeout(75000);
 
-    await FastmailActions.Check_Need_Payment_Method_to_Start_Electricity_Service(MoveIn.pgUserEmail);
+    await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
     // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
     // After sign-in, user is prompted to add payment method inline
