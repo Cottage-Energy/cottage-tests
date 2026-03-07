@@ -38,7 +38,10 @@ tmpclaude-*-cwd
 .playwright-mcp/
 
 # Debug and temp files
-debug-*.js
+debug-*
 ss-*.png
 screenshot-*.png
 listDevices.*
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
