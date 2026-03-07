@@ -1133,17 +1133,21 @@ export class MoveInPage{
         await this.page.waitForLoadState('load');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
-        // "Skip for now" only appears when "Public Grid handles everything" is selected.
-        // If not already visible, select the PG radio first to reveal it.
+        // Wait for the payment page to fully render (Stripe iframes load)
+        await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
+
+        // Check if "Skip for now" is already visible (e.g. when no PG toggle is shown)
         let skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+
+        // If not visible, check if the PG radio exists and select it to reveal "Skip for now"
         if (!skipVisible) {
-            await this.Move_In_Pay_Through_PG_Switch.check();
-            await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
+            const pgRadioVisible = await this.Move_In_Pay_Through_PG_Title.isVisible().catch(() => false);
+            if (pgRadioVisible) {
+                await this.Move_In_Pay_Through_PG_Switch.check({ timeout: TIMEOUTS.MEDIUM });
+                await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
+            }
             skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
         }
-
-        // Wait for Stripe iframes to fully initialize before clicking Skip
-        await this.page.waitForTimeout(TIMEOUTS.DEFAULT);
 
         if (skipVisible) {
             await this.Move_In_Skip_Button.scrollIntoViewIfNeeded();

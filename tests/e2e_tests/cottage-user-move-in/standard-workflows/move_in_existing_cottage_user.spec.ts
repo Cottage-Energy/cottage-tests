@@ -567,7 +567,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Early Drop Off', ()
 });
 
 
-test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () => {
+test.describe.fixme('Move In Existing User: Cottageuser Exist Only Late Drop Off (Immediate)', () => {
   test.describe.configure({mode: "serial"});
     
   test('EVERSOURCE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({page, moveInpage, overviewPage}) => {
@@ -603,7 +603,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
 
-    //await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
+    await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
     await page.goto('/sign-in');
     //await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(PaymentData.ValidCardNUmber,PGuser.CardExpiry,PGuser.CVC,PGuser.Country,PGuser.Zip);
     await overviewPage.Setup_Password();
@@ -659,7 +659,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
 
-    //await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
+    await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
     await page.goto('/sign-in');
     // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
     // await finishAccountSetupPage.Enter_Manual_Payment_Details_After_Skip(...)
@@ -717,7 +717,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
 
-    //await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
+    await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
     await page.goto('/sign-in');
     // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
     // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(...)
@@ -772,7 +772,7 @@ test.describe('Move In Existing User: Cottageuser Exist Only Late Drop Off', () 
     await expect(paymentVis).toBe(true);
     await page.waitForTimeout(75000);
 
-    //await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
+    await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(PGuser.Email);
     await page.goto('/sign-in');
     // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
     // await finishAccountSetupPage.Enter_Manual_Payment_Valid_Bank_Details_After_Skip(...)

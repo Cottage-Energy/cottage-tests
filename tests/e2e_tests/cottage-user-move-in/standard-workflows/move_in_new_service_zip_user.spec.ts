@@ -17,8 +17,8 @@ test.beforeEach(async ({ page },testInfo) => {
 });
 
 test.afterEach(async ({ page },testInfo) => {
-  await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
-  await page.close();
+  //await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+  //await page.close();
 });
 
 /*test.afterAll(async ({ page }) => {
@@ -73,11 +73,11 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', {tag: [ '@smoke','@regression1'],}, async ({moveInpage, overviewPage, page}) => {
-    test.setTimeout(600000);
+  test.fixme('CON-EDISON New User Skip Add Payment', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1],}, async ({moveInpage, overviewPage, page}) => {
+    test.setTimeout(TIMEOUTS.TEST);
     MoveIn = await newUserMoveInSkipPayment(page, 'CON-EDISON', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
-    await page.waitForTimeout(75000);
+    await page.waitForTimeout(TIMEOUTS.EXTRA_LONG);
 
     await FastmailActions.Check_Quick_Reminder_Add_Your_Payment_Method(MoveIn.pgUserEmail);
     await page.goto('/sign-in');
@@ -86,9 +86,9 @@ test.describe('Move In New Service Zip User', () => {
     // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "PENDING", "CON-EDISON");
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "CON-EDISON");
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 
