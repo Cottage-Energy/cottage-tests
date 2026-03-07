@@ -1,7 +1,7 @@
 ---
 name: test-plan
 description: Generate a structured test plan from a ticket, PR, or feature description
-user-invocable: true
+user-invokable: true
 ---
 
 # Generate a Test Plan
@@ -9,22 +9,92 @@ user-invocable: true
 Create a comprehensive test plan from a Linear ticket, GitHub PR, feature description, or any combination of sources.
 
 ## 1. Gather Context
-Collect information from all available sources:
-- **Linear ticket** — use `mcp__linear__get_issue` for requirements
-- **GitHub PR** — use GitHub MCP tools for code changes
-- **Notion docs** — note links or fetch if MCP is authenticated
-- **Figma screens** — note links for UI reference
-- **Conversation context** — user-provided details
-- **Existing tests** — search `tests/e2e_tests/` for related coverage
+Accept any combination of inputs — a Linear ticket is NOT required. Route by what the user provides:
 
-## 2. Identify Test Scope
+### Notion Link
+- Use `WebFetch` to fetch the Notion page content (interim until Notion MCP auth is complete)
+- Parse the page for requirements, acceptance criteria, and flow descriptions
+- Extract any **mermaid flowchart** blocks — see Step 1b for interpretation
+
+### Figma Link
+- Extract `fileKey` and `nodeId` from the URL (convert `-` to `:` in nodeId)
+- Call `mcp__figma__get_design_context` to get component structure, code hints, and annotations
+- Call `mcp__figma__get_screenshot` for visual reference
+- Extract from the design context:
+  - UI components and their states (enabled/disabled, visible/hidden, loading)
+  - Form fields, inputs, and validation requirements
+  - Navigation flows between screens
+  - Edge states visible in design (empty states, error states)
+- Map design elements to test interactions and assertions
+
+### GitHub PR Link
+- Use `mcp__github__get_pull_request` and `mcp__github__get_pull_request_files` to read the diff
+- Identify UI changes, API changes, DB changes, business logic changes
+
+### Linear Ticket (optional)
+- Use `mcp__linear__get_issue` for requirements, labels, linked issues
+- Follow any links to Notion docs, Figma screens, or PRs from the ticket
+
+### Conversation Context
+- User-provided details, pasted content, or verbal descriptions
+
+### Database Context (when DB changes are mentioned)
+- Use `mcp__supabase__list_tables` to understand current schema
+- Use `mcp__supabase__execute_sql` to inspect table structures, column types, constraints, and existing data relevant to the feature
+- Identify: new tables/columns, changed constraints, migration impacts, data that test assertions should verify
+
+### Live App State (quick UI peek)
+When planning tests for an existing feature or flow, peek at the live app to ground your test cases in reality:
+- `mcp__playwright__browser_navigate` to the page or flow being tested
+- `mcp__playwright__browser_snapshot` to see current UI elements, form fields, buttons, and component states
+- `mcp__playwright__browser_take_screenshot` to capture the current state for reference
+- This prevents writing test cases for UI elements that don't exist or have different names/labels than expected
+- Especially useful when Figma designs are outdated or when testing an existing feature with no design link
+
+### Existing Test Coverage
+- Search `tests/e2e_tests/` with Glob/Grep for related tests already in the repo
+
+## 1b. Interpret Mermaid Flowcharts
+When mermaid flowchart blocks are found in Notion content or pasted by the user:
+- **Happy path flows** — main paths through the flowchart become primary test cases
+- **Decision branches** — conditions that create alternate paths become edge case / conditional tests
+- **Terminal states** — end nodes become expected results for assertions
+- **Error/failure paths** — paths leading to error states become negative test cases
+- Map each distinct path through the flowchart to one or more test cases in the plan
+
+## 2. Quick Triage Summary
+Before writing detailed test cases, present a triage summary so the user can confirm scope:
+
+```
+## Triage: [Feature/Ticket Name]
+
+### Summary
+Brief description of what's being tested and why.
+
+### Test Requirements
+- [ ] Requirement 1
+- [ ] Requirement 2
+
+### Linked Resources
+- Source: [Notion / Figma / PR / Linear — with links]
+- Related files/components changed
+
+### Regression Risk
+- [Existing features that may be affected]
+```
+
+After presenting the triage, ask: **"Want me to continue to a full test plan?"**
+- If yes → proceed to Step 3
+- If no → stop here (the triage summary is the deliverable)
+
+## 3. Identify Test Scope
 From the gathered context, define:
 - **In scope**: What this test plan covers
 - **Out of scope**: What's explicitly excluded
 - **Prerequisites**: Test data, environment setup, feature flags
 - **Dependencies**: Other features or services involved
 
-## 3. Write Test Cases
+## 4. Write Test Cases
 For each scenario, define:
 - **Test case ID** — e.g., TC-001
 - **Title** — concise description
@@ -34,14 +104,14 @@ For each scenario, define:
 - **Priority** — P0 (blocker), P1 (critical), P2 (normal), P3 (low)
 - **Type** — Smoke, Regression, Edge Case, Exploratory
 
-## 4. Test Plan Template
+## 5. Test Plan Template
 
 ```markdown
 # Test Plan: [Feature/Ticket Name]
 
 ## Overview
-**Ticket**: [Linear ID]
-**PR**: [GitHub PR link]
+**Ticket**: [Linear ID or "N/A"]
+**Source**: [Notion doc link / Figma link / PR link — list all inputs used]
 **Date**: [date]
 **Tester**: Christian
 
@@ -90,13 +160,34 @@ For each scenario, define:
 - [Dependencies on other teams]
 ```
 
-## 5. Saving the Test Plan
-- Ask the user where to save: as a local markdown file in the repo, or just display it
-- If saving locally: place in `tests/test_plans/` directory
-- If Notion MCP is available: offer to create it in the Notion testing workspace
+## 6. Saving the Test Plan
+- Save to `tests/test_plans/` directory
+- Naming: `{TICKET_ID}_{feature_name}.md` when a Linear ticket exists, or `{feature_name}.md` when there is no ticket
+- If Notion MCP is available: offer to also create it in the Notion testing workspace
 
-## 6. Next Steps
+## 7. Next Steps
 After the test plan is approved:
-- Use `/new-test` to scaffold automated test cases
-- Use `/exploratory-test` for manual investigation items
-- Use `/triage-ticket` if more tickets need analysis
+- `/new-test` to scaffold automated test cases (will reference this plan)
+- `/exploratory-test` to interactively investigate items marked "Exploratory only"
+- `/log-bug` if issues are found during analysis
+- `/run-tests` to execute tests after they're created
+
+---
+
+## 8. Tools Used
+
+| Tool | Purpose |
+|------|---------|
+| **Linear MCP** | `get_issue` — pull ticket requirements and linked resources |
+| **GitHub MCP** | `get_pull_request`, `get_pull_request_files` — read PR diffs for code-driven planning |
+| **Figma MCP** | `get_design_context`, `get_screenshot` — extract UI components and design expectations |
+| **Supabase MCP** | `list_tables`, `execute_sql` — inspect schema, constraints, and data context for DB-related test cases |
+| **Playwright MCP** | `browser_navigate`, `browser_snapshot`, `browser_take_screenshot` — peek at live app to ground test cases in reality |
+| `WebFetch` | Fetch Notion page content (interim until Notion MCP auth) |
+| `Glob`, `Grep` | Find existing test coverage in the repo |
+| `Write` | Save the test plan to `tests/test_plans/` |
+
+---
+
+## Retrospective
+After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
