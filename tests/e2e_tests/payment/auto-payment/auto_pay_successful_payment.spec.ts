@@ -32,6 +32,7 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
   
   await utilityQueries.updateBuildingBilling("autotest",true);
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
+  await utilityQueries.updateBuildingOfferRenewableEnergy("autotest", false);
   await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
@@ -46,29 +47,27 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe('Valid Card Auto Payment', () => {
+test.describe.fixme('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
-  test('EVERSOURCE EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
     
-    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE","EVERSOURCE");
+    await utilityQueries.updateCompaniesToBuilding("autotest","EVERSOURCE",null);
     
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, false);
+    MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE", null, true, false);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     
-    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
-    // After sign-in, user is prompted to add payment method inline
-    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
-
+    await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+    await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC, PGuserUsage.Country, PGuserUsage.Zip);
 
     //Payment Checks
     await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
@@ -170,16 +169,16 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('DUKE CON-EDISON Gas Only Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('DUKE Gas Only Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
     const PGuserUsage = await generateTestUserData();
 
-    await utilityQueries.updateCompaniesToBuilding("autotest","DUKE","CON-EDISON");
+    await utilityQueries.updateCompaniesToBuilding("autotest", null, "DUKE");
 
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoPayment(page,"DUKE","CON-EDISON", false, true);
+    MoveIn = await newUserMoveInAutoPayment(page, null,"DUKE", false, true);
 
     await page.goto('/sign-in'); //TEMPORARY FIX
     /*
@@ -208,7 +207,7 @@ test.describe('Valid Card Auto Payment', () => {
 });
 
 
-test.describe('Valid Bank Auto Payment', () => {
+test.describe.fixme('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     

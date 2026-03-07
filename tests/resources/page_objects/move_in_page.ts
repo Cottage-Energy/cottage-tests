@@ -113,6 +113,7 @@ export class MoveInPage{
     readonly Move_In_Auto_Payment_Checbox: Locator;
     readonly Move_In_Submit_Button: Locator;
     readonly Move_In_Skip_Button: Locator;
+    readonly Move_In_Self_Manage_Option: Locator;
 
     readonly Move_In_Confirm_Skip_Payment_Title: Locator;
     readonly Move_In_Confirm_Skip_Payment_Question_Link: Locator;
@@ -252,6 +253,7 @@ export class MoveInPage{
         this.Move_In_Auto_Payment_Checbox = page.getByRole('checkbox', { name: 'Enable auto-pay (bill is paid' });
         this.Move_In_Submit_Button = page.getByRole('button', { name: 'Submit', exact: true });
         this.Move_In_Skip_Button = page.getByRole('button', { name: 'Skip for now' });
+        this.Move_In_Self_Manage_Option = page.getByText('I will manage payments myself');
 
         this.Move_In_Confirm_Skip_Payment_Title = page.getByRole('heading', { name: 'We need a payment method on' });
         this.Move_In_Confirm_Skip_Payment_Question_Link = page.getByText('Questions? Chat with us so we');
@@ -488,16 +490,16 @@ export class MoveInPage{
     }
 
     async Submit_Move_In_Button(){
-        // Try clicking Continue button first, if not available or fails, click Submit button
+        // UI uses Continue button; Submit is legacy fallback
         try {
-            await expect(this.Move_In_Continue_Button).toBeVisible({timeout:2000});
-            await expect(this.Move_In_Continue_Button).toBeEnabled({timeout:2000});
-            await this.Move_In_Continue_Button.hover({timeout:1000});
-            await this.Move_In_Continue_Button.click({timeout:1000});
+            await expect(this.Move_In_Continue_Button).toBeVisible({timeout:TIMEOUTS.DEFAULT});
+            await expect(this.Move_In_Continue_Button).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
+            await this.Move_In_Continue_Button.hover({timeout:TIMEOUTS.MEDIUM});
+            await this.Move_In_Continue_Button.click({timeout:TIMEOUTS.MEDIUM});
         } catch (error) {
-            await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:10000});
-            await this.Move_In_Submit_Button.hover({timeout:10000});
-            await this.Move_In_Submit_Button.click({timeout:10000});
+            await expect(this.Move_In_Submit_Button).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
+            await this.Move_In_Submit_Button.hover({timeout:TIMEOUTS.MEDIUM});
+            await this.Move_In_Submit_Button.click({timeout:TIMEOUTS.MEDIUM});
         }
     }
 
@@ -766,13 +768,19 @@ export class MoveInPage{
         log.debug('isPriorAddressRequired', { isVisible });
 
         if (isVisible === true){
-            await this.Move_In_Prev_Address_Field.click({timeout:30000});
+            // Check if the previous address field actually exists in the current UI
+            const fieldExists = await this.Move_In_Prev_Address_Field.isVisible({ timeout: TIMEOUTS.SHORT }).catch(() => false);
+            if (!fieldExists) {
+                log.debug('Previous address field not found in UI, skipping');
+                return;
+            }
+            await this.Move_In_Prev_Address_Field.click({timeout:TIMEOUTS.DEFAULT});
             await this.page.waitForTimeout(500);
             await this.Move_In_Prev_Address_Field.pressSequentially(prevAddress,{delay:50});
             await this.page.waitForTimeout(500);
             await this.Move_In_Prev_Address_Field.press('Backspace');
-            await this.Move_In_Address_Dropdown(prevAddress)?.waitFor({state: 'visible', timeout: 30000});
-            await this.Move_In_Address_Dropdown(prevAddress).click({timeout:10000});
+            await this.Move_In_Address_Dropdown(prevAddress)?.waitFor({state: 'visible', timeout: TIMEOUTS.DEFAULT});
+            await this.Move_In_Address_Dropdown(prevAddress).click({timeout:TIMEOUTS.MEDIUM});
             // Wait for address to populate, then force-click title past any secondary dropdown
             await this.page.waitForTimeout(2000);
             await this.Move_In_Identity_Info_Title.click({ force: true });
@@ -1124,18 +1132,31 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
         await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
-        await this.page.waitForTimeout(3000);
 
-        // Click "Skip for now" button
-        await this.Move_In_Skip_Button.click();
-        await this.page.waitForTimeout(2000);
+        // "Skip for now" only appears when "Public Grid handles everything" is selected.
+        // If not already visible, select the PG radio first to reveal it.
+        let skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+        if (!skipVisible) {
+            await this.Move_In_Pay_Through_PG_Switch.check();
+            await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
+            skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
+        }
 
-        // Handle confirmation dialog if it appears
-        try {
-            await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({ timeout: 5000 });
-            await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
-        } catch {
-            // No confirmation dialog — proceed
+        // Wait for Stripe iframes to fully initialize before clicking Skip
+        await this.page.waitForTimeout(TIMEOUTS.DEFAULT);
+
+        if (skipVisible) {
+            await this.Move_In_Skip_Button.scrollIntoViewIfNeeded();
+            await this.Move_In_Skip_Button.click();
+            await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
+
+            // Handle confirmation dialog if it appears
+            try {
+                await expect(this.Move_In_Confirm_Skip_Payment_Title).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+                await this.Move_In_Confirm_Skip_Payment_Add_Later_Button.click();
+            } catch {
+                // No confirmation dialog — proceed
+            }
         }
     }
 

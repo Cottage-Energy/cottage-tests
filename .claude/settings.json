@@ -1,0 +1,11 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(gh pr view 1036 --repo Cottage-Energy/cottage-nextjs --json title,body,state,labels,files,url)",
+      "Bash(gh pr view 1036 --repo Cottage-Energy/cottage-nextjs --json title,body,state,files,additions,deletions,changedFiles)"
+    ]
+  }
+}
