@@ -37,6 +37,11 @@ export class OverviewPage {
     readonly Overview_Setup_Password_Confirm_Password_Field: Locator
     readonly Overview_Setup_Password_Set_Password_Button: Locator
 
+    readonly Overview_Add_Payment_Info_Title: Locator
+    readonly Overview_Pay_In_Full_Option: Locator
+    readonly Overview_Split_My_Bill_Option: Locator
+    readonly Overview_Sidebar_Add_Payment_Button: Locator
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -65,7 +70,7 @@ export class OverviewPage {
         this.Overview_Service_Fee_Message = page.getByText('Credit Card payments will be');
 
         this.Overview_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
-        this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
+        this.Overview_Save_Payment_Button = page.getByRole('button', { name: 'Save details' });
         this.Overview_Success_Message = page.getByText('ðŸ¥³ Success', { exact: true });
 
         this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
@@ -86,6 +91,12 @@ export class OverviewPage {
         this.Overview_Setup_Password_Field = page.locator('input[name="password"]');
         this.Overview_Setup_Password_Confirm_Password_Field = page.locator('input[name="confirmPassword"]');
         this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: /Set (new )?password/i });
+
+        // Account setup stepper — payment info selection (shown when user skipped payment during move-in)
+        this.Overview_Add_Payment_Info_Title = page.getByText('Add your payment info');
+        this.Overview_Pay_In_Full_Option = page.getByText('Pay in full').first();
+        this.Overview_Split_My_Bill_Option = page.getByText('Split my bill').first();
+        this.Overview_Sidebar_Add_Payment_Button = page.getByRole('button', { name: 'Add payment method' });
     }
 
     //methods
@@ -156,6 +167,18 @@ export class OverviewPage {
         await this.page.waitForTimeout(200);
         await expect(this.Overview_Setup_Password_Set_Password_Button).toBeEnabled({timeout:30000});
         await this.Overview_Setup_Password_Set_Password_Button.click();
+    }
+
+    async Select_Pay_In_Full_If_Flex_Enabled(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(2000);
+
+        const isFlexVisible = await this.Overview_Split_My_Bill_Option.isVisible();
+        if (isFlexVisible) {
+            await expect(this.Overview_Pay_In_Full_Option).toBeVisible({timeout:30000});
+            await this.Overview_Pay_In_Full_Option.click();
+            await this.page.waitForTimeout(1000);
+        }
     }
 
     async Go_to_Profile(firstName: string) {
@@ -229,7 +252,12 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover();
         await this.Overview_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
+        // After saving, verify success: either a toast appears or the payment section collapses
+        // (account setup stepper flow shows no toast — the section just collapses)
+        await Promise.race([
+            this.Overview_Success_Message.waitFor({ state: 'visible', timeout: 30000 }),
+            this.Overview_Add_Payment_Info_Title.waitFor({ state: 'hidden', timeout: 30000 }),
+        ]);
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
 

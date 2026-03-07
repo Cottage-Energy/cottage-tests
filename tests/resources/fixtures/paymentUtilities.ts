@@ -78,8 +78,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
         const ElectricBillID = await billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
@@ -171,8 +171,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
         const GasBillID = await billQueries.insertGasBill(userPaymentInfo.gasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
@@ -264,8 +264,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -370,8 +370,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsMultipleChargeAccounts(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsMultipleChargeAccounts(MoveIn);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -513,8 +513,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
         const ElectricBillID = await billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500);
@@ -607,8 +607,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
         const GasBillID = await billQueries.insertGasBill(userPaymentInfo.gasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
         await page.waitForTimeout(500);
@@ -701,8 +701,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsSingleChargeAccount(MoveIn);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
@@ -808,8 +808,8 @@ export class PaymentUtilities {
         const billingPage = new BillingPage(page);
         const profilePage = new ProfilePage(page);
 
-        const userPaymentInfo = await this.getPaymentDetailsMultipleChargeAccounts(MoveIn);
         await this.ensureRegistrationComplete(page, MoveIn.cottageUserId);
+        const userPaymentInfo = await this.getPaymentDetailsMultipleChargeAccounts(MoveIn);
 
         const [ElectricBillID, GasBillID] = await Promise.all([
             billQueries.insertElectricBill(userPaymentInfo.electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage),
