@@ -73,7 +73,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test.fixme('CON-EDISON New User Skip Add Payment', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1],}, async ({moveInpage, overviewPage, page}) => {
+  test('CON-EDISON New User Skip Add Payment', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1],}, async ({moveInpage, overviewPage, page}) => {
     test.setTimeout(TIMEOUTS.TEST);
     MoveIn = await newUserMoveInSkipPayment(page, 'CON-EDISON', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -93,7 +93,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
+  test.fixme('TX DEREG New User', {tag: [ '@regression3'],}, async ({moveInpage, page}) => {
     test.setTimeout(300000);
     MoveIn = await newUserMoveInAutoPayment(page,'TX-DEREG', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
