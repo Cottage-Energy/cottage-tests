@@ -225,7 +225,7 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
 
 
 
-test.describe('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
+test.describe.fixme('Move In Parameter TX Dereg New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 

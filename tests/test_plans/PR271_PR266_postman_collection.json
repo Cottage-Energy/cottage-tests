@@ -1,0 +1,709 @@
+{
+	"info": {
+		"name": "PR #271 + PR #266 — Flex Due Date & Connect Account",
+		"description": "Test collection for services PR #271 (Flex bill due_date fallback → today+20) and PR #266 (new /connect-account endpoint + upsert-credentials changes).\n\nReplace collection variables before running.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "ADMIN_URL",
+			"value": "https://your-admin-router-url.example.com",
+			"description": "Admin Router base URL (check SST/infra config)"
+		},
+		{
+			"key": "FLEX_BILL_ENDPOINT",
+			"value": "https://your-flex-bill-endpoint.example.com/bill",
+			"description": "Flex bill API endpoint URL"
+		},
+		{
+			"key": "API_KEY",
+			"value": "your-api-key-here",
+			"description": "Authorization header value for admin endpoints"
+		},
+		{
+			"key": "USER_ID",
+			"value": "00000000-0000-0000-0000-000000000000",
+			"description": "Test user UUID with ElectricAccount and GasAccount"
+		},
+		{
+			"key": "USER_ID_NO_BILLS",
+			"value": "00000000-0000-0000-0000-000000000000",
+			"description": "Flex user UUID with no bills / zero balance"
+		},
+		{
+			"key": "USER_ID_WITH_BILLS",
+			"value": "00000000-0000-0000-0000-000000000000",
+			"description": "Flex user UUID with real dueDate values on bills"
+		},
+		{
+			"key": "USER_EMAIL",
+			"value": "testuser@example.com",
+			"description": "Email for the test user"
+		}
+	],
+	"item": [
+		{
+			"name": "PR #271 — Flex Due Date",
+			"description": "Verify all 3 fallback due_date values changed from 0/14 → 20 days",
+			"item": [
+				{
+					"name": "TC-003: Test mode mock bill (today+20)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FLEX_BILL_ENDPOINT}}?test=true",
+							"host": ["{{FLEX_BILL_ENDPOINT}}"],
+							"query": [
+								{ "key": "test", "value": "true" }
+							]
+						},
+						"description": "Easiest to verify — no user setup needed. Mock bill should return due_date ≈ today+20 and amount_due_in_cents = 22500."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('due_date is ~today+20', () => {",
+									"    const body = pm.response.json();",
+									"    const dueDate = new Date(body.due_date);",
+									"    const expected = new Date();",
+									"    expected.setDate(expected.getDate() + 20);",
+									"    const diffDays = Math.abs((dueDate - expected) / (1000*60*60*24));",
+									"    pm.expect(diffDays).to.be.below(2, 'due_date should be ~20 days from today');",
+									"});",
+									"",
+									"pm.test('amount_due_in_cents is 22500', () => {",
+									"    pm.expect(pm.response.json().amount_due_in_cents).to.eql(22500);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-001: Flex user — NULL due dates (today+20)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FLEX_BILL_ENDPOINT}}?userId={{USER_ID}}",
+							"host": ["{{FLEX_BILL_ENDPOINT}}"],
+							"query": [
+								{ "key": "userId", "value": "{{USER_ID}}" }
+							]
+						},
+						"description": "Flex user whose bills have NULL dueDate values. Fallback should return due_date ≈ today+20."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('due_date is ~today+20', () => {",
+									"    const body = pm.response.json();",
+									"    const dueDate = new Date(body.due_date);",
+									"    const expected = new Date();",
+									"    expected.setDate(expected.getDate() + 20);",
+									"    const diffDays = Math.abs((dueDate - expected) / (1000*60*60*24));",
+									"    pm.expect(diffDays).to.be.below(2, 'due_date should be ~20 days from today');",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-002: Flex user — no bills (today+20, $0)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FLEX_BILL_ENDPOINT}}?userId={{USER_ID_NO_BILLS}}",
+							"host": ["{{FLEX_BILL_ENDPOINT}}"],
+							"query": [
+								{ "key": "userId", "value": "{{USER_ID_NO_BILLS}}" }
+							]
+						},
+						"description": "Flex user with no bills / zero balance. Should return due_date ≈ today+20 and amount_due_in_cents = 0."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('due_date is ~today+20', () => {",
+									"    const body = pm.response.json();",
+									"    const dueDate = new Date(body.due_date);",
+									"    const expected = new Date();",
+									"    expected.setDate(expected.getDate() + 20);",
+									"    const diffDays = Math.abs((dueDate - expected) / (1000*60*60*24));",
+									"    pm.expect(diffDays).to.be.below(2);",
+									"});",
+									"",
+									"pm.test('amount_due_in_cents is 0', () => {",
+									"    pm.expect(pm.response.json().amount_due_in_cents).to.eql(0);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-004: Flex user — real due dates (regression)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FLEX_BILL_ENDPOINT}}?userId={{USER_ID_WITH_BILLS}}",
+							"host": ["{{FLEX_BILL_ENDPOINT}}"],
+							"query": [
+								{ "key": "userId", "value": "{{USER_ID_WITH_BILLS}}" }
+							]
+						},
+						"description": "Regression — flex user with real dueDate values. Response should use the actual earliest due date, NOT the +20 day fallback."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('due_date is NOT today+20 (uses real date)', () => {",
+									"    const body = pm.response.json();",
+									"    const dueDate = new Date(body.due_date);",
+									"    const fallback = new Date();",
+									"    fallback.setDate(fallback.getDate() + 20);",
+									"    const diffDays = Math.abs((dueDate - fallback) / (1000*60*60*24));",
+									"    // If it's more than 2 days away from today+20, it's using a real date",
+									"    pm.expect(diffDays).to.be.above(1, 'due_date should be a real bill date, not the +20 fallback');",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PR #266 — Connect Account (Happy Path)",
+			"description": "New /connect-account endpoint — valid requests",
+			"item": [
+				{
+					"name": "TC-010: Electric account — all fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"characterOverride\": null,\n    \"password\": \"TestPass123!\",\n    \"retainEmail\": false,\n    \"accountNumber\": \"1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "Electric account with all fields provided. Verify: credentials created, ElectricAccount.accountNumber = 1234567890, status = ACTIVE."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body.success).to.be.true;",
+									"    pm.expect(body.message).to.include('electric');",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-011: Gas account — all fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"NGMA\",\n    \"utilityType\": \"gas\",\n    \"password\": \"TestPass123!\",\n    \"retainEmail\": false,\n    \"accountNumber\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "Gas account with all fields. Verify: credentials created, GasAccount.accountNumber = 9876543210, status = ACTIVE."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body.success).to.be.true;",
+									"    pm.expect(body.message).to.include('gas');",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-012: retainEmail=true — user email preserved",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"retainEmail\": true\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "retainEmail=true — pgEmail should be the user's original email, not @publicgrid.me. Verify in DB: SELECT pgEmail FROM CottageUsers WHERE id = USER_ID."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-013: retainEmail=false — publicgrid email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"retainEmail\": false\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "retainEmail=false (or omitted) — pgEmail should be {username}@publicgrid.me. Verify in DB."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-014: Without accountNumber — no account update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"password\": \"TestPass123!\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "No accountNumber field — credentials should be created but ElectricAccount/GasAccount table should NOT be updated."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-015: Without password — system generates one",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"accountNumber\": \"1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "No password field — credentials should be created with an auto-generated password."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-016: characterOverride — override password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"characterOverride\": \"abc\",\n    \"accountNumber\": \"1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "characterOverride provided, no password — generated password should use 'abc' character set."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"",
+									"pm.test('Response indicates success', () => {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PR #266 — Connect Account (Validation)",
+			"description": "Negative tests — invalid inputs and auth",
+			"item": [
+				{
+					"name": "TC-020: Invalid auth token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "wrong-token" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"00000000-0000-0000-0000-000000000000\",\n    \"email\": \"test@example.com\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "Wrong Authorization header — should return 400 with 'Invalid access token'."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"",
+									"pm.test('Error message is Invalid access token', () => {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body.success).to.be.false;",
+									"    pm.expect(body.message).to.eql('Invalid access token');",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-021: Invalid userId — not a UUID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"not-a-uuid\",\n    \"email\": \"test@example.com\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "userId is not a valid UUID — Zod validation should reject."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 4xx or 5xx', () => {",
+									"    pm.expect(pm.response.code).to.be.within(400, 599);",
+									"});",
+									"",
+									"pm.test('Response indicates failure', () => {",
+									"    pm.expect(pm.response.json().success).to.be.false;",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-022: Invalid email format",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"00000000-0000-0000-0000-000000000000\",\n    \"email\": \"not-an-email\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "Malformed email — Zod validation should reject."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 4xx or 5xx', () => {",
+									"    pm.expect(pm.response.code).to.be.within(400, 599);",
+									"});",
+									"",
+									"pm.test('Response indicates failure', () => {",
+									"    pm.expect(pm.response.json().success).to.be.false;",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-023: Invalid utilityType",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"00000000-0000-0000-0000-000000000000\",\n    \"email\": \"test@example.com\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"water\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/connect-account",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["connect-account"]
+						},
+						"description": "utilityType='water' — must be 'gas' or 'electric'. Zod validation should reject."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 4xx or 5xx', () => {",
+									"    pm.expect(pm.response.code).to.be.within(400, 599);",
+									"});",
+									"",
+									"pm.test('Response indicates failure', () => {",
+									"    pm.expect(pm.response.json().success).to.be.false;",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PR #266 — Upsert Credentials (Regression)",
+			"description": "Existing /upsert-credentials endpoint backward compatibility",
+			"item": [
+				{
+					"name": "TC-030: Existing flow — no new params",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"characterOverride\": null\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/upsert-credentials",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["upsert-credentials"]
+						},
+						"description": "Original schema without password or retainEmail — behavior should be identical to pre-PR. Generated password, @publicgrid.me email."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-031: With password param",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"characterOverride\": null,\n    \"password\": \"MyCustomPass123\"\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/upsert-credentials",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["upsert-credentials"]
+						},
+						"description": "New optional password param — credentials should use 'MyCustomPass123' instead of generated password."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TC-032: With retainEmail param",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "{{API_KEY}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"email\": \"{{USER_EMAIL}}\",\n    \"provider\": \"EVERSOURCE\",\n    \"utilityType\": \"electric\",\n    \"characterOverride\": null,\n    \"retainEmail\": true\n}"
+						},
+						"url": {
+							"raw": "{{ADMIN_URL}}/upsert-credentials",
+							"host": ["{{ADMIN_URL}}"],
+							"path": ["upsert-credentials"]
+						},
+						"description": "New optional retainEmail param — pgEmail should be the user's original email, not @publicgrid.me."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));"
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
