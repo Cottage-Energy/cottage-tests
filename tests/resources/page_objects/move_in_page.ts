@@ -688,7 +688,7 @@ export class MoveInPage{
             "Pass"
           ];
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.Move_In_Program_Enrolled_Question.first()).toBeVisible({timeout:10000});
+        await expect(this.Move_In_Program_Enrolled_Question.first()).toBeVisible({timeout: TIMEOUTS.DEFAULT});
 
         // Handle ALL Program Enrolled radiogroups (multiple when electric & gas are different companies)
         const radiogroups = this.page.getByRole('radiogroup').filter({ hasText: 'Pass' });
