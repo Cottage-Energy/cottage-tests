@@ -8,7 +8,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 | Step | Activity | Skill |
 |------|----------|-------|
-| 1. **Triage** | Read Linear tickets tagged for Testing/QA | `/triage-ticket` |
+| 1. **Triage** | Read Linear tickets tagged for Testing/QA | `/test-plan` (Quick Triage phase) |
 | 2. **Research** | Gather context from Notion docs, Figma screens, GitHub PRs | `/review-pr` (for PRs), `/test-plan` (multi-source) |
 | 3. **Test Planning** | Write test plans and test cases from requirements | `/test-plan` |
 | 4. **Exploratory Testing** | Interactive exploration to find edge cases and bugs | `/exploratory-test` |
@@ -39,7 +39,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 | Server | Purpose | Use for |
 |--------|---------|---------|
-| **Linear** | Read tickets for Testing/QA, log bugs, track test-related issues | `get_issue`, `save_issue`, `search_issues`, `list_issues`, `list_issue_statuses` |
+| **Linear** | Read tickets for Testing/QA, log bugs, track test-related issues, comment test plans back to tickets | `get_issue`, `save_issue`, `save_comment`, `list_comments`, `search_issues`, `list_issues`, `list_issue_statuses` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
 | **Playwright** | Browser automation for interactive testing and debugging | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |

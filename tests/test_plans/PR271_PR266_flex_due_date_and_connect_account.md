@@ -3,19 +3,38 @@
 ## Overview
 **PRs**: [services#271](https://github.com/Cottage-Energy/services/pull/271) (Flex due date) | [services#266](https://github.com/Cottage-Energy/services/pull/266) (Connect account)
 **Ticket**: [ENG-2372](https://linear.app/public-grid/issue/ENG-2372/feat-connect-account-save-credentials-endpoint) (PR #266)
+**Full-stack doc**: [qa-test-cases-connect-overview.md](qa-test-cases-connect-overview.md) (covers frontend, task layer, services, e2e)
 **Date**: 2026-03-09
 **Tester**: Christian
+
+## Known Inconsistencies (from full-stack review)
+
+> **Resolve before testing.** See [qa-test-cases-connect-overview.md](qa-test-cases-connect-overview.md) for full details.
+
+| # | Issue | Impact on Services Testing |
+|---|-------|---------------------------|
+| I-1 | `saving_credentials` metadata status not handled by frontend | No impact — backend-only state |
+| I-2 | No 5-minute MFA countdown in frontend | No impact — task layer concern |
+| I-3 | `credentialsSaved` never read by frontend | Backend-only verification — verify in task output, not UI |
+| I-4 | `accountInfo.isActive` never checked by frontend | Frontend shows success regardless — TC-010/TC-011 pass even for inactive accounts |
+| I-5 | Success view shows account number only, not active status | Adjust UI test expectations |
+| I-6 | `account_not_found` / `account_locked` sourcing unclear | Must confirm task sets `output.error` to exact strings for frontend mapping |
+
+---
 
 ## Summary
 
 | Category | Test Cases | P0 | P1 | P2 | Approach |
 |----------|-----------|----|----|----|---------:|
 | Flex Due Date Fallback (PR #271) | TC-001 – TC-005 | 2 | 2 | 1 | API + UI |
-| Connect Account — Happy Path (PR #266) | TC-010 – TC-016 | 4 | 3 | 0 | API + DB |
-| Connect Account — Validation (PR #266) | TC-020 – TC-023 | 1 | 3 | 0 | API |
-| Upsert Credentials — Regression (PR #266) | TC-030 – TC-032 | 1 | 2 | 0 | API + DB |
+| Connect Account — Happy Path (PR #266) | TC-010 – TC-017 | 5 | 3 | 0 | API + DB |
+| Connect Account — Validation (PR #266) | TC-020 – TC-025 | 2 | 4 | 0 | API |
+| Upsert Credentials — Regression (PR #266) | TC-030 – TC-033 | 1 | 3 | 0 | API + DB |
+| Credential Logic (PR #266) | TC-050 – TC-056 | 0 | 4 | 3 | DB |
+| DB Side Effects (PR #266) | TC-060 – TC-064 | 3 | 2 | 0 | DB |
+| Security (PR #266) | TC-070 – TC-073 | 2 | 2 | 0 | API + DB |
 | UI/E2E Regression | TC-040 – TC-041 | 1 | 1 | 0 | Playwright |
-| **Totals** | **20** | **9** | **11** | **1** | |
+| **Totals** | **37** | **16** | **21** | **4** | |
 
 ## Scope
 
@@ -24,13 +43,16 @@
 - New `/connect-account` Lambda endpoint (request validation, credential creation, account activation)
 - `UtilityCredentialsClient.upsertCredentials` changes (`retainEmail`, `existingPassword` params)
 - Existing `/upsert-credentials` endpoint backward compatibility
-- DB state verification (credentials, account status, pgEmail)
+- DB state verification (credentials, account status, pgEmail, encryption)
+- Credential logic matrix (password priority, email generation)
+- Security: auth, encryption, secrets
 
 ### Out of Scope
 - Flex payment splitting logic (no changes)
 - Stripe payment processing (no changes)
 - Scaffold skill files added in PR #266 (dev tooling, not runtime code)
 - Infrastructure/SST deployment verification (ops team)
+- Frontend connect UI, task layer (Trigger.dev), bill upload modal — covered in [qa-test-cases-connect-overview.md](qa-test-cases-connect-overview.md)
 
 ### Prerequisites
 - Access to dev environment API endpoints
@@ -85,6 +107,7 @@ SELECT "isFlexCustomer" FROM "CottageUsers" WHERE id = '<userId>';
 | TC-014 | Without accountNumber — no account table update | Test user | 1. POST `/connect-account` without `accountNumber` field 2. Query account table | 200 response. Credentials created. Account table `accountNumber` and `status` unchanged | P1 |
 | TC-015 | Without password — system generates one | Test user | 1. POST `/connect-account` without `password` field 2. Query credentials | 200 response. Credentials created with auto-generated password (not empty) | P1 |
 | TC-016 | With characterOverride — override password generated | Test user | 1. POST `/connect-account` with `characterOverride: "abc"`, no `password` 2. Query credentials | 200 response. Generated password uses override character set | P0 |
+| TC-017 | password takes precedence over characterOverride | Test user | 1. POST `/connect-account` with `password: "explicit"` AND `characterOverride: "abc"` 2. Query credentials | 200 response. `password` used; `characterOverride` ignored. (Ref: full-stack 18.7) | P0 |
 
 **Verification queries**:
 ```sql
@@ -107,11 +130,13 @@ SELECT "pgEmail" FROM "CottageUsers" WHERE id = '<userId>';
 | ID | Title | Preconditions | Steps | Expected Result | Priority |
 |----|-------|---------------|-------|-----------------|----------|
 | TC-020 | Invalid auth token | None | 1. POST `/connect-account` with wrong `Authorization` header | 400 response: "Invalid access token" | P0 |
-| TC-021 | Invalid userId — not a UUID | None | 1. POST `/connect-account` with `userId: "not-a-uuid"` | 400 response with Zod validation error | P1 |
-| TC-022 | Invalid email format | None | 1. POST `/connect-account` with `email: "not-an-email"` | 400 response with Zod validation error | P1 |
-| TC-023 | Invalid utilityType | None | 1. POST `/connect-account` with `utilityType: "water"` | 400 response with Zod validation error (expected "gas" or "electric") | P1 |
+| TC-021 | Invalid userId — not a UUID | None | 1. POST `/connect-account` with `userId: "not-a-uuid"` | 500 response with Zod validation error | P1 |
+| TC-022 | Invalid email format | None | 1. POST `/connect-account` with `email: "not-an-email"` | 500 response with Zod validation error | P1 |
+| TC-023 | Invalid utilityType | None | 1. POST `/connect-account` with `utilityType: "water"` | 500 response with Zod validation error (expected "gas" or "electric") | P1 |
+| TC-024 | No auth header at all | None | 1. POST `/connect-account` with valid body but NO `Authorization` header | 400 response: "Invalid access token" (Ref: full-stack 18.9) | P0 |
+| TC-025 | Missing required field (userId) | None | 1. POST `/connect-account` with body missing `userId` entirely | 500 response with Zod parse error (Ref: full-stack 18.10) | P1 |
 
-**Note**: Missing required fields (`userId`, `email`, `provider`) are covered by Zod schema validation and will return 500 (JSON parse or validation error). The endpoint currently returns 500 for non-InputError exceptions.
+**Note**: Zod validation errors return 500 because the endpoint only returns 400 for `InputError` (auth check). Schema validation failures are caught by the generic error handler.
 
 ---
 
@@ -125,6 +150,63 @@ SELECT "pgEmail" FROM "CottageUsers" WHERE id = '<userId>';
 | TC-030 | Existing flow — no new params | Test user | 1. POST `/upsert-credentials` with original schema (userId, email, provider, utilityType, characterOverride) — no `password` or `retainEmail` | 200 response. Credentials created with generated password and `@publicgrid.me` email. Behavior identical to pre-PR | P0 |
 | TC-031 | With password param | Test user | 1. POST `/upsert-credentials` with `password: "MyCustomPass123"` | 200 response. Credentials use provided password instead of generated one | P1 |
 | TC-032 | With retainEmail param | Test user | 1. POST `/upsert-credentials` with `retainEmail: true` | 200 response. `pgEmail` = user's original email | P1 |
+| TC-033 | Both password + retainEmail together | Test user | 1. POST `/upsert-credentials` with `password: "P@ss"` AND `retainEmail: true` | 200 response. Uses real email AND provided password. (Ref: full-stack 19.4) | P1 |
+
+---
+
+### Credential Logic — `upsertCredentials` (PR #266)
+
+> Tests for the internal credential logic. Verify by inspecting DB state after API calls.
+
+| ID | Scenario | Input | Expected Behavior | Priority |
+|----|----------|-------|-------------------|----------|
+| TC-050 | `retainEmail: false`, no existing pgEmail | New user, `retainEmail` omitted | Generates `username@publicgrid.me`, checks for duplicates via RPC | P1 |
+| TC-051 | `retainEmail: false`, existing pgEmail in DB | User already has `pgEmail` set | Reuses the existing `@publicgrid.me` email from DB | P1 |
+| TC-052 | `retainEmail: true` | Any user | Skips pgEmail generation, uses user's original email as-is | P1 |
+| TC-053 | `existingPassword` provided | `password: "MyPass"` | Uses it directly, skips password generation | P1 |
+| TC-054 | `existingPassword` undefined, `characterOverride` set | `characterOverride: "abc"` | Uses `generatePasswordOverride(characterOverride, 10)` | P2 |
+| TC-055 | Both `existingPassword` and `characterOverride` undefined | Neither provided | Uses `generateAlphanumericStringWithSymbols(10)` | P2 |
+| TC-056 | `existingPassword` wins over `characterOverride` | Both provided | `existingPassword` is used, `characterOverride` ignored | P2 |
+
+---
+
+### DB Side Effects (PR #266)
+
+| ID | Verification | Table | Expected | Priority |
+|----|-------------|-------|----------|----------|
+| TC-060 | Credentials upserted correctly | `admin_upsert_credentials` RPC | Encrypted password, pgEmail, providerId, iv all stored | P0 |
+| TC-061 | `CottageUsers.pgEmail` updated | `CottageUsers` | `pgEmail` matches expected value for the user | P0 |
+| TC-062 | Account number set (connect flow) | `ElectricAccount` / `GasAccount` | `accountNumber` matches input, `status = "ACTIVE"` | P0 |
+| TC-063 | Only matching user's rows updated | `ElectricAccount` / `GasAccount` | Only rows with matching `cottageUserID` are updated | P1 |
+| TC-064 | No account update when `accountNumber` omitted | `ElectricAccount` / `GasAccount` | No changes to account rows | P1 |
+
+**Verification queries**:
+```sql
+-- TC-060: Check credentials were upserted with encryption
+SELECT p_user, p_email, p_provider, p_iv FROM "admin_upsert_credentials" -- verify iv is populated (encrypted)
+WHERE p_user = '<userId>' ORDER BY created_at DESC LIMIT 1;
+
+-- TC-061: Check pgEmail
+SELECT "pgEmail", email FROM "CottageUsers" WHERE id = '<userId>';
+
+-- TC-062/TC-063: Check account activation (only for matching user)
+SELECT "accountNumber", status, "cottageUserID" FROM "ElectricAccount" WHERE "cottageUserID" = '<userId>';
+SELECT "accountNumber", status, "cottageUserID" FROM "GasAccount" WHERE "cottageUserID" = '<userId>';
+
+-- TC-064: Snapshot account state BEFORE and AFTER a no-accountNumber call
+SELECT "accountNumber", status FROM "ElectricAccount" WHERE "cottageUserID" = '<userId>';
+```
+
+---
+
+### Security (PR #266)
+
+| ID | Test Case | Steps | Expected Result | Priority |
+|----|-----------|-------|-----------------|----------|
+| TC-070 | Auth required on `/connect-account` | Call without valid API key | 400 returned | P0 |
+| TC-071 | Auth required on `/upsert-credentials` | Call without valid API key | 400 returned | P0 |
+| TC-072 | Password is encrypted in DB | After credential save, inspect DB | Password is encrypted (not plaintext). `iv` column populated | P1 |
+| TC-073 | Lambda secrets are linked | Check infra config in `infra/api.ts` | `SUPABASE_ADMIN_CREDENTIALS`, `API_KEY`, `ENCRYPTION_KEY` all bound to `connect-account` Lambda | P1 |
 
 ---
 
@@ -236,6 +318,21 @@ curl -s -X POST "<ADMIN_URL>/connect-account" \
     "accountNumber": "1234567890"
   }'
 # Expected: 200. Generated password uses "abc" character set.
+
+# TC-017: password takes precedence over characterOverride
+curl -s -X POST "<ADMIN_URL>/connect-account" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: <API_KEY>" \
+  -d '{
+    "userId": "<USER_ID>",
+    "email": "testuser@example.com",
+    "provider": "EVERSOURCE",
+    "utilityType": "electric",
+    "password": "ExplicitPass123!",
+    "characterOverride": "abc",
+    "accountNumber": "1234567890"
+  }'
+# Expected: 200. "ExplicitPass123!" used; characterOverride "abc" ignored.
 ```
 
 ### PR #266 — Connect Account (Validation / Negative)
@@ -288,6 +385,28 @@ curl -s -X POST "<ADMIN_URL>/connect-account" \
     "utilityType": "water"
   }'
 # Expected: 500 — Zod validation error (utilityType must be "gas" or "electric")
+
+# TC-024: No auth header at all
+curl -s -X POST "<ADMIN_URL>/connect-account" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "00000000-0000-0000-0000-000000000000",
+    "email": "test@example.com",
+    "provider": "EVERSOURCE",
+    "utilityType": "electric"
+  }'
+# Expected: 400 — {"success":false,"message":"Invalid access token"}
+
+# TC-025: Missing required field (userId)
+curl -s -X POST "<ADMIN_URL>/connect-account" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: <API_KEY>" \
+  -d '{
+    "email": "test@example.com",
+    "provider": "EVERSOURCE",
+    "utilityType": "electric"
+  }'
+# Expected: 500 — Zod validation error (userId is required)
 ```
 
 ### PR #266 — Upsert Credentials (Regression)
@@ -333,6 +452,21 @@ curl -s -X POST "<ADMIN_URL>/upsert-credentials" \
     "retainEmail": true
   }'
 # Expected: 200. pgEmail = "testuser@example.com" (not @publicgrid.me).
+
+# TC-033: Both password + retainEmail together
+curl -s -X POST "<ADMIN_URL>/upsert-credentials" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: <API_KEY>" \
+  -d '{
+    "userId": "<USER_ID>",
+    "email": "testuser@example.com",
+    "provider": "EVERSOURCE",
+    "utilityType": "electric",
+    "characterOverride": null,
+    "password": "P@ss123",
+    "retainEmail": true
+  }'
+# Expected: 200. Uses real email AND provided password.
 ```
 
 ### DB Verification Queries (run after cURL calls)
@@ -347,6 +481,11 @@ SELECT "pgEmail", email FROM "CottageUsers" WHERE id = '<USER_ID>';
 
 -- After any connect/upsert: Check credentials exist
 SELECT * FROM "UtilityCredential" WHERE "cottageUserID" = '<USER_ID>' ORDER BY created_at DESC LIMIT 5;
+
+-- TC-072: Verify password is encrypted (iv column populated)
+-- Look for non-null iv value — password should NOT be plaintext
+SELECT p_user, p_email, p_iv FROM "admin_upsert_credentials"
+WHERE p_user = '<USER_ID>' ORDER BY created_at DESC LIMIT 1;
 ```
 
 ---
@@ -372,16 +511,23 @@ The `retainEmail` flag:
 ### Phase 1: API Verification (before merge)
 1. Call flex bill endpoint with `?test=true` → verify TC-003
 2. Call `/connect-account` with electric + gas happy paths → verify TC-010, TC-011
-3. Call `/connect-account` with invalid auth → verify TC-020
-4. Call `/upsert-credentials` without new params → verify TC-030
+3. Call `/connect-account` with password + characterOverride → verify TC-017
+4. Call `/connect-account` with invalid/missing auth → verify TC-020, TC-024
+5. Call `/upsert-credentials` without new params → verify TC-030
 
 ### Phase 2: DB Verification
-5. Query Supabase for credentials, account status, pgEmail after API calls
-6. Verify `retainEmail` behavior (TC-012, TC-013)
+6. Query Supabase for credentials, account status, pgEmail after API calls
+7. Verify `retainEmail` behavior (TC-012, TC-013)
+8. Verify password encryption (TC-072) — check `iv` column is populated
+9. Verify account activation only affects matching user (TC-063)
 
-### Phase 3: E2E Regression (after merge to dev)
-7. Run connect-account tests: `PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/connect-account/ --project=Chromium`
-8. Run payment tests: `PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/payment/ --project=Chromium`
+### Phase 3: Security
+10. Verify auth on both endpoints (TC-070, TC-071)
+11. Confirm Lambda secrets in infra config (TC-073)
 
-### Phase 4: Flex UI Spot-Check
-9. Log in as a flex user, verify due date display (TC-005)
+### Phase 4: E2E Regression (after merge to dev)
+12. Run connect-account tests: `PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/connect-account/ --project=Chromium`
+13. Run payment tests: `PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/payment/ --project=Chromium`
+
+### Phase 5: Flex UI Spot-Check
+14. Log in as a flex user, verify due date display (TC-005)
