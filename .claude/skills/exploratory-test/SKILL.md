@@ -311,5 +311,44 @@ Do not let exploratory tests accumulate indefinitely — they should be graduate
 
 ---
 
+## 7. Screenshot Evidence & Linear Attachment
+
+When capturing screenshots during exploratory sessions and needing to attach them to Linear tickets:
+
+### Upload workflow
+1. `mcp__playwright__browser_take_screenshot` to save PNG files locally
+2. Upload to `0x0.st` for hosting: `curl -s -F "file=@screenshot.png" https://0x0.st` — returns a direct URL
+3. Post to Linear via `mcp__linear__save_comment` with markdown image syntax: `![description](url)`
+4. Clean up local PNG files after upload
+
+**Why not base64 directly?** MCP tool parameters can't handle large base64-encoded images. The 0x0.st upload → URL embed pattern is the reliable workaround.
+
+### Screenshot naming convention
+Name screenshots descriptively: `{area}-{detail}-{viewport}.png`
+- e.g., `sign-in-desktop-chrome.png`, `onboarding-step2-mobile.png`, `transfer-address-card-confirmed.png`
+
+---
+
+## 8. Parallel Sub-Agents for Independent Test Areas
+
+When multiple independent test areas need exploration (e.g., different browsers, different flows), use parallel sub-agents via the Agent tool:
+- Each sub-agent gets its own Playwright browser session
+- Example: one agent tests Safari rendering, another tests company override logic, a third explores transfer flow
+- Consolidate findings from all agents before posting to Linear
+- This significantly reduces total exploration time
+
+---
+
+## 9. Common Blockers & Workarounds
+
+| Blocker | Symptom | Workaround |
+|---------|---------|------------|
+| Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page | `page.evaluate(() => document.querySelector('[role="alertdialog"]').remove())` |
+| `/sign-out` 404 | Direct navigation to `/sign-out` returns 404 | Clear cookies via `page.evaluate` then navigate to `/sign-in` |
+| GitHub MCP 404 | `mcp__github__get_pull_request` returns "Not Found" for cottage-nextjs PRs | Fall back to `gh pr view <number> --repo Cottage-Energy/cottage-nextjs --json ...` |
+| Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
+
+---
+
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
