@@ -1,0 +1,99 @@
+/**
+ * MokoBoko Design System — Secondary Button (Standalone Handoff)
+ *
+ * Dependencies:
+ *   npm install react class-variance-authority clsx tailwind-merge
+ *
+ * Tailwind config requirement:
+ *   Add the custom shadow token to your tailwind.config.ts:
+ *
+ *   theme: {
+ *     extend: {
+ *       boxShadow: {
+ *         'skeu-secondary':
+ *           '0 0 0 1px rgba(24,29,39,0.12) inset, 0 -2px 0 0 rgba(24,29,39,0.06) inset, 0 1px 2px 0 rgba(16,24,40,0.05)',
+ *       },
+ *     },
+ *   }
+ */
+
+import React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+// ─── Utility ─────────────────────────────────────────────
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+// ─── Variants ────────────────────────────────────────────
+const buttonVariants = cva(
+  'group inline-flex flex-shrink-0 items-center justify-center rounded-xl border-none overflow-hidden disabled:cursor-not-allowed text-sm font-semibold outline-none cursor-pointer transition-transform duration-150 ease-out active:[transform:scale(0.975)_translateY(1px)] disabled:active:[transform:none] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-400',
+  {
+    variants: {
+      variant: {
+        'secondary-gray':
+          'text-gray-700 bg-white shadow-skeu-secondary hover:bg-gray-200 disabled:bg-gray-100 disabled:text-gray-500 disabled:shadow-[inset_0_0_0_1px_rgba(229,231,235,1)] disabled:hover:bg-gray-100',
+      },
+      size: {
+        sm: 'px-3 py-2 gap-1.5',
+        md: 'px-3 py-2.5 gap-1.5',
+        lg: 'px-[14px] py-2.5 gap-2 text-base',
+        xl: 'px-4 py-3 gap-2 text-base',
+      },
+    },
+    defaultVariants: {
+      variant: 'secondary-gray',
+      size: 'md',
+    },
+  }
+);
+
+// ─── Types ───────────────────────────────────────────────
+export interface SecondaryButtonProps
+  extends React.ComponentPropsWithoutRef<'button'>,
+    VariantProps<typeof buttonVariants> {
+  fullWidth?: boolean;
+  leadingIcon?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
+}
+
+// ─── Component ───────────────────────────────────────────
+const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps>(
+  (
+    {
+      children,
+      className,
+      fullWidth = false,
+      leadingIcon,
+      trailingIcon,
+      size = 'md',
+      variant = 'secondary-gray',
+      type = 'button',
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <button
+        className={cn(
+          buttonVariants({ variant, size }),
+          fullWidth && 'w-full',
+          className
+        )}
+        ref={ref}
+        type={type}
+        {...props}
+      >
+        {leadingIcon && <span className="inline-flex items-center">{leadingIcon}</span>}
+        {children && <span className="inline-flex items-center">{children}</span>}
+        {trailingIcon && <span className="inline-flex items-center">{trailingIcon}</span>}
+      </button>
+    );
+  }
+);
+
+SecondaryButton.displayName = 'SecondaryButton';
+
+export { SecondaryButton, buttonVariants };
