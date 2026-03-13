@@ -153,7 +153,7 @@ export class MoveInPage{
         this.Move_In_Welcome_Title = page.getByRole('heading', { name: 'Utilities on Autopilot' });
         this.Move_In_Welcome_Description = page.getByText(/setting up your utilities.*a breeze/);
 
-        this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms of');
+        this.Move_In_Terms_Checkbox = page.getByLabel('I agree to the Terms');
         this.Move_In_Get_Started_Button = page.getByRole('button', { name: /Let.*s get started/i });
         this.Move_In_Back_Link = page.getByText('Back');
         this.Move_In_Address_Page_Title = page.getByText('Enter your address');
