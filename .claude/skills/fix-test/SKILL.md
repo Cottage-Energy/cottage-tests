@@ -93,6 +93,7 @@ mcp__playwright__browser_take_screenshot → capture what the test would see
 - **Evidence**: snapshot shows the element exists but with a different name/role/label than the test expects
 - **Fix**: update the locator in the **page object** (never in the spec). Use the snapshot output to get the correct role/name.
 - Locator hierarchy: `getByRole` > `getByText` > `getByLabel` > `getByTestId` > `locator('css')` (last resort)
+- **Prefer regex over exact text** — e.g., `page.getByRole('heading', { name: /Upload document/i })` instead of exact `'Upload your bill'`. Regex survives minor text changes (capitalization, rewording) without breaking.
 - Do NOT add arbitrary waits — fix the locator
 
 ### Timing Issue
@@ -207,3 +208,7 @@ After fixing one test, check if the same issue affects others:
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-13 (BillUploadPage locator fix)
+- **Exact text locators are brittle**: `BillUploadPage.uploadBillHeading` used `getByRole('heading', { name: 'Upload your bill' })` — broke when PR #1088 changed the heading to "Upload document". Fixed with regex `/Upload document/i`. Added "prefer regex over exact text" recommendation to the Flaky Locator diagnosis section.
+- **Fix was quick and isolated**: The structured diagnostic flow (read test → identify change → see live app → fix POM → verify) worked well. Total turnaround was fast because Playwright MCP had already confirmed the new heading text during the exploratory session.

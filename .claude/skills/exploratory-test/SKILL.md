@@ -42,6 +42,7 @@ Before investigating, understand what you're looking at. Process all available s
 
 ### Check database context
 - `mcp__supabase__list_tables` to understand relevant tables
+- **Always query `information_schema.columns` first** to discover exact column names before writing data queries — Supabase uses PascalCase with quoted identifiers (e.g., `"cottageConnectUserType"`, `"isConnectAccount"`), and guessing column names wastes time
 - `mcp__supabase__execute_sql` to check current data state, feature flags, or preconditions mentioned in the ticket
 
 ---
@@ -274,7 +275,27 @@ npx playwright test tests/e2e_tests/exploratory/explore_my_investigation.spec.ts
 
 ---
 
-## 4. Graduating an Exploratory Test
+## 4. Cleanup After Session
+
+Before finishing any exploratory session (interactive or scripted), clean up generated artifacts:
+
+1. **Screenshots** — delete local PNG files after they've been uploaded to `0x0.st` and posted to Linear
+2. **`.playwright-mcp/` directory** — Playwright MCP creates this in the project root; delete it after the session
+3. **`test-results/` directory** — if scripted exploratory tests were run and failed, remove generated trace/screenshot artifacts
+4. **Browser sessions** — ensure `mcp__playwright__browser_close` is called to release the browser
+
+```bash
+# Cleanup commands
+rm -f *.png                          # screenshots in project root
+rm -rf .playwright-mcp/              # Playwright MCP session data
+rm -rf test-results/                 # test runner artifacts (only if safe to remove)
+```
+
+Do NOT skip cleanup — leftover artifacts bloat the repo and can be accidentally committed.
+
+---
+
+## 5. Graduating an Exploratory Test
 
 When the investigation is complete:
 1. **Found a bug** → `/log-bug` to file in Linear, then `/new-test` to create a regression test that guards against recurrence
@@ -286,7 +307,7 @@ Do not let exploratory tests accumulate indefinitely — they should be graduate
 
 ---
 
-## 5. Rules (never violate)
+## 6. Rules (never violate)
 - Use `TEST_TAGS.EXPLORATORY` — never raw strings like `'@exploratory'`
 - Use `TIMEOUTS` constants — never magic numbers
 - Use structured logger (`createLogger`) — never `console.log`
@@ -297,7 +318,7 @@ Do not let exploratory tests accumulate indefinitely — they should be graduate
 
 ---
 
-## 6. Tools Used
+## 7. Tools Used
 
 | Tool | Purpose |
 |------|---------|
@@ -311,7 +332,7 @@ Do not let exploratory tests accumulate indefinitely — they should be graduate
 
 ---
 
-## 7. Screenshot Evidence & Linear Attachment
+## 8. Screenshot Evidence & Linear Attachment
 
 When capturing screenshots during exploratory sessions and needing to attach them to Linear tickets:
 
@@ -329,7 +350,7 @@ Name screenshots descriptively: `{area}-{detail}-{viewport}.png`
 
 ---
 
-## 8. Parallel Sub-Agents for Independent Test Areas
+## 9. Parallel Sub-Agents for Independent Test Areas
 
 When multiple independent test areas need exploration (e.g., different browsers, different flows), use parallel sub-agents via the Agent tool:
 - Each sub-agent gets its own Playwright browser session
@@ -339,7 +360,7 @@ When multiple independent test areas need exploration (e.g., different browsers,
 
 ---
 
-## 9. Common Blockers & Workarounds
+## 10. Common Blockers & Workarounds
 
 | Blocker | Symptom | Workaround |
 |---------|---------|------------|
@@ -347,8 +368,14 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | `/sign-out` 404 | Direct navigation to `/sign-out` returns 404 | Clear cookies via `page.evaluate` then navigate to `/sign-in` |
 | GitHub MCP 404 | `mcp__github__get_pull_request` returns "Not Found" for cottage-nextjs PRs | Fall back to `gh pr view <number> --repo Cottage-Energy/cottage-nextjs --json ...` |
 | Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
+| OTP email pollution | Interactive sessions trigger OTP emails that accumulate for shared test accounts | After exploration, note which test accounts had OTPs triggered — automated tests using those accounts may fail until emails clear. Consider using `getLatestOTP()` pattern (take most recent email) instead of asserting exactly 1 email |
 
 ---
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-13 (ENG-2402 Connect Account)
+- **Supabase column discovery**: Wasted 4+ attempts guessing column names. Added instruction to always query `information_schema.columns` first.
+- **OTP email pollution**: Two exploratory sessions triggered multiple OTP emails for the same shared test users. This caused the subsequent `/new-test` spec to fail because `Get_OTP` asserts exactly 1 email. Added to Common Blockers table.
+- **Mutually exclusive cards**: Connect ELIGIBLE users see auto-apply card; non-connect users see renewable energy card. These are exclusive — never both. This kind of business logic discovery is valuable to capture in the session summary.

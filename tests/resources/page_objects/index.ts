@@ -9,6 +9,10 @@ export { OverviewPage } from './overview_dashboard_page';
 export { ServicesPage } from './services_page';
 export { ProfilePage } from './account_profile_page';
 export { BillUploadPage } from './bill_upload_page';
+export { ConnectPage } from './connect_page';
+export { ConnectOverviewPage } from './connect_overview_page';
+export { BillUploadModalPage } from './bill_upload_modal_page';
+export { ConnectUtilityModalPage } from './connect_utility_modal_page';
 export { SidebarChat } from './sidebar_chat';
 export { SupportPage } from './support_page';
 

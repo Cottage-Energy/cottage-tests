@@ -14,6 +14,9 @@ export { generateTestUserData } from './test_user';
 // Fastmail actions
 export * as FastmailActions from './fastmail_actions';
 
+// OTP sign-in helpers
+export { signInWithOTP, getLatestOTP, dismissPasswordResetIfPresent, dismissESCONoticeIfPresent } from './otpSignIn';
+
 // User cleanup
 export { CleanUp, Test_User_Clean_Up } from './userCleanUp';
 

@@ -62,7 +62,11 @@ export class FastmailClient {
    * @returns {Promise<EmailQueryResponse>} The mailbox data.
    */
   private async getMailbox(args: MailboxQueryArgs): Promise<EmailQueryResponse> {
-    const { apiUrl, accountId, inboxId, to, subject, from } = args;
+    const { apiUrl, accountId, inboxId, to, subject, from, receivedAfter } = args;
+    const filter: Record<string, string> = { inMailbox: inboxId, subject, to, from };
+    if (receivedAfter) {
+      filter.after = receivedAfter;
+    }
     const body = {
       using: ["urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail"],
       methodCalls: [
@@ -70,7 +74,7 @@ export class FastmailClient {
           "Email/query",
           {
             accountId,
-            filter: { inMailbox: inboxId, subject, to, from },
+            filter,
             sort: [{ property: "receivedAt", isAscending: false }],
             limit: 10,
           },

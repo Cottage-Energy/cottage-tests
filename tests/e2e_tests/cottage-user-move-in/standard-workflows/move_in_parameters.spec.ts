@@ -211,12 +211,12 @@ test.describe('Move In Invalid Parameter New User Electric &/or Gas', () => {
   test('Move In Parameter Inavalid Electric and Gas Company', {tag: [ '@regression6'],}, async ({moveInpage,page}) => {
     test.setTimeout(600000);
     await page.goto('/move-in?electricCompany=XXX&gasCompany=XXX',{ waitUntil: 'domcontentloaded' });
-    MoveIn = await newUserMoveInAutoPayment(page, "COSERV", null, true, true);
+    MoveIn = await newUserMoveInAutoPayment(page, "COMED", null, true, true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
     await accountQueries.checkGasAccountIdNotPresent(MoveIn.cottageUserId);
     await page.waitForTimeout(10000);
 
-    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "COSERV", null);
+    await FastmailActions.Check_Utility_Account_OTW(MoveIn.pgUserEmail, "COMED", null);
     await FastmailActions.Check_Welcome_to_PG_Lets_Get_Started(MoveIn.pgUserEmail);
   });
 

@@ -25,9 +25,11 @@ Always import from barrel exports:
 ```typescript
 import { test, expect } from '../../resources/page_objects';
 import { TIMEOUTS, TEST_TAGS } from '../../resources/constants';
-import { log } from '../../resources/utils/logger';
+import { createLogger } from '../../resources/utils/logger';
+
+const log = createLogger('FeatureName');
 ```
-Adjust relative paths based on file depth.
+Adjust relative paths based on file depth. Note: use `createLogger('Name')` — NOT `import { log }`.
 
 ## 4. Structure Template
 ```typescript
@@ -116,11 +118,14 @@ Export from `tests/resources/fixtures/database/index.ts`.
 ## 7. Rules (never violate)
 - Use `TEST_TAGS` constants for tags — never raw strings like `'@smoke'`
 - Use `TIMEOUTS` constants — never magic numbers like `30000`
-- Use structured logger — never `console.log`
+- Use structured logger (`createLogger('Name')`) — never `console.log`
 - No `any` types — import proper types from `tests/resources/types/`
 - Always include `afterEach` with cleanup logic
 - Use `test.describe.configure({ mode: "serial" })` only if tests share state
 - Use page objects for all UI interactions — never raw selectors in test files
+- **Prefer regex locators** in POMs for text-based locators — e.g., `page.getByRole('heading', { name: /Upload document/i })` instead of exact `'Upload document'`. Regex survives minor UI text changes without breaking tests.
+- **OTP-based tests**: Do NOT use `FastmailActions.Get_OTP()` for shared test accounts — it asserts `content.length === 1` which breaks when prior sessions left stale OTP emails. Instead, create a custom `getLatestOTP()` that takes the most recent email. Import `Email` type from `tests/resources/utils/fastmail/types` for proper typing.
+- **Tests sharing the same OTP user** should be combined into a single test or run sequentially with a single sign-in, to avoid triggering multiple OTP emails that pollute each other.
 
 ## 8. Validate Before Done
 After creating the test (and any supporting POMs/fixtures), run a standards check:
@@ -143,7 +148,22 @@ PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/<feature>/<new_fi
 - If it fails → diagnose and fix immediately (don't leave a broken test)
 - If it depends on specific test data or environment → note the prerequisites clearly in the spec comments
 
-## 10. Next Steps
+## 10. Cleanup Artifacts
+After running the test (pass or fail), clean up generated artifacts before declaring done:
+
+1. **`test-results/` directory** — Playwright generates traces, screenshots, and videos on failure; remove after diagnosis
+2. **`.playwright-mcp/` directory** — if Playwright MCP was used to inspect UI for locators, remove session data
+3. **Local screenshots** — any PNGs taken during development/debugging in the project root
+
+```bash
+rm -rf test-results/                 # test runner artifacts
+rm -rf .playwright-mcp/              # Playwright MCP session data
+rm -f *.png                          # screenshots in project root
+```
+
+Do NOT skip cleanup — leftover artifacts bloat the repo and can be accidentally committed.
+
+## 11. Next Steps
 After the test is created and passing:
 - `/run-tests` to run it in CI or with different browsers
 - `/exploratory-test` if the test revealed areas needing further investigation
@@ -152,7 +172,7 @@ After the test is created and passing:
 
 ---
 
-## 11. Tools Used
+## 12. Tools Used
 
 | Tool | Purpose |
 |------|---------|
@@ -166,3 +186,10 @@ After the test is created and passing:
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-13 (ENG-2402 Connect Flow Tests)
+- **Logger import was wrong**: Template said `import { log }` but actual codebase pattern is `import { createLogger } from '../../resources/utils/logger'` + `const log = createLogger('Name')`. Fixed in Step 3.
+- **`FastmailActions.Get_OTP()` is fragile**: Asserts `content.length === 1` which fails when prior exploratory sessions left stale OTP emails. Created custom `getLatestOTP()` that iterates `bodyValues` keys and takes the most recent match. Added to Rules.
+- **Regex locators prevent breakage**: `BillUploadPage.uploadBillHeading` broke when UI text changed from "Upload your bill" to "Upload document". Using `/Upload document/i` regex would have survived the change. Added regex preference to Rules.
+- **Combined TC-096 + TC-097**: Originally separate tests for the same non-connect user, but each triggered a new OTP causing email pollution. Combined into one test with a single sign-in. Added to Rules.
+- **`Email` type import**: `import type { Email } from '../../resources/utils/fastmail/types'` for proper typing of Fastmail API responses — avoids `any[]`.
