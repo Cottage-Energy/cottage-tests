@@ -32,10 +32,12 @@ export type MailboxQueryArgs = {
   to: string;
   subject: string;
   from: string;
+  receivedAfter?: string;
 };
 
 export type FetchEmailArgs = {
   to: string;
   subject: string;
   from: string;
+  receivedAfter?: string;
 };

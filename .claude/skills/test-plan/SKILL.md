@@ -33,6 +33,8 @@ Accept any combination of inputs — a Linear ticket is NOT required. Route by w
 
 ### Linear Ticket (optional)
 - Use `mcp__linear__get_issue` for requirements, labels, linked issues
+- **Check ticket comments**: Use `mcp__linear__list_comments` to read all comments on the ticket — comments often contain linked tickets, Figma URLs, Notion links, PR references, and contextual decisions not captured in the description
+- **Follow linked tickets**: For each linked/related ticket mentioned in comments or the description, use `mcp__linear__get_issue` to pull its context too. Related tickets often contain acceptance criteria, edge cases, and technical details that expand the test scope significantly.
 - Follow any links to Notion docs, Figma screens, or PRs from the ticket
 
 ### Conversation Context
@@ -215,7 +217,7 @@ After the test plan is approved:
 
 | Tool | Purpose |
 |------|---------|
-| **Linear MCP** | `get_issue` — pull ticket requirements and linked resources; `save_comment` — post test plan summary back to ticket |
+| **Linear MCP** | `get_issue` — pull ticket requirements and linked resources; `list_comments` — read ticket comments for linked tickets, Figma/Notion URLs, and contextual decisions; `save_comment` — post test plan summary back to ticket |
 | **GitHub MCP** | `get_pull_request`, `get_pull_request_files` — read PR diffs for code-driven planning |
 | **Figma MCP** | `get_design_context`, `get_screenshot` — extract UI components and design expectations |
 | **Supabase MCP** | `list_tables`, `execute_sql` — inspect schema, constraints, and data context for DB-related test cases |
@@ -228,3 +230,7 @@ After the test plan is approved:
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-13 (ENG-2402 Connect Account)
+- **Missed ticket comments and linked tickets**: The original test plan was built from the main ticket description + PR diff only. The user had to explicitly ask to check linked tickets (ENG-2365, ENG-2363, ENG-2370, ENG-2371, ENG-2372) which contained critical ACs that expanded the test plan from ~85 to 108 cases. Added `mcp__linear__list_comments` step and explicit "follow linked tickets" instruction to Step 1.
+- **Database context was essential**: Understanding `isConnectReady`, `isConnectAccount`, `cottageConnectUserType`, and account status fields was critical for writing accurate test preconditions. The DB context step worked well once we queried `information_schema.columns` first.

@@ -1,0 +1,72 @@
+{
+    "CON_EDISON": {
+        "address": "88 S 1st St, Brooklyn, NY 11249",
+        "utilityName": "Con Edison",
+        "isConnectReady": true
+    },
+    "COMED": {
+        "address": "808 Chicago Ave, Dixon, IL 61021",
+        "utilityName": "ComEd",
+        "isConnectReady": true
+    },
+    "NGMA": {
+        "address": "52 Plymouth St, Cambridge, MA 02141",
+        "utilityName": "National Grid MA",
+        "isConnectReady": true
+    },
+    "TX_DEREG": {
+        "address": "1301 University Ave, Lubbock, TX 79401",
+        "utilityName": "THINK ENERGY",
+        "isConnectReady": false
+    },
+    "TX_LIGHT": {
+        "address": "2900 Canton St, Dallas, TX 75226",
+        "utilityName": "THINK ENERGY",
+        "isConnectReady": false
+    },
+    "PECO": {
+        "address": "1500 Market St, Philadelphia, PA 19102",
+        "utilityName": "PECO",
+        "isConnectReady": false
+    },
+    "PSEG": {
+        "address": "80 Park Pl, Newark, NJ 07102",
+        "utilityName": "PSEG",
+        "isConnectReady": false
+    },
+    "EVERSOURCE": {
+        "address": "100 Pearl St, Hartford, CT 06103",
+        "utilityName": "Eversource",
+        "isConnectReady": false
+    },
+    "DUKE_ENERGY": {
+        "address": "550 S Tryon St, Charlotte, NC 28202",
+        "utilityName": "Duke Energy",
+        "isConnectReady": false
+    },
+    "GEORGIA_POWER": {
+        "address": "241 Ralph McGill Blvd, Atlanta, GA 30308",
+        "utilityName": "Georgia Power",
+        "isConnectReady": false
+    },
+    "FPL": {
+        "address": "700 Universe Blvd, Juno Beach, FL 33408",
+        "utilityName": "Florida Power and Light",
+        "isConnectReady": false
+    },
+    "BGE": {
+        "address": "2 Center Plz, Baltimore, MD 21201",
+        "utilityName": "Baltimore Gas and Electric",
+        "isConnectReady": false
+    },
+    "DTE": {
+        "address": "1 Energy Plz, Detroit, MI 48226",
+        "utilityName": "DTE",
+        "isConnectReady": false
+    },
+    "ORANGE_ROCKLAND": {
+        "address": "390 W Route 59, Spring Valley, NY 10977",
+        "utilityName": "Orange & Rockland",
+        "isConnectReady": false
+    }
+}

@@ -34,7 +34,7 @@ export class BillUploadPage {
         this.checkAvailabilityButton = page.getByRole('button', { name: /Check availability/i });
         
         // Upload Bill Page
-        this.uploadBillHeading = page.getByRole('heading', { name: 'Upload your bill' });
+        this.uploadBillHeading = page.getByRole('heading', { name: /Upload your bill/i });
         this.emailTextbox = page.getByRole('textbox');
         this.fileInput = page.locator('input[type="file"]');
         this.uploadBillButton = page.getByRole('button', { name: /Upload bill/i });
