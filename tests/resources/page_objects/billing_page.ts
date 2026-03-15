@@ -11,7 +11,7 @@ export class BillingPage {
     readonly Billing_Bills_History_Tab: Locator;
     readonly Billing_Payments_Tab: Locator;
 
-    readonly Billing_Make_Payment_Button: Locator;
+    readonly Billing_Pay_Bill_Button: Locator;
 
     readonly Billing_Save_Payment_Button: Locator
     readonly Billing_Success_Message: Locator
@@ -28,7 +28,7 @@ export class BillingPage {
         this.Billing_Bills_History_Tab = page.getByRole('tab', { name: /Bill.*History/ });
         this.Billing_Payments_Tab = page.getByRole('tab', { name: 'Payments' });
 
-        this.Billing_Make_Payment_Button = page.getByRole('button', { name: /Make a Payment|Pay bill/ });
+        this.Billing_Pay_Bill_Button = page.getByRole('button', { name: 'Pay bill' });
 
         this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
         this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });
@@ -36,11 +36,11 @@ export class BillingPage {
     }
 
     //methods
-    async Click_Make_Payment_Button() {
-        await expect(this.Billing_Make_Payment_Button).toBeVisible({timeout:30000});
-        await expect(this.Billing_Make_Payment_Button).toBeEnabled({timeout:30000});
-        await this.Billing_Make_Payment_Button.hover();
-        await this.Billing_Make_Payment_Button.click();
+    async Click_Pay_Bill_Button() {
+        await expect(this.Billing_Pay_Bill_Button).toBeVisible({timeout:30000});
+        await expect(this.Billing_Pay_Bill_Button).toBeEnabled({timeout:30000});
+        await this.Billing_Pay_Bill_Button.hover();
+        await this.Billing_Pay_Bill_Button.click();
     }
 
 
@@ -145,20 +145,20 @@ export class BillingPage {
         await expect(this.Billing_Outstanding_Balance).not.toContainText(message);
     }
 
-    async Check_Make_Payment_Button_Not_Visible() {
-        await expect(this.Billing_Make_Payment_Button).not.toBeVisible({timeout:10000});
+    async Check_Pay_Bill_Button_Not_Visible() {
+        await expect(this.Billing_Pay_Bill_Button).not.toBeVisible({timeout:10000});
     }
 
-    async Check_Make_Payment_Button_Visible() {
-        await expect(this.Billing_Make_Payment_Button).toBeVisible({timeout:10000});
+    async Check_Pay_Bill_Button_Visible() {
+        await expect(this.Billing_Pay_Bill_Button).toBeVisible({timeout:10000});
     }
 
-    async Check_Make_Payment_Button_Enabled() {
-        await expect(this.Billing_Make_Payment_Button).toBeEnabled({timeout:10000});
+    async Check_Pay_Bill_Button_Enabled() {
+        await expect(this.Billing_Pay_Bill_Button).toBeEnabled({timeout:10000});
     }
 
-    async Check_Make_Payment_Button_Disabled() {
-        await expect(this.Billing_Make_Payment_Button).toBeDisabled({timeout:10000});
+    async Check_Pay_Bill_Button_Disabled() {
+        await expect(this.Billing_Pay_Bill_Button).toBeDisabled({timeout:10000});
     }
 
     //Electric Bills Assertions

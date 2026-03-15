@@ -604,7 +604,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
     });
 
 
-    test('PSEG PSEG Electric Profile Added to Make Payment Button Update', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
+    test('PSEG PSEG Electric Profile Added to Pay Bill Button Update', {tag: ['@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
     
         test.setTimeout(1800000);
     
@@ -638,11 +638,11 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         const ElectricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Electric_Bill(AdminApiContext,ElectricAccountId,PGuserUsage.ElectricAmount,PGuserUsage.ElectricUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Pay_Bill_Button_Update_Electric_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId);
     });
     
 
-    test('NGMA CON-EDISON Electric & Gas Finish Account Added to Make Payment Button Update', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('NGMA CON-EDISON Electric & Gas Finish Account Added to Pay Bill Button Update', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -679,11 +679,11 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
             AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Pay_Bill_Button_Update_Electric_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, ElectricAccountId, GasAccountId);
     });
 
     
-    test('NGMA Gas Finish Account Added to Make Payment Button Update', {tag: ['@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('NGMA Gas Finish Account Added to Pay Bill Button Update', {tag: ['@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -716,7 +716,7 @@ test.describe.fixme('Invalid Bank to Valid Bank Auto Payment', () => {
         const GasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
         await AdminApi.Simulate_Gas_Bill(AdminApiContext,GasAccountId,PGuserUsage.GasAmount,PGuserUsage.GasUsage);
         await page.waitForTimeout(500)
-        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
+        await paymentUtilities.Bank_Auto_Payment_Failed_Bank_Pay_Bill_Button_Update_Gas_Bill(page, AdminApiContext, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, GasAccountId);
     });
 
 });

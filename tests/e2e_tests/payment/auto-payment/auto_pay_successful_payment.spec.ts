@@ -47,7 +47,7 @@ test.afterEach(async ({ page },testInfo) => {
 });*/
 
 
-test.describe.fixme('Valid Card Auto Payment', () => {
+test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
@@ -127,6 +127,8 @@ test.describe.fixme('Valid Card Auto Payment', () => {
     // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+    await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC, PGuserUsage.Country, PGuserUsage.Zip);
 
 
     //Payment Checks
