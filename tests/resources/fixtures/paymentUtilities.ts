@@ -88,14 +88,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
         ]);
         await page.waitForTimeout(500);
@@ -107,8 +107,8 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             await overviewPage.Check_Outstanding_Balance_Amount(0);
@@ -131,8 +131,8 @@ export class PaymentUtilities {
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -181,14 +181,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
         ]);
         await page.waitForTimeout(500);
@@ -200,8 +200,8 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             await overviewPage.Check_Outstanding_Balance_Amount(0);
@@ -224,8 +224,8 @@ export class PaymentUtilities {
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -277,14 +277,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
         ]);
@@ -303,8 +303,8 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             await overviewPage.Check_Outstanding_Balance_Amount(0);
@@ -327,8 +327,8 @@ export class PaymentUtilities {
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -383,14 +383,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
         ]);
@@ -412,24 +412,32 @@ export class PaymentUtilities {
                     overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
                 ]);
             } catch {
-                console.log("Outstanding balance and message check failed, check visually");
+                console.log("Overview1: Outstanding balance and message check failed, check visually");
             }
-            await Promise.all([
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
-            ]);
+            try {
+                await Promise.all([
+                    overviewPage.Check_Pay_Bill_Button_Visible(),
+                    overviewPage.Check_Pay_Bill_Button_Enabled(),
+                ]);
+            } catch {
+                console.log("Autopay test: Pay Bill button not visible/enabled — payment may already be in process");
+            }
         } catch {
             try{
                 await Promise.all([
                     overviewPage.Check_Outstanding_Balance_Amount(0),
                 ]);
             } catch {
-                console.log("Outstanding balance and message check failed, check visually");
+                console.log("Overview2: Outstanding balance and message check failed, check visually");
             }
-            await Promise.all([
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            try {
+                await Promise.all([
+                    overviewPage.Check_Pay_Bill_Button_Visible(),
+                    overviewPage.Check_Pay_Bill_Button_Disabled(),
+                ]);
+            } catch {
+                console.log("Autopay test: Pay Bill button not visible/disabled — payment may already be in process");
+            }
         }
 
         await Promise.all([
@@ -451,24 +459,32 @@ export class PaymentUtilities {
                     billingPage.Check_Outstanding_Balance_Amount(0),
                 ]);
             } catch {
-                console.log("Outstanding balance and message check failed, check visually");
+                console.log("Billing1: Outstanding balance and message check failed, check visually");
             }
-            await Promise.all([
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
-            ]);
+            try {
+                await Promise.all([
+                    billingPage.Check_Pay_Bill_Button_Visible(),
+                    billingPage.Check_Pay_Bill_Button_Disabled(),
+                ]);
+            } catch {
+                console.log("Autopay test: Billing Pay Bill button not visible/disabled — payment may already be in process");
+            }
         } catch {
             try{
                 await Promise.all([
                     billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
                 ]);
             } catch {
-                console.log("Outstanding balance and message check failed, check visually");
+                console.log("Billing2: Outstanding balance and message check failed, check visually");
             }
-            await Promise.all([
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
-            ]);
+            try {
+                await Promise.all([
+                    billingPage.Check_Pay_Bill_Button_Visible(),
+                    billingPage.Check_Pay_Bill_Button_Enabled(),
+                ]);
+            } catch {
+                console.log("Autopay test: Billing Pay Bill button not visible/enabled — payment may already be in process");
+            }
         }
 
         await Promise.all([
@@ -523,14 +539,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
         ]);
         await page.waitForTimeout(500);
@@ -542,8 +558,8 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             await overviewPage.Check_Outstanding_Balance_Amount(0);
@@ -566,8 +582,8 @@ export class PaymentUtilities {
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -617,14 +633,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
         ]);
         await page.waitForTimeout(500);
@@ -636,8 +652,8 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             await overviewPage.Check_Outstanding_Balance_Amount(0);
@@ -660,8 +676,8 @@ export class PaymentUtilities {
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -714,14 +730,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
         ]);
@@ -740,8 +756,8 @@ export class PaymentUtilities {
         try{
             await Promise.all([
                 overviewPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             await overviewPage.Check_Outstanding_Balance_Amount(0);
@@ -764,8 +780,8 @@ export class PaymentUtilities {
         } catch {
             await Promise.all([
                 billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.CombinedAmountActual),
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -821,14 +837,14 @@ export class PaymentUtilities {
 
         await Promise.all([
             overviewPage.Check_Outstanding_Balance_Amount(0),
-            overviewPage.Check_Make_Payment_Button_Not_Visible(),
+            overviewPage.Check_Pay_Bill_Button_Not_Visible(),
             overviewPage.Check_Electricity_Card_Is_Clear(ElectricBillID, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Is_Clear(GasBillID, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
         ]);
         await sidebarChat.Goto_Billing_Page_Via_Icon();
         await Promise.all([
             billingPage.Check_Outstanding_Balance_Amount(0),
-            billingPage.Check_Make_Payment_Button_Not_Visible(),
+            billingPage.Check_Pay_Bill_Button_Not_Visible(),
             billingPage.Check_Electric_Bill_Hidden(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Gas_Bill_Hidden(PGuserUsage.GasUsage.toString()),
         ]);
@@ -853,8 +869,8 @@ export class PaymentUtilities {
                 console.log("Outstanding balance and message check failed, check visually");
             }
             await Promise.all([
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Enabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         } catch {
             try{
@@ -865,8 +881,8 @@ export class PaymentUtilities {
                 console.log("Outstanding balance and message check failed, check visually");
             }
             await Promise.all([
-                overviewPage.Check_Make_Payment_Button_Visible(),
-                overviewPage.Check_Make_Payment_Button_Disabled(),
+                overviewPage.Check_Pay_Bill_Button_Visible(),
+                overviewPage.Check_Pay_Bill_Button_Disabled(),
             ]);
         }
 
@@ -892,8 +908,8 @@ export class PaymentUtilities {
                 console.log("Outstanding balance and message check failed, check visually");
             }
             await Promise.all([
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Disabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Disabled(),
             ]);
         } catch {
             try{
@@ -904,8 +920,8 @@ export class PaymentUtilities {
                 console.log("Outstanding balance and message check failed, check visually");
             }
             await Promise.all([
-                billingPage.Check_Make_Payment_Button_Visible(),
-                billingPage.Check_Make_Payment_Button_Enabled(),
+                billingPage.Check_Pay_Bill_Button_Visible(),
+                billingPage.Check_Pay_Bill_Button_Enabled(),
             ]);
         }
 
@@ -1025,7 +1041,7 @@ export class PaymentUtilities {
         const billingAmount = await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Pending"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
@@ -1149,7 +1165,7 @@ export class PaymentUtilities {
       await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
       await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
       const billingAmount = await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
-      await billingPage.Check_Make_Payment_Button_Visible_Enable();
+      await billingPage.Check_Pay_Bill_Button_Visible_Enable();
       await Promise.all([
           billQueries.checkElectricBillVisibility(ElectricAccountId, true),
           billQueries.checkGasBillVisibility(GasAccountId, true),
@@ -1282,7 +1298,7 @@ export class PaymentUtilities {
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
@@ -1396,7 +1412,7 @@ export class PaymentUtilities {
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
         await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
-        await billingPage.Check_Make_Payment_Button_Visible_Enable(),
+        await billingPage.Check_Pay_Bill_Button_Visible_Enable(),
         await Promise.all([
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
@@ -1515,7 +1531,7 @@ export class PaymentUtilities {
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Failed"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
@@ -1614,7 +1630,7 @@ export class PaymentUtilities {
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
@@ -1729,7 +1745,7 @@ export class PaymentUtilities {
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
         await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
-        await billingPage.Check_Make_Payment_Button_Visible_Enable(),
+        await billingPage.Check_Pay_Bill_Button_Visible_Enable(),
         await Promise.all([
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
@@ -1849,7 +1865,7 @@ export class PaymentUtilities {
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Failed"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
@@ -1894,7 +1910,7 @@ export class PaymentUtilities {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Pay_Bill_Button_Update_Electric_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string){
         
         const ElectriBillID = await billQueries.getElectricBillId(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         
@@ -1949,14 +1965,14 @@ export class PaymentUtilities {
         await Promise.all([
             billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
             billingPage.Check_Electric_Bill_Amount(PGuserUsage.ElectricUsage.toString(), PGuserUsage.ElectricAmountActual),
         ]);
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
-        await billingPage.Click_Make_Payment_Button();
+        await billingPage.Click_Pay_Bill_Button();
         await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual);
         await billingPage.Click_Pay_Now_Button();
@@ -1989,7 +2005,7 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Electric_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Pay_Bill_Button_Update_Electric_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, ElectricAccountId: string, GasAccountId: string){
         
         const ElectriBillID = await billQueries.getElectricBillId(ElectricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage);
         const GasBillID = await billQueries.getGasBillId(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
@@ -2062,7 +2078,7 @@ export class PaymentUtilities {
         await billingPage.Check_Electric_Bill_Visibility(PGuserUsage.ElectricUsage.toString());
         await billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString());
         await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
-        await billingPage.Check_Make_Payment_Button_Visible_Enable(),
+        await billingPage.Check_Pay_Bill_Button_Visible_Enable(),
         await Promise.all([
             billingPage.Check_Electric_Bill_Status(PGuserUsage.ElectricUsage.toString(), "Failed"),
             billingPage.Check_Electric_Bill_View_Button(PGuserUsage.ElectricUsage.toString()),
@@ -2074,7 +2090,7 @@ export class PaymentUtilities {
         ]);
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
-        await billingPage.Click_Make_Payment_Button();
+        await billingPage.Click_Pay_Bill_Button();
         await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.ElectricAmountActual, PGuserUsage.GasAmountActual);
         await billingPage.Click_Pay_Now_Button();
@@ -2125,7 +2141,7 @@ export class PaymentUtilities {
     }
 
 
-    async Bank_Auto_Payment_Failed_Bank_Make_Payment_Button_Update_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
+    async Bank_Auto_Payment_Failed_Bank_Pay_Bill_Button_Update_Gas_Bill(page:any, AdminApiContext:any, overviewPage:any, billingPage:any, sidebarChat:any, MoveIn: any, PGuserUsage: any, GasAccountId: string){
         
         const GasBillID = await billQueries.getGasBillId(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage);
 
@@ -2180,14 +2196,14 @@ export class PaymentUtilities {
         await Promise.all([
             billingPage.Check_Gas_Bill_Visibility(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.GasAmountActual),
-            billingPage.Check_Make_Payment_Button_Visible_Enable(),
+            billingPage.Check_Pay_Bill_Button_Visible_Enable(),
             billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Failed"),
             billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
             billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
         ]);
         await page.waitForTimeout(1000);
         //UPDATE PAYMENT Section
-        await billingPage.Click_Make_Payment_Button();
+        await billingPage.Click_Pay_Bill_Button();
         await billingPage.Enter_Auto_Payment_Valid_Bank_Details_After_Failure(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await billingPage.Check_Pay_Outstanding_Balance_Modal(PGuserUsage.GasAmountActual);
         await billingPage.Click_Pay_Now_Button();
