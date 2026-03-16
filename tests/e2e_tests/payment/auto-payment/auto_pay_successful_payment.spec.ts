@@ -209,7 +209,7 @@ test.describe('Valid Card Auto Payment', () => {
 });
 
 
-test.describe.fixme('Valid Bank Auto Payment', () => {
+test.describe('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     
@@ -252,11 +252,10 @@ test.describe.fixme('Valid Bank Auto Payment', () => {
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         
-        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
-        // After sign-in, user is prompted to add payment method inline
-        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
+        await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.pgUserEmail, MoveIn.pgUserName);
 
         await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks_Single_Charge(page, MoveIn, PGuserUsage);
     });
@@ -310,15 +309,14 @@ test.describe.fixme('Valid Bank Auto Payment', () => {
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         
-        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
-        // After sign-in, user is prompted to add payment method inline
-        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
+        await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.pgUserEmail, MoveIn.pgUserName);
 
         await paymentUtilities.Auto_Bank_Payment_Electric_Gas_Checks_Multiple_Charge(page, MoveIn, PGuserUsage);
     });
-    
+
 
     test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
@@ -333,11 +331,10 @@ test.describe.fixme('Valid Bank Auto Payment', () => {
     
         await page.goto('/sign-in'); //TEMPORARY FIX
         
-        // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
-        // After sign-in, user is prompted to add payment method inline
-        // await finishAccountSetupPage.Enter_Auto_Payment_Valid_Bank_Details_After_Skip(MoveIn.pgUserEmail, MoveIn.pgUserName);
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
+        await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+        await overviewPage.Enter_Auto_Payment_Valid_Bank_Details(MoveIn.pgUserEmail, MoveIn.pgUserName);
 
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, MoveIn, PGuserUsage);
     });

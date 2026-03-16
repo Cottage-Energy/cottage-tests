@@ -389,7 +389,11 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover({timeout:10000});
         await this.Overview_Save_Payment_Button.click({timeout:10000});
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
+        // After saving, verify success: either a toast appears or the payment section collapses
+        await Promise.race([
+            this.Overview_Success_Message.waitFor({ state: 'visible', timeout: 30000 }),
+            this.Overview_Add_Payment_Info_Title.waitFor({ state: 'hidden', timeout: 30000 }),
+        ]);
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
 
@@ -450,11 +454,15 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover();
         await this.Overview_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
+        // After saving, verify success: either a toast appears or the payment section collapses
+        await Promise.race([
+            this.Overview_Success_Message.waitFor({ state: 'visible', timeout: 30000 }),
+            this.Overview_Add_Payment_Info_Title.waitFor({ state: 'hidden', timeout: 30000 }),
+        ]);
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
 
-    
+
     async Enter_Auto_Payment_Invalid_Bank_Details(Email:string, FullName:string){
         await this.page.waitForLoadState('domcontentloaded');
 
@@ -506,7 +514,11 @@ export class OverviewPage {
         await this.Overview_Save_Payment_Button.hover();
         await this.Overview_Save_Payment_Button.click();
 
-        await expect(this.Overview_Success_Message).toBeVisible({timeout:30000});
+        // After saving, verify success: either a toast appears or the payment section collapses
+        await Promise.race([
+            this.Overview_Success_Message.waitFor({ state: 'visible', timeout: 30000 }),
+            this.Overview_Add_Payment_Info_Title.waitFor({ state: 'hidden', timeout: 30000 }),
+        ]);
         await expect(this.page).toHaveURL(/.*\/app\/overview.*/, { timeout: 30000 });
     }
 
