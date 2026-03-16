@@ -366,9 +366,12 @@ When multiple independent test areas need exploration (e.g., different browsers,
 |---------|---------|------------|
 | Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page | `page.evaluate(() => document.querySelector('[role="alertdialog"]').remove())` |
 | `/sign-out` 404 | Direct navigation to `/sign-out` returns 404 | Clear cookies via `page.evaluate` then navigate to `/sign-in` |
-| GitHub MCP 404 | `mcp__github__get_pull_request` returns "Not Found" for cottage-nextjs PRs | Fall back to `gh pr view <number> --repo Cottage-Energy/cottage-nextjs --json ...` |
+| GitHub MCP 404 | `mcp__github__get_pull_request` or `list_pull_requests` returns "Not Found" for cottage-nextjs, pg-admin, or other repos | Fall back to `gh pr list --repo Cottage-Energy/<repo> --state merged --limit 10 --json number,title,mergedAt,author` or `gh pr view <number> --repo Cottage-Energy/<repo> --json ...` |
 | Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
 | OTP email pollution | Interactive sessions trigger OTP emails that accumulate for shared test accounts | After exploration, note which test accounts had OTPs triggered — automated tests using those accounts may fail until emails clear. Consider using `getLatestOTP()` pattern (take most recent email) instead of asserting exactly 1 email |
+| Start Service Date dialog | Every save on accounts with date discrepancy (Start Date ≠ Start Service Date) triggers "Start Service Date Change Detected" dialog | Dismiss with Cancel to avoid committing date changes. This is unrelated to the feature under test — don't mistake it for feature behavior |
+| Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `curl -X PUT "https://<project>.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer <service_role_key>" -d '{"password": "NewPassword123!"}'` |
+| Large PG Admin snapshots | `browser_snapshot` output >50KB gets truncated in tool results | Use `filename` parameter to save to file, then `grep` the file for specific patterns (dialog names, button refs, status values) |
 
 ---
 
@@ -379,3 +382,22 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Supabase column discovery**: Wasted 4+ attempts guessing column names. Added instruction to always query `information_schema.columns` first.
 - **OTP email pollution**: Two exploratory sessions triggered multiple OTP emails for the same shared test users. This caused the subsequent `/new-test` spec to fail because `Get_OTP` asserts exactly 1 email. Added to Common Blockers table.
 - **Mutually exclusive cards**: Connect ELIGIBLE users see auto-apply card; non-connect users see renewable energy card. These are exclusive — never both. This kind of business logic discovery is valuable to capture in the session summary.
+
+### Session: 2026-03-16 (ENG-2406 PG Admin Deep Testing)
+- **PG Admin inline edit patterns**: Two distinct patterns discovered — (1) **contenteditable** for free-text fields (External Signing ID, Notes): double-click cell button → type with `pressSequentially(slowly: true)` → Enter to save; (2) **combobox dropdowns** for select fields (State, Provider, Consent Method): double-click cell button → dropdown appears → click option to select. These are TanStack Table patterns, not standard HTML forms.
+- **`pressSequentially` vs `fill` for search**: `pressSequentially("Zack")` only typed "k" in a search field. `browser_fill_form` with `fill()` set the full value correctly. Prefer `fill()` for search/text inputs; reserve `pressSequentially` for contenteditable cells.
+- **GitHub MCP 404 affects pg-admin too**: Not just cottage-nextjs. Updated Common Blockers to mention all repos and the CLI fallback pattern.
+
+### Session: 2026-03-16 (ENG-2406 Full Consent Framework — 6 phases)
+- **Multi-phase sessions need explicit phase tracking**: This was the largest exploratory session to date — 6 phases, 106/108 test cases, 5 bugs filed, 14 observations. Tracking progress via TodoWrite and posting phase summaries to Linear after each phase kept the session organized. Without phase-by-phase posting, the final summary would be overwhelming.
+- **DB trigger testing is high-value**: Testing `create_community_solar_consent()` trigger directly via SQL INSERT uncovered the wildcard config gap (TC-096) that UI testing alone would miss. Always include direct DB trigger/function testing when the feature has server-side logic.
+- **Supabase admin API for password resets**: When test user passwords are unknown/expired, use `curl -X PUT "https://<project>.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer <service_role_key>" -d '{"password": "NewPassword123!"}'` instead of guessing credentials. This saved significant time in both ENG-2406 and ENG-2395.
+- **DocuSeal embed testing pattern**: For third-party embeds (DocuSeal, Documenso), the embed loads inside the app's modal/dialog. Test with valid URLs first, then invalid/null URLs to verify graceful degradation. Invalid URLs = infinite spinner (filed as bug); null URLs = graceful "documents being prepared" message.
+- **Observations table pattern**: For complex features, collecting non-bug findings (data inconsistencies, UX nits, potential issues) into a numbered observations table and posting to Linear gives the team actionable context beyond just pass/fail.
+
+### Session: 2026-03-16 (ENG-2395 NEVER_VERIFIED Status)
+- **Large snapshots need file-based approach**: PG Admin pages produce snapshots >50KB that exceed tool output limits. Using `browser_snapshot` with `filename` parameter and then `grep`-ing the saved file for specific patterns (dialog names, button refs) is much more reliable than trying to parse truncated inline output.
+- **Start Service Date dialog is a recurring red herring**: Every save on the Newark International account triggers a "Start Service Date Change Detected" dialog due to a date discrepancy (Start Date vs Start Service Date). This is NOT related to the feature under test. When testing account saves, expect and dismiss this dialog — don't mistake it for feature behavior.
+- **`CottageUser` table not directly queryable**: `SELECT FROM "CottageUser"` fails with 42P01. User data lives in `auth.users`. Use `auth.users` for user lookups, not CottageUser.
+- **Password reset dialog**: For PG Admin customer FE testing, use the Supabase admin API to set a known password rather than trying to guess or reset via UI. This was essential for testing the customer FE side of NEVER_VERIFIED.
+- **Shared Account Management**: When testing status changes on accounts with both Electric and Gas (shared utility company), a single status change in PG Admin updates BOTH accounts simultaneously. Always verify both account IDs in DB after a status change.
