@@ -124,6 +124,48 @@ After all ACs are validated, systematically expand. For each AC that passed, exp
 - Rapid double-click on submit buttons
 - Resize browser during flow (responsive breakpoints)
 
+#### Data manipulation — progressive isolation
+When an AC seems "not testable from UI," manipulate the underlying data through the real system pipeline to create exact conditions. Don't accept "blocked" too quickly.
+
+**Technique: Progressive isolation**
+1. Test with valid/normal data first → confirm baseline works
+2. Change ONE variable (e.g., NULL one bill's dueDate) → observe what changes
+3. Change ALL variables (e.g., NULL every dueDate) → expose the real fallback behavior
+4. This narrows down exactly where behavior diverges from expected
+
+**Technique: Pay-then-insert cycle** (for billing/payment scenarios)
+1. Pay all outstanding bills via UI → balance = $0
+2. Manipulate existing data via Supabase if needed (e.g., NULL dueDates)
+3. Insert new record with specific test data via Supabase, set `ingestionState = 'approved'`
+4. Wait 7 minutes for Inngest to process (sets to `processed`, recalculates balances)
+5. Verify DB state before testing — confirm ingestionState, field values, balance
+6. Reload page and test
+
+**Key rule**: Use the real system pipeline (UI payments, Inngest processing), NOT manual DB hacks to set balances or states. Manual hacks create inconsistencies between the DB and what backend APIs return.
+
+**Technique: Fetch interceptor for API payload capture**
+When you need to inspect request/response bodies for internal API calls (e.g., `generate-token`, any Next.js API route), install a `window.fetch` override via `browser_evaluate` BEFORE triggering the action:
+```javascript
+window.__interceptedCalls = [];
+const origFetch = window.fetch;
+window.fetch = async function(...args) {
+  const url = typeof args[0] === 'string' ? args[0] : args[0]?.url || '';
+  const response = await origFetch.apply(this, args);
+  if (url.includes('your-endpoint')) {
+    const clone = response.clone();
+    let body = null;
+    try { body = await clone.json(); } catch(e) {}
+    let reqBody = null;
+    if (args[1]?.body) { try { reqBody = JSON.parse(args[1].body); } catch(e) {} }
+    window.__interceptedCalls.push({ url, method: args[1]?.method || 'GET', status: response.status, requestBody: reqBody, responseBody: body });
+  }
+  return response;
+};
+```
+Then read: `window.__interceptedCalls.filter(c => c.url.includes('your-endpoint'))`
+
+This captures full payloads including request body, which `browser_network_requests` doesn't provide.
+
 #### Error/failure conditions
 - Network offline or slow (use `mcp__playwright__browser_evaluate` to simulate)
 - API returning errors (observe console/network for unexpected failures)
@@ -401,3 +443,11 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **`CottageUser` table not directly queryable**: `SELECT FROM "CottageUser"` fails with 42P01. User data lives in `auth.users`. Use `auth.users` for user lookups, not CottageUser.
 - **Password reset dialog**: For PG Admin customer FE testing, use the Supabase admin API to set a known password rather than trying to guess or reset via UI. This was essential for testing the customer FE side of NEVER_VERIFIED.
 - **Shared Account Management**: When testing status changes on accounts with both Electric and Gas (shared utility company), a single status change in PG Admin updates BOTH accounts simultaneously. Always verify both account IDs in DB after a status change.
+
+### Session: 2026-03-17 (ENG-2417 Flex Token Retest + PR #271)
+- **Fetch interceptor for API payload capture**: When you need to inspect request/response bodies for API calls (e.g., `generate-token`), install a `window.fetch` override via `browser_evaluate`. This captures full payloads including request body, which `browser_network_requests` doesn't provide. Pattern: `window.__interceptedCalls = []; const origFetch = window.fetch; window.fetch = async function(...args) { /* clone response, capture body, push to array */ };`
+- **Inngest bill processing for test data setup**: Insert bills in `ElectricBill` with `ingestionState = 'approved'` via Supabase. Inngest picks them up every ~5 mins and sets to `processed`, which updates balances naturally. Wait 7 mins to be safe. Do NOT manually set `ingestionState = 'processed'` — let Inngest do it so the full pipeline runs (balance recalculation, etc.).
+- **Balance endpoint vs Flex bill endpoint are separate code paths**: The frontend's `generate-token` payload gets `nearestDueDate` from the balance endpoint (`/property/{id}/balance`), NOT from `bill-formatter.ts`. When testing backend changes to due dates or balances, verify WHICH endpoint the frontend actually calls. Don't assume a change to one endpoint affects the other.
+- **Pay-then-insert pattern for realistic test scenarios**: Pay existing bills via UI (card payment), wait for $0 balance, then insert new bills with specific data via Supabase + Inngest. This creates controlled AC scenarios with real payment history.
+- **Session clearing between users**: For reliable sign-out via Playwright MCP, clear cookies + localStorage + sessionStorage: `document.cookie.split(";").forEach(...)` + `localStorage.clear()` + `sessionStorage.clear()`, then navigate to `/sign-in`.
+- **`dueDate` column default is `now()`**: When inserting bills with explicit `NULL` for dueDate, the NULL overrides the default. But Inngest may compute a display date (statementDate + 3 days) shown in the frontend — this is frontend-only, DB stays NULL.
