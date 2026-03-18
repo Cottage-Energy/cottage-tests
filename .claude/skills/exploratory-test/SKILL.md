@@ -124,6 +124,48 @@ After all ACs are validated, systematically expand. For each AC that passed, exp
 - Rapid double-click on submit buttons
 - Resize browser during flow (responsive breakpoints)
 
+#### Data manipulation — progressive isolation
+When an AC seems "not testable from UI," manipulate the underlying data through the real system pipeline to create exact conditions. Don't accept "blocked" too quickly.
+
+**Technique: Progressive isolation**
+1. Test with valid/normal data first → confirm baseline works
+2. Change ONE variable (e.g., NULL one bill's dueDate) → observe what changes
+3. Change ALL variables (e.g., NULL every dueDate) → expose the real fallback behavior
+4. This narrows down exactly where behavior diverges from expected
+
+**Technique: Pay-then-insert cycle** (for billing/payment scenarios)
+1. Pay all outstanding bills via UI → balance = $0
+2. Manipulate existing data via Supabase if needed (e.g., NULL dueDates)
+3. Insert new record with specific test data via Supabase, set `ingestionState = 'approved'`
+4. Wait 7 minutes for Inngest to process (sets to `processed`, recalculates balances)
+5. Verify DB state before testing — confirm ingestionState, field values, balance
+6. Reload page and test
+
+**Key rule**: Use the real system pipeline (UI payments, Inngest processing), NOT manual DB hacks to set balances or states. Manual hacks create inconsistencies between the DB and what backend APIs return.
+
+**Technique: Fetch interceptor for API payload capture**
+When you need to inspect request/response bodies for internal API calls (e.g., `generate-token`, any Next.js API route), install a `window.fetch` override via `browser_evaluate` BEFORE triggering the action:
+```javascript
+window.__interceptedCalls = [];
+const origFetch = window.fetch;
+window.fetch = async function(...args) {
+  const url = typeof args[0] === 'string' ? args[0] : args[0]?.url || '';
+  const response = await origFetch.apply(this, args);
+  if (url.includes('your-endpoint')) {
+    const clone = response.clone();
+    let body = null;
+    try { body = await clone.json(); } catch(e) {}
+    let reqBody = null;
+    if (args[1]?.body) { try { reqBody = JSON.parse(args[1].body); } catch(e) {} }
+    window.__interceptedCalls.push({ url, method: args[1]?.method || 'GET', status: response.status, requestBody: reqBody, responseBody: body });
+  }
+  return response;
+};
+```
+Then read: `window.__interceptedCalls.filter(c => c.url.includes('your-endpoint'))`
+
+This captures full payloads including request body, which `browser_network_requests` doesn't provide.
+
 #### Error/failure conditions
 - Network offline or slow (use `mcp__playwright__browser_evaluate` to simulate)
 - API returning errors (observe console/network for unexpected failures)
@@ -366,9 +408,12 @@ When multiple independent test areas need exploration (e.g., different browsers,
 |---------|---------|------------|
 | Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page | `page.evaluate(() => document.querySelector('[role="alertdialog"]').remove())` |
 | `/sign-out` 404 | Direct navigation to `/sign-out` returns 404 | Clear cookies via `page.evaluate` then navigate to `/sign-in` |
-| GitHub MCP 404 | `mcp__github__get_pull_request` returns "Not Found" for cottage-nextjs PRs | Fall back to `gh pr view <number> --repo Cottage-Energy/cottage-nextjs --json ...` |
+| GitHub MCP 404 | `mcp__github__get_pull_request` or `list_pull_requests` returns "Not Found" for cottage-nextjs, pg-admin, or other repos | Fall back to `gh pr list --repo Cottage-Energy/<repo> --state merged --limit 10 --json number,title,mergedAt,author` or `gh pr view <number> --repo Cottage-Energy/<repo> --json ...` |
 | Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
 | OTP email pollution | Interactive sessions trigger OTP emails that accumulate for shared test accounts | After exploration, note which test accounts had OTPs triggered — automated tests using those accounts may fail until emails clear. Consider using `getLatestOTP()` pattern (take most recent email) instead of asserting exactly 1 email |
+| Start Service Date dialog | Every save on accounts with date discrepancy (Start Date ≠ Start Service Date) triggers "Start Service Date Change Detected" dialog | Dismiss with Cancel to avoid committing date changes. This is unrelated to the feature under test — don't mistake it for feature behavior |
+| Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `curl -X PUT "https://<project>.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer <service_role_key>" -d '{"password": "NewPassword123!"}'` |
+| Large PG Admin snapshots | `browser_snapshot` output >50KB gets truncated in tool results | Use `filename` parameter to save to file, then `grep` the file for specific patterns (dialog names, button refs, status values) |
 
 ---
 
@@ -379,3 +424,30 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Supabase column discovery**: Wasted 4+ attempts guessing column names. Added instruction to always query `information_schema.columns` first.
 - **OTP email pollution**: Two exploratory sessions triggered multiple OTP emails for the same shared test users. This caused the subsequent `/new-test` spec to fail because `Get_OTP` asserts exactly 1 email. Added to Common Blockers table.
 - **Mutually exclusive cards**: Connect ELIGIBLE users see auto-apply card; non-connect users see renewable energy card. These are exclusive — never both. This kind of business logic discovery is valuable to capture in the session summary.
+
+### Session: 2026-03-16 (ENG-2406 PG Admin Deep Testing)
+- **PG Admin inline edit patterns**: Two distinct patterns discovered — (1) **contenteditable** for free-text fields (External Signing ID, Notes): double-click cell button → type with `pressSequentially(slowly: true)` → Enter to save; (2) **combobox dropdowns** for select fields (State, Provider, Consent Method): double-click cell button → dropdown appears → click option to select. These are TanStack Table patterns, not standard HTML forms.
+- **`pressSequentially` vs `fill` for search**: `pressSequentially("Zack")` only typed "k" in a search field. `browser_fill_form` with `fill()` set the full value correctly. Prefer `fill()` for search/text inputs; reserve `pressSequentially` for contenteditable cells.
+- **GitHub MCP 404 affects pg-admin too**: Not just cottage-nextjs. Updated Common Blockers to mention all repos and the CLI fallback pattern.
+
+### Session: 2026-03-16 (ENG-2406 Full Consent Framework — 6 phases)
+- **Multi-phase sessions need explicit phase tracking**: This was the largest exploratory session to date — 6 phases, 106/108 test cases, 5 bugs filed, 14 observations. Tracking progress via TodoWrite and posting phase summaries to Linear after each phase kept the session organized. Without phase-by-phase posting, the final summary would be overwhelming.
+- **DB trigger testing is high-value**: Testing `create_community_solar_consent()` trigger directly via SQL INSERT uncovered the wildcard config gap (TC-096) that UI testing alone would miss. Always include direct DB trigger/function testing when the feature has server-side logic.
+- **Supabase admin API for password resets**: When test user passwords are unknown/expired, use `curl -X PUT "https://<project>.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer <service_role_key>" -d '{"password": "NewPassword123!"}'` instead of guessing credentials. This saved significant time in both ENG-2406 and ENG-2395.
+- **DocuSeal embed testing pattern**: For third-party embeds (DocuSeal, Documenso), the embed loads inside the app's modal/dialog. Test with valid URLs first, then invalid/null URLs to verify graceful degradation. Invalid URLs = infinite spinner (filed as bug); null URLs = graceful "documents being prepared" message.
+- **Observations table pattern**: For complex features, collecting non-bug findings (data inconsistencies, UX nits, potential issues) into a numbered observations table and posting to Linear gives the team actionable context beyond just pass/fail.
+
+### Session: 2026-03-16 (ENG-2395 NEVER_VERIFIED Status)
+- **Large snapshots need file-based approach**: PG Admin pages produce snapshots >50KB that exceed tool output limits. Using `browser_snapshot` with `filename` parameter and then `grep`-ing the saved file for specific patterns (dialog names, button refs) is much more reliable than trying to parse truncated inline output.
+- **Start Service Date dialog is a recurring red herring**: Every save on the Newark International account triggers a "Start Service Date Change Detected" dialog due to a date discrepancy (Start Date vs Start Service Date). This is NOT related to the feature under test. When testing account saves, expect and dismiss this dialog — don't mistake it for feature behavior.
+- **`CottageUser` table not directly queryable**: `SELECT FROM "CottageUser"` fails with 42P01. User data lives in `auth.users`. Use `auth.users` for user lookups, not CottageUser.
+- **Password reset dialog**: For PG Admin customer FE testing, use the Supabase admin API to set a known password rather than trying to guess or reset via UI. This was essential for testing the customer FE side of NEVER_VERIFIED.
+- **Shared Account Management**: When testing status changes on accounts with both Electric and Gas (shared utility company), a single status change in PG Admin updates BOTH accounts simultaneously. Always verify both account IDs in DB after a status change.
+
+### Session: 2026-03-17 (ENG-2417 Flex Token Retest + PR #271)
+- **Fetch interceptor for API payload capture**: When you need to inspect request/response bodies for API calls (e.g., `generate-token`), install a `window.fetch` override via `browser_evaluate`. This captures full payloads including request body, which `browser_network_requests` doesn't provide. Pattern: `window.__interceptedCalls = []; const origFetch = window.fetch; window.fetch = async function(...args) { /* clone response, capture body, push to array */ };`
+- **Inngest bill processing for test data setup**: Insert bills in `ElectricBill` with `ingestionState = 'approved'` via Supabase. Inngest picks them up every ~5 mins and sets to `processed`, which updates balances naturally. Wait 7 mins to be safe. Do NOT manually set `ingestionState = 'processed'` — let Inngest do it so the full pipeline runs (balance recalculation, etc.).
+- **Balance endpoint vs Flex bill endpoint are separate code paths**: The frontend's `generate-token` payload gets `nearestDueDate` from the balance endpoint (`/property/{id}/balance`), NOT from `bill-formatter.ts`. When testing backend changes to due dates or balances, verify WHICH endpoint the frontend actually calls. Don't assume a change to one endpoint affects the other.
+- **Pay-then-insert pattern for realistic test scenarios**: Pay existing bills via UI (card payment), wait for $0 balance, then insert new bills with specific data via Supabase + Inngest. This creates controlled AC scenarios with real payment history.
+- **Session clearing between users**: For reliable sign-out via Playwright MCP, clear cookies + localStorage + sessionStorage: `document.cookie.split(";").forEach(...)` + `localStorage.clear()` + `sessionStorage.clear()`, then navigate to `/sign-in`.
+- **`dueDate` column default is `now()`**: When inserting bills with explicit `NULL` for dueDate, the NULL overrides the default. But Inngest may compute a display date (statementDate + 3 days) shown in the frontend — this is frontend-only, DB stays NULL.

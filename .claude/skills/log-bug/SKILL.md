@@ -53,9 +53,10 @@ If the bug involves errors:
 ## 3. Identify Suspected Cause
 
 ### Check recent PRs
-- `mcp__github__list_pull_requests` for recently merged PRs in `cottage-nextjs`
+- `mcp__github__list_pull_requests` for recently merged PRs in the **affected repo** (not just `cottage-nextjs` — could be `pg-admin`, `services`, etc.)
 - `mcp__github__get_pull_request_files` on suspicious PRs
 - If a recent PR likely introduced the bug, note it in the report as "Suspected cause: PR #X"
+- **GitHub MCP 404 workaround**: If `mcp__github__list_pull_requests` returns "Not Found" for a repo, fall back to CLI: `gh pr list --repo Cottage-Energy/<repo> --state merged --limit 10 --json number,title,mergedAt,author`
 
 ### Check recent commits
 - `mcp__github__list_commits` to find changes in the affected feature area
@@ -78,7 +79,7 @@ Use this framework to set severity consistently:
 
 ## 5. Check for Duplicates
 
-- `mcp__linear__search_issues` to search for similar bugs using keywords from the bug title and affected feature
+- `mcp__linear__list_issues` with `query` parameter to search for similar bugs using keywords from the bug title and affected feature (note: `search_issues` does not exist — use `list_issues` with `query`)
 - If a duplicate exists → suggest commenting on the existing issue with new evidence instead of creating a new one
 - If a related (but different) bug exists → note it as "Related: BUG-XXX"
 
@@ -158,12 +159,29 @@ Title: [BUG] <concise description of the bug>
 
 | Tool | Purpose |
 |------|---------|
-| **Linear MCP** | `save_issue` — create the bug report; `search_issues` — check for duplicates |
+| **Linear MCP** | `save_issue` — create the bug report; `list_issues` (with `query` param) — check for duplicates |
 | **Playwright MCP** | `browser_navigate`, `browser_click`, `browser_take_screenshot`, `browser_snapshot`, `browser_console_messages`, `browser_network_requests` — capture evidence |
 | **Supabase MCP** | `execute_sql` — capture database state as evidence |
 | **GitHub MCP** | `list_pull_requests`, `get_pull_request_files`, `list_commits` — identify suspected cause |
+| **gh CLI** (fallback) | `gh pr list --repo ...` — when GitHub MCP returns 404 for a repo |
+
+---
+
+## 10. Common Blockers & Workarounds
+
+| Blocker | Symptom | Workaround |
+|---------|---------|------------|
+| GitHub MCP 404 | `mcp__github__list_pull_requests` returns "Not Found" for pg-admin, cottage-nextjs | Use `gh pr list --repo Cottage-Energy/<repo> --state merged --limit 10 --json number,title,mergedAt,author` |
+| Linear `search_issues` missing | No `mcp__linear__search_issues` tool exists | Use `mcp__linear__list_issues` with `query` parameter instead |
+| Labels not applied | `labels: ["Bug"]` in `save_issue` results in empty labels array | Label name may need exact match or label ID — verify label exists in workspace first |
 
 ---
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-16 (ENG-2406 Consent Config — Add Row bug)
+- **`mcp__linear__search_issues` doesn't exist**: Step 5 referenced it but the actual tool is `mcp__linear__list_issues` with a `query` param. Updated step 5 and tools table.
+- **GitHub MCP 404 for pg-admin**: `mcp__github__list_pull_requests` returned "Not Found" for `Cottage-Energy/pg-admin`. Had to fall back to `gh pr list` CLI. Added to step 3 and Common Blockers table.
+- **Labels not applied via `save_issue`**: Passed `["Bug"]` but created issue had empty labels. Likely a name mismatch or MCP limitation. Added to Common Blockers.
+- **Identify the right repo**: Step 3 previously only mentioned `cottage-nextjs`. PG Admin bugs come from the `pg-admin` repo. Updated to say "affected repo".
