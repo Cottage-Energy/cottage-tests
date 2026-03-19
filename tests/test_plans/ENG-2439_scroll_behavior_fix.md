@@ -211,7 +211,7 @@ async function scrollDown(page: Page, pixels = 500) {
 | **Move-in (pgtest)** | `/move-in?shortCode=pgtest` | Shortcode `pgtest` (`useEncourageConversion=TRUE`, shorter flow) | Also has `isUtilityVerificationEnabled=TRUE` |
 | **Transfer** | `/transfer` OR active/eligible user → Services → "Transfer my service" | User with ElectricAccount status `ACTIVE` or `ELIGIBLE` | Need existing test user with active account |
 | **Light (TX dereg)** | `/move-in` → address `2900 Canton St` unit `524` | Modal appears: keep original → TX dereg, or address with ESD ID → Light flow | Light-specific address triggers the modal |
-| **Finish Registration** | API-generated URL via `POST api-dev.publicgrd.com/v1/test-partner/register` | Bearer `GlF6YW1mCDNyZjopPSWDVFhpQlWDsSJA`, building `guid-autotest`, modify email/name/date per run | URL in API response contains `?token=` and `&email=` params |
+| **Finish Registration** | API-generated URL via `POST api-dev.publicgrd.com/v1/test-partner/register` | Bearer token (see `.env`), building `guid-autotest`, modify email/name/date per run | URL in API response contains `?token=` and `&email=` params |
 
 ### Non-Billing Flows (maintainedFor IS NULL — no payment method)
 

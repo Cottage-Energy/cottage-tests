@@ -111,7 +111,7 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 | Transfer | `https://dev.publicgrid.energy/transfer` | Or: active/eligible user → Services → "Transfer my service" |
 | Light (TX dereg) | `https://dev.publicgrid.energy/move-in` | Use address `2900 Canton St` unit `524` → modal appears |
 | TX Bill Drop | Bill Upload / Verify Utilities URLs with TX zip (e.g., `75063`) | Light-enabled zip code |
-| Finish Registration | API-generated URL | `POST api-dev.publicgrd.com/v1/test-partner/register` with Bearer `GlF6YW1mCDNyZjopPSWDVFhpQlWDsSJA` |
+| Finish Registration | API-generated URL | `POST api-dev.publicgrd.com/v1/test-partner/register` with Bearer token (see `.env`) |
 
 ### Non-Billing Flows (maintainedFor IS NULL — no payment method)
 Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequired=false` + user chooses "I will manage payments myself"
