@@ -143,6 +143,19 @@ When an AC seems "not testable from UI," manipulate the underlying data through 
 
 **Key rule**: Use the real system pipeline (UI payments, Inngest processing), NOT manual DB hacks to set balances or states. Manual hacks create inconsistencies between the DB and what backend APIs return.
 
+**Technique: Inngest API trigger** (for subscription and async job testing)
+Inngest functions in `services` repo can be triggered via REST API in dev using `INNGEST_EVENT_KEY` from `.env`:
+```bash
+curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "<event-name>", "data": {}}'
+```
+Key event names:
+- `transaction-generation-trigger` — creates pending `SubscriptionMetadata` for active subscriptions
+- `subscriptions-payment-trigger` — processes pending metadata into payments
+
+**Important**: Inngest API always returns 200 regardless of whether a function handled the event. Event names must match exactly (check `services` repo source for correct names). In production these are cron-triggered, not event-triggered.
+
 **Technique: Fetch interceptor for API payload capture**
 When you need to inspect request/response bodies for internal API calls (e.g., `generate-token`, any Next.js API route), install a `window.fetch` override via `browser_evaluate` BEFORE triggering the action:
 ```javascript
@@ -396,7 +409,9 @@ Name screenshots descriptively: `{area}-{detail}-{viewport}.png`
 
 When multiple independent test areas need exploration (e.g., different browsers, different flows), use parallel sub-agents via the Agent tool:
 - Each sub-agent gets its own Playwright browser session
-- Example: one agent tests Safari rendering, another tests company override logic, a third explores transfer flow
+- **Limit to 2-3 concurrent Playwright agents** — more than that causes 429 rate limiting on dev server
+- Use additional agents for non-browser work (DB queries, code analysis) to stay productive
+- Example: one agent tests sidebar cards, another tests subscription tabs, a third runs DB verification queries
 - Consolidate findings from all agents before posting to Linear
 - This significantly reduces total exploration time
 
@@ -414,6 +429,10 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | Start Service Date dialog | Every save on accounts with date discrepancy (Start Date ≠ Start Service Date) triggers "Start Service Date Change Detected" dialog | Dismiss with Cancel to avoid committing date changes. This is unrelated to the feature under test — don't mistake it for feature behavior |
 | Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `curl -X PUT "https://<project>.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer <service_role_key>" -d '{"password": "NewPassword123!"}'` |
 | Large PG Admin snapshots | `browser_snapshot` output >50KB gets truncated in tool results | Use `filename` parameter to save to file, then `grep` the file for specific patterns (dialog names, button refs, status values) |
+| mi-session/start redirect | Onboarding pages (`/move-in`, `/transfer`, `/bill-upload`, `/finish-registration`) auto-redirect within seconds via `mi-session/start` API | Intercept fetch immediately after `browser_navigate`: `window.fetch = function(...args) { if (args[0]?.includes?.('mi-session/start') \|\| (typeof args[0] === 'string' && args[0].includes('mi-session/start'))) return new Promise(() => {}); return window.__origFetch.apply(this, args); };` (save `__origFetch` first) |
+| Short page content | Pages don't have enough content to scroll for scroll testing | `browser_resize` to width 1280, height 400 to force scrollable content |
+| Playwright MCP is Chromium-only | Cannot test Safari bfcache or Firefox behavior via MCP | Note as limitation in results. True cross-browser tests need `npx playwright test --project=Safari` via the test runner |
+| Parallel agents rate limiting | 4+ concurrent Playwright agents hitting dev server causes 429 errors | Limit to 2-3 concurrent browser agents; use extra agents for DB/code work |
 
 ---
 
@@ -451,3 +470,13 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Pay-then-insert pattern for realistic test scenarios**: Pay existing bills via UI (card payment), wait for $0 balance, then insert new bills with specific data via Supabase + Inngest. This creates controlled AC scenarios with real payment history.
 - **Session clearing between users**: For reliable sign-out via Playwright MCP, clear cookies + localStorage + sessionStorage: `document.cookie.split(";").forEach(...)` + `localStorage.clear()` + `sessionStorage.clear()`, then navigate to `/sign-in`.
 - **`dueDate` column default is `now()`**: When inserting bills with explicit `NULL` for dueDate, the NULL overrides the default. But Inngest may compute a display date (statementDate + 3 days) shown in the frontend — this is frontend-only, DB stays NULL.
+
+### Session: 2026-03-18 (ENG-2439 Scroll Behavior + ENG-2396/2399/2374 Overview Sidebar)
+- **mi-session/start auto-redirect is the #1 blocker for onboarding flow testing**: Every onboarding page (`/move-in`, `/transfer`, `/bill-upload`, `/finish-registration`) triggers `mi-session/start` API that redirects within seconds. MUST intercept fetch immediately after every `browser_navigate`. Added to Common Blockers table.
+- **Parallel agents cause rate limiting**: Running 4 Playwright MCP agents simultaneously against dev server caused 429 errors, blocking Light + Transfer flow tests. Limit to 2-3 concurrent browser agents. Updated Section 9 with this constraint.
+- **Playwright MCP is Chromium-only**: Cannot test Safari bfcache or Firefox via MCP. True cross-browser tests need the Playwright test runner with browser projects. Added to Common Blockers.
+- **Viewport height matters for scroll testing**: Many onboarding pages fit within standard viewports (812px). Must reduce to 400px height to force scrollable content and get meaningful scroll position values.
+- **CottageUsers table is plural**: `"CottageUsers"` not `"CottageUser"`. The DB verification agent wasted attempts on the wrong name. Always query `information_schema.tables` first for unfamiliar tables.
+- **PR deployment timing affects testing**: PR #1100 was merged 2h before testing but wasn't deployed to dev yet. Always check merge time vs deployment status before reporting FAILs. The non-billing FE failures were deployment timing, not code bugs.
+- **`enrollmentPreference` is NOT on ElectricAccount**: Despite code references to `enrollmentPreference`, the column doesn't exist on `ElectricAccount`. It's tracked in a separate table. Always verify column existence via `information_schema.columns` before assuming column locations from code.
+- **0 ENROLLED DR users in dev**: Only PENDING and CANCELLED. Had to manually update one record to ENROLLED status for GridRewards enrolled card testing. Test user: `pgtest+grid-007@joinpublicgrid.com`.

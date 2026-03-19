@@ -30,8 +30,12 @@ export async function Get_OTP(Email: string) {
     await expect(content.length).toEqual(1);
     const email_body = content[0].bodyValues[2].value;
     
-    const regex = /<p>Enter this code to login: (\d+)<\/p>/;
-    const match = email_body.match(regex);
+    // Try new email template: "This is your login code:" with code in a separate styled <p>
+    const newTemplateRegex = /login code[:\s]*<\/p>[\s\S]*?<p[^>]*>\s*(\d{6})\s*<\/p>/i;
+    // Fallback: old email template with inline code
+    const oldTemplateRegex = /<p>Enter this code to login: (\d+)<\/p>/;
+
+    const match = email_body.match(newTemplateRegex) || email_body.match(oldTemplateRegex);
 
     if (match) {
         const code = match[1];

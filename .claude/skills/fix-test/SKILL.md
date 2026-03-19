@@ -115,6 +115,16 @@ mcp__playwright__browser_take_screenshot → capture what the test would see
 - **Evidence**: different base URL, missing env vars, browser differences
 - **Fix**: check `playwright.config.ts`, `environmentBaseUrl.ts`, and CI workflow config
 
+### Inngest / Async Processing Issue
+- **Symptom**: test expects data that should be created by a backend job (e.g., `SubscriptionMetadata`, `Payment`, bill processing) but the data never appears
+- **Evidence**: DB query shows expected records are missing or still in `pending` state
+- **Possible causes**:
+  - Inngest function wasn't triggered or used wrong event name (API always returns 200 even if no function handles the event)
+  - Prerequisites not met: `ElectricAccount.status` not `ACTIVE`, `SubscriptionConfiguration.dayOfMonth` doesn't match today, `Subscription.startDate` not in the past
+  - Insufficient wait time — Inngest processing is async, need polling not fixed sleep
+- **Fix**: verify event name matches exactly (see `CLAUDE.md` → Inngest Integration), check prerequisites, use DB polling with timeout instead of `sleep`
+- Trigger Inngest via API: `curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" -H "Content-Type: application/json" -d '{"name": "<event-name>", "data": {}}'`
+
 ### UI Changed (App Updated)
 - **Symptom**: test was passing, now fails after a PR merged
 - **Evidence**: GitHub MCP shows a recent PR changed the component, snapshot shows new UI structure

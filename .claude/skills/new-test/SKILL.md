@@ -115,6 +115,32 @@ Export from `tests/resources/fixtures/database/index.ts`.
 
 **Test utility** — place in `tests/resources/fixtures/{name}Utilities.ts`, follow patterns from `paymentUtilities.ts` or `billUploadUtilities.ts`.
 
+## 6b. Inngest-Dependent Tests
+When tests require async backend processing (subscriptions, bill ingestion, payment processing):
+
+**Trigger Inngest functions via API** using `INNGEST_EVENT_KEY` from `.env`:
+```typescript
+import { execSync } from 'child_process';
+
+function triggerInngest(eventName: string): void {
+  const key = process.env.INNGEST_EVENT_KEY;
+  execSync(`curl -s -X POST "https://inn.gs/e/${key}" -H "Content-Type: application/json" -d '{"name": "${eventName}", "data": {}}'`);
+}
+```
+
+Key event names (dev only — production uses cron):
+- `transaction-generation-trigger` — creates pending `SubscriptionMetadata`
+- `subscriptions-payment-trigger` — processes pending metadata into payments
+
+**Wait for processing**: Inngest functions are async. After triggering, poll the DB for expected state changes (e.g., metadata status `pending` → `completed`, new `Payment` record) with a timeout. Do NOT use fixed `sleep` — use a polling helper.
+
+**Prerequisites for subscription tests**:
+- `ElectricAccount.status` must be `ACTIVE`
+- `SubscriptionConfiguration.dayOfMonth` must match today
+- `Subscription.startDate` must be at least 1 billing cycle in the past
+
+See `CLAUDE.md` → Inngest Integration for full details.
+
 ## 7. Rules (never violate)
 - Use `TEST_TAGS` constants for tags — never raw strings like `'@smoke'`
 - Use `TIMEOUTS` constants — never magic numbers like `30000`
