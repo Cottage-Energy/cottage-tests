@@ -102,8 +102,55 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 - `playwright.config.ts` — browser projects (Chromium, Firefox, Safari, Mobile) + tag-based suites (Smoke, Regression1–7)
 - `CODE_STANDARDS.md` — full coding standards reference
 
+## Onboarding Flows
+
+### Billing Flows (maintainedFor IS NOT NULL — payment method added or addable)
+| Flow | URL / Entry Point | Notes |
+|------|-------------------|-------|
+| Move-in | `https://dev.publicgrid.energy/move-in` | Add `?shortCode=<building>` for specific buildings |
+| Transfer | `https://dev.publicgrid.energy/transfer` | Or: active/eligible user → Services → "Transfer my service" |
+| Light (TX dereg) | `https://dev.publicgrid.energy/move-in` | Use address `2900 Canton St` unit `524` → modal appears |
+| TX Bill Drop | Bill Upload / Verify Utilities URLs with TX zip (e.g., `75063`) | Light-enabled zip code |
+| Finish Registration | API-generated URL | `POST api-dev.publicgrd.com/v1/test-partner/register` with Bearer `GlF6YW1mCDNyZjopPSWDVFhpQlWDsSJA` |
+
+### Non-Billing Flows (maintainedFor IS NULL — no payment method)
+Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequired=false` + user chooses "I will manage payments myself"
+
+| Flow | URL / Entry Point | Notes |
+|------|-------------------|-------|
+| Move-in (non-billing) | Same as billing move-in | Building/utility config determines path |
+| Transfer | Same as billing transfer | |
+| Utility Verification | `/move-in?shortCode=pgtest` | Building has `isUtilityVerificationEnabled=TRUE`; user clicks "I will call and setup myself" |
+| Bill Upload / Savings | `/bill-upload/connect-account` | Requires `isBillUploadAvailable=TRUE` on UtilityCompany; zip `12249` (Con Edison) |
+| Verify Utilities | `/verify-utilities/connect-account` | Same `isBillUploadAvailable` prerequisite |
+| Connect | `/connect` | |
+
+### Building Shortcodes
+| Shortcode | Description |
+|-----------|-------------|
+| `autotest` | Standard move-in (partner-branded). Default for tests |
+| `pgtest` | Short move-in (`useEncourageConversion=TRUE`, `isUtilityVerificationEnabled=TRUE`) |
+| `txtest` | TX dereg encourage conversion (`useEncourageConversion=TRUE`, ElectricCompany=`TX-DEREG`) |
+
 ## Tech Stack
-TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification)
+TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification), Inngest (async job triggers)
+
+## Inngest Integration
+Inngest functions in the `services` repo can be triggered via REST API in dev using `INNGEST_EVENT_KEY` from `.env`.
+
+```bash
+curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "<event-name>", "data": {}}'
+```
+
+| Function | Event Name (dev) | Purpose |
+|----------|-----------------|---------|
+| `trigger-transaction-generation` | `transaction-generation-trigger` | Creates pending `SubscriptionMetadata` for active subscriptions |
+| `trigger-subscriptions-payment` | `subscriptions-payment-trigger` | Processes pending metadata into payments |
+
+**Important**: Inngest API always returns 200 — doesn't mean a function handled the event. Event names must match exactly.
+**In production**: These are cron-triggered (1PM/3PM EST), not event-triggered — can only invoke manually via Inngest dashboard.
 
 ## Environments
 Environment base URLs are configured in `tests/resources/utils/environmentBaseUrl.ts`. Tests select the environment via the `ENVIRONMENT` env var.

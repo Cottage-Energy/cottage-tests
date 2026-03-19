@@ -36,8 +36,12 @@ export async function getLatestOTP(email: string): Promise<string> {
     // Use the first result (most recent due to sort by receivedAt desc)
     const emailBody = content[0].bodyValues;
     for (const key of Object.keys(emailBody)) {
-        const match = emailBody[key].value.match(/<p>Enter this code to login: (\d+)<\/p>/);
-        if (match) return match[1];
+        // Try new email template: "This is your login code:" with code in a separate styled <p>
+        const newMatch = emailBody[key].value.match(/login code[:\s]*<\/p>[\s\S]*?<p[^>]*>\s*(\d{6})\s*<\/p>/i);
+        if (newMatch) return newMatch[1];
+        // Fallback: old email template with inline code
+        const oldMatch = emailBody[key].value.match(/<p>Enter this code to login: (\d+)<\/p>/);
+        if (oldMatch) return oldMatch[1];
     }
     throw new Error(`OTP code not found in email body for ${email}`);
 }
