@@ -438,6 +438,9 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | Multi-property user | User lands on `/app/summary` instead of `/app/overview` | Click "View" on the specific property card. Users with 2+ properties always see the picker first |
 | tmpfiles.org upload output lost | `curl -s -F "file=@img.png" https://tmpfiles.org/api/v1/upload` returns empty in bash pipelines | Write to temp file: `curl -s -o /tmp/upload.json -F "file=@img.png" https://tmpfiles.org/api/v1/upload && cat /tmp/upload.json`. Direct URL: replace `tmpfiles.org/` with `tmpfiles.org/dl/` |
 | Password reuse on reset | Supabase admin password reset with same password returns 422 | Remove the dialog via `document.querySelector('[role="alertdialog"]').remove()` instead of completing the form |
+| Supabase project ID wrong | `mcp__supabase__execute_sql` returns "Forbidden resource" | Dev = `wzlacfmshqvjhjczytan`, Staging = `euztcfcsytpxtyepvdcj`. Use `mcp__supabase__list_projects` to verify. |
+| OTP needed in interactive session | Can't call `FastmailActions.Get_OTP` outside Playwright test runner | Use Node.js JMAP script: `cd cottage-tests && node -e "require('dotenv').config(); /* fetch email via axios */"` — see memory `fastmail-otp-retrieval.md` for full pattern |
+| No `jq` on Windows | bash JSON parsing fails | Use `node -e` with `JSON.parse()` instead of `curl | jq` |
 
 ---
 
@@ -498,3 +501,21 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **AC-first then data manipulation is non-negotiable**: Session started with ad-hoc screenshot collection. User corrected to follow the skill structure: pull ACs first, walk through each systematically, THEN expand to edge cases with data manipulation. The structured approach found both bugs (ENG-2465, ENG-2467) that ad-hoc testing missed.
 - **Data manipulation is the highest-value exploratory technique**: Setting `enrollmentPreference` to null/verification_only/automatic, flipping `offerRenewableEnergyDashboard`, `shouldShowDemandResponse`, `isHandleBilling` on buildings, and manipulating `SubscriptionConfiguration.dayOfMonth` + `Subscription.startDate` for Inngest — these DB-level manipulations tested more AC combinations than UI-only exploration ever could.
 - **`enrollmentPreference` lives on `CottageUsers` table**: Confirmed and used extensively for data manipulation testing. Not on ElectricAccount, not on Property.
+
+### Session: 2026-03-23 (ENG-2470 Legal Consent Links, LPOA Tracking, IP Capture)
+- **Household invitation testing**: Owner invites from `/app/household` → "Add member" → email → "Send invite". Invitation email uses Resend tracked links (`resend-links.com`). Invite URL in email uses `dev.onepublicgrid.com` NOT `dev.publicgrid.energy`. Actual page: `/resident?inviteCode={code}`. Extract inviteCode by parsing `href` containing `resident%3FinviteCode` from email HTML.
+- **TermsAndConditions table for modal testing**: `TermsAndConditions` table has `versionDate` column. Outdated-terms modal triggers when user's `termsAndConditionsDate < latest versionDate`. Null-terms modal triggers when `termsAndConditionsDate IS NULL`. Set user's date to before latest `versionDate` (currently `2026-03-20`) to trigger outdated modal.
+- **Partner theme testing pattern**: Use shortcodes `autotest` (Moved), `funnel4324534` (Funnel), `venn325435435` (Venn), `renew4543665999` (Renew). All use encouraged conversion flow (address → welcome-encouraged page). Verify link color via `window.getComputedStyle(link).color`.
+- **Password auth avoids OTP rate limiting**: When a test user has a known password (e.g., `PG#12345!`), use password sign-in instead of OTP. Multiple OTP requests to same email cause Supabase 429 rate limits that persist for minutes.
+- **Move-in "MM/DD/YYYY" field is move-in date, NOT DOB**: The date field on "About You" step is the move-in start date (must be within 3 days of today). DOB is on the identity step. Use tomorrow's date for move-in.
+- **Use `1111111111` for test phone numbers**: Prevents sending real SMS to random numbers.
+- **SSO not testable in dev**: `isSSOEnabled = false` on all utilities. `/sign-up` always goes to wait list.
+- **ALWAYS take screenshots**: User requires screenshot evidence for every AC and edge case in exploratory sessions. Post to Linear with tmpfiles.org hosting.
+
+### Session: 2026-03-23 (ENG-2430 GUID & LeaseID Parity)
+- **Fastmail OTP retrieval via Node.js**: Can fetch OTPs directly without asking the user. Pattern: `cd cottage-tests && node -e "require('dotenv').config(); /* axios JMAP calls */"` using `FASTMAIL_API_KEY` from `.env`. Search emails by `to` address, extract 6-digit code from HTML body. No `jq` on Windows — must use Node.js instead of bash+curl+jq.
+- **Supabase dev project ID**: `wzlacfmshqvjhjczytan` (NOT `jruifrkxfqmaimtodssv`). Use `mcp__supabase__list_projects` to discover correct ID if unsure.
+- **Property table join path**: `Property` has no `cottageUserID` column. Join via `ElectricAccount`: `Property.electricAccountID → ElectricAccount.id`, then `ElectricAccount.cottageUserID → auth.users.id`. Always check `information_schema.columns` first.
+- **Drop-off / resume testing pattern**: Create user with guid → complete to Payment step → clear cookies → navigate with same guid (should resume, console logs `refreshed in progress session`) → navigate with same value as leaseID (should NOT resume, starts fresh). This tests `checkIfGuidInProgress` isolation without needing complex provider state.
+- **Non-billing path is faster for exploratory**: "I will manage payments myself" skips Stripe iframe entirely. Use this when payment method isn't the thing under test — saves 30+ seconds per flow.
+- **Always test shortCode variations**: Different shortCodes trigger different flow variants (`autotest` = standard 6-step, `pgtest` = encourage conversion address-first, `txtest` = TX dereg address-first, no shortCode = generic 5-step). URL param behavior (guid/leaseID) should work identically across all. User explicitly called this out as a gap.

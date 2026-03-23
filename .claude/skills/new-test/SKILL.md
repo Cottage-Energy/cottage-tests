@@ -328,3 +328,10 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Password reset for unknown test users**: Added section 6g. Supabase admin API pattern.
 - **Inngest date alignment**: Updated section 6b with prerequisites — startDate must be 1+ month in past, dayOfMonth must match today.
 - **Patterns discovered during exploratory that should become helpers**: stripeHelpers, databaseHelpers (flag manipulation), inngestHelpers (trigger + poll), sessionHelpers (clear/switch user), passwordHelpers (admin reset). These should be created as reusable fixtures when scaffolding the first sidebar/subscription automation specs.
+
+### Session: 2026-03-23 (ENG-2470 Legal Consent Exploration → Automation Patterns)
+- **Use `1111111111` for test phone numbers**: In move-in and registration flows, always use this number to avoid sending SMS to real people. Add as a constant or in test data generators.
+- **Household invitation tests need Fastmail email parsing**: Invite URL uses Resend tracked links. Extract `inviteCode` from email HTML `href` containing `resident%3FinviteCode`. Resident page is at `/resident?inviteCode={code}`.
+- **Legal link assertions pattern**: Reusable pattern for verifying `<LegalLinks />` across flows — check 3 links (Terms, Privacy Policy, LPOA) with correct `href`, `target="_blank"`, `rel="noopener noreferrer"`. Consider a shared assertion helper.
+- **DB verification for consent fields**: After registration, verify 4 columns: `termsAndConditionsDate`, `lpoaConsentDate`, `ipAddressTerms`, `ipAddressLPOA`. Add to `userQueries.ts` or create `consentQueries.ts`.
+- **Partner theme shortcodes**: `autotest` (Moved), `funnel4324534` (Funnel), `venn325435435` (Venn), `renew4543665999` (Renew). Useful for white-label test coverage.

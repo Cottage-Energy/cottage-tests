@@ -132,6 +132,14 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | `pgtest` | Short move-in (`useEncourageConversion=TRUE`, `isUtilityVerificationEnabled=TRUE`) |
 | `txtest` | TX dereg encourage conversion (`useEncourageConversion=TRUE`, ElectricCompany=`TX-DEREG`) |
 
+### Partner Theme Shortcodes
+| Shortcode | Theme | Brand Color |
+|-----------|-------|-------------|
+| `autotest` | Moved | Blue |
+| `funnel4324534` | Funnel | Dark navy |
+| `venn325435435` | Venn | Coral/orange |
+| `renew4543665999` | Renew | Deep indigo |
+
 ## Tech Stack
 TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification), Inngest (async job triggers)
 
