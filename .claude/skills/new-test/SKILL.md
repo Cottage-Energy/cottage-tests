@@ -141,6 +141,106 @@ Key event names (dev only — production uses cron):
 
 See `CLAUDE.md` → Inngest Integration for full details.
 
+## 6c. Stripe Payment Method Entry in Tests
+When a test needs to add a payment method via the UI (subscription activation, paused-to-active flow):
+
+**Stripe iframe IS accessible via Playwright** — use `frameLocator`:
+```typescript
+// Fill Stripe card form
+const stripeFrame = page.frameLocator('iframe[title="Secure payment input frame"]');
+await stripeFrame.getByRole('textbox', { name: 'Card number' }).fill('4242424242424242');
+await stripeFrame.getByRole('textbox', { name: /Expiration/ }).fill('12 / 30');
+await stripeFrame.getByRole('textbox', { name: 'Security code' }).fill('123');
+await stripeFrame.getByLabel('Country').selectOption('United States');
+await stripeFrame.getByRole('textbox', { name: 'ZIP code' }).fill('10001');
+
+// Click save on parent page (not inside iframe)
+await page.getByRole('button', { name: 'Save details' }).click();
+```
+
+**Important**: The iframe `name` attribute changes per session (`__privateStripeFrame{N}`). Use the `title` selector which is stable: `iframe[title="Secure payment input frame"]`.
+
+## 6d. Move-in Flow Tests (Onboarding)
+When scaffolding tests for the move-in/transfer/bill-upload flows:
+
+**mi-session/start interceptor is mandatory** — without it, the page auto-redirects:
+```typescript
+// Install BEFORE the page loads content
+await page.addInitScript(() => {
+  const origFetch = window.fetch;
+  window.fetch = function(...args: Parameters<typeof fetch>) {
+    const url = typeof args[0] === 'string' ? args[0] : (args[0] as Request)?.url || '';
+    if (url.includes('mi-session/start')) {
+      return new Promise(() => {}); // Block forever
+    }
+    return origFetch.apply(window, args);
+  };
+});
+await page.goto('https://dev.publicgrid.energy/move-in?shortCode=autotest');
+```
+
+**Building flag alignment for RE tests** — all three must be true for RE option to appear:
+1. `Building.offerRenewableEnergy = true`
+2. `UtilityCompany.offerRenewableEnergy = true`
+3. `UtilityCompany.subscriptionConfigurationID` is set (not null)
+
+Use DB setup in `beforeEach` and restore in `afterEach`.
+
+## 6e. DB Flag Manipulation for Test Preconditions
+When tests need specific feature flag states, create setup/teardown helpers:
+
+```typescript
+// In beforeEach — set flags
+await supabase.from('Building').update({ isHandleBilling: false }).eq('shortCode', 'autotest');
+await supabase.from('UtilityCompany').update({ offerRenewableEnergy: true }).eq('id', 'SDGE');
+
+// In afterEach — ALWAYS restore
+await supabase.from('Building').update({ isHandleBilling: true }).eq('shortCode', 'autotest');
+await supabase.from('UtilityCompany').update({ offerRenewableEnergy: false }).eq('id', 'SDGE');
+```
+
+Key flags used in sidebar/subscription tests:
+- `Building.isHandleBilling` — billing vs non-billing
+- `Building.offerRenewableEnergyDashboard` — sidebar renewable card + recommendation
+- `Building.offerRenewableEnergy` — move-in flow RE option
+- `Building.shouldShowDemandResponse` — GridRewards recommendation
+- `UtilityCompany.offerRenewableEnergy` — RE resolution
+- `UtilityCompany.subscriptionConfigurationID` — links to pricing config
+- `CottageUsers.enrollmentPreference` — null/verification_only/automatic/manual → controls "Search for savings"
+- `SubscriptionConfiguration.dayOfMonth` — billing day (set to today for Inngest tests)
+- `Subscription.startDate` — must be in past for Inngest processing
+
+## 6f. Session Clearing Between Users
+When a test needs to switch between users:
+
+```typescript
+async function clearSession(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    document.cookie.split(';').forEach(c => {
+      document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+    });
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+  await page.goto('https://dev.publicgrid.energy/sign-in');
+}
+```
+
+## 6g. Password Reset for Test Users
+When a test needs to sign in as a user with unknown password:
+
+```typescript
+import { execSync } from 'child_process';
+
+function resetPassword(userId: string, password: string = 'PG#12345'): void {
+  const serviceKey = process.env.SUPABASE_API_KEY;
+  const url = process.env.SUPABASE_URL;
+  execSync(`curl -s -X PUT "${url}/auth/v1/admin/users/${userId}" -H "Authorization: Bearer ${serviceKey}" -H "apikey: ${serviceKey}" -H "Content-Type: application/json" -d '{"password": "${password"}'`);
+}
+```
+
+**Note**: Supabase blocks password reuse — if the user already has `PG#12345`, the reset will return 422. Handle the password reset dialog via DOM removal if needed.
+
 ## 7. Rules (never violate)
 - Use `TEST_TAGS` constants for tags — never raw strings like `'@smoke'`
 - Use `TIMEOUTS` constants — never magic numbers like `30000`
@@ -219,3 +319,19 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Regex locators prevent breakage**: `BillUploadPage.uploadBillHeading` broke when UI text changed from "Upload your bill" to "Upload document". Using `/Upload document/i` regex would have survived the change. Added regex preference to Rules.
 - **Combined TC-096 + TC-097**: Originally separate tests for the same non-connect user, but each triggered a new OTP causing email pollution. Combined into one test with a single sign-in. Added to Rules.
 - **`Email` type import**: `import type { Email } from '../../resources/utils/fastmail/types'` for proper typing of Fastmail API responses — avoids `any[]`.
+
+### Session: 2026-03-20 (ENG-2396/2399/2374/2453 Exploratory → Automation Patterns)
+- **Stripe iframe accessible via Playwright**: Added section 6c with `frameLocator` pattern. Key: use `iframe[title="Secure payment input frame"]` (stable) not `iframe[name="__privateStripeFrame{N}"]` (dynamic).
+- **mi-session/start interceptor for onboarding tests**: Added section 6d. Without it, move-in/transfer pages auto-redirect. Use `page.addInitScript()` for spec-based tests (more reliable than runtime `page.evaluate`).
+- **DB flag manipulation is essential for sidebar/subscription tests**: Added section 6e with all key flags. Building + Utility + SubscriptionConfig must all be aligned. Always restore in afterEach.
+- **Session clearing between users**: Added section 6f. Cookie + localStorage + sessionStorage clear pattern.
+- **Password reset for unknown test users**: Added section 6g. Supabase admin API pattern.
+- **Inngest date alignment**: Updated section 6b with prerequisites — startDate must be 1+ month in past, dayOfMonth must match today.
+- **Patterns discovered during exploratory that should become helpers**: stripeHelpers, databaseHelpers (flag manipulation), inngestHelpers (trigger + poll), sessionHelpers (clear/switch user), passwordHelpers (admin reset). These should be created as reusable fixtures when scaffolding the first sidebar/subscription automation specs.
+
+### Session: 2026-03-23 (ENG-2470 Legal Consent Exploration → Automation Patterns)
+- **Use `1111111111` for test phone numbers**: In move-in and registration flows, always use this number to avoid sending SMS to real people. Add as a constant or in test data generators.
+- **Household invitation tests need Fastmail email parsing**: Invite URL uses Resend tracked links. Extract `inviteCode` from email HTML `href` containing `resident%3FinviteCode`. Resident page is at `/resident?inviteCode={code}`.
+- **Legal link assertions pattern**: Reusable pattern for verifying `<LegalLinks />` across flows — check 3 links (Terms, Privacy Policy, LPOA) with correct `href`, `target="_blank"`, `rel="noopener noreferrer"`. Consider a shared assertion helper.
+- **DB verification for consent fields**: After registration, verify 4 columns: `termsAndConditionsDate`, `lpoaConsentDate`, `ipAddressTerms`, `ipAddressLPOA`. Add to `userQueries.ts` or create `consentQueries.ts`.
+- **Partner theme shortcodes**: `autotest` (Moved), `funnel4324534` (Funnel), `venn325435435` (Venn), `renew4543665999` (Renew). Useful for white-label test coverage.

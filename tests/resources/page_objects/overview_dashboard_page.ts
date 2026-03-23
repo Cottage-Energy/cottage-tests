@@ -83,7 +83,7 @@ export class OverviewPage {
 
         this.Overview_New_Terms_Modal_Title = page.getByRole('heading', { name: 'We\'ve made updates to our' });
         this.Overview_New_Terms_Modal_Content = page.getByText('We have expanded our services');
-        this.Overview_New_Terms_Modal_Agree_Checkbox = page.locator('//p[contains(text(),"I agree to the updated Terms of Service")]//preceding::button[@role="checkbox"]')
+        this.Overview_New_Terms_Modal_Agree_Checkbox = page.getByLabel(/I agree to Public Grid.*updated/i)
         this.Overview_New_Terms_Modal_Accept_Button = page.getByRole('button', { name: 'Accept' })
 
         this.Overview_Inactive_Account_Alert = page.getByText('Inactive Account: Service at');
