@@ -51,7 +51,7 @@ export class ConnectPage {
         this.getStartedButton = page.getByRole('button', { name: 'Get started' });
 
         // Legal links
-        this.letterOfAuthorizationLink = page.getByRole('link', { name: 'Letter of Authorization' });
+        this.letterOfAuthorizationLink = page.getByRole('link', { name: /LPOA/i });
         this.termsLink = page.getByRole('link', { name: 'Terms' });
 
         // Toast notifications (Sonner toast component)

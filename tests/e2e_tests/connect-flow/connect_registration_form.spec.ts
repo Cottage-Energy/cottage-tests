@@ -92,7 +92,7 @@ test.describe('Connect Registration Form — Detailed UI', () => {
         await connectPage.navigateToConnect();
 
         log.section('Verify legal links');
-        log.step(1, 'Letter of Authorization link visible');
+        log.step(1, 'LPOA link visible');
         await expect(connectPage.letterOfAuthorizationLink).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
 
         log.step(2, 'Terms link visible');
