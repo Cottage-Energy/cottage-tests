@@ -1,32 +1,35 @@
-# Test Plan: ENG-2396 + ENG-2399 + ENG-2374 — Overview Sidebar & Non-Billing Subscriptions
+# Test Plan: ENG-2396 + ENG-2399 + ENG-2374 + ENG-2453 — Overview Sidebar, Non-Billing Subscriptions & Subscription Modal CTA
 
 ## Overview
 **Tickets**:
 - [ENG-2396](https://linear.app/public-grid/issue/ENG-2396/task-overview-page-enhancements-dedicated-right-hand-sidebar) — Overview Page Enhancements: Dedicated Right-Hand Sidebar
 - [ENG-2399](https://linear.app/public-grid/issue/ENG-2399/task-non-billing-subscriptions-front-end) — Non-billing Subscriptions (Front-end) — *sub-task of ENG-2396*
 - [ENG-2374](https://linear.app/public-grid/issue/ENG-2374/task-enable-subscriptions-for-non-billing-users-services) — Enable subscriptions for non-billing users (Services)
+- [ENG-2453](https://linear.app/public-grid/issue/ENG-2453/task-add-action-in-subscription-modal) — Add action in subscription modal — *sub-task of ENG-2396*
 
 **PRs**:
 - [cottage-nextjs#1099](https://github.com/Cottage-Energy/cottage-nextjs/pull/1099) — Overview sidebar enhancement (ENG-2396, 28 files)
 - [cottage-nextjs#1100](https://github.com/Cottage-Energy/cottage-nextjs/pull/1100) — Non-billing subscriptions FE (ENG-2399, 12 files)
 - [services#281](https://github.com/Cottage-Energy/services/pull/281) — Non-billing subscriptions backend (ENG-2374, 1 file)
+- [cottage-nextjs#1107](https://github.com/Cottage-Energy/cottage-nextjs/pull/1107) — Subscription modal CTA + hover states + layout (ENG-2453, 10 files, merged 2026-03-19)
 
 **Sources**:
-- Linear: 3 tickets + implementation plan comments + DB migration + RLS policies
+- Linear: 4 tickets + implementation plan comments + DB migration + RLS policies
 - Notion: [Overview Right-Hand Side Bar](https://www.notion.so/Overview-Right-Hand-Side-Bar-312ac7268ffc800e91c7ef5c79a1d494) — sidebar visibility conditions with CHANGE notes
 - Figma: Inaccessible (file permission error) — nodes referenced: 4995:6780, 5121:11052, 4446:26247
 - DB: Schema confirmed — `Building.offerRenewableEnergyDashboard` deployed, Subscription RLS updated
+- PR diff: cottage-nextjs#1107 — full diff reviewed for ENG-2453 changes
 
-**Date**: 2026-03-18
+**Date**: 2026-03-18 (updated 2026-03-19)
 **Tester**: Christian
-**Created by**: Butch Castro (ENG-2396, ENG-2399), Cian Laguesma (ENG-2374)
+**Created by**: Butch Castro (ENG-2396, ENG-2399, ENG-2453), Cian Laguesma (ENG-2374)
 
 ---
 
 ## Context
 
 ### Why These Tickets Are Combined
-ENG-2399 is a sub-task (parentId) of ENG-2396, and ENG-2374 is the backend counterpart to ENG-2399. Together they form one feature: **rebuild the overview sidebar AND extend subscriptions to non-billing users** across frontend and backend.
+ENG-2399 and ENG-2453 are sub-tasks (parentId) of ENG-2396, and ENG-2374 is the backend counterpart to ENG-2399. Together they form one feature: **rebuild the overview sidebar AND extend subscriptions to non-billing users** across frontend and backend. ENG-2453 adds a conversion funnel to the sidebar by turning the HowRenewableWorksSheet from informational ("Got it") into actionable ("Activate offer").
 
 ### Feature Summary
 
@@ -35,6 +38,8 @@ ENG-2399 is a sub-task (parentId) of ENG-2396, and ENG-2374 is the backend count
 **ENG-2399 — Non-billing Subscriptions (FE)**: Removes `isBillingCustomer` gates across 6 files so non-billing residents (`maintainedFor = null`) can see the Subscription tab, Payment tab, renewable energy cards, and manage subscriptions. Non-billing users without a payment method see subscriptions as "paused".
 
 **ENG-2374 — Non-billing Subscriptions (Backend)**: Adds `cottageUserID` fallback in `getUserIDByPropertyID()` (services repo, `packages/users/repository.ts`) when `maintainedFor` is null, enabling subscription payment processing for non-billing users.
+
+**ENG-2453 — Subscription Modal CTA + Hover States**: Converts HowRenewableWorksSheet from informational to actionable. Adds "Activate offer" CTA that creates a subscription directly from the sheet. Replaces "Got it" with "Maybe later" + "Activate offer" dual buttons. Adds hover states (`hover:bg-purple-25`, title turns purple) to all recommendation items, making the entire row clickable. Adds neighbor count social proof ("N neighbors joined") to "Go 100% renewable" description. Replaces hardcoded "1st" billing day with dynamic `subscriptionConfiguration.dayOfMonth`. Switches layout from flexbox to CSS grid when sidebar is present, and moves FAQs below both columns.
 
 ### Key Concepts
 
@@ -56,6 +61,29 @@ ENG-2399 is a sub-task (parentId) of ENG-2396, and ENG-2374 is the backend count
 - **"Search for savings"**: `enrollmentPreference === null` OR `enrollmentPreference === 'verification_only'` *(Notion CHANGE — implementation plan comment says only null; Notion confirms both)*
 - **"Go 100% renewable"**: `building.offerRenewableEnergyDashboard = true` + `subscriptionConfiguration` exists + NO active subscription *(no isBillingCustomer gate — removed by ENG-2399)*
 - **"Get paid to save energy"**: `electricAccountID` exists + `shouldShowDemandResponse = true` + `demandResponseProviderID` exists + `isOwner = true` + DR status NOT `ENROLLED` or `PENDING_ENROLLMENT`
+
+**HowRenewableWorksSheet changes** (ENG-2453):
+- "Got it" button → "Maybe later" (secondary) + "Activate offer" (primary CTA)
+- "Activate offer" calls `handleActivateSubscription()` — creates subscription directly from the sheet
+- Billing text now dynamic: "On the {ordinal} of each month" using `subscriptionConfiguration.dayOfMonth` (was hardcoded "1st")
+- Monthly fee dynamic: `centsToDollars(subscriptionConfiguration.monthlyFee)` (was hardcoded "$3.29")
+- "Questions? Chat with us" moved inside scrollable content area
+- Processing state on "Activate offer" button during mutation
+
+**Recommendation item hover behavior** (ENG-2453):
+- Entire row is clickable (outer `<div>` has `onClick={onMoreClick}`, `cursor-pointer`)
+- Hover: background `hover:bg-purple-25`, title text `group-hover:text-purple-500`
+- "More" button changed to `<Button variant="link">`, underline removed on hover (`group-hover:no-underline`)
+
+**Neighbor count social proof** (ENG-2453):
+- "Go 100% renewable" description: `"$X.XX/mo · N neighbors joined"` when `subscriptionCount > 0`
+- Falls back to just `"$X.XX/mo"` when count is 0 or null
+- Count fetched from `/api/subscriptions/count`
+
+**Layout changes** (ENG-2453):
+- Overview switches from `flex-row` to `md:grid md:grid-cols-[400px_22.5rem]` when sidebar present
+- Sidebar gets `md:col-start-2 md:row-start-1 md:row-span-2 md:self-start` (sticky at top of grid)
+- `OverviewFAQs` moved outside the left column — now spans below both columns in the grid
 
 **Renewable energy card states** (gate: `offerRenewableEnergyDashboard` + `subscriptionConfiguration` + active subscription):
 | State | Condition | Shows |
@@ -97,6 +125,18 @@ ea."maintainedFor" = auth.uid() OR ea."cottageUserID" = auth.uid()
 **PR #281 — Non-billing backend (1 file)**:
 - `packages/users/repository.ts` — `getUserIDByPropertyID()` adds `cottageUserID` fallback
 
+**PR #1107 — Subscription modal CTA + hover states + layout (10 files)**:
+- Modified: `how-renewable-works-sheet.tsx` — "Activate offer" CTA, dynamic billing day/fee, layout restructure
+- Modified: `recommendation-item.tsx` — hover states (bg-purple-25, title color), full-row clickable, Button component
+- Modified: `recommended-for-you.tsx` — `handleActivateSubscription` integration, new props to sheet
+- Modified: `use-recommendation-items.ts` — subscriptions count query, activate mutation, resident ID, new exports
+- Modified: `overview-components.tsx` — CSS grid layout, sidebar grid positioning, FAQ repositioning
+- Modified: `renewable-card.tsx` — "Manage" and "See full impact" changed to `<Button variant="link">`
+- Modified: `ready-to-go-green-modal.tsx` — dynamic billing day ordinal (not hardcoded "1st")
+- Modified: `subscriptions/queries/options.ts` — new `getSubscriptionsCountOptions()` query
+- New: `utils/format-day-ordinal.ts` — `getDayOfMonthWord()` (day number → English word)
+- Modified: `packages/utils/src/date.ts` — `getDayOfMonthOrdinal()` (day number → "1st", "2nd", etc.)
+
 ### Discrepancies Found
 
 | Item | Implementation Comment | Notion (latest) | Resolution |
@@ -114,10 +154,17 @@ ea."maintainedFor" = auth.uid() OR ea."cottageUserID" = auth.uid()
 - Sidebar visibility/hidden logic per Notion CHANGE (CUSTOMER + move-in status)
 - Recommendation card visibility per all 3 items' rules
 - Recommendation item interactions (sheet/modal opens)
+- Recommendation item hover states and full-row clickability (ENG-2453)
 - Savings card all 7 savingsCardType states
 - Renewable energy card: paused + active states
 - GridRewards card: enrolled + pending states
 - Card priority ordering
+- HowRenewableWorksSheet: "Activate offer" CTA creates subscription from sidebar (ENG-2453)
+- HowRenewableWorksSheet: dynamic billing day and monthly fee from subscriptionConfiguration (ENG-2453)
+- "Go 100% renewable" neighbor count social proof (ENG-2453)
+- Overview layout: CSS grid + sticky sidebar + FAQs repositioning (ENG-2453)
+- ReadyToGoGreenModal: dynamic billing day (ENG-2453)
+- Button styling consistency (variant="link") across sidebar (ENG-2453)
 - Non-billing user: Subscription tab, Payment tab, dropdown menu visibility
 - Non-billing user: activate, cancel, view subscription
 - Non-billing user: paused subscription + add payment method flow
@@ -135,7 +182,7 @@ ea."maintainedFor" = auth.uid() OR ea."cottageUserID" = auth.uid()
 - `SavingsAlertsSwitchCard` removal + `'switch'` savingsCardType removal (per ticket, but needs dev confirmation)
 
 ### Prerequisites
-- All 3 PRs deployed to dev: cottage-nextjs #1099 + #1100, services #281
+- All 4 PRs deployed to dev: cottage-nextjs #1099 + #1100 + #1107, services #281
 - `Building.offerRenewableEnergyDashboard` column deployed (confirmed)
 - Subscription RLS policies updated (confirmed)
 - Test users across billing states (see Test Data)
@@ -188,8 +235,8 @@ ea."maintainedFor" = auth.uid() OR ea."cottageUserID" = auth.uid()
 | ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
 |----|-------|---------------|-------|-----------------|----------|-----------|
 | TC-030 | "Search for savings" click opens SearchForSavingsSheet | `enrollmentPreference: null`, building supports savings | 1. Sign in 2. Click "Search for savings" item | SearchForSavingsSheet dialog opens with: savings info, alerts toggle, auto-apply toggle, enrollment preference update | P1 | Yes |
-| TC-031 | "Go 100% renewable" — "More" opens HowRenewableWorksSheet | No active subscription, building has `subscriptionConfiguration` | 1. Sign in 2. Click "More" on "Go 100% renewable" | HowRenewableWorksSheet opens with: how it works, pricing from `subscriptionConfiguration.monthlyFee`, CTA button | P1 | Yes |
-| TC-032 | "Go 100% renewable" shows dynamic pricing | `subscriptionConfiguration.monthlyFee` configured | 1. Sign in 2. Check "Go 100% renewable" description | Shows "$X.XX/mo" with actual `monthlyFee` from config (NOT hardcoded $3.29) | P1 | Exploratory |
+| TC-031 | "Go 100% renewable" — click row or "More" opens HowRenewableWorksSheet | No active subscription, building has `subscriptionConfiguration` | 1. Sign in 2. Click anywhere on the "Go 100% renewable" row (or the "More" button) | HowRenewableWorksSheet opens with: how it works, dynamic billing day + fee from `subscriptionConfiguration`, "Maybe later" + "Activate offer" buttons *(updated by ENG-2453: entire row clickable, "Got it" → dual CTA)* | P1 | Yes |
+| TC-032 | "Go 100% renewable" shows dynamic pricing + neighbor count | `subscriptionConfiguration.monthlyFee` configured, neighbors have subscribed | 1. Sign in 2. Check "Go 100% renewable" description | Shows "$X.XX/mo · N neighbors joined" with actual `monthlyFee` from config and count from `/api/subscriptions/count`. Falls back to just "$X.XX/mo" when count is 0 *(updated by ENG-2453: added social proof)* | P1 | Exploratory |
 | TC-033 | "Get paid to save energy" — "More" opens DemandResponseEnrollModal | `shouldShowDemandResponse: true`, `isOwner: true`, not enrolled | 1. Sign in 2. Click "More" on "Get paid to save energy" | DemandResponseEnrollModal opens | P1 | Yes |
 
 ### 4. Status Cards (Inactive / Scheduled Move-Out)
@@ -307,6 +354,53 @@ ea."maintainedFor" = auth.uid() OR ea."cottageUserID" = auth.uid()
 | TC-140 | Billing user overview sidebar renders correctly | Billing user, various feature flags, active savings | 1. Sign in 2. Navigate to overview | Sidebar renders with correct cards — savings, recommendations, etc. match billing user's state. No visual regression from sidebar refactor | P0 | Yes |
 | TC-141 | Billing user PropertyCard shows savings header + RE section | Billing user, building supports RE | 1. Sign in 2. Navigate to overview | PropertyCard shows "Savings" header with badge + divider + RE section (both visible for billing users) | P1 | Yes |
 
+### 15. HowRenewableWorksSheet — CTA & Dynamic Content (ENG-2453)
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-160 | "Activate offer" creates subscription from sheet | User without subscription, building has `subscriptionConfiguration`, payment method on file | 1. Sign in 2. Navigate to overview 3. Click "Go 100% renewable" row 4. Click "Activate offer" in sheet | Processing spinner shows on button; subscription created; sheet closes; renewable energy card appears in sidebar (replaces recommendation item) | P0 | Yes |
+| TC-161 | "Maybe later" dismisses sheet without action | Same as TC-160 | 1. Open HowRenewableWorksSheet 2. Click "Maybe later" | Sheet closes; no subscription created; "Go 100% renewable" remains in recommendations | P0 | Yes |
+| TC-162 | "Activate offer" for user without payment method | User without subscription, NO payment method on file | 1. Sign in 2. Click "Go 100% renewable" 3. Click "Activate offer" | Subscription created in paused state; renewable card shows paused with "Add payment method" CTA (verify no error/crash) | P0 | Yes |
+| TC-163 | Dynamic billing day in sheet matches subscriptionConfiguration.dayOfMonth | `subscriptionConfiguration.dayOfMonth` set to a value (e.g., 15) | 1. Open HowRenewableWorksSheet 2. Read step 4 text | Step 4 heading: "You get charged on the {ordinal}" (e.g., "15th"). Description: "On the {word} of the month" (e.g., "fifteenth"). NOT hardcoded "1st"/"first" | P0 | Yes |
+| TC-164 | Dynamic monthly fee in sheet matches subscriptionConfiguration.monthlyFee | `subscriptionConfiguration.monthlyFee` configured (e.g., 329 cents = $3.29) | 1. Open HowRenewableWorksSheet 2. Read step 4 description | Shows "a flat $3.29 is charged" using `centsToDollars(monthlyFee)`, NOT hardcoded | P1 | Yes |
+| TC-165 | "Activate offer" processing state prevents double-click | Same as TC-160 | 1. Click "Activate offer" 2. Immediately click again while processing | Button shows spinner (`isProcessing`); second click has no effect; only one subscription created | P1 | Exploratory |
+| TC-166 | Sheet content is scrollable on mobile | Mobile viewport, HowRenewableWorksSheet open | 1. Open sheet on mobile 2. Scroll through steps content | Content area scrolls within `max-h-[60vh]` constraint; buttons ("Maybe later" + "Activate offer") remain visible below scroll area | P1 | Yes |
+| TC-167 | "Questions? Chat with us" in sheet opens chat | HowRenewableWorksSheet open | 1. Click "Questions? Chat with us" link | Chat widget opens; sheet closes (`onClick={() => onOpenChange(false)}`) | P2 | Exploratory |
+
+### 16. Recommendation Item Hover States (ENG-2453)
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-170 | Recommendation item background on hover | At least 1 recommendation item visible | 1. Hover over any recommendation item row | Row background changes to `bg-purple-25` (light purple) | P1 | Yes |
+| TC-171 | Recommendation item title color on hover | Same | 1. Hover over any recommendation item row | Title text turns `text-purple-500` | P1 | Yes |
+| TC-172 | Entire recommendation row is clickable | "Go 100% renewable" visible | 1. Click on the icon area of the row (not the "More" button) | HowRenewableWorksSheet opens (entire row has `onClick={onMoreClick}`) | P0 | Yes |
+| TC-173 | "More" button underline hidden on row hover | Recommendation item visible | 1. Hover over the row 2. Observe "More" button | "More" button loses its underline on hover (`group-hover:no-underline`) | P2 | Exploratory |
+| TC-174 | Cursor is pointer on recommendation row | Recommendation item visible | 1. Hover over any recommendation item | Cursor changes to pointer (`cursor-pointer` on row) | P2 | Exploratory |
+
+### 17. Neighbor Count Social Proof (ENG-2453)
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-175 | "Go 100% renewable" shows neighbor count when > 0 | No subscription, `/api/subscriptions/count` returns count > 0 | 1. Sign in 2. Navigate to overview 3. Check "Go 100% renewable" description | Description reads "$X.XX/mo · N neighbors joined" | P1 | Yes |
+| TC-176 | "Go 100% renewable" hides neighbor count when 0 | No subscription, `/api/subscriptions/count` returns 0 or null | 1. Sign in 2. Navigate to overview | Description reads "$X.XX/mo" only (no "neighbors joined" text) | P1 | Exploratory |
+
+### 18. Overview Layout & FAQs (ENG-2453)
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-180 | Overview uses CSS grid when sidebar present | Active user with qualifying sidebar cards, desktop viewport | 1. Sign in 2. Navigate to overview 3. Inspect layout | Layout uses `grid` with columns `[400px_22.5rem]` (not flexbox). Left content and sidebar side by side | P1 | Yes |
+| TC-181 | Sidebar is sticky at top of grid | Same as TC-180, page has enough content to scroll | 1. Scroll down the page | Sidebar stays at top of its grid area (`self-start`), left content scrolls normally | P1 | Yes |
+| TC-182 | FAQs appear below both columns | Non-billing active user (FAQs shown) or connect user with FAQs | 1. Sign in 2. Navigate to overview 3. Scroll to FAQs section | FAQs span below both left content and sidebar (not nested inside left column) | P1 | Yes |
+| TC-183 | Layout falls back to single column when no sidebar | User with no qualifying sidebar cards | 1. Sign in 2. Navigate to overview | Page renders as single column (no grid), consistent with TC-003 | P1 | Yes |
+
+### 19. Button Styling Consistency (ENG-2453)
+
+| ID | Title | Preconditions | Steps | Expected Result | Priority | Automate? |
+|----|-------|---------------|-------|-----------------|----------|-----------|
+| TC-185 | "Manage" link uses Button component styling | Active renewable subscription, sidebar visible | 1. Navigate to overview 2. Check "Manage" link on renewable card | Uses `<Button variant="link">` styling (consistent with other sidebar buttons) | P2 | Exploratory |
+| TC-186 | "See full impact" toggle uses Button component styling | Same as TC-185 | 1. Check "See full impact" / "Hide details" toggle | Uses `<Button variant="link">` styling | P2 | Exploratory |
+| TC-187 | ReadyToGoGreenModal uses dynamic billing day | User activating subscription via modal (not sidebar sheet) | 1. Trigger subscription activation modal 2. Read billing explanation text | Shows "On the {ordinal} of each month" using `subscriptionConfiguration.dayOfMonth`, NOT hardcoded "1st" | P1 | Exploratory |
+
 ---
 
 ## Database Verification
@@ -323,13 +417,13 @@ ea."maintainedFor" = auth.uid() OR ea."cottageUserID" = auth.uid()
 ## Automation Plan
 
 ### Smoke (P0 — critical path)
-TC-004, TC-005, TC-010, TC-011, TC-017, TC-022, TC-024, TC-025, TC-055, TC-060, TC-063, TC-100, TC-101, TC-104, TC-110, TC-111, TC-112, TC-113, TC-114, TC-117, TC-133, TC-134, TC-135, TC-140
+TC-004, TC-005, TC-010, TC-011, TC-017, TC-022, TC-024, TC-025, TC-055, TC-060, TC-063, TC-100, TC-101, TC-104, TC-110, TC-111, TC-112, TC-113, TC-114, TC-117, TC-133, TC-134, TC-135, TC-140, TC-160, TC-161, TC-162, TC-163, TC-172
 
 ### Regression (P1 — broader coverage)
-TC-001–TC-003, TC-006–TC-007, TC-012–TC-015, TC-019–TC-020, TC-023, TC-030–TC-031, TC-033, TC-050–TC-052, TC-054, TC-061–TC-062, TC-064, TC-066, TC-070, TC-072, TC-080–TC-081, TC-102, TC-115, TC-141
+TC-001–TC-003, TC-006–TC-007, TC-012–TC-015, TC-019–TC-020, TC-023, TC-030–TC-031, TC-033, TC-050–TC-052, TC-054, TC-061–TC-062, TC-064, TC-066, TC-070, TC-072, TC-080–TC-081, TC-102, TC-115, TC-141, TC-164, TC-166, TC-170, TC-171, TC-175, TC-180, TC-181, TC-182, TC-183, TC-187
 
 ### Exploratory Only (manual — complex state or timing)
-TC-018, TC-032, TC-040–TC-043, TC-056, TC-065, TC-067–TC-068, TC-071, TC-073–TC-074, TC-082, TC-085–TC-086, TC-103, TC-116, TC-120–TC-123, TC-130–TC-132, TC-137
+TC-018, TC-032, TC-040–TC-043, TC-056, TC-065, TC-067–TC-068, TC-071, TC-073–TC-074, TC-082, TC-085–TC-086, TC-103, TC-116, TC-120–TC-123, TC-130–TC-132, TC-137, TC-165, TC-167, TC-173, TC-174, TC-176, TC-185, TC-186
 
 ### Unit/Integration Tests (recommend to dev team)
 - TC-136: `getUserIDByPropertyID()` fallback — unit test in services repo
@@ -338,6 +432,9 @@ TC-018, TC-032, TC-040–TC-043, TC-056, TC-065, TC-067–TC-068, TC-071, TC-073
 - `use-recommendation-items` hook — all 3 items visibility matrix — component test
 - Renewable card state resolution (paused vs active) — component test
 - `savingsCardType` → sidebar card mapping — component test
+- `getDayOfMonthOrdinal()` and `getDayOfMonthWord()` — unit test for edge cases (1→"1st"/"first", 31→"31st"/"thirty-first")
+- `getSubscriptionsCountOptions()` — integration test for `/api/subscriptions/count` endpoint
+- `handleActivateSubscription` from sidebar sheet — integration test for mutation flow
 
 ---
 
@@ -412,7 +509,7 @@ SELECT * FROM "SubscriptionConfiguration" LIMIT 5;
 
 3. **Non-billing test users may be scarce** — Most dev test users are billing (`maintainedFor` set). May need to create new users via non-billing buildings or modify `maintainedFor` to null in DB.
 
-4. **Three PRs must be co-deployed** — Sidebar (PR #1099) and non-billing FE (PR #1100) are in cottage-nextjs; backend (PR #281) is in services. Testing requires all three deployed to dev simultaneously.
+4. **Four PRs must be co-deployed** — Sidebar (PR #1099), non-billing FE (PR #1100), and modal CTA (PR #1107) are in cottage-nextjs; backend (PR #281) is in services. Testing requires all four deployed to dev simultaneously. PR #1107 merged 2026-03-19.
 
 5. **Sidebar refactor is HIGH-RISK** — PR #1099 touches all 4 rendering paths in `overview-components.tsx` (28 files total). Regression risk for existing billing users is significant. Prioritize TC-140 (billing overview regression) early.
 
@@ -422,6 +519,16 @@ SELECT * FROM "SubscriptionConfiguration" LIMIT 5;
 
 8. **`offerRenewableEnergyDashboard` vs `offerRenewableEnergy`** — Two separate flags. The dashboard flag (new, defaults `true`) gates the sidebar renewable card + "Go 100% renewable" recommendation. The existing `offerRenewableEnergy` flag gates the move-in RE offer. Do not confuse them.
 
-9. **Hardcoded pricing risk** — Ticket notes HowRenewableWorksSheet "currently hardcoded $3.29 — should use dynamic `subscriptionConfiguration.monthlyFee`". TC-032 checks this explicitly.
+9. **Hardcoded pricing FIXED by ENG-2453** — PR #1107 replaces hardcoded "$3.29" and "1st" with dynamic values from `subscriptionConfiguration`. TC-163/TC-164 verify this. Also fixed in ReadyToGoGreenModal (TC-187).
 
 10. **GasAccount in RLS** — The RLS policies check both `ElectricAccount` and `GasAccount` via OR. If testing with gas-only properties, verify subscription access works through the gas path too.
+
+11. **"Activate offer" creates subscription without payment confirmation** — The CTA in HowRenewableWorksSheet calls `handleActivateSubscription` directly. If the user has no payment method, this creates a paused subscription. Verify this is intentional and no error occurs (TC-162).
+
+12. **Subscriptions count endpoint** — PR #1107 adds a new fetch to `/api/subscriptions/count`. If this endpoint doesn't exist yet or returns an error, the "N neighbors joined" text may not render or could cause a UI error. TC-175/TC-176 cover this.
+
+13. **Layout regression from flexbox → CSS grid** — PR #1107 changes all 3 rendering paths in `overview-components.tsx` from `flex-row` to `grid`. This is a broad layout change that could cause visual regressions for users with narrow browser windows, zoomed displays, or unusual viewport sizes. TC-180–TC-183 cover the happy paths.
+
+14. **Double mutation risk on "Activate offer"** — The processing state (`isActivateProcessing`) prevents double-clicks, but verify network errors or slow responses don't leave the button in a stuck processing state (TC-165).
+
+15. **`onActivateOffer` always truthy** — The sheet renders "Activate offer" conditionally with `{onActivateOffer && ...}`, but `onActivateOffer` is always passed as a prop. The button will always render. This is likely intentional but confirm there's no scenario where it should be hidden (e.g., user already subscribed but sheet is still open).
