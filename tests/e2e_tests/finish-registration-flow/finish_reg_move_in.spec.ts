@@ -48,7 +48,7 @@ test.describe('Finish Registration — Move-in E2E', () => {
   });
 
   test('API → address prefilled → company questions → identity step reached', {
-    tag: [TEST_TAGS.SMOKE, TEST_TAGS.API, TEST_TAGS.E2E],
+    tag: [TEST_TAGS.API, TEST_TAGS.E2E],
   }, async ({ finishRegistrationPage }) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     const email = testEmail('movein');
@@ -119,7 +119,7 @@ test.describe('Finish Registration — Move-in E2E', () => {
   });
 
   test('API with minimal payload → address step loads', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.API, TEST_TAGS.E2E],
+    tag: [TEST_TAGS.API, TEST_TAGS.E2E],
   }, async ({ finishRegistrationPage }) => {
     test.setTimeout(TIMEOUTS.TEST_UI);
     const email = testEmail('minimal');
@@ -147,7 +147,7 @@ test.describe('Finish Registration — Move-in E2E', () => {
   });
 
   test('API via realpage slug → finish-reg URL works', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.API, TEST_TAGS.E2E],
+    tag: [TEST_TAGS.API, TEST_TAGS.E2E],
   }, async ({ finishRegistrationPage }) => {
     test.setTimeout(TIMEOUTS.TEST_UI);
     const email = testEmail('rpslug');

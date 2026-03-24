@@ -49,7 +49,7 @@ test.describe('Finish Registration — Verification E2E', () => {
   });
 
   test('API → address → provider info → utility verification step reached', {
-    tag: [TEST_TAGS.SMOKE, TEST_TAGS.API, TEST_TAGS.E2E],
+    tag: [TEST_TAGS.API, TEST_TAGS.E2E],
   }, async ({ finishRegistrationPage }) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     const email = testEmail('full');
@@ -115,7 +115,7 @@ test.describe('Finish Registration — Verification E2E', () => {
   });
 
   test('verification flow: "I will do it later" is available', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.API, TEST_TAGS.E2E],
+    tag: [TEST_TAGS.API, TEST_TAGS.E2E],
   }, async ({ finishRegistrationPage }) => {
     test.setTimeout(TIMEOUTS.TEST_UI);
     const email = testEmail('later');
@@ -150,7 +150,7 @@ test.describe('Finish Registration — Verification E2E', () => {
   });
 
   test('verification flow: prefilled fields from API payload', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.API, TEST_TAGS.E2E],
+    tag: [TEST_TAGS.API, TEST_TAGS.E2E],
   }, async ({ finishRegistrationPage }) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     const email = testEmail('prefill');

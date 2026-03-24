@@ -94,7 +94,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── AC1: leaseID provided → used as external_lease_id ───
 
   test('AC1: leaseID at root is used as externalLeaseID', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('ac1');
@@ -129,7 +129,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── AC2: Fallback to internalID|siteId ───
 
   test('AC2: fallback uses internalID|siteId when no leaseID', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('ac2');
@@ -162,7 +162,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── AC3: Missing internalID → error ───
 
   test('AC3: no leaseID + missing internalID is rejected', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -181,7 +181,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── AC4: Missing siteId → error ───
 
   test('AC4: no leaseID + missing siteId is rejected', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -204,7 +204,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── AC5: Duplicate externalLeaseID → error ───
 
   test('AC5: duplicate leaseID is rejected', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.MEDIUM);
     const email1 = testEmail('ac5a');
@@ -235,7 +235,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── AC6: Finish-registration URL contains leaseID ───
 
   test('AC6: finish-registration URL includes leaseID param', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('ac6');
@@ -275,7 +275,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── leaseID Priority ───
 
   test('leaseID at root takes priority over fallback fields', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('priority');
@@ -297,7 +297,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── Partner Slug ───
 
   test('registration via realpage partner slug succeeds', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('realpage');
@@ -319,7 +319,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── Minimal Payload ───
 
   test('minimal payload (4 required fields + leaseID) succeeds', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('minimal');
@@ -339,7 +339,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── Duplicate Email ───
 
   test('duplicate email is rejected with 409', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.MEDIUM);
     const email = testEmail('dupemail');
@@ -365,7 +365,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── Cross-Format Duplicate ───
 
   test('leaseID matching existing fallback value is rejected', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.MEDIUM);
     const email1 = testEmail('crossfmt1');
@@ -395,7 +395,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── Partial Address → No Address in URL ───
 
   test('partial address omits all address params from URL', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('partaddr');
@@ -419,7 +419,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── No Auth ───
 
   test('request without auth header is rejected', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -435,7 +435,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── moveInDate Validation ───
 
   test('moveInDate more than 3 days in past is rejected', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const pastDate = new Date();
@@ -455,7 +455,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── moveInDate Boundary (3 days ago — should pass) ───
 
   test('moveInDate exactly 3 days ago is accepted', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('3days');
@@ -476,7 +476,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── Missing Required Fields ───
 
   test('missing firstName is rejected with 400', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -490,7 +490,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   });
 
   test('invalid email format is rejected with 400', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -505,7 +505,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   });
 
   test('invalid enrollment.type is rejected with 400', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -521,7 +521,7 @@ test.describe('Register Endpoint — ENG-2407', () => {
   // ─── No Orphaned Records ───
 
   test('failed requests do not create orphaned DB records', {
-    tag: [TEST_TAGS.API, TEST_TAGS.REGRESSION1],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = testEmail('orphan');
