@@ -1,7 +1,7 @@
 ---
 name: review-pr
 description: Review a GitHub PR to understand code changes and identify what needs testing
-user-invokable: true
+user-invocable: true
 ---
 
 # Review a PR for Testing

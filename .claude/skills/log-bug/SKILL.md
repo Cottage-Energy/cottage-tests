@@ -1,7 +1,7 @@
 ---
 name: log-bug
 description: Create a structured bug report in Linear from test findings
-user-invokable: true
+user-invocable: true
 ---
 
 # Log a Bug in Linear

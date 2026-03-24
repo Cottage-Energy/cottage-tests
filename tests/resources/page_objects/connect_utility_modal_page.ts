@@ -22,20 +22,42 @@ export class ConnectUtilityModalPage {
     readonly connectButton: Locator;
     readonly uploadBillLink: Locator;
 
+    // Connecting progress elements
+    readonly connectingHeading: Locator;
+    readonly connectingSubtext: Locator;
+
+    // Error state elements
+    readonly connectFailedHeading: Locator;
+    readonly connectFailedMessage: Locator;
+    readonly tryAgainButton: Locator;
+    readonly uploadBillFallbackButton: Locator;
+
     constructor(page: Page) {
         this.page = page;
+
+        // Scope form locators to the dialog to avoid collisions with page-level inputs
+        const dialog = page.getByRole('dialog');
 
         // Form view
         this.modalTitle = page.getByText(/Connect your account/i);
         this.providerCard = page.locator('[class*="bg-brown-50"]').first();
         this.providerDescription = page.getByText(/Enter your .+ login details/i);
-        this.emailInput = page.getByRole('textbox', { name: /email/i });
-        this.passwordInput = page.getByRole('textbox', { name: /password/i })
-            .or(page.locator('input[type="password"]'));
+        this.emailInput = dialog.locator('input[name="email"]');
+        this.passwordInput = dialog.locator('input[name="password"]');
         this.credentialSecurityNotice = page.getByText(/Credentials are protected and never stored/i);
-        this.cancelButton = page.getByRole('button', { name: /Cancel/i });
-        this.connectButton = page.getByRole('button', { name: /^Connect$/i });
+        this.cancelButton = dialog.getByRole('button', { name: /Cancel/i });
+        this.connectButton = dialog.getByRole('button', { name: /^Connect$/i });
         this.uploadBillLink = page.getByText(/Upload bill/i).last();
+
+        // Connecting progress
+        this.connectingHeading = page.getByRole('heading', { name: /Connecting your account/i });
+        this.connectingSubtext = page.getByText(/This usually takes a few seconds/i);
+
+        // Error state
+        this.connectFailedHeading = dialog.getByRole('heading', { name: /Connect failed/i });
+        this.connectFailedMessage = dialog.getByText(/email or password you entered doesn.t match/i);
+        this.tryAgainButton = dialog.getByRole('button', { name: /Try again/i });
+        this.uploadBillFallbackButton = dialog.getByRole('button', { name: /Upload bill/i });
     }
 
     /**
@@ -66,6 +88,49 @@ export class ConnectUtilityModalPage {
      */
     async clickUploadBill(): Promise<void> {
         await this.uploadBillLink.click();
+        await this.page.waitForTimeout(TIMEOUTS.ANIMATION);
+    }
+
+    /**
+     * Fill credentials and click Connect
+     */
+    async fillCredentialsAndConnect(email: string, password: string): Promise<void> {
+        await this.emailInput.fill(email);
+        await this.passwordInput.fill(password);
+        await this.connectButton.click();
+    }
+
+    /**
+     * Verify the connecting progress view is displayed
+     */
+    async verifyConnectingView(): Promise<void> {
+        await expect(this.connectingHeading).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(this.connectingSubtext).toBeVisible({ timeout: TIMEOUTS.SHORT });
+    }
+
+    /**
+     * Verify the connect failed error view is displayed
+     */
+    async verifyConnectFailedView(): Promise<void> {
+        await expect(this.connectFailedHeading).toBeVisible({ timeout: TIMEOUTS.LONG });
+        await expect(this.connectFailedMessage).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(this.tryAgainButton).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await expect(this.uploadBillFallbackButton).toBeVisible({ timeout: TIMEOUTS.SHORT });
+    }
+
+    /**
+     * Click "Try again" on the error view to return to credential form
+     */
+    async clickTryAgain(): Promise<void> {
+        await this.tryAgainButton.click();
+        await this.page.waitForTimeout(TIMEOUTS.ANIMATION);
+    }
+
+    /**
+     * Click "Upload bill" fallback on the error view
+     */
+    async clickUploadBillFallback(): Promise<void> {
+        await this.uploadBillFallbackButton.click();
         await this.page.waitForTimeout(TIMEOUTS.ANIMATION);
     }
 

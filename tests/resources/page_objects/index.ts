@@ -11,10 +11,11 @@ export { ProfilePage } from './account_profile_page';
 export { BillUploadPage } from './bill_upload_page';
 export { ConnectPage } from './connect_page';
 export { ConnectOverviewPage } from './connect_overview_page';
-export { BillUploadModalPage } from './bill_upload_modal_page';
+export { UploadBillModalPage } from './upload_bill_modal_page';
 export { ConnectUtilityModalPage } from './connect_utility_modal_page';
 export { SidebarChat } from './sidebar_chat';
 export { SupportPage } from './support_page';
+export { FinishRegistrationPage } from './finish_registration_page';
 
 // Base fixture exports
 export { test, expect } from './base/baseFixture';

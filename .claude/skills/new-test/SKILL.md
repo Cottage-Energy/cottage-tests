@@ -1,7 +1,7 @@
 ---
 name: new-test
 description: Scaffold a new Playwright e2e test spec following project conventions
-user-invokable: true
+user-invocable: true
 ---
 
 # Create a New Test Spec
@@ -253,8 +253,11 @@ function resetPassword(userId: string, password: string = 'PG#12345'): void {
 - **OTP-based tests**: Do NOT use `FastmailActions.Get_OTP()` for shared test accounts — it asserts `content.length === 1` which breaks when prior sessions left stale OTP emails. Instead, create a custom `getLatestOTP()` that takes the most recent email. Import `Email` type from `tests/resources/utils/fastmail/types` for proper typing.
 - **Tests sharing the same OTP user** should be combined into a single test or run sequentially with a single sign-in, to avoid triggering multiple OTP emails that pollute each other.
 
-## 8. Validate Before Done
-After creating the test (and any supporting POMs/fixtures), run a standards check:
+## 8. Validate Before Done (Verification Before Completion)
+
+**Iron rule: no test is "done" without fresh, real verification evidence.** Do not claim a test works based on reasoning alone. The phrase "should pass" is banned — show output.
+
+### Standards check on all created/modified files:
 - No `any` types in any created/modified file
 - All timeouts use `TIMEOUTS` constants
 - All tags use `TEST_TAGS` constants
@@ -265,14 +268,25 @@ After creating the test (and any supporting POMs/fixtures), run a standards chec
 - No raw selectors in spec files — all through page objects
 - Check existing tests in the same feature folder for patterns to follow
 
-## 9. Run the Test
+### Anti-rationalization guards — STOP if you catch yourself thinking:
+| Thought | What to do instead |
+|---------|---------------------|
+| "The test logic looks correct, it should pass" | Run it. "Looks correct" is not evidence. |
+| "I'll skip running it — it's straightforward" | The simplest tests catch the most surprising bugs. Run it. |
+| "It failed but that's just a data issue, the test is fine" | A test that can't run is not a test. Fix the data setup. |
+| "I'll mark it as `.skip` for now and come back later" | No. Either make it pass or don't create it yet. |
+| "The POM locators match what I saw in the snapshot" | Snapshots are a moment in time. Run the test to prove they work in the full flow. |
+
+## 9. Run the Test and Show Evidence
 Always run the new test locally to verify it works before declaring done:
 ```bash
 PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/<feature>/<new_file>.spec.ts
 ```
-- If it passes → done
-- If it fails → diagnose and fix immediately (don't leave a broken test)
+- **Paste the actual test output** — pass count, duration, any warnings
+- If it passes → proceed to cleanup
+- If it fails → diagnose and fix immediately (don't leave a broken test). Return to Step 8 after fixing.
 - If it depends on specific test data or environment → note the prerequisites clearly in the spec comments
+- **After any fix attempt**, re-run from scratch — do NOT assume a code change fixed the issue without fresh evidence
 
 ## 10. Cleanup Artifacts
 After running the test (pass or fail), clean up generated artifacts before declaring done:

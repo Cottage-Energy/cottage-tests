@@ -1,7 +1,7 @@
 ---
 name: fix-test
 description: Investigate and fix a failing or flaky Playwright test
-user-invokable: true
+user-invocable: true
 ---
 
 # Fix a Failing Test
@@ -86,7 +86,45 @@ mcp__playwright__browser_take_screenshot → capture what the test would see
 
 ---
 
-## 4. Diagnose the Root Cause
+## 4. Diagnose the Root Cause (4-Phase Systematic Debugging)
+
+Follow this structured methodology — do NOT skip phases or jump to "guess and check" fixes.
+
+### Phase 1: Root Cause Investigation
+Gather facts before forming any hypothesis:
+- What EXACTLY does the error say? (copy the full message, not a paraphrase)
+- What is the ACTUAL state of the app/DB right now? (snapshot, query — not assumptions)
+- When did it LAST pass? What changed between then and now?
+- Is it reproducible 100% of the time, or intermittent?
+
+### Phase 2: Pattern Analysis
+Look for patterns across this failure and related context:
+- Does this failure match any known category below?
+- Have other tests in the same feature area started failing too?
+- Is the failure environment-specific (CI only, local only, specific browser)?
+- Does the timing correlate with a deploy, PR merge, or data change?
+
+### Phase 3: Hypothesis Testing
+Form a specific, testable hypothesis — then prove it before coding a fix:
+- State: "The failure is caused by [X] because [evidence Y]"
+- Test: verify the hypothesis with a targeted action (snapshot, DB query, network check)
+- If disproven → return to Phase 1, gather more evidence. Do NOT try another random fix.
+
+### Phase 4: Implementation
+Only after the root cause is confirmed should you apply a fix. See Step 5 for fix patterns.
+
+**Anti-rationalization guards — STOP if you catch yourself thinking:**
+| Thought | What to do instead |
+|---------|---------------------|
+| "Let me just try this quick fix and see if it works" | Form a hypothesis first. What specifically should this fix change? |
+| "It's probably a timing issue, let me add a wait" | Prove it — snapshot the page at the failure point. Is it actually still loading? |
+| "I'll add a retry, that should handle it" | Retries mask root causes. Diagnose why it fails in the first place. |
+| "The test is flaky, let me mark it as skip" | Skipping is not fixing. Find the actual instability. |
+| "It works now after I re-ran it" | Intermittent ≠ fixed. Find what makes it intermittent. |
+
+---
+
+### Common Failure Categories
 
 ### Flaky Locator
 - **Symptom**: element not found intermittently
@@ -159,12 +197,16 @@ mcp__playwright__browser_take_screenshot → capture what the test would see
 
 ---
 
-## 6. Verify the Fix
+## 6. Verify the Fix (Verification Before Completion)
 
-### Run the fixed test locally
+**Iron rule: no fix is "done" without fresh, real verification evidence.** Do not claim success based on reasoning alone. The phrase "should work" is banned — show output.
+
+### Run the fixed test locally and show the result
 ```bash
 PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/path/to/file.spec.ts
 ```
+- Paste the actual pass/fail output — not "it passed" without evidence
+- If it fails → return to Phase 1 (Step 4). Do NOT re-run hoping it passes.
 
 ### Run related tests to check for regressions
 - If you changed a page object, run all tests that use it
@@ -172,6 +214,13 @@ PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/path/to/file.spec
 ```bash
 PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/<feature>/
 ```
+- Show the suite result. A fix that breaks other tests is not a fix.
+
+### Confirm root cause was actually addressed
+- Re-check the evidence from Phase 1: is the original condition that caused the failure now resolved?
+- If you changed a locator → snapshot the live app and confirm the new locator matches
+- If you fixed data setup → query the DB and confirm state is correct
+- If you fixed timing → explain what specific race condition is now handled
 
 ### Standards check on all modified files
 - No `any` types

@@ -5,6 +5,9 @@
 // Database queries (modular)
 export * from './database';
 
+// API test helpers
+export { RegisterApi } from './api';
+
 // Move-in flows (modular)  
 export * from './moveIn';
 

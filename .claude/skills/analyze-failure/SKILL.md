@@ -1,7 +1,7 @@
 ---
 name: analyze-failure
 description: Analyze test failures from CI/local runs, classify root cause, and recommend next steps
-user-invokable: true
+user-invocable: true
 ---
 
 # Analyze Test Failures

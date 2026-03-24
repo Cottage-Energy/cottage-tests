@@ -1,7 +1,7 @@
 ---
 name: test-plan
 description: Generate a structured test plan from a ticket, PR, or feature description
-user-invokable: true
+user-invocable: true
 ---
 
 # Generate a Test Plan
@@ -223,6 +223,7 @@ After the test plan is approved:
 | **Supabase MCP** | `list_tables`, `execute_sql` — inspect schema, constraints, and data context for DB-related test cases |
 | **Playwright MCP** | `browser_navigate`, `browser_snapshot`, `browser_take_screenshot` — peek at live app to ground test cases in reality |
 | `WebFetch` | Fetch Notion page content (interim until Notion MCP auth) |
+| **Exa MCP** | `web_search_exa` — search for testing patterns, edge cases, and domain context; `get_code_context_exa` — find code examples for similar test scenarios; `crawling_exa` — fetch and parse external documentation URLs |
 | `Glob`, `Grep` | Find existing test coverage in the repo |
 | `Write` | Save the test plan to `tests/test_plans/` |
 

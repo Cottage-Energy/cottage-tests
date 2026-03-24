@@ -1,7 +1,7 @@
 ---
 name: exploratory-test
 description: Investigate behavior, reproduce bugs, and validate edge cases — interactively or via scaffolded specs
-user-invokable: true
+user-invocable: true
 ---
 
 # Exploratory Test

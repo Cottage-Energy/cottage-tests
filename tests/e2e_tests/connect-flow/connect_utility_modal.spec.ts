@@ -28,7 +28,7 @@ const log = createLogger('ConnectUtilityModal');
  * - TC-014: Credential security notice visible (Con Edison)
  * - TC-015: Cancel and Connect button layout (Con Edison)
  * - TC-016: "Upload bill" alternative link visible (ComEd)
- * - TC-017: "Upload bill" switches to bill upload modal (National Grid MA)
+ * - TC-017: "Upload bill" switches to upload bill modal (National Grid MA)
  */
 
 const conEdison = connectData.CON_EDISON;
@@ -180,9 +180,9 @@ test.describe('Connect Utility Modal — Form View', () => {
         log.info('TC-016 PASS (ComEd): Upload bill link visible in connect modal');
     });
 
-    test('TC-017: "Upload bill" switches to bill upload modal (National Grid MA)', {
+    test('TC-017: "Upload bill" switches to upload bill modal (National Grid MA)', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, connectUtilityModalPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, connectUtilityModalPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore National Grid MA session and navigate to overview');
@@ -198,10 +198,10 @@ test.describe('Connect Utility Modal — Form View', () => {
         log.section('Click "Upload bill" in connect modal');
         await connectUtilityModalPage.clickUploadBill();
 
-        log.section('Verify bill upload modal opens');
-        await expect(billUploadModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
-        await expect(billUploadModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        log.section('Verify upload bill modal opens');
+        await expect(uploadBillModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(uploadBillModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.SHORT });
 
-        log.info('TC-017 PASS (National Grid MA): Upload bill switches to bill upload modal');
+        log.info('TC-017 PASS (National Grid MA): Upload bill switches to upload bill modal');
     });
 });

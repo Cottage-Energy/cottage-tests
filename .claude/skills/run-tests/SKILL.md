@@ -1,7 +1,7 @@
 ---
 name: run-tests
 description: Run tests locally, trigger CI runs, or interactively walk through flows via Playwright MCP
-user-invokable: true
+user-invocable: true
 ---
 
 # Run Tests

@@ -9,8 +9,9 @@ import { ProfilePage } from '../account_profile_page';
 import { BillUploadPage } from '../bill_upload_page';
 import { ConnectPage } from '../connect_page';
 import { ConnectOverviewPage } from '../connect_overview_page';
-import { BillUploadModalPage } from '../bill_upload_modal_page';
+import { UploadBillModalPage } from '../upload_bill_modal_page';
 import { ConnectUtilityModalPage } from '../connect_utility_modal_page';
+import { FinishRegistrationPage } from '../finish_registration_page';
 
 /**
  * Page object fixtures type definition
@@ -26,8 +27,9 @@ interface PageFixtures {
   billUploadPage: BillUploadPage;
   connectPage: ConnectPage;
   connectOverviewPage: ConnectOverviewPage;
-  billUploadModalPage: BillUploadModalPage;
+  uploadBillModalPage: UploadBillModalPage;
   connectUtilityModalPage: ConnectUtilityModalPage;
+  finishRegistrationPage: FinishRegistrationPage;
 }
 
 /**
@@ -74,12 +76,16 @@ const testPages = base.extend<PageFixtures>({
     await use(new ConnectOverviewPage(page));
   },
 
-  billUploadModalPage: async ({ page }, use) => {
-    await use(new BillUploadModalPage(page));
+  uploadBillModalPage: async ({ page }, use) => {
+    await use(new UploadBillModalPage(page));
   },
 
   connectUtilityModalPage: async ({ page }, use) => {
     await use(new ConnectUtilityModalPage(page));
+  },
+
+  finishRegistrationPage: async ({ page }, use) => {
+    await use(new FinishRegistrationPage(page));
   },
 });
 
