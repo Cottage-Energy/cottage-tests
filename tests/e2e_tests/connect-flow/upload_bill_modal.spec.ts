@@ -7,12 +7,12 @@ import { createLogger } from '../../resources/utils/logger';
 import { dismissPasswordResetIfPresent, dismissESCONoticeIfPresent } from '../../resources/fixtures';
 import connectData from '../../resources/data/connect_flow-data.json';
 
-const log = createLogger('BillUploadModal');
+const log = createLogger('UploadBillModal');
 
 /**
- * Bill Upload Modal Tests — ENG-2402, Sections 7–11
+ * Upload Bill Modal Tests — ENG-2402, Sections 7–11
  *
- * Covers the bill upload modal that opens from the auto-apply savings card on the overview page.
+ * Covers the upload bill modal that opens from the auto-apply savings card on the overview page.
  *
  * Setup: Registers a NEW user via /connect with ComEd address.
  * Auth: Saves browser storageState after registration and restores it in each test.
@@ -113,7 +113,7 @@ test.describe('Bill Upload Modal', () => {
 
     test('TC-046 + TC-047 + TC-049: Modal idle view — title, drop zone, and button layout', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore session and navigate to overview');
@@ -124,29 +124,29 @@ test.describe('Bill Upload Modal', () => {
         await dismissESCONoticeIfPresent(page);
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
-        log.section('Open bill upload modal');
+        log.section('Open upload bill modal');
         await expect(connectOverviewPage.uploadBillButton).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
         await connectOverviewPage.uploadBillButton.click();
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         log.step(1, 'TC-046: Modal title reads "Upload document"');
-        await expect(billUploadModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(uploadBillModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
 
         log.step(2, 'TC-047: Drop zone text visible');
-        await expect(billUploadModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.SHORT });
-        await expect(billUploadModalPage.dropZoneDragText).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await expect(uploadBillModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await expect(uploadBillModalPage.dropZoneDragText).toBeVisible({ timeout: TIMEOUTS.SHORT });
 
         log.step(3, 'TC-049: Cancel and Upload buttons visible, Upload disabled');
-        await expect(billUploadModalPage.cancelButton).toBeVisible({ timeout: TIMEOUTS.SHORT });
-        await expect(billUploadModalPage.uploadButton).toBeVisible({ timeout: TIMEOUTS.SHORT });
-        await billUploadModalPage.verifyUploadButtonDisabled();
+        await expect(uploadBillModalPage.cancelButton).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await expect(uploadBillModalPage.uploadButton).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await uploadBillModalPage.verifyUploadButtonDisabled();
 
         log.info('TC-046 + TC-047 + TC-049 PASS');
     });
 
     test('TC-050: "Connect account" alternative link visible', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore session and open modal');
@@ -160,14 +160,14 @@ test.describe('Bill Upload Modal', () => {
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         log.section('Verify "Connect account" link');
-        await billUploadModalPage.verifyConnectAccountLinkVisible();
+        await uploadBillModalPage.verifyConnectAccountLinkVisible();
 
         log.info('TC-050 PASS: Connect account alternative link visible');
     });
 
     test('TC-057 + TC-059 + TC-061: Ready view — title, re-upload link, upload enabled', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore session and open modal');
@@ -181,23 +181,23 @@ test.describe('Bill Upload Modal', () => {
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         log.section('Select a file');
-        await billUploadModalPage.selectFile(SAMPLE_PDF);
+        await uploadBillModalPage.selectFile(SAMPLE_PDF);
 
         log.step(1, 'TC-057: Title still reads "Upload document"');
-        await expect(billUploadModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(uploadBillModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
 
         log.step(2, 'TC-059: Re-upload link visible');
-        await expect(billUploadModalPage.reUploadLink).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await expect(uploadBillModalPage.reUploadLink).toBeVisible({ timeout: TIMEOUTS.SHORT });
 
         log.step(3, 'TC-061: Upload button is now enabled');
-        await billUploadModalPage.verifyUploadButtonEnabled();
+        await uploadBillModalPage.verifyUploadButtonEnabled();
 
         log.info('TC-057 + TC-059 + TC-061 PASS');
     });
 
     test('TC-058: File size NOT displayed in ready view', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
-    }, async ({ page, connectOverviewPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore session and open modal');
@@ -211,7 +211,7 @@ test.describe('Bill Upload Modal', () => {
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         log.section('Select a file and verify no file size');
-        await billUploadModalPage.selectFile(SAMPLE_PDF);
+        await uploadBillModalPage.selectFile(SAMPLE_PDF);
 
         // File size patterns like "1.2 MB", "500 KB", etc should NOT be visible
         const fileSizePattern = page.getByText(/\d+\.?\d*\s*(KB|MB|GB)/i);
@@ -222,7 +222,7 @@ test.describe('Bill Upload Modal', () => {
 
     test('TC-060: Re-upload resets to idle view', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore session and open modal');
@@ -236,14 +236,14 @@ test.describe('Bill Upload Modal', () => {
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
         log.section('Select file then click re-upload');
-        await billUploadModalPage.selectFile(SAMPLE_PDF);
-        await expect(billUploadModalPage.reUploadLink).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await uploadBillModalPage.selectFile(SAMPLE_PDF);
+        await expect(uploadBillModalPage.reUploadLink).toBeVisible({ timeout: TIMEOUTS.SHORT });
 
-        await billUploadModalPage.clickReUpload();
+        await uploadBillModalPage.clickReUpload();
 
         log.section('Verify returned to idle view');
-        await expect(billUploadModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
-        await billUploadModalPage.verifyUploadButtonDisabled();
+        await expect(uploadBillModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await uploadBillModalPage.verifyUploadButtonDisabled();
 
         log.info('TC-060 PASS: Re-upload resets to idle view');
     });

@@ -1,7 +1,7 @@
 ---
 name: test-coverage
 description: Map automated test coverage by feature area, tag, and browser — identify gaps
-user-invokable: true
+user-invocable: true
 ---
 
 # Test Coverage Summary

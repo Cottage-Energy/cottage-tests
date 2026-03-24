@@ -19,7 +19,7 @@ const log = createLogger('AutoApplyCard');
  * - TC-068 + TC-070 + TC-095: Auto-apply card text, layout, rendering
  * - isConnectReady=false: Connect utility button hidden
  * - isConnectReady=true: Connect utility button visible
- * - TC-072: Upload bill → bill upload modal
+ * - TC-072: Upload bill → upload bill modal
  * - TC-071: Connect utility → Upload bill modal switch
  */
 
@@ -198,9 +198,9 @@ test.describe('Auto-Apply Savings Card', () => {
         log.info('isConnectReady=true PASS: Connect utility button visible');
     });
 
-    test('TC-072: Upload bill button opens bill upload modal', {
+    test('TC-072: Upload bill button opens upload bill modal', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore BGE session');
@@ -215,16 +215,16 @@ test.describe('Auto-Apply Savings Card', () => {
         await connectOverviewPage.uploadBillButton.click();
         await page.waitForTimeout(TIMEOUTS.UI_STABILIZE);
 
-        log.section('Verify bill upload modal opens');
-        await expect(billUploadModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
-        await expect(billUploadModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.SHORT });
+        log.section('Verify upload bill modal opens');
+        await expect(uploadBillModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(uploadBillModalPage.dropZoneClickToUpload).toBeVisible({ timeout: TIMEOUTS.SHORT });
 
-        log.info('TC-072 PASS: Upload bill opens bill upload modal');
+        log.info('TC-072 PASS: Upload bill opens upload bill modal');
     });
 
     test('TC-071: Connect utility button opens connect modal, can switch to upload bill', {
         tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
-    }, async ({ page, connectOverviewPage, connectUtilityModalPage, billUploadModalPage }) => {
+    }, async ({ page, connectOverviewPage, connectUtilityModalPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
         log.section('Restore Con Edison session (isConnectReady=true)');
@@ -247,7 +247,7 @@ test.describe('Auto-Apply Savings Card', () => {
         await connectUtilityModalPage.clickUploadBill();
 
         log.step(3, 'Bill upload modal opens after switch');
-        await expect(billUploadModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+        await expect(uploadBillModalPage.modalTitle).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
 
         log.info('TC-071 PASS: Connect utility → Upload bill modal switch works');
     });

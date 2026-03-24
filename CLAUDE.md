@@ -46,6 +46,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | **Figma** | UI screens to verify visual correctness and compare against implementation | `get_design_context`, `get_screenshot` |
 | **Notion** | Documentation hub — feature docs, test plans, test cases *(auth pending)* | Will use MCP tools once authenticated |
 | **context7** | Look up latest library/framework documentation | `resolve-library-id`, `query-docs` |
+| **Exa** | Web search, code examples, and URL crawling for research during test planning and debugging | `web_search_exa`, `get_code_context_exa`, `crawling_exa` |
 
 ## GitHub Repos
 

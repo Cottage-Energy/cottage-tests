@@ -1,7 +1,7 @@
 ---
 name: release-ready
 description: Generate a release readiness report — CI results, open bugs, blockers, go/no-go recommendation
-user-invokable: true
+user-invocable: true
 ---
 
 # Release Readiness Report

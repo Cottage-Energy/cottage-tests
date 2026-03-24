@@ -1,7 +1,7 @@
 ---
 name: ci-health
 description: Check CI test health — latest workflow runs, pass/fail by scope, recurring failures
-user-invokable: true
+user-invocable: true
 ---
 
 # CI Test Health Check

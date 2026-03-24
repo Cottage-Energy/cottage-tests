@@ -2,14 +2,14 @@ import { type Page, type Locator, expect } from '@playwright/test';
 import { TIMEOUTS } from '../constants';
 
 /**
- * Page Object for the Bill Upload Modal on the overview page.
+ * Page Object for the Upload Bill Modal on the overview page.
  * This is the modal that opens when clicking "Upload bill" on the auto-apply savings card.
  * NOT the same as BillUploadPage which is for the public /bill-upload/connect-account flow.
  *
  * Modal states: Idle → Ready (file selected) → Uploading → Success
  * Error state reuses Idle view with error message.
  */
-export class BillUploadModalPage {
+export class UploadBillModalPage {
     readonly page: Page;
 
     // Modal container
@@ -175,4 +175,4 @@ export class BillUploadModalPage {
     }
 }
 
-export default BillUploadModalPage;
+export default UploadBillModalPage;

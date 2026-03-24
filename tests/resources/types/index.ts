@@ -5,3 +5,4 @@
 export * from './moveIn.types';
 export * from './user.types';
 export * from './database.types';
+export * from './register.types';
