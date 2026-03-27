@@ -28,6 +28,14 @@ When the user provides a GitHub PR (URL, number, or repo/number), analyze the ch
 - `mcp__figma__get_design_context` + `mcp__figma__get_screenshot` for the expected UI
 - Compare: does the PR's UI changes match the design intent?
 
+### Visual diff (when PR has UI changes and is deployed to dev)
+If the PR is merged/deployed to dev and includes UI changes:
+1. `mcp__playwright__browser_navigate` to the affected page(s) on dev
+2. `mcp__playwright__browser_take_screenshot` to capture current live state
+3. If Figma link available → `mcp__figma__get_screenshot` for design comparison
+4. Check: layout, typography, colors, component states, responsive behavior
+5. Flag differences as **Bug** (wrong vs design), **Improvement** (could be better), or **Intentional** (PR changed this on purpose)
+
 ### Database changes (if PR touches migrations or schema)
 - `mcp__supabase__list_tables` to understand current schema
 - `mcp__supabase__execute_sql` to inspect affected tables — columns, types, constraints, relationships
@@ -153,6 +161,9 @@ Classify the PR's risk level:
 ### Design Comparison (if Figma available)
 - [Match/Mismatch] — [details of comparison]
 
+### UX & Improvement Observations
+- [Any UX friction, inconsistency, or missing feedback noticed while reviewing the changes]
+
 ### Suggested Approach
 1. [First action — e.g., run smoke tests to check for immediate regressions]
 2. [Second action — e.g., update POM for changed button label]
@@ -179,6 +190,7 @@ After review, chain to the appropriate skill:
 | **GitHub MCP** | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status` — read PR diff, check CI |
 | **Linear MCP** | `get_issue` — pull linked ticket for requirements context |
 | **Figma MCP** | `get_design_context`, `get_screenshot` — compare UI changes against design |
+| **Playwright MCP** | `browser_navigate`, `browser_take_screenshot` — visual diff of deployed UI changes |
 | **Supabase MCP** | `list_tables`, `execute_sql` — inspect schema when PR has DB changes |
 | `Glob`, `Grep` | Find affected tests, page objects, and fixtures |
 

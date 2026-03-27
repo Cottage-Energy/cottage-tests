@@ -29,13 +29,39 @@ Accept any combination of inputs — a Linear ticket is NOT required. Route by w
 
 ### GitHub PR Link
 - Use `mcp__github__get_pull_request` and `mcp__github__get_pull_request_files` to read the diff
+- **If GitHub MCP returns 404** (common for `services`, `cottage-nextjs`, `pg-admin`), fall back to CLI: `gh pr view <number> --repo Cottage-Energy/<repo> --json title,body,state,files` and `gh pr diff <number> --repo Cottage-Energy/<repo>`
 - Identify UI changes, API changes, DB changes, business logic changes
+
+### Inngest Function Source (when ticket involves backend/email/async jobs)
+When a ticket references the `services` repo or mentions Inngest, email templates, or async processing:
+- **Read the function source** via GitHub API: `gh api repos/Cottage-Energy/services/contents/<path> --jq '.content' | base64 -d`
+- Identify: trigger mechanism (cron vs event + event name), eligibility criteria (what DB conditions must be met), what data the function uses
+- This is critical for writing accurate test preconditions and understanding the testable window
+- Cross-reference with `tests/docs/inngest-functions.md` for known event names and patterns
+
+### Linear Project Link (multi-milestone planning)
+When the user provides a Linear **project** URL (e.g., `linear.app/public-grid/project/<slug>/overview`):
+- Use `mcp__linear__get_project` with the **full slug** from the URL (e.g., `multi-processor-payment-system-54806c1fd524`) — short name alone may not match
+- Pass `includeMembers: true`, `includeMilestones: true`, `includeResources: true` to get full context
+- Use `mcp__linear__list_issues` with `project: "<Project Name>"` to pull all tickets
+- **Large result handling**: Project issue lists can be very large (70+ tickets = 100K+ chars). Parse with `node -e` to group by `projectMilestone.name` — do NOT try to read the raw JSON file directly
+- Group tickets by milestone and create a **milestone-phased test plan**:
+  - Each milestone gets its own test case section
+  - Add a **Ticket → Test Case Mapping** table so test cases can be activated as individual tickets move to development
+  - Identify epic/parent tickets vs. task tickets (epics often have no milestone assignment)
+- Template adjustments for project-level plans:
+  - File naming: `{project_name}.md` (no ticket ID prefix)
+  - Overview includes milestone summary table with ticket counts and risk levels
+  - "Phased Activation" section in Automation Plan — which tests activate per milestone
+  - "Test Infrastructure Changes" section — new POMs, fixtures, types, test data needed
+- After saving, offer to save a memory file for the project so future sessions have context when individual tickets arrive
 
 ### Linear Ticket (optional)
 - Use `mcp__linear__get_issue` for requirements, labels, linked issues
 - **Check ticket comments**: Use `mcp__linear__list_comments` to read all comments on the ticket — comments often contain linked tickets, Figma URLs, Notion links, PR references, and contextual decisions not captured in the description
 - **Follow linked tickets**: For each linked/related ticket mentioned in comments or the description, use `mcp__linear__get_issue` to pull its context too. Related tickets often contain acceptance criteria, edge cases, and technical details that expand the test scope significantly.
 - Follow any links to Notion docs, Figma screens, or PRs from the ticket
+- **When the ticket references a flow by name** (e.g., "bill upload", "verify utilities", "move-in"), look it up in `tests/docs/onboarding-flows.md` to confirm the exact URL, entry point, and code path. Similar-sounding flows can be completely different code paths — e.g., Bill Upload and Verify Utilities share a Next.js route group `(bill-upload)` but have separate `page.tsx` files. A PR fixing one may not fix the other.
 
 ### Conversation Context
 - User-provided details, pasted content, or verbal descriptions
@@ -96,6 +122,20 @@ From the gathered context, define:
 - **Prerequisites**: Test data, environment setup, feature flags
 - **Dependencies**: Other features or services involved
 
+## 3b. Identify UX & Improvement Opportunities
+While analyzing the feature context (designs, live app, PRs, ticket), actively note anything that could be improved from a user experience perspective — even if it's working as coded. You're reviewing the feature more thoroughly than most people on the team, so use that perspective.
+
+**Look for:**
+- **Flow friction** — unnecessary steps, redundant inputs, state lost on navigation
+- **Confusing UI** — ambiguous labels, unclear icons, screens that require re-reading
+- **Inconsistency** — same action worded differently across flows, mismatched patterns
+- **Missing feedback** — no loading indicator, no success confirmation, unhelpful error messages
+- **Accessibility** — missing labels, poor keyboard flow, low contrast
+- **Empty/error states** — generic or missing messaging when things go wrong or data is absent
+- **Mobile gaps** — touch targets, overflow, content not adapted for small screens
+
+Capture these in the "UX & Improvement Opportunities" section of the test plan. They don't block test planning — they're a valuable byproduct of your analysis.
+
 ## 4. Write Test Cases
 For each scenario, define:
 - **Test case ID** — e.g., TC-001
@@ -152,6 +192,14 @@ For each scenario, define:
 |----|-------|-------------|-----------------|----------|
 | TC-030 | [title] | [what to check in Supabase] | [expected] | P1 |
 
+### UX & Improvement Opportunities
+| ID | Screen/Step | Observation | Impact | Suggestion |
+|----|------------|-------------|--------|------------|
+| UX-001 | [where in the flow] | [what could be better — friction, confusion, inconsistency, missing feedback] | [user impact — drop-off risk, confusion, frustration] | [concrete improvement idea] |
+| UX-002 | [where] | [observation] | [impact] | [suggestion] |
+
+> These are not test failures — the feature works as specified. These are opportunities to improve the user experience identified during test planning. File actionable ones as improvement tickets via `/log-bug`.
+
 ## Automation Plan
 - **Smoke**: [which test cases to include in smoke suite]
 - **Regression**: [which regression scope to assign]
@@ -193,6 +241,9 @@ When a Linear ticket was used as input (i.e., an `issueId` is available from Ste
 - **Regression**: [cases targeted for regression]
 - **Exploratory only**: [cases staying manual]
 
+### UX Observations
+- [Count] improvement opportunities identified (see full plan for details)
+
 ### Risks
 - [Key risks or blockers, if any]
 
@@ -210,6 +261,12 @@ After the test plan is approved:
 - `/exploratory-test` to interactively investigate items marked "Exploratory only"
 - `/log-bug` if issues are found during analysis
 - `/run-tests` to execute tests after they're created
+
+### Documentation Check
+After saving the test plan, check if the feature involves a backend flow or Inngest function not yet documented:
+- New Inngest event name or function? → Update `tests/docs/inngest-functions.md`
+- New onboarding flow variant, email template, or integration pattern? → Create/update a doc in `tests/docs/`
+- This keeps the docs folder current as a byproduct of test planning, not as a separate chore
 
 ---
 
@@ -231,6 +288,14 @@ After the test plan is approved:
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-26 (Multi-Processor Payment System — Project-level plan)
+- **New input type: Linear Project link**. First time planning at the project level (not single ticket). Required `mcp__linear__get_project` + `mcp__linear__list_issues` with project filter. Added "Linear Project Link" section to Step 1.
+- **`get_project` needs full URL slug**: Short name (`multi-processor-payment-system`) returned "not found". Full slug from URL (`multi-processor-payment-system-54806c1fd524`) worked.
+- **Large issue lists overflow tool output**: 72 tickets = 106K chars, too large to read directly. Must parse with `node -e` and group by `projectMilestone.name` (not `milestone` — that field doesn't exist on project issues).
+- **Ticket-to-test-case mapping was essential**: With 72 tickets across 7 milestones, a mapping table (ticket → test case IDs) makes the plan actionable as tickets roll through development one by one.
+- **Milestone-phased structure worked well**: Each milestone as its own test case section + a "Phased Activation" plan for when to enable tests. Also added "Test Infrastructure Changes" section for new POMs/fixtures/types needed.
+- **Save project context to memory**: Created a memory file so future conversations can pick up individual tickets with full project context.
 
 ### Session: 2026-03-13 (ENG-2402 Connect Account)
 - **Missed ticket comments and linked tickets**: The original test plan was built from the main ticket description + PR diff only. The user had to explicitly ask to check linked tickets (ENG-2365, ENG-2363, ENG-2370, ENG-2371, ENG-2372) which contained critical ACs that expanded the test plan from ~85 to 108 cases. Added `mcp__linear__list_comments` step and explicit "follow linked tickets" instruction to Step 1.

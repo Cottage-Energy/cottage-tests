@@ -1,12 +1,26 @@
 ---
 name: ci-health
-description: Check CI test health — latest workflow runs, pass/fail by scope, recurring failures
+description: Check CI test health, environment status, flaky test trends — morning pre-flight check
 user-invocable: true
 ---
 
 # CI Test Health Check
 
-Quick morning check: how are the tests doing? Pull the latest GitHub Actions runs, summarize pass/fail by scope, and surface patterns.
+Quick morning check: is the environment healthy? How are the tests doing? Any flaky trends?
+
+## 0. Environment Pre-flight (run first)
+
+Before checking CI results, verify the test environment is healthy. This prevents wasting time investigating "failures" caused by environment issues.
+
+### Dev environment
+- `mcp__playwright__browser_navigate` to `https://dev.publicgrid.energy` — does it load? Check for 5xx errors.
+- `mcp__playwright__browser_navigate` to `https://dev.publicgrid.energy/sign-in` — does sign-in page render?
+- `mcp__supabase__execute_sql` with a simple query (e.g., `SELECT 1`) on the dev project (`wzlacfmshqvjhjczytan`) — is the DB reachable?
+
+### Quick verdict
+- All healthy → proceed to CI check
+- Environment down → flag it immediately, skip CI analysis (failures are likely env-related)
+- Partial (e.g., DB up but app down) → note it, proceed with caution
 
 ## 1. Fetch Latest Workflow Runs
 - Use `Bash` with `gh run list --workflow=main-workflow.yml --limit 10` to get recent runs from `Cottage-Energy/cottage-tests`
@@ -52,10 +66,36 @@ This prevents duplicate bug reports and gives context on whether failures are be
 - **New failures** — tests that passed previously but failed in the most recent run (likely regression from a code change)
 - **Known issues** — failures linked to existing Linear bugs (expected to fail until fix lands)
 
+## 5b. Flaky Test Trending
+Compare the last 5-10 CI runs to identify flaky tests (tests that intermittently pass and fail):
+
+- `gh run list --workflow=main-workflow.yml --limit 10 --json databaseId,conclusion,startedAt` to get run IDs
+- For each failed run: `gh run view <id> --log-failed` to collect failed test names
+- A test is **flaky** if it failed in some runs but passed in others within the window
+- A test is **persistently broken** if it failed in every run
+
+```
+### Flaky Test Trend (last [N] runs)
+| Test | Fail Rate | Last 5 Runs | Pattern |
+|------|-----------|-------------|---------|
+| `path/test.spec.ts` > "test name" | 3/5 (60%) | PFPFP | Intermittent — likely timing/data issue |
+| `path/test2.spec.ts` > "test name" | 5/5 (100%) | FFFFF | Persistent — broken, not flaky |
+| `path/test3.spec.ts` > "test name" | 2/5 (40%) | PPFFP | Recent regression — started failing 2 runs ago |
+```
+
+**Actions by pattern:**
+- Intermittent (20-60% fail rate) → `/fix-test` for stabilization (likely timing, data, or race condition)
+- Persistent (80-100% fail rate) → `/analyze-failure` for root cause (likely product bug or test rot)
+- Recent regression (started failing in last 1-2 runs) → correlate with recent PRs via `gh pr list --state merged --limit 5`
+
 ## 6. Output Format
 
 ```
 ## CI Health — [date]
+
+### Environment Status
+- Dev app: [Healthy / Down / Degraded]
+- Supabase: [Reachable / Unreachable]
 
 ### Overview
 - Total scopes: [X] passed, [Y] failed
@@ -91,7 +131,9 @@ This prevents duplicate bug reports and gives context on whether failures are be
 
 | Tool | Purpose |
 |------|---------|
-| **GitHub MCP** or `Bash` (`gh` CLI) | Fetch workflow runs and failure logs |
+| **Playwright MCP** | `browser_navigate` — environment pre-flight check (dev app health) |
+| **Supabase MCP** | `execute_sql` — environment pre-flight check (DB reachability) |
+| **GitHub MCP** or `Bash` (`gh` CLI) | Fetch workflow runs, failure logs, and run history for flaky trending |
 | **Linear MCP** | `search_issues` — cross-reference failures with existing bugs |
 | `Glob`, `Grep` | Cross-reference failed tests with local test files |
 

@@ -23,6 +23,7 @@ Before investigating, understand what you're looking at. Process all available s
 - `mcp__linear__get_issue` to pull description, acceptance criteria, reproduction steps, severity, linked PRs, linked Figma/Notion
 - **Extract and number every acceptance criterion** — these become the Phase 1 checklist
 - Note the environment, user type, and any preconditions mentioned
+- **When the ticket references a flow by name** (e.g., "bill upload", "verify utilities", "move-in", "transfer"), look it up in `tests/docs/onboarding-flows.md` to confirm the exact URL, entry point, and code path. Flow names can be ambiguous — e.g., "verify utilities" is a specific onboarding flow at `/verify-utilities/connect-account`, NOT the overview re-upload for `ISSUE_VERIFICATION` users.
 
 ### From a Figma link (visual bug or UI verification)
 - `mcp__figma__get_design_context` with fileKey and nodeId from the URL
@@ -83,8 +84,15 @@ After each significant interaction, `mcp__playwright__browser_snapshot` to see t
 
 #### e. Compare against Figma (if design link provided)
 - `mcp__figma__get_screenshot` for the expected design
-- `mcp__playwright__browser_take_screenshot` for the live app
-- Compare: layout, spacing, component states, responsive behavior
+- `mcp__playwright__browser_take_screenshot` for the live app at matching viewport
+- **Structured comparison checklist:**
+  - Layout & spacing — element positioning, margins, padding
+  - Typography — font sizes, weights, line heights
+  - Colors — backgrounds, text, borders (use `window.getComputedStyle()` for exact values)
+  - Component states — hover, active, disabled, error, empty
+  - Responsive — check at mobile (375px), tablet (768px), desktop (1280px) if design includes breakpoints
+  - Content — placeholder text, labels, button copy match design
+- Flag differences as either **Bug** (wrong implementation) or **Improvement** (design could be better)
 
 #### f. Record the AC result
 For each AC, log:
@@ -156,6 +164,50 @@ Key event names:
 
 **Important**: Inngest API always returns 200 regardless of whether a function handled the event. Event names must match exactly (check `services` repo source for correct names). In production these are cron-triggered, not event-triggered.
 
+**Cron-only functions** (CANNOT be triggered via event API — must wait for `*/5` schedule or invoke from Inngest dashboard):
+- `balance-ledger-batch` — processes approved bills → `processed`, creates Payment in `requires_capture`
+- `stripe-payment-capture-batch` — captures payments in `requires_capture` → `succeeded`
+- Pipeline is sequential: ledger batch → stripe capture → then next bill can process
+- **Requires billing user** (`maintainedFor` IS NOT NULL) — non-billing users' bills stay `approved` forever
+
+**Full Inngest event reference**: See `tests/docs/inngest-functions.md` for all known event names, apps, and eligibility criteria.
+
+**Technique: Email touchpoint testing** (for Inngest-triggered emails)
+When a ticket involves backend-triggered emails (onboarding touchpoints, payment notifications, reminders):
+
+1. **Read the Inngest function source** to understand eligibility criteria:
+   ```bash
+   gh api repos/Cottage-Energy/services/contents/<path-to-function> --jq '.content' | base64 -d
+   ```
+   Key things to identify: event name, cron vs event trigger, what DB conditions qualify a user, what data the email uses.
+
+2. **Set up eligible test users** via Supabase — manipulate the specific fields the function checks (e.g., `startDate`, `status`, feature flags). Record original values for restoration.
+
+3. **Trigger the Inngest event**:
+   ```bash
+   source .env; curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "<event-name>", "data": {}}'
+   ```
+
+4. **Wait ~45 seconds** for Inngest processing + email delivery.
+
+5. **Verify email content via Fastmail JMAP** (Node.js — no `jq` on Windows):
+   ```javascript
+   // Search by recipient + recent timestamp
+   filter: { to: 'pgtest+<user>@joinpublicgrid.com', after: new Date(Date.now() - 5*60*1000).toISOString() }
+   // Parse HTML body for specific content (addresses, names, links, conditional sections)
+   ```
+
+6. **Capture email screenshots** — save email HTML to file, serve via local HTTP server (`node -e "require('http').createServer(...)"`), navigate Playwright MCP to `http://localhost:<port>/<file>.html`, take screenshot. Note: `file://` URLs are blocked in Playwright MCP.
+
+7. **Restore all DB changes** immediately after verification.
+
+**Key gotchas**:
+- Batch Inngest functions (like `preparing-for-move`) process ALL qualifying users — you can't target one user. Be aware other test accounts may also receive emails.
+- `dayjs().diff(date, 'day')` truncates partial days toward zero — a startDate "tomorrow" may actually need to be +2 calendar days for `diff === -1`.
+- Test both positive (email sent) AND negative (email NOT sent for ineligible dates/statuses) boundaries.
+
 **Technique: Fetch interceptor for API payload capture**
 When you need to inspect request/response bodies for internal API calls (e.g., `generate-token`, any Next.js API route), install a `window.fetch` override via `browser_evaluate` BEFORE triggering the action:
 ```javascript
@@ -179,6 +231,27 @@ Then read: `window.__interceptedCalls.filter(c => c.url.includes('your-endpoint'
 
 This captures full payloads including request body, which `browser_network_requests` doesn't provide.
 
+#### UX & Improvement Observations
+As you walk through each AC and edge case, actively look for opportunities to improve the product — not just things that are broken. You're the person touching every flow end-to-end, so your perspective is uniquely valuable.
+
+**What to look for:**
+- **Flow friction** — steps that feel unnecessary, redundant clicks, forms that don't remember state after back navigation
+- **Confusing UI** — labels that are ambiguous, icons without clear meaning, screens where you (with full context) have to pause and think
+- **Inconsistency** — different wording for the same action across flows, different button styles for the same intent, behaviors that differ without reason between shortcodes/themes
+- **Missing feedback** — actions with no loading state, success without confirmation, errors without helpful messages
+- **Accessibility gaps** — elements missing roles/labels (you'll notice these from locator priority), poor keyboard navigation, low contrast
+- **Empty/error state quality** — what does the user see when there's no data? When something fails? Is the messaging helpful or generic?
+- **Information architecture** — is the right info visible at the right time? Is the user forced to navigate away to find something they need in context?
+- **Mobile responsiveness** — touch targets too small, content overflow, horizontal scrolling where it shouldn't exist
+
+**How to capture:** For each observation, note:
+1. **Where** — exact screen/step/URL
+2. **What** — what you observed
+3. **Why it matters** — impact on user experience (confusion, friction, drop-off risk)
+4. **Suggestion** — a concrete improvement idea
+
+These go into the Phase 3 summary under "UX & Improvement Observations" and can be filed as improvement tickets via `/log-bug` (which supports both bug and improvement types).
+
 #### Error/failure conditions
 - Network offline or slow (use `mcp__playwright__browser_evaluate` to simulate)
 - API returning errors (observe console/network for unexpected failures)
@@ -194,6 +267,41 @@ For each variation:
 2. Observe the result
 3. If unexpected behavior → capture evidence and chain to `/log-bug`
 4. If working as expected → note it and move on
+
+### Phase 2b — Accessibility Quick Audit (optional, run when requested or when UX observations flag a11y gaps)
+
+Run on the primary page(s) under test. This is a focused check, not a full WCAG audit.
+
+#### Automated scan via axe-core
+```javascript
+// Inject axe-core and run scan via browser_evaluate
+const script = document.createElement('script');
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.9.1/axe.min.js';
+document.head.appendChild(script);
+// After load:
+const results = await axe.run();
+return { violations: results.violations.map(v => ({ id: v.id, impact: v.impact, description: v.description, nodes: v.nodes.length })) };
+```
+
+#### Keyboard navigation
+- Tab through the entire page — does focus order make sense?
+- Can every interactive element (buttons, links, inputs, toggles) be reached via Tab?
+- Can modals be closed with Escape?
+- Does Enter/Space activate buttons and links?
+- Is there a visible focus indicator on every element?
+
+#### Screen reader labels
+- `mcp__playwright__browser_snapshot` gives the accessibility tree — check:
+  - Do images have alt text?
+  - Do form inputs have labels?
+  - Do buttons have descriptive text (not just icons)?
+  - Are ARIA roles used correctly (not overused)?
+
+#### Contrast spot-check
+- Use `window.getComputedStyle()` on text elements to get `color` and `backgroundColor`
+- Flag any text that appears light-on-light or dark-on-dark
+
+**Output**: Add findings to the Phase 3 summary under "Accessibility" column in Edge Cases table, or as UX Improvement observations if they're not outright failures.
 
 ### Phase 3 — Session Summary
 
@@ -220,6 +328,14 @@ After both phases, produce a structured summary:
 |--------|-------|----------|-------------|
 | BUG-XXX | [title] | [severity] | Phase 1 AC #2 / Phase 2 edge case |
 
+### UX & Improvement Observations
+| # | Screen/Step | Observation | Impact | Suggestion | Filed? |
+|---|------------|-------------|--------|------------|--------|
+| 1 | [where] | [what you noticed] | [why it matters — confusion, friction, drop-off risk] | [concrete improvement idea] | [TICKET-ID or "Not filed"] |
+| 2 | [where] | [what you noticed] | [impact] | [suggestion] | [TICKET-ID or "Not filed"] |
+
+> These are not bugs — the feature works as coded. These are opportunities to make the product better. File as improvement tickets via `/log-bug` when the suggestion is actionable.
+
 ### Coverage Assessment
 - ACs tested: [N] / [total]
 - Edge cases explored: [N]
@@ -230,6 +346,50 @@ After both phases, produce a structured summary:
 - `/new-test` to automate [specific AC or edge case]
 - `/fix-test` if existing tests need updating
 - `/test-plan` if the feature needs full test plan coverage
+- `/log-bug` to file improvement tickets for UX observations worth acting on
+
+### Documentation Check
+- Did you discover an Inngest function, flow, or data pattern not yet documented? → Create/update a doc in `tests/docs/`
+- Did you discover a new Inngest event name or eligibility criteria? → Update `tests/docs/inngest-functions.md`
+- Did you map a new flow (email, onboarding variant, admin process)? → Offer to generate a flow doc (see Phase 4)
+```
+
+### Phase 4 — Flow Documentation (optional, offer when a new flow was walked)
+
+When the session walked through a flow not yet documented in `tests/docs/`, offer to generate a flow doc. This turns the exploratory session into reusable team knowledge.
+
+**When to offer**: you walked through 3+ sequential steps in a flow that doesn't have a doc yet.
+
+**Template** — save to `tests/docs/{flow-name}.md`:
+```markdown
+# {Flow Name}
+
+## Overview
+Brief description of the flow's purpose and entry points.
+
+## Entry Points
+| URL | Shortcode | Notes |
+|-----|-----------|-------|
+| [URL] | [shortcode or N/A] | [conditions] |
+
+## Steps
+| # | Screen | URL | User Action | What Happens |
+|---|--------|-----|-------------|-------------|
+| 1 | [screen name] | [URL] | [what user does] | [result] |
+| 2 | ... | ... | ... | ... |
+
+## Key DB State
+| Table | Column | Value | Meaning |
+|-------|--------|-------|---------|
+| [table] | [column] | [value] | [what it controls] |
+
+## Edge Cases & Gotchas
+- [anything surprising discovered during the session]
+
+## Related
+- Test plan: [link if exists]
+- Automated tests: [file paths if exist]
+- Linear tickets: [related tickets]
 ```
 
 ---
@@ -441,6 +601,9 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | Supabase project ID wrong | `mcp__supabase__execute_sql` returns "Forbidden resource" | Dev = `wzlacfmshqvjhjczytan`, Staging = `euztcfcsytpxtyepvdcj`. Use `mcp__supabase__list_projects` to verify. |
 | OTP needed in interactive session | Can't call `FastmailActions.Get_OTP` outside Playwright test runner | Use Node.js JMAP script: `cd cottage-tests && node -e "require('dotenv').config(); /* fetch email via axios */"` — see memory `fastmail-otp-retrieval.md` for full pattern |
 | No `jq` on Windows | bash JSON parsing fails | Use `node -e` with `JSON.parse()` instead of `curl | jq` |
+| Inngest cron functions not triggerable via event API | `inn.gs/e/balance-ledger.batch` returns 200 but does nothing — cron functions ignore event sends | Wait for `*/5` cron cycle (~5 min) or invoke from Inngest dashboard. Don't waste time retrying event sends. |
+| Bills stuck in `approved` | `balance-ledger-batch` won't process bills for non-billing users | User must have `maintainedFor` IS NOT NULL on ElectricAccount — requires billing move-in path ("Public Grid handles everything" + Stripe card). Non-billing users (`maintainedFor = null`) stay `approved` forever. |
+| Second bill won't process | First bill's payment is in `requires_capture`, blocking next bill | Pipeline is sequential: ledger batch → stripe capture → then next bill. Wait for `stripe-payment-capture-batch` cron, or set 2nd bill directly to `processed` for FE-only testing. |
 
 ---
 

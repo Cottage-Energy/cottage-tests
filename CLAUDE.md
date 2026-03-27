@@ -10,10 +10,10 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 |------|----------|-------|
 | 1. **Triage** | Read Linear tickets tagged for Testing/QA | `/test-plan` (Quick Triage phase) |
 | 2. **Research** | Gather context from Notion docs, Figma screens, GitHub PRs | `/review-pr` (for PRs), `/test-plan` (multi-source) |
-| 3. **Test Planning** | Write test plans and test cases from requirements | `/test-plan` |
-| 4. **Exploratory Testing** | Interactive exploration to find edge cases and bugs | `/exploratory-test` |
+| 3. **Test Planning** | Write test plans, test cases, and UX improvement opportunities from requirements | `/test-plan` |
+| 4. **Exploratory Testing** | Interactive exploration to find bugs, edge cases, and UX improvement opportunities | `/exploratory-test` |
 | 5. **Automation** | Convert findings into Playwright e2e tests | `/new-test` |
-| 6. **Bug Reporting** | Log discovered bugs in Linear with evidence | `/log-bug` |
+| 6. **Bug & Improvement Reporting** | Log bugs and UX improvement suggestions in Linear with evidence | `/log-bug` |
 | 7. **Test Execution** | Run automated suites locally or via CI | `/run-tests` |
 
 ### Supporting Skills
@@ -22,15 +22,18 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 |-------|-------------|
 | `/fix-test` | A test is failing or flaky — diagnose and fix |
 | `/analyze-failure` | Classify CI/local failures, identify root cause |
-| `/ci-health` | Morning check — how are the tests doing? |
+| `/ci-health` | Morning pre-flight — env health, CI pass/fail, flaky test trends |
 | `/test-coverage` | Map what's automated, find gaps |
 | `/release-ready` | Go/no-go report before a release |
+| `/test-data` | Set up test data — billing users, bills, subscriptions, feature flags |
+| `/qa-summary` | Weekly/sprint QA summary for the team — tickets, bugs, improvements, CI trends |
 
 ### Main Outputs
 - Test plans and test cases (in `tests/test_plans/`)
 - Automated Playwright test scripts (in `tests/e2e_tests/`)
 - Test documentation (in Notion)
-- Bug reports (in Linear)
+- Bug reports and improvement tickets (in Linear)
+- UX & product improvement suggestions (from test planning and exploratory sessions)
 - Test execution results (exploratory + scripted)
 
 ## MCP Servers (always prefer these over alternatives)
@@ -39,7 +42,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 | Server | Purpose | Use for |
 |--------|---------|---------|
-| **Linear** | Read tickets for Testing/QA, log bugs, track test-related issues, comment test plans back to tickets | `get_issue`, `save_issue`, `save_comment`, `list_comments`, `search_issues`, `list_issues`, `list_issue_statuses` |
+| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, comment test plans back to tickets | `get_issue`, `save_issue`, `save_comment`, `list_comments`, `search_issues`, `list_issues`, `list_issue_statuses` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
 | **Playwright** | Browser automation for interactive testing and debugging | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
@@ -123,7 +126,7 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | Transfer | Same as billing transfer | |
 | Utility Verification | `/move-in?shortCode=pgtest` | Building has `isUtilityVerificationEnabled=TRUE`; user clicks "I will call and setup myself" |
 | Bill Upload / Savings | `/bill-upload/connect-account` | Requires `isBillUploadAvailable=TRUE` on UtilityCompany; zip `12249` (Con Edison) |
-| Verify Utilities | `/verify-utilities/connect-account` | Same `isBillUploadAvailable` prerequisite |
+| Verify Utilities | `/verify-utilities/connect-account` | Same `isBillUploadAvailable` prerequisite. **Separate `page.tsx`** from Bill Upload despite shared `(bill-upload)` route group |
 | Connect | `/connect` | |
 
 ### Building Shortcodes
@@ -144,6 +147,8 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 ## Tech Stack
 TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification), Inngest (async job triggers)
 
+Email content verification uses Fastmail JMAP API via Node.js — see `tests/docs/preparing-for-move-touchpoint.md` for the pattern.
+
 ## Inngest Integration
 Inngest functions in the `services` repo can be triggered via REST API in dev using `INNGEST_EVENT_KEY` from `.env`.
 
@@ -157,9 +162,28 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 |----------|-----------------|---------|
 | `trigger-transaction-generation` | `transaction-generation-trigger` | Creates pending `SubscriptionMetadata` for active subscriptions |
 | `trigger-subscriptions-payment` | `subscriptions-payment-trigger` | Processes pending metadata into payments |
+| `preparing-for-move` | `preparing-for-move` | Pre-move-in reminder email (2 days before startDate) |
+| `send-email` | `email.send` | Generic email dispatch |
 
-**Important**: Inngest API always returns 200 — doesn't mean a function handled the event. Event names must match exactly.
-**In production**: These are cron-triggered (1PM/3PM EST), not event-triggered — can only invoke manually via Inngest dashboard.
+**Cron-only functions** (cannot be triggered via event API — must wait for `*/5` schedule or invoke from Inngest dashboard):
+
+| Function | Cron | Purpose |
+|----------|------|---------|
+| `balance-ledger-batch` | `*/5 * * * *` (TZ America/New_York) | Processes approved bills → `processed`, recalculates balances, creates Payment in `requires_capture` |
+| `stripe-payment-capture-batch` | `*/5 * * * *` | Captures payments in `requires_capture` → `succeeded` |
+
+**Bill processing pipeline** (sequential — each step needs a cron cycle):
+1. Insert bill with `ingestionState = 'approved'`
+2. `balance-ledger-batch` → bill becomes `processed`, Payment created in `requires_capture`
+3. `stripe-payment-capture-batch` → Payment becomes `succeeded`
+4. Only then can the next approved bill be processed
+5. **Requires billing user** (`maintainedFor` IS NOT NULL) — non-billing users' bills stay `approved` forever
+
+**Important**: Inngest API always returns 200 — doesn't mean a function handled the event. Event names must match exactly. Cron functions return 200 to event sends but are NOT triggered by them.
+**In production**: Event-triggered functions above are cron-triggered (1PM/3PM EST) — can only invoke manually via Inngest dashboard.
+
+**Reading Inngest function source**: When a ticket involves an Inngest function, read the source via GitHub API to understand trigger mechanism and eligibility criteria:
+`gh api repos/Cottage-Energy/services/contents/<path> --jq '.content' | base64 -d`
 
 ## Environments
 Environment base URLs are configured in `tests/resources/utils/environmentBaseUrl.ts`. Tests select the environment via the `ENVIRONMENT` env var.
@@ -188,11 +212,14 @@ Tests run via GitHub Actions (`main-workflow.yml`). Scheduled regressions run da
 
 Skills route to each other based on outcomes. Common chains:
 
-- **Ticket lands** → `/triage-ticket` → `/test-plan` → `/new-test` → `/run-tests`
-- **Exploratory session** → `/exploratory-test` → `/log-bug` (for bugs found) → `/new-test` (for regression tests)
+- **Ticket lands** → `/test-plan` → `/test-data` (setup) → `/new-test` → `/run-tests`
+- **Exploratory session** → `/exploratory-test` → `/log-bug` (bugs + improvements) → `/new-test` (regression tests)
 - **CI failure** → `/ci-health` → `/analyze-failure` → `/fix-test` (test issue) or `/log-bug` (product bug)
 - **PR review** → `/review-pr` → `/test-plan` → `/exploratory-test` or `/new-test`
 - **Release check** → `/release-ready` (aggregates `/ci-health` + Linear bugs + open PRs + feature flags)
+- **Weekly reporting** → `/qa-summary` (aggregates Linear + GitHub + CI + test plans)
+- **Morning check** → `/ci-health` (env health + CI + flaky trends) → `/fix-test` or `/analyze-failure` as needed
+- **Test data needed** → `/test-data` (recipes for billing users, bills, subscriptions, flags)
 
 After completing any skill, suggest the logical next skill based on the outcome.
 

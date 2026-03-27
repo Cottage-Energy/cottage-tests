@@ -1,6 +1,6 @@
 ---
 name: new-test
-description: Scaffold a new Playwright e2e test spec following project conventions
+description: Scaffold a new Playwright e2e or API test spec following project conventions
 user-invocable: true
 ---
 
@@ -14,7 +14,20 @@ Before writing test cases from scratch, check if a test plan already exists:
 - If a plan exists → read it and align the new test to the planned test cases (IDs, priorities, scope)
 - If no plan exists → proceed with gathering context from the user
 
-## 2. Determine Placement
+## 1b. Determine Test Type
+Detect whether this is an **e2e test** (UI interaction) or an **API test** (endpoint validation):
+
+| Signal | Type |
+|--------|------|
+| User says "API test", "endpoint test", "register endpoint" | API |
+| Target is a REST endpoint, webhook, or backend service | API |
+| User says "test this flow", "test this page", references a URL | E2E |
+| Target involves UI interaction, forms, navigation | E2E |
+
+- **E2E** → continue to Step 2 (below)
+- **API** → skip to Step 2-API
+
+## 2. Determine Placement (E2E)
 - Ask which feature area: `connect-account`, `cottage-user-move-in`, `homepage`, `payment`, or a new one
 - Place the file in `tests/e2e_tests/<feature>/`
 - Name it `{feature}_{scenario}.spec.ts`
@@ -118,7 +131,9 @@ Export from `tests/resources/fixtures/database/index.ts`.
 ## 6b. Inngest-Dependent Tests
 When tests require async backend processing (subscriptions, bill ingestion, payment processing):
 
-**Trigger Inngest functions via API** using `INNGEST_EVENT_KEY` from `.env`:
+**Two types of Inngest functions:**
+
+1. **Event-triggered** (can be triggered via API):
 ```typescript
 import { execSync } from 'child_process';
 
@@ -131,8 +146,26 @@ function triggerInngest(eventName: string): void {
 Key event names (dev only — production uses cron):
 - `transaction-generation-trigger` — creates pending `SubscriptionMetadata`
 - `subscriptions-payment-trigger` — processes pending metadata into payments
+- `preparing-for-move` — pre-move-in reminder email (2 days before startDate)
+- `email.send` — generic email dispatch
 
-**Wait for processing**: Inngest functions are async. After triggering, poll the DB for expected state changes (e.g., metadata status `pending` → `completed`, new `Payment` record) with a timeout. Do NOT use fixed `sleep` — use a polling helper.
+2. **Cron-only** (CANNOT be triggered via event API — must wait for `*/5` schedule):
+- `balance-ledger-batch` — processes approved bills → `processed`, creates Payment in `requires_capture`
+- `stripe-payment-capture-batch` — captures payments → `succeeded`
+- Sending events to `inn.gs/e/` returns 200 but is a no-op for cron functions
+
+**Full reference**: See `tests/docs/inngest-functions.md` for all known event names, apps, eligibility criteria, and gotchas.
+
+**Wait for processing**: Inngest functions are async. After triggering (or after cron fires), poll the DB for expected state changes with a timeout. Do NOT use fixed `sleep` — use a polling helper like `billQueries.checkElectricBillIsProcessed()`.
+
+**Bill test data setup pattern** (for tests that need processed bills on the overview):
+1. Create user via move-in **with billing path** ("Public Grid handles everything" + Stripe card) — non-billing users (`maintainedFor = null`) can't process bills
+2. Activate account: `ElectricAccount.status = 'ACTIVE'`, `isActive = true`, `registrationJobCompleted = true`
+3. Ensure `Resident.isRegistrationComplete = true`
+4. Insert bills with `ingestionState = 'approved'` via `billQueries.insertApprovedElectricBill()`
+5. Wait for `balance-ledger-batch` cron (*/5 min) — polls via `billQueries.checkElectricBillIsProcessed()`
+6. Pipeline is **sequential**: ledger batch processes bill → creates payment in `requires_capture` → `stripe-payment-capture-batch` captures → only then next bill can process
+7. For FE-only tests (e.g., chart rendering), set 2nd+ bills directly to `processed` via SQL to avoid waiting for full pipeline
 
 **Prerequisites for subscription tests**:
 - `ElectricAccount.status` must be `ACTIVE`
@@ -241,6 +274,82 @@ function resetPassword(userId: string, password: string = 'PG#12345'): void {
 
 **Note**: Supabase blocks password reuse — if the user already has `PG#12345`, the reset will return 422. Handle the password reset dialog via DOM removal if needed.
 
+## 2-API. Determine Placement (API Tests)
+- Place in `tests/api_tests/<feature>/`
+- Name it `{feature}_{scenario}.spec.ts`
+- Check existing API tests with `Glob` for `tests/api_tests/**/*.spec.ts` to follow patterns (e.g., `tests/api_tests/register/`)
+
+## 3-API. API Helper Class
+Create a reusable API helper following the `RegisterApi` pattern at `tests/resources/fixtures/api/`:
+
+```typescript
+import { createLogger } from '../../utils/logger';
+
+const log = createLogger('FeatureApi');
+
+interface FeaturePayload { /* request body type */ }
+interface FeatureResponse { /* response body type */ }
+
+export class FeatureApi {
+  private baseUrl: string;
+  private token: string;
+
+  constructor(baseUrl: string, token: string) {
+    this.baseUrl = baseUrl;
+    this.token = token;
+  }
+
+  async createResource(payload: FeaturePayload): Promise<{ status: number; body: FeatureResponse }> {
+    log.info('POST /endpoint', { payload });
+    const response = await fetch(`${this.baseUrl}/endpoint`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${this.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const body = await response.json();
+    return { status: response.status, body };
+  }
+}
+```
+
+Export from `tests/resources/fixtures/api/index.ts`.
+
+## 4-API. API Test Structure
+```typescript
+import { test, expect } from '@playwright/test';
+import { FeatureApi } from '../../resources/fixtures/api';
+import { TIMEOUTS, TEST_TAGS } from '../../resources/constants';
+import { createLogger } from '../../resources/utils/logger';
+
+const log = createLogger('FeatureApiTest');
+
+test.describe('API: Feature Name', () => {
+  let api: FeatureApi;
+
+  test.beforeAll(async () => {
+    api = new FeatureApi(process.env.API_BASE_URL!, process.env.API_TOKEN!);
+  });
+
+  test('returns 201 for valid payload', { tag: [TEST_TAGS.REGRESSION1] }, async () => {
+    const { status, body } = await api.createResource({ /* valid payload */ });
+    expect(status).toBe(201);
+    expect(body).toHaveProperty('id');
+  });
+
+  test('returns 400 for missing required field', { tag: [TEST_TAGS.REGRESSION1] }, async () => {
+    const { status } = await api.createResource({ /* incomplete payload */ });
+    expect(status).toBe(400);
+  });
+});
+```
+
+**Key patterns:**
+- Group tests: happy path (2xx), validation (4xx), auth (401/403), edge cases
+- Verify DB side effects via Supabase MCP or query modules
+- Use `test.describe.configure({ mode: 'serial' })` only if tests share state
+- Clean up created resources in `afterAll`/`afterEach`
+- After API scaffolding is done → proceed to Step 7 (Rules), Step 8 (Validate), Step 9 (Run)
+
 ## 7. Rules (never violate)
 - Use `TEST_TAGS` constants for tags — never raw strings like `'@smoke'`
 - Use `TIMEOUTS` constants — never magic numbers like `30000`
@@ -310,6 +419,10 @@ After the test is created and passing:
 - `/fix-test` if it exposed issues in existing page objects or fixtures
 - Update the test plan in `tests/test_plans/` to mark the test case as automated (if a plan exists)
 
+### Documentation Check
+- Did you build a new testing pattern (email verification, API testing, Inngest pipeline)? → Document the reusable pattern in `tests/docs/`
+- Did you create new fixtures or helpers that future tests should reuse? → Note them in the relevant doc or in `tests/docs/inngest-functions.md` if Inngest-related
+
 ---
 
 ## 12. Tools Used
@@ -349,3 +462,10 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Legal link assertions pattern**: Reusable pattern for verifying `<LegalLinks />` across flows — check 3 links (Terms, Privacy Policy, LPOA) with correct `href`, `target="_blank"`, `rel="noopener noreferrer"`. Consider a shared assertion helper.
 - **DB verification for consent fields**: After registration, verify 4 columns: `termsAndConditionsDate`, `lpoaConsentDate`, `ipAddressTerms`, `ipAddressLPOA`. Add to `userQueries.ts` or create `consentQueries.ts`.
 - **Partner theme shortcodes**: `autotest` (Moved), `funnel4324534` (Funnel), `venn325435435` (Venn), `renew4543665999` (Renew). Useful for white-label test coverage.
+
+### Session: 2026-03-26 (ENG-2446 Bill Usage Charts — Test Data Setup Learnings)
+- **Billing move-in path required for bill processing**: Non-billing move-in ("I will manage payments myself") sets `maintainedFor = null`. `balance-ledger-batch` silently skips those bills — they stay `approved` forever. Tests that need processed bills MUST use billing move-in ("Public Grid handles everything" + Stripe card).
+- **Bill processing pipeline is sequential**: `balance-ledger-batch` (*/5 cron) processes approved bill → creates Payment in `requires_capture` → `stripe-payment-capture-batch` (*/5 cron) captures payment → only then next bill can process. For N sequential bills, worst case ~N×10 min.
+- **Cron functions can't be triggered via event API**: `inn.gs/e/balance-ledger.batch` returns 200 but does nothing. Updated section 6b to distinguish event-triggered vs cron-only functions.
+- **Shortcut for FE-only tests**: If testing only FE behavior (e.g., chart rendering), first bill goes through real pipeline to validate setup, then set remaining bills directly to `processed` via SQL.
+- **Gas account creation**: If a building doesn't have gas, can INSERT a `GasAccount` manually with valid `utilityCompanyID` (e.g., `PEOPLES-GAS`, `DUKE`, `BGE`). Set `maintainedFor`, `status = ACTIVE`, `registrationJobCompleted = true`.
