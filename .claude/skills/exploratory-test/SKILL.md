@@ -494,7 +494,7 @@ npx playwright test tests/e2e_tests/exploratory/explore_my_investigation.spec.ts
 
 Before finishing any exploratory session (interactive or scripted), clean up generated artifacts:
 
-1. **Screenshots** — delete local PNG files after they've been uploaded to `0x0.st` and posted to Linear
+1. **Screenshots** — delete local PNG files after they've been uploaded to tmpfiles.org and embedded in Linear ticket descriptions
 2. **`.playwright-mcp/` directory** — Playwright MCP creates this in the project root; delete it after the session
 3. **`test-results/` directory** — if scripted exploratory tests were run and failed, remove generated trace/screenshot artifacts
 4. **Browser sessions** — ensure `mcp__playwright__browser_close` is called to release the browser
@@ -553,11 +553,14 @@ When capturing screenshots during exploratory sessions and needing to attach the
 
 ### Upload workflow
 1. `mcp__playwright__browser_take_screenshot` to save PNG files locally
-2. Upload to `0x0.st` for hosting: `curl -s -F "file=@screenshot.png" https://0x0.st` — returns a direct URL
-3. Post to Linear via `mcp__linear__save_comment` with markdown image syntax: `![description](url)`
-4. Clean up local PNG files after upload
+2. Upload to **tmpfiles.org**: `curl -s -o /tmp/upload.json -F "file=@screenshot.png" https://tmpfiles.org/api/v1/upload && cat /tmp/upload.json` — returns a JSON with URL
+3. Convert URL: replace `tmpfiles.org/` with `tmpfiles.org/dl/` for the direct link
+4. **Prefer ticket descriptions over comments for images**: Use `mcp__linear__save_issue` (with `id` to update) to embed images in the ticket description. Linear auto-uploads referenced images to its own CDN (`uploads.linear.app`), so images in **descriptions persist permanently**. Images only in comments via tmpfiles.org links will expire in ~1 hour.
+5. Clean up local PNG files after upload
 
-**Why not base64 directly?** MCP tool parameters can't handle large base64-encoded images. The 0x0.st upload → URL embed pattern is the reliable workaround.
+**Why not base64 directly?** MCP tool parameters can't handle large base64-encoded images. The tmpfiles.org upload → URL embed in description pattern is the reliable workaround.
+
+**Why descriptions over comments?** Linear re-hosts images referenced in descriptions to `uploads.linear.app`. tmpfiles.org links expire ~1 hour. If you post screenshots only in comments, they'll break. Always update the ticket description with the screenshots so they persist.
 
 ### Screenshot naming convention
 Name screenshots descriptively: `{area}-{detail}-{viewport}.png`
@@ -587,12 +590,14 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
 | OTP email pollution | Interactive sessions trigger OTP emails that accumulate for shared test accounts | After exploration, note which test accounts had OTPs triggered — automated tests using those accounts may fail until emails clear. Consider using `getLatestOTP()` pattern (take most recent email) instead of asserting exactly 1 email |
 | Start Service Date dialog | Every save on accounts with date discrepancy (Start Date ≠ Start Service Date) triggers "Start Service Date Change Detected" dialog | Dismiss with Cancel to avoid committing date changes. This is unrelated to the feature under test — don't mistake it for feature behavior |
-| Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `curl -X PUT "https://<project>.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer <service_role_key>" -d '{"password": "NewPassword123!"}'` |
+| Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `source .env && curl -X PUT "https://wzlacfmshqvjhjczytan.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer $SUPABASE_API_KEY" -H "apikey: $SUPABASE_API_KEY" -H "Content-Type: application/json" -d '{"password": "NewPassword123!"}'`. Both `Authorization` and `apikey` headers are required. Env var is `SUPABASE_API_KEY` (not `SUPABASE_SERVICE_ROLE_KEY`). |
 | Large PG Admin snapshots | `browser_snapshot` output >50KB gets truncated in tool results | Use `filename` parameter to save to file, then `grep` the file for specific patterns (dialog names, button refs, status values) |
 | mi-session/start redirect | Onboarding pages (`/move-in`, `/transfer`, `/bill-upload`, `/finish-registration`) auto-redirect within seconds via `mi-session/start` API | Intercept fetch immediately after `browser_navigate`: `window.fetch = function(...args) { if (args[0]?.includes?.('mi-session/start') \|\| (typeof args[0] === 'string' && args[0].includes('mi-session/start'))) return new Promise(() => {}); return window.__origFetch.apply(this, args); };` (save `__origFetch` first) |
 | Short page content | Pages don't have enough content to scroll for scroll testing | `browser_resize` to width 1280, height 400 to force scrollable content |
 | Playwright MCP is Chromium-only | Cannot test Safari bfcache or Firefox behavior via MCP | Note as limitation in results. True cross-browser tests need `npx playwright test --project=Safari` via the test runner |
 | Parallel agents rate limiting | 4+ concurrent Playwright agents hitting dev server causes 429 errors | Limit to 2-3 concurrent browser agents; use extra agents for DB/code work |
+| Parallel move-in agents | Multiple agents doing move-in share browser session — autocomplete cross-contamination, wrong emails, incomplete registrations | **NEVER** run move-in flows in parallel via Playwright MCP. Run them sequentially, one at a time. Non-browser agents (DB, Inngest) can run in parallel. |
+| Cron-dependent testing | Waiting 15+ min for cron jobs wastes time | Poll every 3 min instead of sleeping for the full expected duration. Check DB state each poll. |
 | Stripe iframe | Previously thought cross-origin Stripe iframes were inaccessible | Playwright MCP CAN access Stripe iframe content — snapshot includes `f{N}e{N}` refs. Use `browser_fill_form` with those refs. Pattern: card=`4242424242424242`, exp=`12 / 30`, CVC=`123`, country=`United States`, ZIP=`10001` |
 | ESCO notice (NY) | New York addresses trigger regulatory `alertdialog` "Because you live in New York..." | Dismiss with `browser_click` on "Got it!" button. Don't confuse with feature behavior |
 | Multi-property user | User lands on `/app/summary` instead of `/app/overview` | Click "View" on the specific property card. Users with 2+ properties always see the picker first |
@@ -604,6 +609,10 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | Inngest cron functions not triggerable via event API | `inn.gs/e/balance-ledger.batch` returns 200 but does nothing — cron functions ignore event sends | Wait for `*/5` cron cycle (~5 min) or invoke from Inngest dashboard. Don't waste time retrying event sends. |
 | Bills stuck in `approved` | `balance-ledger-batch` won't process bills for non-billing users | User must have `maintainedFor` IS NOT NULL on ElectricAccount — requires billing move-in path ("Public Grid handles everything" + Stripe card). Non-billing users (`maintainedFor = null`) stay `approved` forever. |
 | Second bill won't process | First bill's payment is in `requires_capture`, blocking next bill | Pipeline is sequential: ledger batch → stripe capture → then next bill. Wait for `stripe-payment-capture-batch` cron, or set 2nd bill directly to `processed` for FE-only testing. |
+| Light session caching | Second Light flow test skips to success page | Close browser or clear cookies/localStorage/sessionStorage between each Light flow test |
+| Light phone validation | `1111111111` returns 400 Invalid phone number | Use `(646) 437-6170` for Light flow, `1111111111` for standard move-in |
+| Quoted URL params in TanStack | ZIP appears as `zip="10001"` instead of `zip=10001` — causes verify-utilities to hang and TX flow wrong routing | Known TanStack bug — same root cause for both. Bill-upload works because it passes ZIP differently |
+| Verify-utilities stuck on "Checking availability..." | Button stays disabled with spinner indefinitely after entering ZIP | Caused by quoted URL params bug. Use bill-upload flow instead for testing until fixed |
 
 ---
 
@@ -682,3 +691,24 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Drop-off / resume testing pattern**: Create user with guid → complete to Payment step → clear cookies → navigate with same guid (should resume, console logs `refreshed in progress session`) → navigate with same value as leaseID (should NOT resume, starts fresh). This tests `checkIfGuidInProgress` isolation without needing complex provider state.
 - **Non-billing path is faster for exploratory**: "I will manage payments myself" skips Stripe iframe entirely. Use this when payment method isn't the thing under test — saves 30+ seconds per flow.
 - **Always test shortCode variations**: Different shortCodes trigger different flow variants (`autotest` = standard 6-step, `pgtest` = encourage conversion address-first, `txtest` = TX dereg address-first, no shortCode = generic 5-step). URL param behavior (guid/leaseID) should work identically across all. User explicitly called this out as a gap.
+
+### Session: 2026-03-30 (ENG-2571 Savings Alert Preference — Onboarding Paths)
+- **Linear re-hosts images in descriptions, not comments**: When you embed a tmpfiles.org URL in a ticket *description* via `save_issue`, Linear auto-uploads the image to `uploads.linear.app` (permanent). But tmpfiles.org links in *comments* expire in ~1 hour. Always prefer updating ticket descriptions with screenshots over posting image-heavy comments.
+- **Path-dependent enrollment defaults are by design**: Non-billing onboarding flows (bill upload, connect, move-in non-billing) include a savings preference step that sets `enrollmentPreference` to `manual`. Billing flows don't include this step, so preference stays NULL. When testing features that depend on `enrollmentPreference`, check users from DIFFERENT onboarding paths — they'll have different initial states.
+- **Efficient multi-user testing via Supabase password reset**: When testing across many users from different onboarding paths, batch-reset passwords via Supabase admin API (`PUT /auth/v1/admin/users/{id}`) instead of running full move-in flows. Query DB to find existing users from each path first, only create fresh users when no suitable one exists.
+- **Use precise terminology in tickets**: "No account user" is ambiguous. Say "user with no valid account number" and specify what that means (NULL, empty, or "PENDING"). The codebase has `hasValidAccountNumber()` that defines this.
+
+### Session: 2026-03-30 (ENG-2188 TanStack Migration — 6 exploratory sessions)
+- **Always compare with dev before reporting parity issues**: Christian emphasized this repeatedly. Without dev comparison, we risk false positives. For every suspected bug, run the same flow on dev.publicgrid.energy first, screenshot both, then report only real differences. This caught the txtest Light plan page bug and TX bill drop routing bug.
+- **Clear cookies between Light flow tests**: Light flow session data persists in cookies. Running a second Light test without clearing causes the flow to skip directly to success (skipping plan, identity, payment). Close browser or clear cookies/localStorage/sessionStorage between each Light flow test.
+- **Light API phone validation stricter than standard**: `1111111111` works for standard move-in but fails on Light with `400 | phone_number: Invalid phone number`. Use `(646) 437-6170` for Light flow testing.
+- **ESI ID = Light flow, no ESI ID = TX-DEREG**: In the Light address modal, "Use verified address" (with ESI ID) goes to Light flow (LightUser). "Keep original" (no ESI ID) goes to TX-DEREG move-in (CottageUser). Two completely different user types and DB tables.
+- **txtest vs pgtest for Light encourage conversion**: txtest is the true Light encourage conversion entry (TX ESI address lookup). pgtest + Light address is a move-in → Light transition. They show different plan pages on dev but TanStack renders them the same (bug).
+- **`BASE_URL` env var for TanStack testing**: Added to playwright.config.ts. Use `BASE_URL=http://localhost:3001` to run automated tests against TanStack. POM locator mismatches block ~35+ tests (terms checkbox, sign-in title/email/OTP).
+
+### Session: 2026-04-01 (ENG-2080 Light Email Update Flow)
+- **Supabase admin API requires both headers**: `Authorization: Bearer $SUPABASE_API_KEY` AND `apikey: $SUPABASE_API_KEY`. Missing the `apikey` header returns "No API key found in request". The env var is `SUPABASE_API_KEY`, not `SUPABASE_SERVICE_ROLE_KEY`. Updated the Common Blockers table.
+- **No-session email confirmation creates temporary DB desync**: When a light user confirms an email change from a different browser (no session), `auth.users.email` updates immediately but `LightUsers.email` stays stale. The sync only happens when the user signs in and goes through `/session-init`. This is by design — the `sync-email` API route runs from session-init, not from email-confirmation. Important for test assertions: don't assert LightUsers is synced until after sign-in.
+- **Toast auto-dismisses within ~3 seconds**: The success/warning toasts on `/portal/account` appear briefly after redirect and auto-dismiss. To capture in screenshots, use `waitFor` text matching immediately after navigation, or take the screenshot within 2 seconds of page load. In automated tests, assert toast presence quickly or use Playwright's `toBeVisible` with a short timeout.
+- **Fastmail JMAP for verification email links**: The email confirmation link is a Resend tracked URL that redirects to Supabase verify, which redirects to `/email-confirmation`. Extract with regex: `body.match(/href="([^"]+)"/g)` then filter for links containing `token_hash` or `email_change`. Decode `&amp;` to `&`.
+- **Light email update test users**: `pgtest+lite-in002@joinpublicgrid.com` (single lightDevID, ACTIVE) and `pgtest+lite-multi00@joinpublicgrid.com` (2 lightDevIDs, ACTIVE) are good test accounts for this flow. Multi-account user is essential for AC6 testing.
