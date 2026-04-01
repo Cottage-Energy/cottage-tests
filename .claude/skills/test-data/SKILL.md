@@ -113,6 +113,68 @@ Toggle DB flags for test scenarios. **Always restore in afterEach/cleanup.**
 | `UtilityCompany` | `subscriptionConfigurationID` | Links to pricing config |
 | `CottageUsers` | `enrollmentPreference` | null/verification_only/automatic/manual |
 
+### 8. Gas-Only or Electric-Only User
+Manipulate building config before move-in to control charge account structure.
+
+**Gas-only:**
+```sql
+-- Save original, set electric to NULL
+UPDATE "Building" SET "electricCompanyID" = NULL WHERE "shortCode" = 'autotest';
+-- Run move-in via Playwright MCP (sequentially, NEVER parallel)
+-- Restore after:
+UPDATE "Building" SET "electricCompanyID" = 'SDGE' WHERE "shortCode" = 'autotest';
+```
+
+**Electric-only:** Same pattern but set `gasCompanyID = NULL`.
+
+**Single charge account (both utilities):** Use a building where `electricCompanyID = gasCompanyID` (e.g., `pgtest` has both = SDGE). Exceptions: Eversource and NGMA always create separate charge accounts.
+
+**Separate charge accounts:** Use a building where `electricCompanyID ≠ gasCompanyID` (e.g., `autotest` has SDGE + SCE).
+
+### 9. User with Overdue Unpaid Bills (for payment reminder testing)
+Requires: billing user (Recipe 1) + active account (Recipe 2) + auto-pay OFF.
+
+**Steps:**
+1. During move-in, **uncheck the auto-pay checkbox** on the payment step. Or set via DB: `UPDATE "CottageUsers" SET "isAutoPaymentEnabled" = false WHERE "id" = '<user-id>'`
+2. Activate account: `UPDATE "ElectricAccount" SET "status" = 'ACTIVE' WHERE "id" = '<ea-id>'`
+3. Insert bill as `approved` with overdue due date:
+```sql
+INSERT INTO "ElectricBill" ("electricAccountID", "totalAmountDue", "totalUsage", "startDate", "endDate", "statementDate", "dueDate", "ingestionState")
+VALUES (<ea-id>, 55000, 0, '2026-02-15', '2026-03-15', '2026-03-15', '<overdue-date>', 'approved');
+```
+4. Wait for `balance-ledger-batch` cron (~5 min) — poll every 3 min: `SELECT "ingestionState" FROM "ElectricBill" WHERE "id" = '<id>'`
+5. **NEVER insert as `processed`** — bypasses BLNK ledger, balance stays $0
+6. With auto-pay OFF, `stripe-payment-capture-batch` won't auto-capture — balance stays outstanding
+
+**Trigger reminder pipeline:**
+```bash
+source .env; curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "ledger.payment.reminders", "data": {"emails": ["<user-email>"]}}'
+```
+
+**Reminder thresholds:** Day 5-15 standard, day 16-24 shutoff warning, day 25+ final shutoff → NEEDS_OFF_BOARDING.
+
+### 10. Manual Payment (via "Pay bill" UI)
+For testing payment flows, reconciliation, and partial payments.
+
+**Steps:**
+1. Sign in as the user via Playwright MCP
+2. Click "Pay bill" on overview
+3. Modal shows:
+   - **Single charge account**: "Total Amount Due", "Past Due Balance", "Other Amount"
+   - **Separate charge accounts**: "Total Amount Due", "Other Amount" → expands to per-utility breakdown
+4. Select amount and click "Pay bill"
+5. Wait for payment processing (~15-20s)
+
+**Trigger offboarding reconciliation after payment:**
+```bash
+source .env; curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "trigger.accounts.offboarding.reconciliation", "data": {}}'
+```
+Reconciliation takes ~5-15 min. Poll DB every 3 min to check status.
+
 ---
 
 ## Cleanup

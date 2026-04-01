@@ -74,6 +74,19 @@ gh api repos/Cottage-Energy/services/contents/packages/inngest/functions/onboard
 
 **ENG-2466 fix (PR #310, 2026-03-27)**: Replaced N+1 per-account queries (~180-240 per batch) with bulk `getAccountStatuses()` pre-fetch + chunked bill retrieval (batches of 25 property IDs). `calculateDelinquency` is now synchronous.
 
+**Dev-only email filter**: Trigger function accepts `data.emails` array to target specific users instead of processing all billing users. Example: `{"name": "ledger.payment.reminders", "data": {"emails": ["user@example.com"]}}`
+
+**Known issue (ENG-2570)**: On single charge accounts (same company for electric + gas), gas-only overdue does NOT trigger NEEDS_OFF_BOARDING. Electric-only overdue offboards both. Separate charge accounts handle each utility independently.
+
+### Offboarding Reconciliation
+
+| Function ID | Event Name (dev) | Purpose |
+|-------------|-----------------|---------|
+| `trigger-accounts-offboarding-reconciliation` | `trigger.accounts.offboarding.reconciliation` | Scans NEEDS_OFF_BOARDING accounts; if outstanding balance is paid, restores status to ACTIVE |
+
+**Timing**: Takes ~5-15 min to process after payment succeeds. Can be triggered via event API or Inngest dashboard Invoke.
+**Behavior**: Only reconciles accounts where the balance is fully resolved. Partial payment reconciles only the paid charge account — unpaid accounts stay NEEDS_OFF_BOARDING.
+
 ### Bill Processing & Payments (Cron-only — NOT event-triggerable)
 
 | Function ID | Cron Schedule | Purpose |

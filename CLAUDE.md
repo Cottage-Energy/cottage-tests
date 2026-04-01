@@ -73,7 +73,12 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 - `PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/<feature>/` — run a feature area
 - `PLAYWRIGHT_HTML_OPEN=never npx playwright test --grep /@smoke/ --project=Chromium` — run smoke tests
 - `PLAYWRIGHT_HTML_OPEN=never npx playwright test --grep /@regression1/ --project=Chromium` — run regression scope
+- `BASE_URL=http://localhost:3001 PLAYWRIGHT_HTML_OPEN=never npx playwright test --project=Chromium` — run tests against TanStack local
 - Add `--headed` to watch the browser, `--debug` for Playwright Inspector
+
+### TanStack Local Testing
+- `BASE_URL=http://localhost:3001 PLAYWRIGHT_HTML_OPEN=never npx playwright test --project=Chromium` — run against TanStack local
+- `BASE_URL=http://localhost:3001 PLAYWRIGHT_HTML_OPEN=never npx playwright test --project=Smoke` — smoke suite (use `--project=Smoke`, NOT `--project=Chromium --grep /@smoke/`)
 
 ### CI Triggers
 - `gh workflow run main-workflow.yml -f scope=Smoke -f environment=dev -f logLevel=INFO -f notify=false` — trigger CI run
@@ -129,6 +134,13 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | Verify Utilities | `/verify-utilities/connect-account` | Same `isBillUploadAvailable` prerequisite. **Separate `page.tsx`** from Bill Upload despite shared `(bill-upload)` route group |
 | Connect | `/connect` | |
 
+### Special Flows
+| Flow | Entry Point | Notes |
+|------|-------------|-------|
+| Canada | Add `?country=ca` to encourage conversion URL (e.g., `?shortCode=pgtest&country=ca`) | Manual address form: Address, Unit, City, Province dropdown, Postal code, Country=Canada |
+| Flex (bill splitting) | Dashboard → flex badge "More" (requires ACTIVE ElectricAccount) | "Split this bill" via getflex.com. 2% fee + 1% credit card. Create ComEd user → set status ACTIVE |
+| Light Address Revamp (ENG-2347) | TX shortcodes use Light type-ahead. "Can't find?" → Google fallback modal | See `tests/docs/onboarding-flows.md` for full gate logic and test addresses |
+
 ### Building Shortcodes
 | Shortcode | Description |
 |-----------|-------------|
@@ -136,13 +148,47 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | `pgtest` | Short move-in (`useEncourageConversion=TRUE`, `isUtilityVerificationEnabled=TRUE`) |
 | `txtest` | TX dereg encourage conversion (`useEncourageConversion=TRUE`, ElectricCompany=`TX-DEREG`) |
 
+### User Types & Post-Auth Routes
+| User Type | DB Table | Post-Auth Route | Entry |
+|-----------|----------|-----------------|-------|
+| CottageUser | `CottageUsers` | `/app/*` (Overview, Billing, Services, Household) | Standard move-in, transfer, finish-reg |
+| LightUser | `LightUsers` | `/portal/*` | Light move-in (ESI ID path) |
+
+### "Set it up myself" Test Paths
+| Flow | Button | Result |
+|------|--------|--------|
+| Standard move-in | "I will do the setup myself" (Utility Setup) | Savings alert page |
+| Encourage (pgtest) | "I will call and setup myself" | Contact Provider page (utility verification) |
+| Light (any) | "I will do/set it up myself" | Contact Provider page (via encourage page on TanStack) |
+
 ### Partner Theme Shortcodes
-| Shortcode | Theme | Brand Color |
-|-----------|-------|-------------|
-| `autotest` | Moved | Blue |
-| `funnel4324534` | Funnel | Dark navy |
-| `venn325435435` | Venn | Coral/orange |
-| `renew4543665999` | Renew | Deep indigo |
+| Shortcode | Theme | Brand Color | Flow Type | Notes |
+|-----------|-------|-------------|-----------|-------|
+| `autotest` | Moved | Blue | Standard 6-step | RE available on utility setup step |
+| `moved5439797test` | Moved | Blue | Standard 5-step | RE available on utility setup step |
+| `venn73458test` | Venn | Coral/orange `rgb(234,117,85)` | Encouraged conversion | RE NOT enabled (MoveInPartner) |
+| `funnel4324534` | Funnel | Dark navy | Standard (not Building) | Partner shortcode, not in Building table |
+| `venn325435435` | Venn | Coral/orange | Standard (not Building) | Partner shortcode, not in Building table |
+| `renew4543665999` | Renew | Deep indigo | Standard (not Building) | Partner shortcode, not in Building table |
+
+### Waitlist Test Addresses
+Waitlist can appear in: **move-in**, **transfer**, **bill-upload**, and **verify-utilities** flows.
+
+| Address / ZIP | Flow | Result |
+|---------------|------|--------|
+| `155 N Nebraska Ave, Casper, WY 82609` | Standard move-in (no shortCode) | Waitlist page + Slack alert fires |
+| `155 N Nebraska Ave, Casper, WY 82609` | Transfer flow | "Not able to service this area" + Slack alert fires |
+| `155 N Nebraska Ave, Casper, WY 82609` | Encouraged conversion (pgtest/venn) | **BUG**: Shows welcome page with `null` utility, NO waitlist (ENG-2618) |
+| `500 N Capitol Ave, Lansing, MI 48933` | Standard move-in / Transfer | Also triggers waitlist (no matching utility) |
+| ZIP `12249` | Bill upload / Verify utilities | Waitlist — "We haven't reached 12249 yet" |
+
+### Bill Upload Test ZIPs
+| ZIP | Utility | Result |
+|-----|---------|--------|
+| `10001` | Con Edison | Bill upload available — proceeds to upload page |
+| `12249` | National Grid MA | Waitlist — "We haven't reached 12249 yet" |
+| `75063` | TX-DEREG | Texas bill drop flow |
+
 
 ## Tech Stack
 TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification), Inngest (async job triggers)
@@ -164,6 +210,8 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 | `trigger-subscriptions-payment` | `subscriptions-payment-trigger` | Processes pending metadata into payments |
 | `preparing-for-move` | `preparing-for-move` | Pre-move-in reminder email (2 days before startDate) |
 | `send-email` | `email.send` | Generic email dispatch |
+| `trigger-ledger-payment-reminders` | `ledger.payment.reminders` | Payment reminder pipeline — supports `data.emails` filter in dev |
+| `trigger-accounts-offboarding-reconciliation` | `trigger.accounts.offboarding.reconciliation` | Reconciles NEEDS_OFF_BOARDING → ACTIVE after payment |
 
 **Cron-only functions** (cannot be triggered via event API — must wait for `*/5` schedule or invoke from Inngest dashboard):
 
