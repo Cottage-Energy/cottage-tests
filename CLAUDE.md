@@ -46,7 +46,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
 | **Playwright** | Browser automation for interactive testing and debugging | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
-| **Figma** | UI screens to verify visual correctness and compare against implementation | `get_design_context`, `get_screenshot` |
+| **Figma** | UI screens to verify visual correctness and compare against implementation. **Note**: PG-App file is password-protected — MCP token auth cannot pass link passwords. Request manual screenshots when MCP returns access errors. | `get_design_context`, `get_screenshot` |
 | **Notion** | Documentation hub — feature docs, test plans, test cases *(auth pending)* | Will use MCP tools once authenticated |
 | **context7** | Look up latest library/framework documentation | `resolve-library-id`, `query-docs` |
 | **Exa** | Web search, code examples, and URL crawling for research during test planning and debugging | `web_search_exa`, `get_code_context_exa`, `crawling_exa` |
@@ -172,13 +172,14 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | `renew4543665999` | Renew | Deep indigo | Standard (not Building) | Partner shortcode, not in Building table |
 
 ### Waitlist Test Addresses
-Waitlist can appear in: **move-in**, **transfer**, **bill-upload**, and **verify-utilities** flows.
+Waitlist can appear in: **move-in**, **transfer**, **bill-upload**, **verify-utilities**, and **encouraged conversion** flows.
 
 | Address / ZIP | Flow | Result |
 |---------------|------|--------|
 | `155 N Nebraska Ave, Casper, WY 82609` | Standard move-in (no shortCode) | Waitlist page + Slack alert fires |
 | `155 N Nebraska Ave, Casper, WY 82609` | Transfer flow | "Not able to service this area" + Slack alert fires |
-| `155 N Nebraska Ave, Casper, WY 82609` | Encouraged conversion (pgtest/venn) | **BUG**: Shows welcome page with `null` utility, NO waitlist (ENG-2618) |
+| `155 N Nebraska Ave, Casper, WY 82609` | Encouraged conversion (MoveInPartner, e.g. `venn73458test`) | "We couldn't find service" dialog → `isUtilityVerificationEnabled=OFF` → waitlist; ON → utility verification (PR #1170) |
+| `155 N Nebraska Ave, Casper, WY 82609` | Encouraged conversion (Building, e.g. `pgtest`) | No dialog — Building shortcodes use pre-configured utilities, zip lookup bypassed |
 | `500 N Capitol Ave, Lansing, MI 48933` | Standard move-in / Transfer | Also triggers waitlist (no matching utility) |
 | ZIP `12249` | Bill upload / Verify utilities | Waitlist — "We haven't reached 12249 yet" |
 

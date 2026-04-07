@@ -5,3 +5,4 @@
 export * from './timeouts';
 export * from './testTags';
 export * from './companies';
+export * from './apiV2';

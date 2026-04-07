@@ -83,6 +83,19 @@ If the bug involves errors:
 
 ---
 
+## 2b. Verify Against Figma Design (before filing)
+
+**CRITICAL**: When the bug is an AC-vs-implementation mismatch (the AC says X but the app does Y), check the Figma design BEFORE filing. The design is the source of truth, not the AC text.
+
+- If a Figma link is on the ticket → `mcp__figma__get_design_context` or `mcp__figma__get_screenshot` to check the design
+- If Figma MCP returns access errors (password-protected file) → ask the user for a manual screenshot
+- If the **design matches the implementation** → the AC text is wrong. Flag as an AC/design discrepancy in a comment, NOT as a bug.
+- Only file a bug when the implementation deviates from **both** the AC and the design.
+
+This step prevents false-positive bugs that waste developer time and create noise.
+
+---
+
 ## 3. Identify Suspected Cause
 
 ### Check recent PRs
