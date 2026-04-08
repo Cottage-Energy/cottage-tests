@@ -61,13 +61,17 @@ Waitlist can appear in 4 flows: **move-in**, **transfer**, **bill-upload**, and 
 
 | Address / ZIP | Flows that show waitlist | Flows that DON'T |
 |---------------|--------------------------|-------------------|
-| `155 N Nebraska Ave, Casper, WY 82609` | Standard move-in, Transfer | Encouraged conversion (BUG: ENG-2618) |
-| `500 N Capitol Ave, Lansing, MI 48933` | Standard move-in, Transfer | Encouraged conversion (same bug) |
+| `155 N Nebraska Ave, Casper, WY 82609` | Standard move-in, Transfer | Encouraged conversion (see note below) |
+| `500 N Capitol Ave, Lansing, MI 48933` | Standard move-in, Transfer | Encouraged conversion (see note below) |
 | ZIP `12249` (National Grid MA) | Bill upload, Verify utilities | — |
 
 **Bill upload / Verify utilities waitlist**: Enter a ZIP where `isBillUploadAvailable=FALSE` on the UtilityCompany → "We haven't reached [ZIP] yet" waitlist page appears.
 
-**Known bug (ENG-2618)**: Encouraged conversion flows (`useEncouragedConversion=true`) bypass the waitlist state entirely for unsupported addresses. The user sees the welcome page with "null" utility name, can complete the full form, then gets a generic "Something went wrong" error on submit. No Slack alert fires.
+**Encouraged conversion + unsupported address behavior** (post ENG-2641 revert, 2026-04-08):
+- **Building shortcodes** (e.g., `pgtest`): Welcome page renders with building's utility (e.g., SDGE) regardless of zip. No waitlist, no error — building config overrides zip lookup.
+- **MoveInPartner shortcodes (utilVerif=ON)** (e.g., `venn73458test`): Routes to Contact Provider (utility verification) via `zip-logic.ts`. "Your provider is" shows empty — no provider for unsupported area.
+- **MoveInPartner shortcodes (utilVerif=OFF) with no building utilities**: Welcome page with "null" utility name → 400 error on submit (ENG-2618 behavior, no test shortcode exists for this exact config).
+- **No Slack waitlist alert fires** in any encouraged conversion path — the encouraged conversion machine never enters the waitlist XState state.
 
 ### Bill Upload Test Data
 - **ZIP for Con Edison (bill upload available)**: `10001` (NOT `12249` — that maps to National Grid MA which goes to waitlist)

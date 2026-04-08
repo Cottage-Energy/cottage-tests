@@ -14,6 +14,7 @@
 import { PublicGridApiV2 } from './publicGridApiV2';
 import { createLogger } from '../../utils/logger';
 import type {
+  ApiV2PaginatedResponse,
   ApiV2Response,
   Bill,
   BillsFilterParams,
@@ -31,6 +32,12 @@ import type {
 const log = createLogger('CustomersApiV2');
 
 export class CustomersApiV2 extends PublicGridApiV2 {
+  /** GET /customers — list customers with optional filters */
+  async listCustomers(params?: { limit?: number; offset?: number; buildingID?: string }): Promise<ApiV2Response<ApiV2PaginatedResponse<Customer>>> {
+    log.info('List customers', { params });
+    return this.get<ApiV2PaginatedResponse<Customer>>('/customers', params as Record<string, string | number>);
+  }
+
   /** GET /customers/{customerID} */
   async getCustomer(customerID: string): Promise<ApiV2Response<Customer>> {
     log.info('Get customer', { customerID });

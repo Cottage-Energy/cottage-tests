@@ -6,19 +6,19 @@
 
 /** Base URLs per environment — v2 API */
 export const API_V2_BASE_URLS: Record<string, string> = {
-  dev: 'https://api-dev.onepublicgrid.com/api/v2',
-  staging: 'https://api-staging.onepublicgrid.com/api/v2',
-  production: 'https://api.onepublicgrid.com/api/v2',
+  dev: 'https://api-dev.publicgrd.com/v2',
+  staging: 'https://api-staging.publicgrd.com/v2',
+  production: 'https://api.onepublicgrid.com/v2',
 } as const;
 
-/** Default pagination values from the spec */
+/** Default pagination values (actual API, not spec) */
 export const API_V2_PAGINATION = {
   /** Default limit for most list endpoints */
-  DEFAULT_LIMIT: 50,
+  DEFAULT_LIMIT: 25,
   /** Max limit for most list endpoints */
   MAX_LIMIT: 100,
   /** Default limit for bill list endpoints */
-  BILLS_DEFAULT_LIMIT: 12,
+  BILLS_DEFAULT_LIMIT: 25,
   /** Max limit for bill list endpoints */
   BILLS_MAX_LIMIT: 50,
   /** Default offset */

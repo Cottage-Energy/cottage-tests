@@ -9,7 +9,8 @@
  */
 
 import { createLogger } from '../../utils/logger';
-import { API_V2_BASE_URLS, API_V2_ENV } from '../../constants/apiV2';
+import { API_V2_ENV } from '../../constants/apiV2';
+import environmentBaseUrl from '../../utils/environmentBaseUrl';
 import type { ApiV2Error, ApiV2Response } from '../../types/apiV2.types';
 
 const log = createLogger('PublicGridApiV2');
@@ -19,8 +20,9 @@ export class PublicGridApiV2 {
   protected readonly apiKey: string;
 
   constructor(apiKey?: string) {
-    const env = process.env[API_V2_ENV.ENVIRONMENT] || 'dev';
-    this.baseUrl = API_V2_BASE_URLS[env] || API_V2_BASE_URLS.dev;
+    const env = (process.env.ENV || 'dev') as keyof typeof environmentBaseUrl;
+    const envConfig = environmentBaseUrl[env] || environmentBaseUrl.dev;
+    this.baseUrl = ('api_v2' in envConfig) ? (envConfig as { api_v2: string }).api_v2 : 'https://api-dev.publicgrd.com/v2';
 
     this.apiKey = apiKey || process.env[API_V2_ENV.API_KEY] || '';
     if (!this.apiKey) {

@@ -27,6 +27,16 @@ Accept any combination of inputs — a Linear ticket is NOT required. Route by w
   - Edge states visible in design (empty states, error states)
 - Map design elements to test interactions and assertions
 
+### API Spec / Documentation Link
+When the source is an API design doc, OpenAPI spec, PDF, or live docs site:
+- **Prefer live docs over PDF exports** — PDFs go stale fast. Ask for a docs site URL (Cloudflare Pages, ReadMe, Swagger UI, etc.) if a PDF is provided
+- Use `WebFetch` to crawl the docs site — get overview, authentication, each endpoint reference, schemas, pagination, errors, and rate limiting pages
+- **Probe the live API before finalizing test cases** — specs drift from implementation. Use `curl` to hit each endpoint and capture actual response shapes. Compare against what docs say.
+- For each endpoint, extract: HTTP method, path, path params, query params, request body fields (required vs optional), response schema, error codes
+- Categorize planned test cases as: happy path, validation (400), auth (401/403), not found (404), conflict (409), pagination, data format conventions
+- **Always note spec-vs-reality discrepancies** — flag as "API bug" (code wrong), "doc bug" (docs wrong), or "improvement" (works but could be better)
+- Cross-reference with `tests/api_tests/` for existing API test patterns (e.g., `RegisterApi` helper pattern)
+
 ### GitHub PR Link
 - Use `mcp__github__get_pull_request` and `mcp__github__get_pull_request_files` to read the diff
 - **If GitHub MCP returns 404** (common for `services`, `cottage-nextjs`, `pg-admin`), fall back to CLI: `gh pr view <number> --repo Cottage-Energy/<repo> --json title,body,state,files` and `gh pr diff <number> --repo Cottage-Energy/<repo>`

@@ -64,6 +64,23 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 Use these as `owner` and `repo` parameters for all GitHub MCP tool calls.
 
+## Partner API v2
+
+Public Grid exposes a REST API for third-party partners. Tests are in `tests/api_tests/v2/`.
+
+| Environment | Base URL |
+|-------------|----------|
+| Dev | `https://api-dev.publicgrd.com/v2` |
+| Staging | `https://api-staging.publicgrd.com/v2` |
+| Production | `https://api.onepublicgrid.com/v2` |
+
+- **Live docs**: `https://0bb57b59.developers-dkm.pages.dev/` (source of truth — NOT the PDF spec)
+- **Auth**: Bearer token via `API_V2_KEY` env var
+- **Base URL config**: `tests/resources/utils/environmentBaseUrl.ts` (has `api_v2` field per environment)
+- **Test data**: customer `pgtest+funnel+final0002@joinpublicgrid.com`, property UUID `67c3e4a3...`, 4 bills, lease `qa-apiv2-lease-001`
+- **Ticket**: ENG-2585
+- **Pattern**: helpers in `tests/resources/fixtures/api/` extend `PublicGridApiV2` base class
+
 ## Commands
 
 Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the report browser from blocking.
@@ -233,6 +250,8 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 
 **Reading Inngest function source**: When a ticket involves an Inngest function, read the source via GitHub API to understand trigger mechanism and eligibility criteria:
 `gh api repos/Cottage-Energy/services/contents/<path> --jq '.content' | base64 -d`
+
+**TanStack Inngest integration**: The TanStack migration has its own Inngest package at `packages/tanstack-inngest/src/functions/` in cottage-nextjs. These are local server-side functions (NOT the `services` repo). TanStack server-side errors appear in the browser console with a `[Server] LOG` prefix. When debugging TanStack email/event issues, check both the browser console for `[Server]` errors and the network tab for the `_serverFn/` POST calls.
 
 ## Environments
 Environment base URLs are configured in `tests/resources/utils/environmentBaseUrl.ts`. Tests select the environment via the `ENVIRONMENT` env var.

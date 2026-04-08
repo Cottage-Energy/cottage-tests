@@ -1,11 +1,74 @@
 # Test Plan: Public Grid REST API v2
 
 ## Overview
-**Ticket**: N/A (API Design Specification)
-**Source**: Public Grid REST API v2 Design Specification (PDF, Draft v0.2 — March 2026)
-**Date**: 2026-04-06
+**Ticket**: ENG-2585
+**Source**: Live API documentation at `https://0bb57b59.developers-dkm.pages.dev/` (supersedes PDF Draft v0.2)
+**Date**: 2026-04-08 (updated from 2026-04-06)
 **Tester**: Christian
-**Base URL**: `https://api.onepublicgrid.com/api/v2`
+**Base URL**: `https://api.publicgrd.com/v2` (dev: `https://api-dev.publicgrd.com/v2`)
+
+> **NOTE**: This plan was originally based on the Notion PDF spec (Draft v0.2, March 2026).
+> As of 2026-04-08, the **live docs site** is the source of truth. Key differences documented below.
+
+## Live Docs vs. PDF Spec — Changelog
+
+| Area | PDF Spec | Live Docs / Actual API | Impact |
+|------|----------|----------------------|--------|
+| Base URL | `api.onepublicgrid.com/api/v2` | `api.publicgrd.com/v2` | Updated in tests |
+| Pagination | Flat `total/limit/offset` | Nested `{ pagination: { total, limit, offset, hasMore } }` | Tests updated |
+| Default limit | 50 | 25 | Tests updated |
+| Building shape | `utilities[]` array | `electricCompanyID` / `gasCompanyID` strings | Tests updated |
+| Property IDs | Integer paths | UUID paths (`propertyUUID`) | Tests updated |
+| Bill IDs | Integer paths | UUID paths (`billID` as UUID) | Tests updated |
+| Property shape | `utilities[]` + `customer` | `electricAccountStatus` / `gasAccountStatus`, no customer in list | Tests updated |
+| Utility shape | `pgEnabled/website/phone/states` | `status/isHandleBilling/logoURL` | Tests updated |
+| Error details | `{ field, reason }` | `{ fields: [{ path, message }] }` | Tests updated |
+| Account statuses | Title Case (`Active`) | lowercase (`active`) | Tests updated |
+| `GET /customers` list | Not in PDF | **New endpoint** — paginated, supports `buildingID` filter | Tests added |
+| `GET /health` | Not in PDF | In docs but NOT IMPLEMENTED (404) | Noted |
+| Rate limiting | Not in PDF | 1,000 req/60s, `429 RATE_LIMITED` | Tests added |
+| `POST /buildings/create` | In PDF | NOT in docs, NOT IMPLEMENTED (404) | Tests skipped |
+| `POST /customers/auth` (SSO) | In PDF | NOT in docs, NOT IMPLEMENTED (404) | Tests skipped |
+| Webhooks | In PDF | NOT in docs | Tests skipped |
+| Bill detail schema | `totalAmountDueCents`, `accountType` | Docs: `amount` (dollars), `type`. Actual: `totalAmountDue` (cents), `type` | **BUG**: docs vs actual mismatch |
+| Bill detail fields | `startDate/endDate/pdfURL` | Docs: `date`, `daysInCycle`, `usageAmount`, `usageUnit`. Actual: `startDate/endDate/totalAmountDue/totalUsage` | **BUG**: docs vs actual mismatch |
+| Zip response | No `zip` field in actual | Docs say `zip` field. Actual: no `zip` top-level | **BUG**: docs vs actual mismatch |
+| Zip path param | `{zip}` | Docs: `{zipCode}` with pattern `^\d{5}$` | Noted |
+
+## Bugs Found (as of 2026-04-08)
+
+| # | Bug | Severity | Status |
+|---|-----|----------|--------|
+| 1 | Status filter on `/properties?status=Active` ignored | Medium | Open |
+| 2 | Timestamps not ISO 8601 (Postgres format) | Medium | Open |
+| 3 | Bill detail: docs say `amount` (dollars) but API returns `totalAmountDue` (cents integer) | Medium | Open |
+| 4 | Bill detail: docs say `daysInCycle/usageAmount/usageUnit` but API returns `totalUsage` only | Medium | Open |
+| 5 | Zip response: docs say `zip` field present but API omits it | Low | Open |
+| 6 | Search doesn't return `properties` array | Low | Open |
+| 7 | Bill field names: docs say `accountType`, API returns `type` | Low | Open |
+
+## Test Execution Summary (as of 2026-04-08)
+
+| Metric | Count |
+|--------|-------|
+| Total tests | 143+ |
+| Passed | 109 |
+| Failed | 0 |
+| Skipped (endpoint not deployed) | 25 |
+| Skipped (needs 2nd API key) | 5 |
+| Skipped (needs test data) | 4 |
+
+## Test Data (established in dev)
+
+| Data | Value | Purpose |
+|------|-------|---------|
+| Customer | `pgtest+funnel+final0002@joinpublicgrid.com` (ID: `3a4c161c-3d3a-4ec8-a7a9-530c9da70e67`) | Customer GET, search |
+| Property | UUID `67c3e4a3-3570-4b93-a9e3-ec313dc9038d` | Property detail, bills, intervals |
+| Building | `009be2c6-dd00-428b-8e0d-92eb53e8418e` (99 Suffolk St, partner: Funnel) | Building tests |
+| Lease ID | `qa-apiv2-lease-001` | Search by lease |
+| Bill | ID 81397, UUID `9cfb0a69-96a7-4fea-a190-8f86ed541bf8`, $85.00, 450.5 kWh, Jan 2025 | Bill tests |
+
+---
 
 ## Scope
 

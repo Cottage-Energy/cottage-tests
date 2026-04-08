@@ -12,7 +12,7 @@ import { BuildingsApiV2 } from '../../../resources/fixtures/api';
 import { TIMEOUTS, TEST_TAGS, API_V2_ERROR_CODES, API_V2_ENV } from '../../../resources/constants';
 import { PublicGridApiV2 } from '../../../resources/fixtures/api';
 import { createLogger } from '../../../resources/utils/logger';
-import type { ApiV2Error, ApiV2PaginatedResponse, Building } from '../../../resources/types';
+import type { ApiV2PaginatedResponse, Building } from '../../../resources/types';
 
 const log = createLogger('AuthApiV2');
 
@@ -39,9 +39,9 @@ test.describe('API v2: Authentication & Authorization', () => {
 
     const response = body as ApiV2PaginatedResponse<Building>;
     expect(response.data).toBeInstanceOf(Array);
-    expect(response).toHaveProperty('total');
-    expect(response).toHaveProperty('limit');
-    expect(response).toHaveProperty('offset');
+    expect(response.pagination).toBeTruthy();
+    expect(response.pagination.total).toBeGreaterThanOrEqual(0);
+    expect(response.pagination.limit).toBeGreaterThan(0);
   });
 
   // ─── AUTH-002: Missing Authorization header ───
@@ -179,8 +179,8 @@ test.describe('API v2: Authentication & Authorization', () => {
     test.skip(!knownCustomerID, 'API_V2_TEST_CUSTOMER_ID not set — skipping');
 
     log.step(1, 'Attempt to access primary partner customer with secondary key');
-    const { CustomersApiV2 } = await import('../../../resources/fixtures/api');
-    const secondaryApi = new CustomersApiV2(secondaryKey);
+    const { CustomersApiV2: CustApi } = await import('../../../resources/fixtures/api/index.js');
+    const secondaryApi = new CustApi(secondaryKey);
     const { status, body } = await secondaryApi.getCustomer(knownCustomerID!);
 
     log.step(2, 'Verify 403 FORBIDDEN');

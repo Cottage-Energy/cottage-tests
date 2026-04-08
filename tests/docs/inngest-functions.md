@@ -180,6 +180,8 @@ These are triggered internally by the FE and **cannot be triggered via the pg-pa
 
 **To test FE Inngest functions**: Run the corresponding e2e flow (move-in, sign-in with unknown email, etc.) rather than triggering events directly. Alternatively, get the FE event key from the Inngest dashboard.
 
+**TanStack migration note (Apr 2026)**: In the TanStack branch, these FE Inngest functions are reimplemented in `packages/tanstack-inngest/src/functions/` (cottage-nextjs repo). The TanStack server functions (`createServerFn`) must explicitly dispatch these events — missing dispatches cause silent email failures (DB record created, UI shows success, but no email sent). Server-side errors appear in the browser console with a `[Server] LOG` prefix. When debugging, check both `browser_console_messages` for `[Server]` entries and the `_serverFn/` POST calls in network tab.
+
 ## Email Verification Pattern
 
 After triggering any email-related Inngest function:

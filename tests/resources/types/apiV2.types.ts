@@ -35,11 +35,16 @@ export type ApiV2ErrorCode =
   | 'CONFLICT'
   | 'INTERNAL_ERROR';
 
-export interface ApiV2PaginatedResponse<T> {
-  data: T[];
+export interface ApiV2Pagination {
   total: number;
   limit: number;
   offset: number;
+  hasMore: boolean;
+}
+
+export interface ApiV2PaginatedResponse<T> {
+  data: T[];
+  pagination: ApiV2Pagination;
 }
 
 export interface ApiV2PaginationParams {
@@ -67,22 +72,17 @@ export interface BuildingUtility {
 export interface Building {
   id: string;
   name: string;
-  shortCode: string;
-  externalID?: string;
-  address: ApiV2Address;
-  utilities: BuildingUtility[];
-  totalUnitCount: number;
-  createdAt: string;
+  shortCode: string | null;
+  externalID: string | null;
+  address: ApiV2Address | null;
+  electricCompanyID: string | null;
+  gasCompanyID: string | null;
 }
 
 export interface BuildingPropertySummary {
   id: number;
-  unitNumber: string;
-  utilities: {
-    accountID: number;
-    accountType: 'electric' | 'gas';
-    status: PartnerStatus;
-  }[];
+  uuid: string;
+  unitNumber: string | null;
 }
 
 export interface BuildingDetail extends Building {
@@ -128,11 +128,12 @@ export interface PropertyCustomerSummary {
 
 export interface Property {
   id: number;
+  uuid: string;
   buildingID: string;
-  unitNumber: string;
-  address: ApiV2Address;
-  utilities: PropertyUtilityAccount[];
-  customer: PropertyCustomerSummary;
+  unitNumber: string | null;
+  address: ApiV2Address | null;
+  electricAccountStatus: string | null;
+  gasAccountStatus: string | null;
 }
 
 export interface PropertiesFilterParams extends ApiV2PaginationParams {
@@ -364,12 +365,11 @@ export interface RegistrationSuccessResponse {
 
 export interface UtilityCompanyV2 {
   id: string;
-  name: string;
-  website: string;
-  phone: string;
-  pgEnabled: boolean;
-  utilitiesHandled: ('electricity' | 'gas')[];
-  states: string[];
+  name: string | null;
+  status: string;
+  utilitiesHandled: string[] | null;
+  isHandleBilling: boolean;
+  logoURL: string | null;
 }
 
 export interface UtilitiesFilterParams {
@@ -378,17 +378,17 @@ export interface UtilitiesFilterParams {
 }
 
 export interface ZipUtilityProvider {
-  id: string;
-  name: string;
+  utilityCompanyID: string;
   isPrimaryUtility: boolean;
-  pgEnabled: boolean;
-  website: string;
-  phone: string;
-  utilitiesHandled: ('electricity' | 'gas')[];
+  state: string;
+  name: string;
+  status: string;
+  utilitiesHandled: string[] | null;
+  isHandleBilling: boolean;
+  logoURL: string | null;
 }
 
 export interface ZipLookupResponse {
-  zip: string;
   utilityProviders: ZipUtilityProvider[];
 }
 

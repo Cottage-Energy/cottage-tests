@@ -277,10 +277,30 @@ function resetPassword(userId: string, password: string = 'PG#12345'): void {
 ## 2-API. Determine Placement (API Tests)
 - Place in `tests/api_tests/<feature>/`
 - Name it `{feature}_{scenario}.spec.ts`
-- Check existing API tests with `Glob` for `tests/api_tests/**/*.spec.ts` to follow patterns (e.g., `tests/api_tests/register/`)
+- Check existing API tests with `Glob` for `tests/api_tests/**/*.spec.ts` to follow patterns (e.g., `tests/api_tests/register/`, `tests/api_tests/v2/`)
+
+## 2b-API. Probe Live Endpoints Before Writing Types
+**CRITICAL: Do NOT write TypeScript types from a spec alone.** Specs drift from implementation. Before creating types or assertions:
+1. **`curl` each endpoint** to capture the actual response shape — fields, types, nesting, pagination structure
+2. **Compare spec vs actual** — note discrepancies as potential bugs or spec drift
+3. **Write types from actual responses**, not from the spec. Add comments where actual differs from spec.
+4. **Use `process.env` for test data IDs from the start** — don't rely on "first item in list" from paginated endpoints. Wire env vars (e.g., `API_V2_TEST_PROPERTY_UUID`) into `beforeAll` setup immediately.
+5. **Categorize findings** as: API bug (code wrong), doc bug (docs wrong), improvement (works but suboptimal), not-a-bug (intended)
+
+Example probe:
+```bash
+curl -s "https://api-dev.publicgrd.com/v2/buildings?limit=1" \
+  -H "Authorization: Bearer $API_KEY" | node -e "
+  const d=JSON.parse(require('fs').readFileSync(0,'utf8'));
+  console.log('Keys:', Object.keys(d));
+  console.log('Item keys:', d.data?.[0] ? Object.keys(d.data[0]) : 'empty');
+"
+```
+
+This prevents the expensive rewrite cycle of: write types from spec → tests fail → discover actual shape → rewrite everything.
 
 ## 3-API. API Helper Class
-Create a reusable API helper following the `RegisterApi` pattern at `tests/resources/fixtures/api/`:
+Create a reusable API helper following the `RegisterApi` or `PublicGridApiV2` pattern at `tests/resources/fixtures/api/`:
 
 ```typescript
 import { createLogger } from '../../utils/logger';
@@ -469,3 +489,10 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Cron functions can't be triggered via event API**: `inn.gs/e/balance-ledger.batch` returns 200 but does nothing. Updated section 6b to distinguish event-triggered vs cron-only functions.
 - **Shortcut for FE-only tests**: If testing only FE behavior (e.g., chart rendering), first bill goes through real pipeline to validate setup, then set remaining bills directly to `processed` via SQL.
 - **Gas account creation**: If a building doesn't have gas, can INSERT a `GasAccount` manually with valid `utilityCompanyID` (e.g., `PEOPLES-GAS`, `DUKE`, `BGE`). Set `maintainedFor`, `status = ACTIVE`, `registrationJobCompleted = true`.
+
+### Session: 2026-04-08 (ENG-2639 Alerts Enrollment API)
+- **`sendMethod()` must omit Content-Type**: When testing unsupported HTTP methods (PUT/DELETE/PATCH), do NOT send `Content-Type: application/json`. Fastify validates the body schema before checking the route, returning 400 instead of the expected 404. Omit the header to get the correct 404.
+- **`create_resident_from_utility_verification` RPC sets termsAndConditionsDate**: Even when `consentDate` is not provided, the Supabase RPC sets `termsAndConditionsDate` to NOW(). Don't assert null — assert it's a recent timestamp.
+- **`enrollRaw()` method pattern**: For validation tests where you need to send invalid types (numbers, booleans) or partial bodies, use a `Record<string, unknown>` overload instead of the typed interface. This avoids TypeScript blocking the invalid payloads you need to test.
+- **Partner Referral tracing**: Enrolled users link to MoveInPartner via `Referrals.referredBy` → `MoveInPartner.id`, NOT via Property.buildingID. Property.buildingID is null for API-enrolled users.
+- **v1 API tests directory**: `tests/api_tests/v1/` is now the home for v1 partner API tests alongside `tests/api_tests/v2/` for Public Grid API v2.
