@@ -334,7 +334,7 @@ test.describe('Invalid Card to Valid Bank Auto Payment', () => {
           billQueries.insertGasBill(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage)
       ]);
       await page.waitForTimeout(500)
-      await autoChecks.Auto_Card_Payment_Electric_Gas_Checks(page, MoveIn, PGuserUsage);
+      await autoChecks.Auto_Card_Payment_Electric_Gas_Checks_Multiple_Charge(page, MoveIn, PGuserUsage);
     });
 
 
@@ -435,7 +435,7 @@ test.describe('Invalid Card to Valid Bank Auto Payment', () => {
             billQueries.insertGasBill(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await autoChecks.Auto_Card_Payment_Electric_Gas_Checks(page, MoveIn, PGuserUsage);
+        await autoChecks.Auto_Card_Payment_Electric_Gas_Checks_Multiple_Charge(page, MoveIn, PGuserUsage);
     });
 
 
@@ -784,10 +784,10 @@ test.describe('Invalid Bank to Valid Card Auto Payment', () => {
             billQueries.insertGasBill(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await autoChecks.Auto_Bank_Payment_Electric_Gas_Checks(page, MoveIn, PGuserUsage);
+        await autoChecks.Auto_Bank_Payment_Electric_Gas_Checks_Multiple_Charge(page, MoveIn, PGuserUsage);
     });
 
-    
+
     test('BGE Gas Finish Account Added to Pay Button Update', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
@@ -889,7 +889,7 @@ test.describe('Invalid Bank to Valid Card Auto Payment', () => {
             billQueries.insertGasBill(GasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage)
         ]);
         await page.waitForTimeout(500)
-        await autoChecks.Auto_Bank_Payment_Electric_Gas_Checks(page, MoveIn, PGuserUsage);
+        await autoChecks.Auto_Bank_Payment_Electric_Gas_Checks_Single_Charge(page, MoveIn, PGuserUsage);
     });
 
 
