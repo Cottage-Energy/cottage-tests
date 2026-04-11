@@ -175,11 +175,14 @@ export class OverviewPage {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000);
 
-        const isFlexVisible = await this.Overview_Split_My_Bill_Option.isVisible();
-        if (isFlexVisible) {
-            await expect(this.Overview_Pay_In_Full_Option).toBeVisible({timeout:30000});
+        // Always click "Pay in full" if visible — this reveals the Stripe payment form.
+        // For Flex-enabled utilities: shows both "Pay in full" and "Split my bill"
+        // For non-Flex utilities: may show only "Pay in full"
+        // Either way, clicking "Pay in full" is required to load the Stripe iframe.
+        const isPayInFullVisible = await this.Overview_Pay_In_Full_Option.isVisible();
+        if (isPayInFullVisible) {
             await this.Overview_Pay_In_Full_Option.click();
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForTimeout(3000);
         }
     }
 
