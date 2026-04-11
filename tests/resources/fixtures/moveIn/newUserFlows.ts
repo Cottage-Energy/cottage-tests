@@ -409,6 +409,116 @@ export async function newUserMoveInAddressParameter(
 
 
 /**
+ * Encouraged conversion move-in flow (pgtest, funnel, partner shortcodes).
+ *
+ * This is a 2-step flow — NOT the standard 6-step:
+ * Step 1: Address lookup → Encouraged landing page (terms, GridRewards) → "Get started"
+ * Step 2: All personal info on ONE page (name, email, phone, date, DOB, SSN, prev address) → "Finish setup"
+ *
+ * VERIFIED via Playwright MCP (2026-04-11):
+ * - pgtest, funnel4324534, and partner shortcodes all use this flow
+ * - No separate utility setup or identity steps — everything on one form
+ * - "Finish setup" button (not "Continue")
+ */
+export async function newUserMoveInEncouraged(
+  page: Page,
+  shortCode: string,
+): Promise<MoveInResult> {
+  const moveInPage = new MoveInPage(page);
+  const pgUser = await generateTestUserData();
+  const pgUserName = `PGTest ${pgUser.FirstName} ${pgUser.LastName}`;
+  const pgUserFirstName = `PGTest ${pgUser.FirstName}`;
+  const pgUserEmail = pgUser.Email;
+
+  log.info('Starting encouraged conversion move-in', { shortCode, email: pgUserEmail });
+
+  // Step 1: Address lookup page
+  // Encouraged flows start with "Where are you looking to start service?" — no Welcome/Terms step
+  const addressInput = page.locator('#onboardingAddress');
+  await addressInput.waitFor({ state: 'visible', timeout: 30000 });
+  await addressInput.pressSequentially(MoveInData.COMEDaddress);
+  await page.waitForTimeout(2000);
+
+  // Select first autocomplete suggestion
+  const firstSuggestion = page.getByText(MoveInData.COMEDaddress.substring(0, 15)).first();
+  await firstSuggestion.waitFor({ state: 'visible', timeout: 10000 });
+  await firstSuggestion.click();
+
+  // Enter unit number
+  await page.locator('input[name="unitNumber"]').fill(pgUser.UnitNumber);
+
+  // Click Next (becomes enabled after address selection)
+  const nextBtn = page.getByRole('button', { name: 'Next' });
+  await nextBtn.waitFor({ state: 'visible', timeout: 10000 });
+  await nextBtn.click();
+  await page.waitForTimeout(3000);
+
+  // Encouraged landing page: agree to terms → click "Get started"
+  const termsCheckbox = page.getByRole('checkbox', { name: /I agree to Public Grid/ });
+  await termsCheckbox.waitFor({ state: 'visible', timeout: 30000 });
+  await termsCheckbox.click();
+
+  const getStartedBtn = page.getByRole('button', { name: 'Get started' });
+  await getStartedBtn.waitFor({ state: 'visible', timeout: 10000 });
+  await getStartedBtn.click();
+  await page.waitForTimeout(3000);
+
+  // Step 2: "Just a couple more details" — all personal info on one page
+  await page.getByText('Just a couple more details').waitFor({ state: 'visible', timeout: 30000 });
+
+  // Fill personal info
+  await page.locator('input[name="firstName"]').fill(`PGTest ${pgUser.FirstName}`);
+  await page.locator('input[name="lastName"]').fill(pgUser.LastName);
+  await page.locator('input[name="email"]').fill(pgUser.Email);
+  await page.locator('input[name="phone"]').fill(pgUser.PhoneNumber);
+
+  // Move-in date — click the date picker button and select first available date
+  const datePickerBtn = page.getByRole('button', { name: 'Select a move-in date' });
+  await datePickerBtn.click();
+  await page.waitForTimeout(1000);
+  const firstAvailableDate = page.locator('[role="gridcell"]:not([disabled])').first();
+  await firstAvailableDate.click();
+
+  // DOB and SSN
+  await page.locator('input[name="dateOfBirth"]').fill(pgUser.BirthDate);
+  await page.locator('input[name="identityNumber"]').fill(pgUser.SSN);
+
+  // Previous address
+  const prevAddressInput = page.locator('#onboardingAddress');
+  await prevAddressInput.fill(MoveInData.COMEDaddress);
+  await page.waitForTimeout(2000);
+  const prevSuggestion = page.getByText(MoveInData.COMEDaddress.substring(0, 15)).first();
+  await prevSuggestion.waitFor({ state: 'visible', timeout: 10000 });
+  await prevSuggestion.click();
+
+  // Click "Finish setup"
+  const finishBtn = page.getByRole('button', { name: 'Finish setup' });
+  await finishBtn.waitFor({ state: 'visible', timeout: 10000 });
+  await finishBtn.click();
+
+  // Wait for success page
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(5000);
+
+  // Get results
+  const smsConsent = true; // SMS checkbox checked by default in encouraged flow
+  const cottageUserId = await userQueries.checkCottageUserId(pgUser.Email, smsConsent);
+  const accountNumber = await userQueries.checkCottageUserAccountNumber(pgUserEmail);
+
+  log.info('Encouraged conversion move-in complete', { email: pgUserEmail, cottageUserId });
+
+  return {
+    accountNumber,
+    cottageUserId,
+    pgUserName,
+    pgUserFirstName,
+    pgUserEmail,
+    smsConsent,
+  };
+}
+
+
+/**
  * Move-in flow for existing utility account
  */
 export async function moveInExistingUtilityAccount(

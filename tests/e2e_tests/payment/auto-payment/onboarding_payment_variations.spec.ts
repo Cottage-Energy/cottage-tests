@@ -1,5 +1,5 @@
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInAutoPayment, generateTestUserData, CleanUp, PaymentUtilities, RegisterApi } from '../../../resources/fixtures';
+import { newUserMoveInEncouraged, generateTestUserData, CleanUp, PaymentUtilities, RegisterApi } from '../../../resources/fixtures';
 import { utilityQueries } from '../../../resources/fixtures/database';
 import { TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -45,22 +45,13 @@ test.describe('Onboarding Payment Variations — Encouraged Conversion', () => {
     await utilityQueries.updateBuildingUseEncourageConversion("pgtest", true);
 
     await page.goto('/move-in?shortCode=pgtest', { waitUntil: 'domcontentloaded' });
+    MoveIn = await newUserMoveInEncouraged(page, 'pgtest');
 
-    // VERIFIED via Playwright MCP (2026-04-11): pgtest uses encouraged conversion flow
-    // which starts with address lookup ("Where are you looking to start service?"), NOT
-    // the standard 6-step Welcome flow. newUserMoveInAutoPayment WON'T work — it expects
-    // the standard flow with Terms/Welcome step.
-    // NEEDS: dedicated encouraged conversion move-in function (newUserMoveInEncouraged)
-    // For now, using standard move-in with autotest shortcode as a placeholder.
-    // TODO: Replace with encouraged conversion move-in function when available.
-    await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
-    await utilityQueries.updateCompaniesToBuilding("autotest", "SDGE", null);
-    MoveIn = await newUserMoveInAutoPayment(page, "SDGE", null, true, false);
-
-    await page.goto('/sign-in'); //TEMPORARY FIX
-
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+    await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC, PGuserUsage.Country, PGuserUsage.Zip);
 
     // Payment Checks — Electric only (single charge account, SDGE)
     await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
@@ -78,16 +69,14 @@ test.describe('Onboarding Payment Variations — Encouraged Conversion', () => {
     // pgtest shortcode with SDGE for both electric and gas
     await utilityQueries.updateBuildingUseEncourageConversion("pgtest", true);
 
-    // VERIFIED: pgtest uses encouraged conversion flow (address lookup, not standard 6-step)
-    // Using autotest shortcode with SDGE config as placeholder until encouraged move-in function exists
-    await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
-    await utilityQueries.updateCompaniesToBuilding("autotest", "SDGE", "SDGE");
-    MoveIn = await newUserMoveInAutoPayment(page, "SDGE", "SDGE", true, true);
+    await page.goto('/move-in?shortCode=pgtest', { waitUntil: 'domcontentloaded' });
+    MoveIn = await newUserMoveInEncouraged(page, 'pgtest');
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
-
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+    await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC, PGuserUsage.Country, PGuserUsage.Zip);
 
     // Payment Checks — Electric + Gas with multiple charge accounts (SDGE uses separate)
     await paymentUtilities.Auto_Card_Payment_Electric_Gas_Checks_Multiple_Charge(page, MoveIn, PGuserUsage);
@@ -111,17 +100,14 @@ test.describe('Onboarding Payment Variations — Partner Shortcode', () => {
     // Partner shortcodes use Funnel theme (dark navy)
     // No updateCompaniesToBuilding needed — partner shortcodes don't use Building config
 
-    // VERIFIED via Playwright MCP (2026-04-11): funnel4324534 also uses encouraged conversion flow
-    // (address lookup, "Where are you looking to start service?"), same as pgtest.
-    // Using autotest shortcode with COMED config as placeholder until encouraged move-in function exists.
-    await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
-    await utilityQueries.updateCompaniesToBuilding("autotest", "COMED", null);
-    MoveIn = await newUserMoveInAutoPayment(page, "COMED", null, true, false);
+    await page.goto('/move-in?shortCode=funnel4324534', { waitUntil: 'domcontentloaded' });
+    MoveIn = await newUserMoveInEncouraged(page, 'funnel4324534');
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
-
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
+    await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+    await overviewPage.Enter_Auto_Payment_Details(PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC, PGuserUsage.Country, PGuserUsage.Zip);
 
     // Payment Checks — Electric only (partner shortcode)
     await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
