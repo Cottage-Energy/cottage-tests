@@ -460,6 +460,11 @@ After the test is created and passing:
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
 
+### Session: 2026-04-11 (Payment test overhaul)
+- **Payment specs import directly from fixture files**: Payment specs import from `tests/resources/fixtures/payment/` (AutoPaymentChecks, ManualPaymentChecks, FailedPaymentChecks). No facade class — each fixture file exports its own class.
+- **Every payment utility method includes BLNK ledger verification**: After payment success/failure, the utility methods verify the corresponding BLNK ledger transactions. This is built into the payment fixtures, not the spec files.
+- **Encouraged conversion flow is 2-step**: Use `newUserMoveInEncouraged()` for pgtest/funnel/partner shortcodes — NOT the standard 6-step `newUserStandardMoveIn()`.
+
 ### Session: 2026-03-13 (ENG-2402 Connect Flow Tests)
 - **Logger import was wrong**: Template said `import { log }` but actual codebase pattern is `import { createLogger } from '../../resources/utils/logger'` + `const log = createLogger('Name')`. Fixed in Step 3.
 - **`FastmailActions.Get_OTP()` is fragile**: Asserts `content.length === 1` which fails when prior exploratory sessions left stale OTP emails. Created custom `getLatestOTP()` that iterates `bodyValues` keys and takes the most recent match. Added to Rules.

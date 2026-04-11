@@ -18,6 +18,12 @@ Don't wait for the user to paste logs — pull them directly:
 - `gh run view <run_id> --log-failed` via Bash to get the failure output
 - Or use `mcp__github__get_pull_request` + `mcp__github__get_pull_request_files` if the failure is on a PR check
 
+### Check for CI Timeout (not a test failure)
+- Look for "The job has exceeded the maximum execution time" in run annotations — this is a job timeout, not a test failure.
+- For timeout issues: check how many tests are in the scope, how many browsers, and whether payment tests (which need `*/5` min cron waits, ~30 min each) are included.
+- Pull actual test execution logs with `gh run view --job=<jobId> --log` and grep for test progress markers `[N/M]` to see which test was running when cancelled.
+- Payment tests should run in Regression1 (Chromium only), not Smoke (2 browsers). Max 1 payment test per scope.
+
 ### From local run
 - Read the Playwright HTML report or test output provided by the user
 

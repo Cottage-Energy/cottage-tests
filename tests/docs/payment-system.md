@@ -1467,3 +1467,13 @@ Every BLNK transaction type in the system, listed by when it's created.
 | `adjustment_{billType}_bill_{billID}_{ts}` | `"Credit adjustment: {reason}"` | `ledgerBalanceID` | `@AdjustmentsAbsorbed` | No | Post-ingestion credit |
 | `adjustment_{billType}_bill_{billID}_{ts}` | `"Fee adjustment: {reason}"` | `@AdjustmentsAbsorbed` | `ledgerBalanceID` | No | Post-ingestion fee |
 | `pre_ingestion_remittance_{billType}_bill_{billID}_{ts}` | `"Pre-ingestion remittance for adjustments: {reason}"` | Varies | Varies | No | Pre-ingestion adj with remittance |
+
+---
+
+## CI Execution
+
+- Payment tests need ~30 min each (move-in ~5 min + bill pipeline 20-25 min waiting for Inngest crons).
+- Bill pipeline depends on Inngest crons: `balance-ledger-batch` (`*/5`) + `stripe-payment-capture-batch` (`*/5`). Each bill needs both crons to fire sequentially.
+- Run payment tests in **Regression1** (Chromium only) — not Smoke (2 browsers = double the wall-clock time, risks job timeout).
+- **1 payment test per CI scope maximum** — multiple payment tests in the same scope compound the cron wait times.
+- DemandResponseEnrollment FK constraint: cleanup must delete `DemandResponseEnrollment` before `ElectricAccount` to avoid FK violation in `afterEach`.

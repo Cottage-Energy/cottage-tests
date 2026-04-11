@@ -59,6 +59,8 @@ Walk through each acceptance criterion from the ticket, one by one.
 For **each AC**:
 
 #### a. Set up the starting state
+- **ALWAYS create fresh test users via move-in flow for interactive testing.** NEVER try to reuse existing test users with unknown passwords — password resets are fragile and session state is unpredictable.
+- The encouraged conversion flow (pgtest, funnel, partner shortcodes) starts with address lookup, NOT the standard Welcome page. Use `newUserMoveInEncouraged()` for these flows.
 - `mcp__playwright__browser_navigate` to the target URL
 - `mcp__supabase__execute_sql` to set up preconditions if needed (feature flags, user state, test data)
 

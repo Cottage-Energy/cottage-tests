@@ -185,6 +185,11 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | CottageUser | `CottageUsers` | `/app/*` (Overview, Billing, Services, Household) | Standard move-in, transfer, finish-reg |
 | LightUser | `LightUsers` | `/portal/*` | Light move-in (ESI ID path) |
 
+### Move-in Payment Step (Step 6)
+- Radio group: "Public Grid handles everything" / "I will manage payments myself"
+- "Skip for now" button appears ONLY when "Public Grid handles everything" is selected
+- Encouraged conversion flow (pgtest, funnel, partner shortcodes) is a 2-step flow, NOT the standard 6-step. Use `newUserMoveInEncouraged()`.
+
 ### "Set it up myself" Test Paths
 | Flow | Button | Result |
 |------|--------|--------|
@@ -221,6 +226,21 @@ Waitlist can appear in: **move-in**, **transfer**, **bill-upload**, **verify-uti
 | `12249` | National Grid MA | Waitlist — "We haven't reached 12249 yet" |
 | `75063` | TX-DEREG | Texas bill drop flow |
 
+
+## Payment UI Reference
+
+### Pay Bill Modal
+- Submit button text is "Pay bill" (NOT "Pay now"). Use `Submit_Pay_Bill_Modal()` scoped to dialog.
+- `Select_Pay_In_Full_If_Flex_Enabled()` must ALWAYS click "Pay in full" when visible — it reveals the Stripe iframe. Without clicking, the Stripe form never loads.
+- Flex option appears in the "Paying with" radiogroup as "Split your bills into smaller payments" — NOT a radio in the Amount section.
+- AutopayPaymentModal only appears with BLNK-processed outstanding balance + valid card + no previous failures.
+
+### Account Page — Payment Tab
+- Tab is "Payment" (not "Payment Information"), button is "Edit details" (not "Edit"), save is "Save details" (not "Save").
+- Auto-pay toggle on Account page is a `switch` role (not checkbox). In edit mode it IS a checkbox.
+
+### SMS Verification
+- `DialpadSMS` table stores INBOUND SMS only. Outbound reminder SMS goes via Dialpad API directly — verify indirectly via consent flags.
 
 ## Tech Stack
 TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification), Inngest (async job triggers)
@@ -289,6 +309,12 @@ Tests run via GitHub Actions (`main-workflow.yml`). Scheduled regressions run da
 | Regression5 | Mobile Safari | Mobile cross-browser |
 | Regression6 | Mobile Chrome | Extended mobile |
 | Regression7 | Mobile Safari | Extended mobile |
+
+### CI Notes — Payment Tests
+- Payment tests take ~30 min each (move-in 5 min + bill pipeline crons `*/5` min x multiple cycles). Limit to 1 payment test per CI scope.
+- Smoke scope runs 2 browsers (Chromium + Mobile Safari) — payment tests can timeout the job. Use Regression1 (Chromium only) for payment test runs.
+- API v2 tests require `API_V2_KEY` in CI secrets — currently only configured in `.env` locally.
+- **DemandResponseEnrollment FK constraint**: cleanup must delete `DemandResponseEnrollment` before `ElectricAccount` to avoid FK violation.
 
 ## Skill Chaining
 
