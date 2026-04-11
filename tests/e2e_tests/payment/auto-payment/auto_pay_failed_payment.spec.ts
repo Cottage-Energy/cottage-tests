@@ -507,7 +507,7 @@ test.describe('Invalid Bank to Valid Bank Auto Payment', () => {
     });
 
     
-    test('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: [ '@smoke', '@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
+    test('DTE DTE Electric & Gas Move In Added to Failed Message Update', {tag: [ '@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
         
         test.setTimeout(1800000);
     

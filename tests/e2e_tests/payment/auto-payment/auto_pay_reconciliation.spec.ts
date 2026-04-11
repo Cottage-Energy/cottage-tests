@@ -49,7 +49,7 @@ async function triggerInngestReconciliation(): Promise<void> {
 test.describe('P1-24: Auto-pay fail -> Inngest reconciliation -> success (COMED Electric Only)', () => {
     test.describe.configure({ mode: "serial" });
 
-    test('COMED Electric Only: auto-pay fails with invalid card, user updates card, Inngest reconciliation succeeds', { tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT] }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage }) => {
+    test('COMED Electric Only: auto-pay fails with invalid card, user updates card, Inngest reconciliation succeeds', { tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT] }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage }) => {
 
         test.setTimeout(1800000);
 

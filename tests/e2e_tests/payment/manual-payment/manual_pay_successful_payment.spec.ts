@@ -466,7 +466,7 @@ test.describe('Valid Bank Manual Payment', () => {
   });
 
 
-  test('BGE NGMA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@smoke', '@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('BGE NGMA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 

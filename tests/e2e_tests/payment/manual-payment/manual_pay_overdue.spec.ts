@@ -528,7 +528,7 @@ test.describe('Recovery Paths', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('P2-24: 25+ days overdue — full payment restores ACTIVE status', {
-    tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 

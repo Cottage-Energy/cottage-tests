@@ -57,7 +57,7 @@ test.describe('P2-02: Manual to Auto-Pay Transition', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — manual user enables auto-pay, next bill auto-pays', {
-    tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
