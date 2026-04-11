@@ -285,8 +285,7 @@ test.describe('Reminder Progression', () => {
     await page.waitForTimeout(30000);
 
     // Verify: Standard reminder email sent
-    // TODO: Implement FastmailActions.Check_Payment_Reminder_Email when method is available
-    // For now, verify the bill is still in overdue state and reminder flag was set
+    await FastmailActions.Check_Payment_Reminder_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, 'Electric');
     await billQueries.checkElectricBillReminder(electricAccountId, true);
 
     logger.info('P2-20: 5 days overdue standard reminder — PASS');
@@ -322,8 +321,8 @@ test.describe('Reminder Progression', () => {
     await triggerPaymentReminders(MoveIn.pgUserEmail);
     await page.waitForTimeout(30000);
 
-    // Verify: Escalated reminder sent — reminder flag should be set
-    // TODO: Implement FastmailActions.Check_Escalated_Payment_Reminder_Email when method is available
+    // Verify: Escalated reminder sent (same template as standard, day 15)
+    await FastmailActions.Check_Payment_Reminder_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual, 'Electric');
     await billQueries.checkElectricBillReminder(electricAccountId, true);
 
     logger.info('P2-21: 15 days overdue escalated reminder — PASS');
@@ -360,8 +359,8 @@ test.describe('Reminder Progression', () => {
     await page.waitForTimeout(30000);
 
     // Verify: Shutoff warning sent (email + SMS)
-    // TODO: Implement FastmailActions.Check_Shutoff_Warning_Email when method is available
-    // TODO: SMS verification not yet available in test framework
+    await FastmailActions.Check_Shutoff_Warning_Email(MoveIn.pgUserEmail, 'Electric');
+    // SMS verification not yet available in test framework
     await billQueries.checkElectricBillReminder(electricAccountId, true);
 
     logger.info('P2-22: 18 days overdue shutoff warning — PASS');

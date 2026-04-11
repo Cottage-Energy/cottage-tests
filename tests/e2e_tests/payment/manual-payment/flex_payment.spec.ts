@@ -93,26 +93,24 @@ test.describe('Flex Payment — Pay in Full', () => {
     await billingPage.Click_Pay_Bill_Button();
     await billingPage.Check_Pay_Outstanding_Balance_Modal();
 
-    // Verify Flex radio options are present in the modal
+    // Verify Flex option is present in the modal "Paying with" section
+    // VERIFIED via Playwright MCP (2026-04-11): Flex is a clickable container in the
+    // "Paying with" radiogroup, NOT a radio in the Amount section.
+    // Text: "Split your bills into smaller payments" + "Add flexible payments to your account"
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
-    // Flex-enabled utility should show "Split my bill" option
-    const splitBillRadio = modal.getByRole('radio', { name: /split.*bill/i })
-      .or(modal.getByText(/split.*bill/i));
-    const payInFullRadio = modal.getByRole('radio', { name: /total.*amount|pay.*full/i })
-      .or(modal.getByText(/pay.*full|total.*amount/i));
+    const flexOption = modal.getByText('Split your bills into smaller payments');
+    const cardOption = modal.getByText(/Visa ending in/);
+    const totalAmountRadio = modal.getByRole('radio', { name: /Total Amount Due/ });
 
-    const isSplitVisible = await splitBillRadio.isVisible();
-    const isPayInFullVisible = await payInFullRadio.isVisible();
+    // Flex-enabled utility should show the flex payment option
+    await expect(flexOption).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await expect(cardOption).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    logger.info('Flex option visible in pay modal — paying with card (Total Amount Due)');
 
-    if (isSplitVisible) {
-      logger.info('Flex split bill option is visible — selecting Pay in Full');
-      await expect(payInFullRadio).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-      await payInFullRadio.click();
-    } else {
-      logger.info('Flex split bill option not visible in modal — proceeding with standard payment');
-    }
+    // Select Total Amount Due (default) and pay with card
+    await expect(totalAmountRadio).toBeChecked();
 
     // Submit payment (pay in full)
     await billingPage.Submit_Pay_Bill_Modal();
@@ -176,52 +174,35 @@ test.describe('Flex Payment — Split Bill Redirect', () => {
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
-    // Look for the split bill / Flex option
-    const splitBillRadio = modal.getByRole('radio', { name: /split.*bill/i })
-      .or(modal.getByText(/split.*bill/i));
+    // VERIFIED via Playwright MCP (2026-04-11): Flex option is in "Paying with" radiogroup
+    // as a clickable container with "Split your bills into smaller payments" text + "Learn more" button
+    const flexOption = modal.getByText('Split your bills into smaller payments');
+    await expect(flexOption).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
-    const isSplitVisible = await splitBillRadio.isVisible();
+    // Click the Flex option container to select it
+    await flexOption.click();
+    await page.waitForTimeout(1000);
 
-    if (isSplitVisible) {
-      // Select "Split my bill"
-      await splitBillRadio.click();
-      await page.waitForTimeout(1000);
+    // After clicking Flex, check for redirect or "Learn more" interaction
+    const learnMoreBtn = modal.getByRole('button', { name: 'Learn more' });
+    const isLearnMoreVisible = await learnMoreBtn.isVisible().catch(() => false);
 
-      // After selecting split, look for redirect link or iframe to getflex.com
-      // Flex may open in new tab or load iframe — capture navigation
+    if (isLearnMoreVisible) {
+      // Click "Learn more" to trigger Flex redirect
       const [flexPage] = await Promise.all([
         context.waitForEvent('page', { timeout: TIMEOUTS.DEFAULT }).catch(() => null),
-        // Some implementations may have a "Continue" or "Split" button after radio selection
-        modal.getByRole('button', { name: /split|continue|proceed/i }).click().catch(() => {
-          logger.info('No secondary button found after split selection — checking for redirect');
-        }),
+        learnMoreBtn.click(),
       ]);
 
       if (flexPage) {
-        // Flex opened in new tab
         const flexUrl = flexPage.url();
         logger.info(`Flex redirect URL: ${flexUrl}`);
         expect(flexUrl).toContain('getflex.com');
         await flexPage.close();
       } else {
-        // Check if Flex iframe loaded or if URL changed
-        const flexIframe = page.frameLocator('iframe[src*="getflex"]').first();
-        const currentUrl = page.url();
-
-        if (currentUrl.includes('getflex.com')) {
-          logger.info('Page redirected to getflex.com');
-          expect(currentUrl).toContain('getflex.com');
-        } else {
-          // Flex may load as an iframe within the modal
-          logger.info('Checking for Flex iframe or content within modal');
-          const flexContent = modal.getByText(/flex|split.*payment|installment/i);
-          const isFlexContentVisible = await flexContent.isVisible().catch(() => false);
-          logger.info(`Flex content visible in modal: ${isFlexContentVisible}`);
-        }
+        // Flex may load inline or via iframe
+        logger.info('Flex did not open new tab — may load inline or via iframe');
       }
-    } else {
-      logger.warn('Split bill option not visible — Flex may not be enabled for this utility in dev');
-      // Still pass the test but log the observation
     }
 
     logger.info('Flex split bill redirect: PASS');
@@ -270,10 +251,10 @@ test.describe('Flex Payment — Non-Flex User', () => {
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
-    // Verify: "Split my bill" option should NOT be visible for non-flex utility
-    const splitBillOption = modal.getByRole('radio', { name: /split.*bill/i })
-      .or(modal.getByText(/split.*bill/i));
-    await expect(splitBillOption).not.toBeVisible({ timeout: 5000 });
+    // Verify: Flex option should NOT be visible for non-flex utility
+    // VERIFIED: Flex shows as "Split your bills into smaller payments" in "Paying with" section
+    const flexOption = modal.getByText('Split your bills into smaller payments');
+    await expect(flexOption).not.toBeVisible({ timeout: 5000 });
 
     // Verify: Standard payment options are present (Total Amount Due / Other Amount)
     const totalAmountRadio = modal.getByRole('radio', { name: /total.*amount/i })
