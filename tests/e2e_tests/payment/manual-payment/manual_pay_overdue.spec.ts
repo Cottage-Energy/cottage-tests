@@ -11,6 +11,7 @@ import {
   billQueries,
   paymentQueries,
   blnkQueries,
+  smsQueries,
 } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import { logger } from '../../../resources/utils/logger';
@@ -360,7 +361,8 @@ test.describe('Reminder Progression', () => {
 
     // Verify: Shutoff warning sent (email + SMS)
     await FastmailActions.Check_Shutoff_Warning_Email(MoveIn.pgUserEmail, 'Electric');
-    // SMS verification not yet available in test framework
+    // SMS verification via DialpadSMS table
+    await smsQueries.checkSMSSent(MoveIn.cottageUserId, 'shutoff');
     await billQueries.checkElectricBillReminder(electricAccountId, true);
 
     logger.info('P2-22: 18 days overdue shutoff warning — PASS');

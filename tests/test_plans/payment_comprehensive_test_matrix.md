@@ -195,6 +195,16 @@
 
 ---
 
+## Manual Test Cases (require PG-Admin or external tools)
+
+| ID | Test | Tool | Steps |
+|----|------|------|-------|
+| M-01 | Bill Statement "View" button appears after PDF generation | PG-Admin | Process bill in PG-Admin bill inbox → verify Statement PDF generates → check Bill History "View" link in customer dashboard |
+| M-02 | SMS content verification for shutoff warnings | Dialpad dashboard | Trigger `ledger.payment.reminders` for 18+ day overdue user → check Dialpad dashboard for SMS content |
+| M-03 | PG-Admin remittance management | PG-Admin | Verify remittance records appear in PG-Admin after successful payment → confirm correct amounts |
+
+---
+
 ## File Architecture
 
 ### Spec Files (restructured)

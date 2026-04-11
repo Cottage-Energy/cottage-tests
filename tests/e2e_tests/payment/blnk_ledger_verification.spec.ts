@@ -15,6 +15,7 @@ import {
   blnkQueries,
 } from '../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS, RETRY_CONFIG } from '../../resources/constants';
+import { logger } from '../../resources/utils/logger';
 import * as PaymentData from '../../resources/data/payment-data.json';
 
 /**
@@ -179,7 +180,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
     // STEP 1: Snapshot BEFORE bill insertion
     const beforeSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
     const initialBalance = beforeSnapshot.balance;
-    console.log('BEFORE bill:', JSON.stringify(beforeSnapshot));
+    logger.info('BEFORE bill:', JSON.stringify(beforeSnapshot));
 
     // STEP 2: Insert approved bill
     const billAmountCents = PGuserUsage.ElectricAmount;
@@ -193,7 +194,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
 
     // Snapshot AFTER ingestion — balance should increase by bill amount
     const afterIngestionSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
-    console.log('AFTER ingestion:', JSON.stringify(afterIngestionSnapshot));
+    logger.info('AFTER ingestion:', JSON.stringify(afterIngestionSnapshot));
 
     // Bill txn is APPLIED immediately, so balance increases
     const expectedBalanceAfterIngestion = initialBalance + billAmountDollars;
@@ -208,7 +209,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
     // Snapshot DURING inflight — inflight_debit_balance should increase
     // (payment txn is INFLIGHT, debiting from charge account to @Stripe)
     const duringInflightSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
-    console.log('DURING inflight:', JSON.stringify(duringInflightSnapshot));
+    logger.info('DURING inflight:', JSON.stringify(duringInflightSnapshot));
 
     // inflight_debit_balance > 0 means there's a pending debit
     expect(duringInflightSnapshot.inflight_debit_balance).toBeGreaterThan(0);
@@ -221,7 +222,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
 
     // Snapshot AFTER success — balance should be back near zero (or reduced)
     const afterSuccessSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
-    console.log('AFTER success:', JSON.stringify(afterSuccessSnapshot));
+    logger.info('AFTER success:', JSON.stringify(afterSuccessSnapshot));
 
     // After payment succeeds, inflight should resolve
     // The outstanding balance (balance + inflight) should be ~0
@@ -329,7 +330,7 @@ test.describe('DB-014: Cross-Table Consistency', () => {
     // ── 9. Full chain verification ──
     await blnkQueries.verifyPaymentChainConsistency(payment.id);
 
-    console.log(`DB-014 PASS: Payment ${payment.id} — full chain verified`);
+    logger.info(`DB-014 PASS: Payment ${payment.id} — full chain verified`);
   });
 
   test('Separate charge accounts — electric + gas consistency', {
@@ -406,7 +407,7 @@ test.describe('DB-014: Cross-Table Consistency', () => {
     expect(gasBillTxn).not.toBeNull();
     expect(gasBillTxn!.status).toBe('APPLIED');
 
-    console.log(`DB-014 PASS: Separate charge accounts — electric ${electricPayment.id}, gas ${gasPayment.id}`);
+    logger.info(`DB-014 PASS: Separate charge accounts — electric ${electricPayment.id}, gas ${gasPayment.id}`);
   });
 });
 
@@ -487,7 +488,7 @@ test.describe('DB-011: Transaction Descriptions & References', () => {
     expect(feeTransferTxn).not.toBeNull();
     expect(feeTransferTxn!.description).toBe(`Fee transfer for payment ${payment.id}`);
 
-    console.log(`DB-011 PASS: All 5 BLNK transactions match expected patterns for payment ${payment.id}`);
+    logger.info(`DB-011 PASS: All 5 BLNK transactions match expected patterns for payment ${payment.id}`);
   });
 });
 
@@ -551,7 +552,7 @@ test.describe('DB-015: Remittance ↔ Contribution Matching', () => {
     const expectedFee = PGuserUsage.ElectricServiceFee;
     expect(totalContributions).toBe(payment.amount - expectedFee);
 
-    console.log(`DB-015 PASS: ${contributions.length} contributions matched with UtilityRemittance records`);
+    logger.info(`DB-015 PASS: ${contributions.length} contributions matched with UtilityRemittance records`);
   });
 });
 
@@ -608,6 +609,6 @@ test.describe('DB-001: Bill Ingestion BLNK Verification', () => {
       txn.transaction_id, 'electric', parseInt(billId)
     );
 
-    console.log(`DB-001 PASS: Bill ${billId} → BLNK txn ${txn.transaction_id} (APPLIED, $${txn.amount})`);
+    logger.info(`DB-001 PASS: Bill ${billId} → BLNK txn ${txn.transaction_id} (APPLIED, $${txn.amount})`);
   });
 });
