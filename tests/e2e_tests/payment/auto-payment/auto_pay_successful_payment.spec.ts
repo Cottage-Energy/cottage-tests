@@ -110,7 +110,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@regression1', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
