@@ -142,6 +142,8 @@ This confirms whether the issue is the app (product bug) or the test (stale loca
 ### Root Cause Classification
 **Category**: [Product Bug / Test Code Issue / Environment / Data Dependency / UI Change / Flaky]
 
+**User Impact**: [If product bug: what the user experiences. If test/env issue: "No user impact — test infrastructure only"]
+
 **Analysis**:
 [Explanation of why this failed, supported by evidence from CI logs, GitHub commits, Supabase queries, and/or Playwright MCP investigation]
 

@@ -114,6 +114,7 @@ After all ACs are validated, systematically expand. For each AC that passed, exp
 - Boundary values — min, max, just over limits
 - Special characters — emoji, unicode, HTML, SQL injection patterns
 - Very long inputs — exceed expected field lengths
+- **Case sensitivity** — for ID/code fields, test lowercase vs uppercase vs mixed case (e.g., `comed` vs `COMED`). Postgres text PKs are case-sensitive by default — near-duplicates can slip through
 
 #### State variations
 - Toggle cycling — ON → OFF → ON, does final state persist?
@@ -324,9 +325,9 @@ After both phases, produce a structured summary:
 | UI | Esc to close modal | PASS | Modal closes, state preserved |
 
 ### Bugs Filed
-| Bug ID | Title | Severity | Found During |
-|--------|-------|----------|-------------|
-| BUG-XXX | [title] | [severity] | Phase 1 AC #2 / Phase 2 edge case |
+| Bug ID | Title | Severity | User Impact | Found During |
+|--------|-------|----------|-------------|-------------|
+| BUG-XXX | [title] | [severity] | [what the user experiences — concrete, non-technical] | Phase 1 AC #2 / Phase 2 edge case |
 
 ### UX & Improvement Observations
 | # | Screen/Step | Observation | Impact | Suggestion | Filed? |
@@ -492,9 +493,11 @@ npx playwright test tests/e2e_tests/exploratory/explore_my_investigation.spec.ts
 
 ## 4. Cleanup After Session
 
+**CRITICAL: Upload screenshots BEFORE deleting local files.** The cleanup sequence must be: (1) upload to tmpfiles.org, (2) embed in Linear ticket **comment** via `save_comment`, (3) THEN delete local PNGs. Deleting before uploading loses evidence permanently. **NEVER modify the ticket description** — it belongs to the creator/dev.
+
 Before finishing any exploratory session (interactive or scripted), clean up generated artifacts:
 
-1. **Screenshots** — delete local PNG files after they've been uploaded to tmpfiles.org and embedded in Linear ticket descriptions
+1. **Screenshots** — delete local PNG files ONLY AFTER they've been uploaded to tmpfiles.org and embedded in Linear ticket **comments**
 2. **`.playwright-mcp/` directory** — Playwright MCP creates this in the project root; delete it after the session
 3. **`test-results/` directory** — if scripted exploratory tests were run and failed, remove generated trace/screenshot artifacts
 4. **Browser sessions** — ensure `mcp__playwright__browser_close` is called to release the browser
@@ -555,12 +558,12 @@ When capturing screenshots during exploratory sessions and needing to attach the
 1. `mcp__playwright__browser_take_screenshot` to save PNG files locally
 2. Upload to **tmpfiles.org**: `curl -s -o /tmp/upload.json -F "file=@screenshot.png" https://tmpfiles.org/api/v1/upload && cat /tmp/upload.json` — returns a JSON with URL
 3. Convert URL: replace `tmpfiles.org/` with `tmpfiles.org/dl/` for the direct link
-4. **Prefer ticket descriptions over comments for images**: Use `mcp__linear__save_issue` (with `id` to update) to embed images in the ticket description. Linear auto-uploads referenced images to its own CDN (`uploads.linear.app`), so images in **descriptions persist permanently**. Images only in comments via tmpfiles.org links will expire in ~1 hour.
+4. **Post screenshots in a ticket comment**: Use `mcp__linear__save_comment` with the `issueId` to embed images. **NEVER modify the ticket description** — it belongs to the creator/dev. tmpfiles.org links expire in ~1 hour, but the comment preserves the test record.
 5. Clean up local PNG files after upload
 
-**Why not base64 directly?** MCP tool parameters can't handle large base64-encoded images. The tmpfiles.org upload → URL embed in description pattern is the reliable workaround.
+**Why not base64 directly?** MCP tool parameters can't handle large base64-encoded images. The tmpfiles.org upload → URL embed in comment pattern is the reliable workaround.
 
-**Why descriptions over comments?** Linear re-hosts images referenced in descriptions to `uploads.linear.app`. tmpfiles.org links expire ~1 hour. If you post screenshots only in comments, they'll break. Always update the ticket description with the screenshots so they persist.
+**Why comments, not descriptions?** The ticket description belongs to the creator. Overwriting it with QA results loses the original ACs and spec. Always use comments for QA findings.
 
 ### Screenshot naming convention
 Name screenshots descriptively: `{area}-{detail}-{viewport}.png`
@@ -615,7 +618,13 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | Verify-utilities stuck on "Checking availability..." | Button stays disabled with spinner indefinitely after entering ZIP | Caused by quoted URL params bug. Use bill-upload flow instead for testing until fixed |
 | Tab clicks blocked by dialogs | Password reset / terms dialogs block tab element clicks; `evaluate`-based clicks don't trigger React state | Use URL params: `browser_navigate` to `/app/account?tabValue=subscriptions` (or `?tabValue=payment`, etc.) instead of clicking tab elements |
 | Figma MCP access denied | PG-App Figma file is password-protected; all MCP calls fail with "could not be accessed" | Ask the user for a manual Figma screenshot. Don't retry MCP — it's a known limitation with password-protected files |
+| Radix calendar blocks clicks | `data-radix-popper-content-wrapper` intercepts pointer events on buttons beneath it; Next button click times out | Click a date in the calendar to close it naturally, THEN click Next. **NEVER remove the popper via DOM** — causes fatal React `removeChild` crash |
+| Transfer flow null address | Properties with `addressID: null` show "Address unavailable"; Next won't advance on move-out date screen | Find test users with valid addresses: query with `JOIN "Address" ON "Address"."id" = "Property"."addressID"` and `"street" IS NOT NULL` |
+| Playwright MCP browser dead | `Target page, context or browser has been closed` after force-killing Chrome | MCP connection is unrecoverable. Fallback: use `node -e "const { chromium } = require('playwright'); ..."` script to take screenshots programmatically. Each flow needs its own `browser.newContext()` to avoid session contamination. |
 | AC vs implementation mismatch | AC text says one thing, implementation does another — tempting to file as bug | **Always check Figma design first.** Design is source of truth. If design matches implementation, the AC text is wrong — flag as discrepancy, don't file a bug. Learned from ENG-2442 AC30 false positive. |
+| PG-Admin dialog scroll | `fullPage: true` screenshots don't capture dialog/sheet inner scroll. `scrollIntoView` from main page doesn't work. | Find the dialog's scroll container and set `scrollTop` directly: `document.querySelector('.h-full.overflow-y-auto').scrollTop = 500`. Take screenshots after each scroll position. |
+| Manually inserted SubscriptionMetadata | Cancel endpoint doesn't process manually INSERTed metadata (missing `transactionID`). Leads to false-positive bugs. | **Always use Inngest-generated metadata** for subscription cancel/payment testing. Run the full `transaction-generation-trigger` pipeline to create metadata, never `INSERT INTO "SubscriptionMetadata"` directly. ENG-2672 was a false positive from this exact mistake. |
+| PG-Admin session expiry | Closing Playwright MCP browser loses PG-Admin auth. Reopening navigates to `/login` (Google SSO) which can't be automated via MCP. | Keep the browser open during the full PG-Admin session. If session expires, fall back to **DB-level testing via Supabase** for business logic validation (e.g., case-sensitive ID checks, constraint testing). For UI retesting, ask user to sign in manually or use a fresh browser session. |
 
 ---
 
@@ -696,7 +705,7 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Always test shortCode variations**: Different shortCodes trigger different flow variants (`autotest` = standard 6-step, `pgtest` = encourage conversion address-first, `txtest` = TX dereg address-first, no shortCode = generic 5-step). URL param behavior (guid/leaseID) should work identically across all. User explicitly called this out as a gap.
 
 ### Session: 2026-03-30 (ENG-2571 Savings Alert Preference — Onboarding Paths)
-- **Linear re-hosts images in descriptions, not comments**: When you embed a tmpfiles.org URL in a ticket *description* via `save_issue`, Linear auto-uploads the image to `uploads.linear.app` (permanent). But tmpfiles.org links in *comments* expire in ~1 hour. Always prefer updating ticket descriptions with screenshots over posting image-heavy comments.
+- **Never modify ticket descriptions**: Ticket descriptions belong to the creator/dev. Always post QA results and screenshots in **comments** via `save_comment`. tmpfiles.org links expire in ~1 hour, but the comment preserves the test record. Learned from ENG-2675 — overwrote the original ACs with QA results and had to revert.
 - **Path-dependent enrollment defaults are by design**: Non-billing onboarding flows (bill upload, connect, move-in non-billing) include a savings preference step that sets `enrollmentPreference` to `manual`. Billing flows don't include this step, so preference stays NULL. When testing features that depend on `enrollmentPreference`, check users from DIFFERENT onboarding paths — they'll have different initial states.
 - **Efficient multi-user testing via Supabase password reset**: When testing across many users from different onboarding paths, batch-reset passwords via Supabase admin API (`PUT /auth/v1/admin/users/{id}`) instead of running full move-in flows. Query DB to find existing users from each path first, only create fresh users when no suitable one exists.
 - **Use precise terminology in tickets**: "No account user" is ambiguous. Say "user with no valid account number" and specify what that means (NULL, empty, or "PENDING"). The codebase has `hasValidAccountNumber()` that defines this.
@@ -748,3 +757,32 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **Empty error objects in TanStack catch blocks**: `ERROR SENDING EMAIL {}` — JavaScript error objects don't serialize with `JSON.stringify()` by default. Suggest `JSON.stringify(error, Object.getOwnPropertyNames(error))` to capture `message`, `stack`, and custom properties. This is a common TanStack debugging pitfall.
 - **Fastmail JMAP is the definitive email delivery test**: For any email-related bug, checking Fastmail via JMAP API is the ground truth. UI success ("Invitation sent!") + DB record created + HTTP 200 does NOT mean the email was sent. Always verify via Fastmail within 10-15 seconds.
 - **Smoke suite against TanStack reveals email-dependent test failures**: 3 of 5 e2e smoke failures were caused by missing post-registration emails (Inngest gap), not UI failures. The move-in flows complete successfully — it's the email verification step that times out. Tests that don't verify emails pass fine.
+
+### Session: 2026-04-08 (ENG-2663 Geocoding API Replacement)
+- **Upload screenshots BEFORE cleanup — not after**: Took 8 screenshots via Playwright MCP, then deleted them in the cleanup phase before uploading to tmpfiles.org. User caught the missing evidence. Updated Section 4 with explicit ordering: upload → embed in Linear → verify re-host → THEN delete local files. This was already a known requirement but the cleanup section didn't enforce the ordering.
+- **Headless Playwright script as MCP fallback**: When force-killing Chrome processes breaks the MCP browser connection (`Target page, context or browser has been closed`), use `node -e "const { chromium } = require('playwright'); ..."` to take screenshots programmatically. Each flow needs its own `browser.newContext()` to avoid session contamination across tests. This saved the session when MCP was unrecoverable.
+- **Backend API swap testing is efficient with URL params + DB verification**: For `generatePreFilledAddress` (server-side function), the fastest test approach was: navigate to `/move-in?streetAddress=...&city=...&zip=...`, observe the address step UI, then query the `Address` table in Supabase. No need to complete full move-in flows — the Address record is created when the address step renders. Tested 8 address variations in ~15 minutes.
+- **`generate-address-data.ts` bypass logic matters for test scope**: Light/TX-DEREG + `useEncouragedConversion=true` bypasses `generatePreFilledAddress`. SDGE + encouraged (`pgtest`) does NOT bypass. Must read the caller code to understand which shortcodes exercise the changed function vs which bypass it.
+
+### Session: 2026-04-08 (ENG-2632 Transfer PostMessage + Iframe Delays + moveInDate)
+- **Iframe testing via Playwright MCP works**: Create `<iframe src="/transfer">` on the parent page. `window.self !== window.top` correctly returns `true` inside the iframe. Parent's `window.addEventListener('message', ...)` captures postMessages from the iframe. Use `MutationObserver` on button elements to capture exact timing of state changes (disabled, spinner). This is a reusable pattern for any iframe/postMessage testing.
+- **Synthetic dispatchEvent triggers React handlers in iframes**: Dispatch `PointerEvent` + `MouseEvent` sequence (`pointerdown`, `mousedown`, `pointerup`, `mouseup`, `click`) through the iframe's `contentWindow` context with `{ bubbles: true, cancelable: true, composed: true }`. React receives these properly — confirmed by postMessage firing and button state changing to disabled+spinner.
+- **NEVER remove Radix calendar popup via DOM**: `data-radix-popper-content-wrapper` intercepts pointer events on the Next button. Removing the element via `document.querySelector().remove()` causes a fatal React `removeChild` crash (`NotFoundError: The node to be removed is not a child of this node`). Instead: click a date in the calendar to close it naturally, THEN click Next. Added to Common Blockers.
+- **Transfer flow requires non-null addressID**: Properties with `addressID: null` show "Address unavailable" and the Next button on the move-out date screen won't advance. When finding test users for transfer testing, always query with `JOIN "Address" a ON a."id" = p."addressID"` and `a."street" IS NOT NULL`.
+- **Deployment verification — prefer functional test over bundle search**: Searching JS bundles via `performance.getEntriesByType('resource')` + fetch works but minified function names may not match (e.g., `isInIframe` not found despite being deployed). A functional test is more reliable: navigate with `?moveInDate=05/01/2026`, walk to the date picker screen, check if the date is prefilled.
+
+### Session: 2026-04-09 (ENG-2627 Revamped Subscriptions)
+- **Manually inserted SubscriptionMetadata produces false-positive bugs**: ENG-2672 was filed because cancel didn't void pending metadata — but the metadata was manually INSERTed (no `transactionID`). When retested with Inngest-generated metadata (via `transaction-generation-trigger`), cancel correctly set status to `canceled`. Always use the full Inngest pipeline to create test data for subscription cancel/payment testing. Added to Common Blockers table.
+- **PG-Admin subscription card requires charge accounts**: The subscription management component lives within the charge account section of the Properties tab. Properties without charge accounts (e.g., property 21135 for `cian+4apr7`) show no subscription card at all. Property 20043 (`subsrace01`) with charge accounts renders correctly. Always verify test users have charge accounts before testing PG-Admin subscription management.
+- **PG-Admin dialog scroll container**: PG-Admin user profile opens in a dialog with its own scroll container (`div.h-full.overflow-y-auto`). `fullPage: true` screenshots capture the main page scroll, not the dialog. `scrollIntoView` from the main page doesn't work either. Must set `scrollTop` directly on the dialog container: `document.querySelector('.h-full.overflow-y-auto').scrollTop = X`. Added to Common Blockers table.
+- **SubscriptionMetadata has no `voided` status**: Enum values are `pending`, `completed`, `canceled`. Test plans and assertions should use `canceled`, not `voided`.
+- **AC15 (non-billing renewal email) is by design same as billing**: The team decided billing and non-billing users get identical renewal email wording. The "estimated" disclaimer only appears on the FE subscription tab. ENG-2673 reclassified as by-design.
+- **Restore `dayOfMonth` immediately after metadata creation**: After triggering `transaction-generation-trigger`, restore `SubscriptionConfiguration.dayOfMonth` to 7 before triggering `subscriptions-payment-trigger`. Leaving it at today's date risks generating metadata for other subscriptions on the next cron cycle.
+- **PG-Admin navigation pattern**: Search auto-filters → click user name → profile panel (dialog/sheet). Tabs: Profile, Properties, Registration, Fastmail, Sent Mail, Actions, History. Faster than direct URL navigation.
+
+### Session: 2026-04-09 (ENG-2674 Utility Company Management)
+- **Case-sensitive ID fields are a hidden near-duplicate risk**: Postgres text PKs are case-sensitive — `COMED` and `comed` coexist as separate records. Always test ID/code fields with lowercase, uppercase, and mixed case variations when the feature has a create/duplicate-check flow. Verified via DB INSERT: `comed` succeeded when `COMED` existed. Added case sensitivity to Phase 2 Input Variations checklist.
+- **PG-Admin uses Google SSO — session dies on browser close**: Closing Playwright MCP browser kills the PG-Admin auth session. Reopening navigates to `/login` with Google SSO iframe, which can't be automated via MCP. **Keep the browser open for the entire PG-Admin session.** If session expires, fall back to DB-level testing via Supabase for business logic (constraints, case sensitivity, defaults). Added to Common Blockers.
+- **DB-level testing validates business logic when UI is blocked**: When PG-Admin session expired, testing case-sensitive ID behavior via `INSERT INTO "UtilityCompany"` directly in Supabase was faster and more conclusive than UI testing. This is a reusable pattern: for CRUD pages, test constraint/validation logic at the DB level, then test UX/feedback at the UI level.
+- **Create form defaults vs DB column defaults are separate concerns**: The PG-Admin create form uses its own defaults (e.g., `isSSNRequired=false`, thresholds `30/30`) that differ from DB column defaults (`isSSNRequired=true`, thresholds `5/25`). Note these as observations, not bugs — the form explicitly sets all values on submit. But flag when form defaults contradict business expectations (e.g., SSN should be required by default for most utilities).
+- **Unhandled 409 causes React error #520**: TanStack server function returning 409 (duplicate ID) wasn't caught by the frontend error handler. The React boundary caught it as error #520, and the dialog closed silently with no user feedback. When testing CRUD create flows, always test duplicate/conflict scenarios — 409 handling is frequently missed.

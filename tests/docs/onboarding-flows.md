@@ -12,8 +12,13 @@ Account's `maintainedFor` is NOT null. Payment method is added or can be added.
 
 ### Transfer Flow
 - **URL**: `https://dev.publicgrid.energy/transfer`
+- **Parameters**: `?moveInDate=MM/DD/YYYY` prefills estimated move-in date picker (ENG-2632). `?moveOutDate=MM/DD/YYYY` prefills move-out date.
 - **Alternative entry**: For users with ElectricAccount status `ACTIVE` or `ELIGIBLE`, go to Services → "Transfer my service" button
 - **XState file**: `app/transfer/forms/form-wizard.tsx`
+- **Iframe behavior**: In iframe context, "Go back" (unavailable screen) and "Done" (success screen) send postMessage + delay 8s before navigation. Non-iframe navigates immediately.
+- **Canceled postMessage**: `{ status: 'canceled' }` sent when user clicks "Go back" on unavailable screen (ENG-2632)
+- **Test users**: `pgtest+0ssn+std` (ineligible — unavailable screen), `pgtest+aniyah_bogankvn0vfr5xo91` (eligible, 808 Chicago Ave)
+- **Gotcha**: Properties with `addressID: null` show "Address unavailable" and block the flow — must use users with valid addresses
 
 ### Light Flow (TX Deregulated)
 - **URL**: `https://dev.publicgrid.energy/move-in`

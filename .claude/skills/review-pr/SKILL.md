@@ -162,7 +162,9 @@ Classify the PR's risk level:
 - [Match/Mismatch] — [details of comparison]
 
 ### UX & Improvement Observations
-- [Any UX friction, inconsistency, or missing feedback noticed while reviewing the changes]
+| # | Area | Observation | User Impact | Suggestion |
+|---|------|-------------|-------------|------------|
+| 1 | [screen/component] | [what could be better] | [what the user experiences — friction, confusion, drop-off risk] | [concrete improvement idea] |
 
 ### Suggested Approach
 1. [First action — e.g., run smoke tests to check for immediate regressions]

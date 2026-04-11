@@ -117,6 +117,10 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   await moveInPage.Enter_ID_Info_Prev_Add(MoveInData.COMEDaddress, electricCompany, gasCompany);
   await moveInPage.Submit_Move_In_Button();
 
+  // Wait for page to transition after ID submission (server creates user, may take a few seconds)
+  await moveInPage.page.waitForLoadState('domcontentloaded');
+  await moveInPage.page.waitForTimeout(5000);
+
   // Step 7: Payment Handling
   const paymentPageVisible = await moveInPage.Check_Payment_Page_Visibility(electricCompany, gasCompany);
 

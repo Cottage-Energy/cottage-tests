@@ -30,7 +30,7 @@ export class BillingPage {
 
         this.Billing_Pay_Bill_Button = page.getByRole('button', { name: 'Pay bill' });
 
-        this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save Payment Method' });
+        this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save details' });
         this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });
 
     }
@@ -231,6 +231,43 @@ export class BillingPage {
         const rowLocator = this.Payment_Row(amount);
         console.log(ExpectedFee);
         await expect(rowLocator).not.toContainText(ExpectedFee);
+    }
+
+    async Check_Pay_Bill_Button_Visible_Enable(): Promise<void> {
+        await expect(this.Billing_Pay_Bill_Button).toBeVisible({ timeout: 30000 });
+        await expect(this.Billing_Pay_Bill_Button).toBeEnabled({ timeout: 30000 });
+    }
+
+    async Check_Electric_Bill_Status(electric_usage: string, status: string): Promise<void> {
+        const rowLocator = this.Billing_Electric_Usage_Row(electric_usage);
+        await expect(rowLocator).toContainText(status, { timeout: 30000 });
+    }
+
+    async Check_Gas_Bill_Status(gas_usage: string, status: string): Promise<void> {
+        const rowLocator = this.Billing_Gas_Usage_Row(gas_usage);
+        await expect(rowLocator).toContainText(status, { timeout: 30000 });
+    }
+
+
+    async Check_Pay_Outstanding_Balance_Modal(_electricAmount?: string, _gasAmount?: string): Promise<void> {
+        const modal = this.page.getByRole('dialog').or(
+            this.page.locator('[role="dialog"]')
+        ).first();
+        await expect(modal).toBeVisible({ timeout: 30000 });
+    }
+
+    async Submit_Pay_Bill_Modal(): Promise<void> {
+        const modal = this.page.getByRole('dialog');
+        await expect(modal).toBeVisible({ timeout: 30000 });
+        const submitBtn = modal.getByRole('button', { name: 'Pay bill' });
+        await expect(submitBtn).toBeVisible({ timeout: 30000 });
+        await expect(submitBtn).toBeEnabled({ timeout: 10000 });
+        await submitBtn.click();
+    }
+
+    async Check_Payment_Failed_Message_In_Modal(): Promise<void> {
+        const failedMsg = this.page.getByText('Your last payment didn\'t go through').first();
+        await expect(failedMsg).toBeVisible({ timeout: 30000 });
     }
 
 }

@@ -732,6 +732,33 @@ export class OverviewPage {
         await expect(this.Overview_Inactive_Account_Alert).toBeVisible({timeout:30000});
     }
 
+    async Check_Get_Started_Widget_Not_Visible(): Promise<void> {
+        const widget = this.page.getByText('Get Started').first();
+        await expect(widget).not.toBeVisible({ timeout: 10000 });
+    }
+
+
+    async Check_Pay_Outstanding_Balance_Modal(_electricAmount?: string, _gasAmount?: string): Promise<void> {
+        const modal = this.page.getByRole('dialog').or(
+            this.page.locator('[role="dialog"]')
+        ).first();
+        await expect(modal).toBeVisible({ timeout: 30000 });
+    }
+
+    async Submit_Pay_Bill_Modal(): Promise<void> {
+        const modal = this.page.getByRole('dialog');
+        await expect(modal).toBeVisible({ timeout: 30000 });
+        const submitBtn = modal.getByRole('button', { name: 'Pay bill' });
+        await expect(submitBtn).toBeVisible({ timeout: 30000 });
+        await expect(submitBtn).toBeEnabled({ timeout: 10000 });
+        await submitBtn.click();
+    }
+
+    async Check_Payment_Failed_Message_In_Modal(): Promise<void> {
+        const failedMsg = this.page.getByText('Your last payment didn\'t go through').first();
+        await expect(failedMsg).toBeVisible({ timeout: 30000 });
+    }
+
 }
 
 

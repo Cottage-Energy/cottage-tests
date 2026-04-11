@@ -26,16 +26,16 @@ export class ProfilePage {
 
         this.Profile_Account_Title = page.getByRole('heading', { name: 'Account', exact: true });
 
-        this.Profile_Payment_Info_Tab = page.getByRole('tab', { name: 'Payment Information' });
-        this.Profile_Payment_Info_Title = page.getByRole('heading', { name: 'Payment Information' });
+        this.Profile_Payment_Info_Tab = page.getByRole('tab', { name: 'Payment' });
+        this.Profile_Payment_Info_Title = page.getByRole('heading', { name: 'Payment method' });
 
         this.Profile_Setup_Payment_Title = page.locator('div').filter({ hasText: /^Set up payment method$/ }).first();
         this.Profile_Setup_Payment_Button = page.getByRole('button', { name: 'Set Up Payment' });
 
-        this.Profile_Edit_Payment_Button = page.getByRole('button', { name: 'Edit' });
+        this.Profile_Edit_Payment_Button = page.getByRole('button', { name: 'Edit details' });
 
         this.Profile_Auto_Payment_Checkbox = page.getByLabel('Enable auto-pay (bill is paid');
-        this.Profile_Save_Payment_Button = page.getByRole('button', { name: 'Save' });
+        this.Profile_Save_Payment_Button = page.getByRole('button', { name: 'Save details' });
         
         
         this.Profile_Success_Message = page.getByText('🥳 Success', { exact: true });
@@ -394,6 +394,10 @@ export class ProfilePage {
         await expect(this.page).toHaveURL(/.*\/app\/account.*/, { timeout: 30000 });
     }
 
+
+    async Check_Payment_Initiated_Message(): Promise<void> {
+        await expect(this.Profile_Success_Message).toBeVisible({ timeout: 30000 });
+    }
 
 }
 

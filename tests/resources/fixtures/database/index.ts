@@ -8,3 +8,4 @@ export * from './billQueries';
 export * from './paymentQueries';
 export * from './utilityQueries';
 export * from './cleanupQueries';
+export * from './blnkQueries';

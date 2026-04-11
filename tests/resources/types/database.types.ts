@@ -122,3 +122,74 @@ export interface MoveInPartnerRecord {
   name: string;
   useEncouragedConversion: boolean;
 }
+
+/**
+ * BLNK Ledger types — blnk schema (not accessible via Supabase PostgREST)
+ * Queried via direct Postgres connection (tests/resources/utils/postgres.ts)
+ * Amounts are in DOLLARS (not cents) — different from Payment table
+ */
+
+export interface BlnkBalance {
+  balance_id: string;
+  balance: number;
+  credit_balance: number;
+  debit_balance: number;
+  inflight_balance: number;
+  inflight_credit_balance: number;
+  inflight_debit_balance: number;
+  ledger_id: string;
+  currency: string;
+}
+
+export interface BlnkTransaction {
+  transaction_id: string;
+  source: string;
+  destination: string;
+  amount: number;
+  currency: string;
+  status: 'APPLIED' | 'INFLIGHT' | 'QUEUED' | 'REJECTED' | 'VOID';
+  reference: string;
+  description: string;
+  created_at: string;
+  meta_data: Record<string, unknown> | null;
+}
+
+export interface TransactionMetadataRecord {
+  ledgerTransactionID: string;
+  electricBillID: number | null;
+  gasBillID: number | null;
+  dueDate: string;
+}
+
+/**
+ * Extended Payment record with fields needed for BLNK verification
+ */
+export interface PaymentDetailRecord {
+  id: string;
+  paidBy: string;
+  amount: number;
+  paymentStatus: string;
+  stripePaymentID: string | null;
+  paymentMethodID: string | null;
+  ledgerTransactionID: string | null;
+  contributions: PaymentContribution[] | null;
+  refundedAmount: number;
+  succeededAt: string | null;
+}
+
+export interface PaymentContribution {
+  amount: number;
+  chargeAccountID?: string;
+  renewableSubscriptionID?: number;
+}
+
+/**
+ * Balance snapshot for point-in-time comparison during pipeline testing
+ */
+export interface BalanceSnapshot {
+  balance: number;
+  inflight_balance: number;
+  inflight_debit_balance: number;
+  inflight_credit_balance: number;
+  outstanding: number; // balance + inflight_balance
+}

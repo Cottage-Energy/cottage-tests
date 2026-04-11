@@ -63,12 +63,12 @@ Aggregate CI results, open bugs, open PRs, feature flag states, and blockers int
 **CI Verdict**: [All green / X scopes failing / Stale results — re-run needed]
 
 ## Open Bugs
-| Severity | Count | Key Issues | Fix PR Status |
-|----------|-------|------------|---------------|
-| Blocker | [N] | [issue titles + IDs] | [merged/open/none] |
-| Critical | [N] | [issue titles + IDs] | [merged/open/none] |
-| Major | [N] | [issue titles + IDs] | — |
-| Minor | [N] | [issue titles + IDs] | — |
+| Severity | Count | Key Issues | User Impact | Fix PR Status |
+|----------|-------|------------|-------------|---------------|
+| Blocker | [N] | [issue titles + IDs] | [what users experience] | [merged/open/none] |
+| Critical | [N] | [issue titles + IDs] | [what users experience] | [merged/open/none] |
+| Major | [N] | [issue titles + IDs] | [what users experience] | — |
+| Minor | [N] | [issue titles + IDs] | [what users experience] | — |
 
 **Bug Verdict**: [No blockers / X blockers need resolution]
 

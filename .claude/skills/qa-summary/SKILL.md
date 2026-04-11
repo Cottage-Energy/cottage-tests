@@ -43,14 +43,14 @@ Aggregate QA activity across Linear, GitHub, CI, and test plans into a team-visi
 | ENG-XXXX | [title] | Done | [X/Y ACs pass] | [brief note] |
 
 ### Bugs Filed
-| Bug | Title | Severity | Status | Found During |
-|-----|-------|----------|--------|-------------|
-| ENG-XXXX | [BUG] title | [severity] | [status] | [which ticket/session] |
+| Bug | Title | Severity | User Impact | Status | Found During |
+|-----|-------|----------|-------------|--------|-------------|
+| ENG-XXXX | [BUG] title | [severity] | [what the user experiences] | [status] | [which ticket/session] |
 
 ### Improvements Suggested
-| Ticket | Title | Impact | Status | Area |
-|--------|-------|--------|--------|------|
-| ENG-XXXX | [IMPROVEMENT] title | [High/Med/Low] | [status] | [feature area] |
+| Ticket | Title | User Impact | Impact | Status | Area |
+|--------|-------|-------------|--------|--------|------|
+| ENG-XXXX | [IMPROVEMENT] title | [user friction/confusion] | [High/Med/Low] | [status] | [feature area] |
 
 ### CI Health
 - Pass rate: [X]% ([Y] passed / [Z] total runs)

@@ -36,6 +36,20 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 - UX & product improvement suggestions (from test planning and exploratory sessions)
 - Test execution results (exploratory + scripted)
 
+### User Impact Rule (enforced — all QA outputs)
+**Every bug, improvement, finding, and observation MUST include a User Impact statement** — describe what the user experiences in concrete, non-technical terms. This applies to:
+- Bug reports posted to Linear
+- Improvement tickets
+- Exploratory session summaries (bugs table, edge cases, UX observations)
+- Test plan UX observations
+- PR review findings
+- Failure analysis (product bugs)
+- Release readiness reports (open bugs)
+- QA summaries (bugs and improvements)
+
+Good: "User gets no indication the creation failed — they may think it succeeded"
+Bad: "409 error is unhandled in the catch block"
+
 ## MCP Servers (always prefer these over alternatives)
 
 **Always use MCP server tools when available.** Do not fall back to CLI commands, web fetches, or manual workarounds when an MCP tool exists for the task. Use `ToolSearch` to load the appropriate MCP tool before calling it.
@@ -45,7 +59,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, comment test plans back to tickets | `get_issue`, `save_issue`, `save_comment`, `list_comments`, `search_issues`, `list_issues`, `list_issue_statuses` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
-| **Playwright** | Browser automation for interactive testing and debugging | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
+| **Playwright** | Browser automation for interactive testing and debugging. **Note**: PG-Admin (`dev.publicgrid.co`) uses Google SSO — closing the browser kills the session. Keep browser open for full PG-Admin sessions; fall back to Supabase for DB-level testing if session expires. | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
 | **Figma** | UI screens to verify visual correctness and compare against implementation. **Note**: PG-App file is password-protected — MCP token auth cannot pass link passwords. Request manual screenshots when MCP returns access errors. | `get_design_context`, `get_screenshot` |
 | **Notion** | Documentation hub — feature docs, test plans, test cases *(auth pending)* | Will use MCP tools once authenticated |
 | **context7** | Look up latest library/framework documentation | `resolve-library-id`, `query-docs` |

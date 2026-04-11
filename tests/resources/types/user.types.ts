@@ -2,41 +2,41 @@
  * Test user data interface with all generated fields
  */
 export interface TestUser {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-  unitNumber: string;
-  today: string;
-  tomorrow: string;
-  fourDaysFromNow: string;
-  twoDaysAgo: string;
-  birthDate: string;
-  ssn: string;
-  cardExpiry: string;
-  cvc: string;
-  country: string;
-  zip: string;
-  electricAmount: number;
-  electricAmountActual: string;
-  electricServiceFee: number;
-  electricServiceFeeActual: string;
-  electricAmountTotal: number;
-  electricAmountActualTotal: string;
-  electricUsage: number;
-  gasAmount: number;
-  gasAmountActual: string;
-  gasServiceFee: number;
-  gasServiceFeeActual: string;
-  gasAmountTotal: number;
-  gasAmountActualTotal: string;
-  gasUsage: number;
-  combinedAmount: number;
-  combinedAmountActual: string;
-  combinedServiceFee: number;
-  combinedServiceFeeActual: string;
-  combinedAmountTotal: number;
-  combinedAmountActualTotal: string;
+  FirstName: string;
+  LastName: string;
+  PhoneNumber: string;
+  Email: string;
+  UnitNumber: string;
+  Today: string;
+  Tomorrow: string;
+  FourDaysFromNow: string;
+  TwoDaysAgo: string;
+  BirthDate: string;
+  SSN: string;
+  CardExpiry: string;
+  CVC: string;
+  Country: string;
+  Zip: string;
+  ElectricAmount: number;
+  ElectricAmountActual: string;
+  ElectricServiceFee: number;
+  ElectricServiceFeeActual: string;
+  ElectricAmountTotal: number;
+  ElectricAmountActualTotal: string;
+  ElectricUsage: number;
+  GasAmount: number;
+  GasAmountActual: string;
+  GasServiceFee: number;
+  GasServiceFeeActual: string;
+  GasAmountTotal: number;
+  GasAmountActualTotal: string;
+  GasUsage: number;
+  CombinedAmount: number;
+  CombinedAmountActual: string;
+  CombinedServiceFee: number;
+  CombinedServiceFeeActual: string;
+  CombinedAmountTotal: number;
+  CombinedAmountActualTotal: string;
 }
 
 /**
