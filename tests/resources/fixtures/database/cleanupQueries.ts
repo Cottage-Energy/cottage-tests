@@ -1,4 +1,5 @@
 import { supabase } from '../../utils/supabase';
+import { logger } from '../../utils/logger';
 
 /**
  * Database cleanup queries for test teardown
@@ -14,9 +15,9 @@ export class CleanupQueries {
       .eq('id', cottageUserId);
 
     if (error) {
-      console.error('Error deleting Cottage User:', error);
+      logger.error('Error deleting Cottage User', { error });
     } else {
-      console.log('Successfully deleted Cottage User');
+      logger.info('Successfully deleted Cottage User');
     }
   }
 
@@ -25,16 +26,23 @@ export class CleanupQueries {
    */
   async deleteElectricAccount(electricAccountId: string | null): Promise<void> {
     if (!electricAccountId) return;
+    const eaId = parseInt(electricAccountId);
+
+    // Delete DemandResponseEnrollment first (FK constraint)
+    await supabase
+      .from('DemandResponseEnrollment')
+      .delete()
+      .eq('electricAccountID', eaId);
 
     const { error } = await supabase
       .from('ElectricAccount')
       .delete()
-      .eq('id', parseInt(electricAccountId));
+      .eq('id', eaId);
 
     if (error) {
-      console.error('Error deleting Electric Account:', error);
+      logger.error('Error deleting Electric Account', { error });
     } else {
-      console.log('Successfully deleted Electric Account');
+      logger.info('Successfully deleted Electric Account');
     }
   }
 
@@ -50,9 +58,9 @@ export class CleanupQueries {
       .eq('id', parseInt(gasAccountId));
 
     if (error) {
-      console.error('Error deleting Gas Account:', error);
+      logger.error('Error deleting Gas Account', { error });
     } else {
-      console.log('Successfully deleted Gas Account');
+      logger.info('Successfully deleted Gas Account');
     }
   }
 
@@ -68,9 +76,9 @@ export class CleanupQueries {
       .eq('id', propertyId);
 
     if (error) {
-      console.error('Error deleting Property:', error);
+      logger.error('Error deleting Property', { error });
     } else {
-      console.log('Successfully deleted Property');
+      logger.info('Successfully deleted Property');
     }
   }
 }
