@@ -43,7 +43,7 @@ test.describe('API v2: GET /customers', () => {
   });
 
   test('CUST-LIST-001: list customers returns paginated response', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -161,7 +161,7 @@ test.describe('API v2: GET /customers/{customerID}', () => {
   // ─── CUST-001: Happy path ───
 
   test('CUST-001: get customer returns full object', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!knownCustomerID, 'No customer discovered from properties');
@@ -185,7 +185,7 @@ test.describe('API v2: GET /customers/{customerID}', () => {
   // ─── CUST-002: Properties array structure ───
 
   test('CUST-002: customer properties array has correct structure', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!knownCustomerID, 'No customer found via property detail — test data needed');
@@ -246,7 +246,7 @@ test.describe('API v2: GET /customers/{customerID}', () => {
   // ─── CUST-006: Get customer property ───
 
   test('CUST-006: get customer property returns full detail', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!knownCustomerID || !knownPropertyUUID, 'No customer/property pair — needs test data with linked customer');
@@ -308,7 +308,7 @@ test.describe('API v2: Customer property bills', () => {
   // ─── CUST-009: Bills happy path ───
 
   test('CUST-009: get customer property bills', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!customerID || !propertyUUID, 'API_V2_TEST_CUSTOMER_ID or API_V2_TEST_PROPERTY_UUID not set');
@@ -377,7 +377,7 @@ test.describe('API v2: Customer property bills', () => {
   // ─── CUST-013: Get specific bill (skipped if no bills exist) ───
 
   test('CUST-013: get specific bill by ID', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!customerID || !propertyUUID, 'Test data not set');
@@ -441,7 +441,7 @@ test.describe('API v2: Customer property intervals', () => {
   // ─── INT-001: Happy path ───
 
   test('INT-001: get intervals returns response', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!customerID || !propertyUUID, 'Test data not set');
@@ -457,7 +457,7 @@ test.describe('API v2: Customer property intervals', () => {
   // ─── INT-002: Interval object shape (skipped if no data) ───
 
   test('INT-002: interval reading has correct shape', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!customerID || !propertyUUID, 'Test data not set');

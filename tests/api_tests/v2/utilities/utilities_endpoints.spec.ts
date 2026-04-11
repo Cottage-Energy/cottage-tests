@@ -43,7 +43,7 @@ test.describe('API v2: GET /utilities', () => {
   // ─── UTIL-001: List all utilities ───
 
   test('UTIL-001: list utilities returns all providers', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -161,7 +161,7 @@ test.describe('API v2: GET /utilities/zip/{zip}', () => {
   // ─── ZIP-001: Known zip (10001 → Con Edison) ───
 
   test('ZIP-001: zip 10001 returns Con Edison', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -182,7 +182,7 @@ test.describe('API v2: GET /utilities/zip/{zip}', () => {
   // ─── ZIP-002: Provider object shape ───
 
   test('ZIP-002: utility provider has correct shape', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 

@@ -49,7 +49,7 @@ test.describe('API v2: Error Format', () => {
   // ─── ERR-001: Error structure ───
 
   test('ERR-001: error response has consistent structure', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -70,7 +70,7 @@ test.describe('API v2: Error Format', () => {
   // ─── ERR-002: INVALID_REQUEST includes details ───
 
   test('ERR-002: INVALID_REQUEST includes field and reason', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -91,7 +91,7 @@ test.describe('API v2: Error Format', () => {
   // ─── ERR-003: UNAUTHORIZED format ───
 
   test('ERR-003: 401 returns UNAUTHORIZED code', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 

@@ -40,7 +40,7 @@ test.describe('API v2: POST /customers/search', () => {
   // ─── SRCH-001: Search by email ───
 
   test('SRCH-001: search by email returns matching customer', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -63,7 +63,7 @@ test.describe('API v2: POST /customers/search', () => {
   // ─── SRCH-002: Search by externalLeaseID ───
 
   test('SRCH-002: search by externalLeaseID', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -132,7 +132,7 @@ test.describe('API v2: POST /customers/search', () => {
   // ─── SRCH-006: Empty body rejected ───
 
   test('SRCH-006: empty search body returns 400', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -210,7 +210,7 @@ test.describe('API v2: POST /customers/auth', () => {
   // ─── SSO-001: Existing user → dashboard ───
 
   test('SSO-001: existing user returns dashboard redirect', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -237,7 +237,7 @@ test.describe('API v2: POST /customers/auth', () => {
   // ─── SSO-002: Unknown user + move-in ───
 
   test('SSO-002: unknown user with move-in flowType', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -258,7 +258,7 @@ test.describe('API v2: POST /customers/auth', () => {
   // ─── SSO-003: Unknown user + verify ───
 
   test('SSO-003: unknown user with verify flowType', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -278,7 +278,7 @@ test.describe('API v2: POST /customers/auth', () => {
   // ─── SSO-004: Unknown user + savings ───
 
   test('SSO-004: unknown user with savings flowType', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 

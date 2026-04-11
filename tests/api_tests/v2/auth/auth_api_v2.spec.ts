@@ -26,7 +26,7 @@ test.describe('API v2: Authentication & Authorization', () => {
   // ─── AUTH-001: Valid API key returns data ───
 
   test('AUTH-001: valid API key returns building data', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -47,7 +47,7 @@ test.describe('API v2: Authentication & Authorization', () => {
   // ─── AUTH-002: Missing Authorization header ───
 
   test('AUTH-002: missing Authorization header returns 401', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -110,7 +110,7 @@ test.describe('API v2: Authentication & Authorization', () => {
   // ─── AUTH-006: Partner scoping — own buildings only ───
 
   test('AUTH-006: partner scoping returns only own buildings', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 

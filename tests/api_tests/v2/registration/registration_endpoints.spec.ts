@@ -35,7 +35,7 @@ test.describe('API v2: POST /registration/move-in', () => {
   // ─── REG-001: Full payload move-in ───
 
   test('REG-001: full payload move-in returns 201', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = RegistrationApiV2.testEmail('reg001');
@@ -61,7 +61,7 @@ test.describe('API v2: POST /registration/move-in', () => {
   // ─── REG-002: Minimum viable payload ───
 
   test('REG-002: minimum viable payload succeeds', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = RegistrationApiV2.testEmail('reg002');
@@ -196,7 +196,7 @@ test.describe('API v2: POST /registration/move-in', () => {
   // ─── REG-009: Duplicate email ───
 
   test('REG-009: duplicate email returns 409', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.LONG);
     const email = RegistrationApiV2.testEmail('reg009');
@@ -218,7 +218,7 @@ test.describe('API v2: POST /registration/move-in', () => {
   // ─── REG-010: finishRegistrationURL is valid ───
 
   test('REG-010: finishRegistrationURL contains token', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = RegistrationApiV2.testEmail('reg010');
@@ -275,7 +275,7 @@ test.describe('API v2: POST /registration/savings-enrollment', () => {
   // ─── SAV-001: Full payload savings enrollment ───
 
   test('SAV-001: savings enrollment with full payload', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = RegistrationApiV2.testEmail('sav001');
@@ -311,7 +311,7 @@ test.describe('API v2: POST /registration/savings-enrollment', () => {
   // ─── SAV-002: Minimum viable payload ───
 
   test('SAV-002: savings with minimum payload succeeds', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const email = RegistrationApiV2.testEmail('sav002');

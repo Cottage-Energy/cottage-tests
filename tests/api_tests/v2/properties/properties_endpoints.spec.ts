@@ -41,7 +41,7 @@ test.describe('API v2: GET /properties', () => {
   // ─── PROP-001: Default pagination ───
 
   test('PROP-001: list properties returns default pagination', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -60,7 +60,7 @@ test.describe('API v2: GET /properties', () => {
   // ─── PROP-002: Filter by buildingID ───
 
   test('PROP-002: filter by buildingID returns matching properties', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -128,7 +128,7 @@ test.describe('API v2: GET /properties', () => {
   // ─── PROP-005: Property object shape ───
 
   test('PROP-005: property object has correct shape', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -218,7 +218,7 @@ test.describe('API v2: GET /properties/{propertyID}', () => {
   // ─── PROP-009: Happy path (property detail uses UUID) ───
 
   test('PROP-009: get property by UUID returns full detail', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -306,7 +306,7 @@ test.describe('API v2: GET /properties/{propertyID}/bills', () => {
   // ─── BILL-001: Default bills response ───
 
   test('BILL-001: get property bills with defaults', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!testPropertyUUID, 'No property available');
@@ -324,7 +324,7 @@ test.describe('API v2: GET /properties/{propertyID}/bills', () => {
   // ─── BILL-002: Bill object shape ───
 
   test('BILL-002: bill object has correct shape', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     test.skip(!testPropertyUUID, 'No property available');

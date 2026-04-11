@@ -46,7 +46,7 @@ test.describe('API v2: GET /buildings', () => {
   // ─── BLD-001: List buildings — default pagination ───
 
   test('BLD-001: list buildings returns default pagination', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -145,7 +145,7 @@ test.describe('API v2: GET /buildings', () => {
   // ─── BLD-006: Building object shape ───
 
   test('BLD-006: building object has correct shape', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -226,7 +226,7 @@ test.describe('API v2: GET /buildings/{buildingID}', () => {
   // ─── BLD-010: Get building by ID ───
 
   test('BLD-010: get building by ID returns full detail with properties', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
 
@@ -329,7 +329,7 @@ test.describe('API v2: POST /buildings/create', () => {
   // ─── BLD-014: Create building — full payload ───
 
   test('BLD-014: create building with full payload', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const ts = Date.now().toString(36);
@@ -364,7 +364,7 @@ test.describe('API v2: POST /buildings/create', () => {
   // ─── BLD-015: Minimum required fields ───
 
   test('BLD-015: create building with minimum required fields', {
-    tag: [TEST_TAGS.API, TEST_TAGS.SMOKE],
+    tag: [TEST_TAGS.API],
   }, async () => {
     test.setTimeout(TIMEOUTS.DEFAULT);
     const ts = Date.now().toString(36);
