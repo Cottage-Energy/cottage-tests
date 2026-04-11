@@ -5,7 +5,6 @@ import {
   newUserMoveInManualBankAccount,
   generateTestUserData,
   CleanUp,
-  PaymentUtilities,
 } from '../../../resources/fixtures';
 import {
   utilityQueries,
@@ -34,8 +33,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * Utility combos: electric only, gas only, electric+gas
  * Recovery paths: card→card, card→bank, bank→card
  */
-
-const paymentUtilities = new PaymentUtilities();
 let MoveIn: any;
 
 test.beforeEach(async ({ page }) => {

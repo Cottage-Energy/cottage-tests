@@ -1,10 +1,11 @@
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInManualPayment, newUserMoveInSkipPayment, newUserMoveInManualBankAccount, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities } from '../../../resources/fixtures';
+import { newUserMoveInManualPayment, newUserMoveInSkipPayment, newUserMoveInManualBankAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { ManualPaymentChecks } from '../../../resources/fixtures/payment';
 import { utilityQueries, accountQueries, billQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
-const paymentUtilities = new PaymentUtilities();
+const paymentUtilities = new ManualPaymentChecks();
 let MoveIn: any;
 
 

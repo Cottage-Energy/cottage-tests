@@ -4,7 +4,6 @@ import {
   newUserMoveInSkipPayment,
   generateTestUserData,
   CleanUp,
-  PaymentUtilities,
 } from '../../../resources/fixtures';
 import {
   utilityQueries,
@@ -34,8 +33,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * 2. Flex split bill redirects to getflex.com
  * 3. Non-flex user does NOT see split option
  */
-
-const paymentUtilities = new PaymentUtilities();
 let MoveIn: ReturnType<typeof newUserMoveInManualPayment> extends Promise<infer T> ? T : never;
 
 test.beforeEach(async ({ page }) => {

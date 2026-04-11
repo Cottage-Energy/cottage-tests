@@ -5,7 +5,6 @@ import {
   newUserMoveInAutoBankAccount,
   generateTestUserData,
   CleanUp,
-  PaymentUtilities,
 } from '../../resources/fixtures';
 import {
   utilityQueries,
@@ -33,8 +32,6 @@ import * as PaymentData from '../../resources/data/payment-data.json';
  *
  * Reference: tests/docs/payment-system.md — Complete BLNK Transaction Catalog
  */
-
-const paymentUtilities = new PaymentUtilities();
 let MoveIn: ReturnType<typeof newUserMoveInAutoPayment> extends Promise<infer T> ? T : never;
 
 // Helper: wait with polling

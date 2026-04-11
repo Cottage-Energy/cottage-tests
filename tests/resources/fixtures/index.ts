@@ -26,9 +26,6 @@ export { CleanUp, Test_User_Clean_Up } from './userCleanUp';
 // Bill upload utilities
 export * from './billUploadUtilities';
 
-// Payment utilities
-export { PaymentUtilities } from './paymentUtilities';
-
 // Re-export utilities for convenience
 export { Logger, loggers, createLogger } from '../utils/logger';
 export { validateOTP, isValidOTP, retryAsync, waitForCondition, assertDefined } from '../utils/testHelpers';

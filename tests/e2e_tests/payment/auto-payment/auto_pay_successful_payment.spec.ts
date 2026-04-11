@@ -1,6 +1,7 @@
 ﻿import { APIRequestContext } from '@playwright/test';
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities } from '../../../resources/fixtures';
+import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { AutoPaymentChecks } from '../../../resources/fixtures/payment';
 import { utilityQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import { AdminApi } from '../../../resources/api/admin_api';
@@ -9,7 +10,7 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
 
 
 let AdminApiContext: APIRequestContext;
-const paymentUtilities = new PaymentUtilities();
+const paymentUtilities = new AutoPaymentChecks();
 let MoveIn: any;
 
 

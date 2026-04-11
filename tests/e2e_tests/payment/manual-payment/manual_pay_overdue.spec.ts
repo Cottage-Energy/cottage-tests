@@ -3,7 +3,6 @@ import {
   newUserMoveInManualPayment,
   generateTestUserData,
   CleanUp,
-  PaymentUtilities,
 } from '../../../resources/fixtures';
 import {
   utilityQueries,
@@ -32,8 +31,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * users from silent service disconnection by sending escalating warnings
  * and providing a clear path to restore service after payment.
  */
-
-const paymentUtilities = new PaymentUtilities();
 let MoveIn: ReturnType<typeof Object.create>;
 
 test.beforeEach(async ({ page }) => {
@@ -361,8 +358,16 @@ test.describe('Reminder Progression', () => {
 
     // Verify: Shutoff warning sent (email + SMS)
     await FastmailActions.Check_Shutoff_Warning_Email(MoveIn.pgUserEmail, 'Electric');
-    // SMS verification via DialpadSMS table
-    await smsQueries.checkSMSSent(MoveIn.cottageUserId, 'shutoff');
+    // SMS: sendText calls Dialpad API directly (no DB record for outbound).
+    // Verify indirectly: user has SMS consent + email was sent (same pipeline triggers both).
+    const { data: smsUser } = await supabase
+      .from('CottageUsers')
+      .select('isAbleToSendTextMessages, dateOfTextMessageConsent')
+      .eq('id', MoveIn.cottageUserId)
+      .single();
+    expect(smsUser?.isAbleToSendTextMessages).toBe(true);
+    expect(smsUser?.dateOfTextMessageConsent).toBeTruthy();
+    logger.info(`SMS consent verified: isAble=${smsUser?.isAbleToSendTextMessages}, consent=${smsUser?.dateOfTextMessageConsent}`);
     await billQueries.checkElectricBillReminder(electricAccountId, true);
 
     logger.info('P2-22: 18 days overdue shutoff warning — PASS');

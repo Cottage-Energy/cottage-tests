@@ -1,5 +1,6 @@
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInEncouraged, generateTestUserData, CleanUp, PaymentUtilities, RegisterApi } from '../../../resources/fixtures';
+import { newUserMoveInEncouraged, generateTestUserData, CleanUp, RegisterApi } from '../../../resources/fixtures';
+import { AutoPaymentChecks } from '../../../resources/fixtures/payment';
 import { utilityQueries } from '../../../resources/fixtures/database';
 import { TEST_TAGS } from '../../../resources/constants';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -7,7 +8,7 @@ import type { MoveInResult } from '../../../resources/types';
 import type { RegisterRequestBody, RegisterSuccessResponse } from '../../../resources/types/register.types';
 
 
-const paymentUtilities = new PaymentUtilities();
+const paymentUtilities = new AutoPaymentChecks();
 let MoveIn: MoveInResult;
 
 

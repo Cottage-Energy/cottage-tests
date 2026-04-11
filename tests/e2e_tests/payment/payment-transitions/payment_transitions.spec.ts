@@ -5,7 +5,6 @@ import {
   newUserMoveInManualPayment,
   generateTestUserData,
   CleanUp,
-  PaymentUtilities,
 } from '../../../resources/fixtures';
 import {
   utilityQueries,
@@ -29,8 +28,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * - P2-08: Payment method switch — Card to Bank (no fee)
  * - P2-09: Payment method switch — Bank to Card (3% fee)
  */
-
-const paymentUtilities = new PaymentUtilities();
 let MoveIn: any;
 
 test.beforeEach(async ({ page }) => {

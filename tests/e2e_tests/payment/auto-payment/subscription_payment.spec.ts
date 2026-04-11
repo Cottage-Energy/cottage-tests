@@ -4,7 +4,6 @@ import {
   newUserMoveInSkipPayment,
   generateTestUserData,
   CleanUp,
-  PaymentUtilities,
 } from '../../../resources/fixtures';
 import {
   utilityQueries,
@@ -31,8 +30,6 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  *
  * Reference: tests/docs/subscription-system.md
  */
-
-const paymentUtilities = new PaymentUtilities();
 let MoveIn: ReturnType<typeof newUserMoveInSkipPayment> extends Promise<infer T> ? T : never;
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
