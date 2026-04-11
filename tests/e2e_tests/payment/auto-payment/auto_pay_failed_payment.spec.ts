@@ -169,7 +169,7 @@ test.describe('Invalid Card to Valid Card Auto Payment', () => {
     });
   
 
-    test('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: [ '@smoke', '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
+    test('COMED EVERSOURCE Electric & Gas Profile Added to Pay Bill Link Update', {tag: [ '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
       
       test.setTimeout(1800000);
   
