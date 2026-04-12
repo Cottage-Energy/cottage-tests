@@ -56,7 +56,7 @@ Bad: "409 error is unhandled in the catch block"
 
 | Server | Purpose | Use for |
 |--------|---------|---------|
-| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, comment test plans back to tickets | `get_issue`, `save_issue`, `save_comment`, `list_comments`, `search_issues`, `list_issues`, `list_issue_statuses` |
+| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, update tickets with QA test plans. Uses `@mseep/linear-mcp@latest` (NOT `linear-mcp-server` which has response format bug). | `get_issue`, `search_issues`, `update_issue`, `create_issue`, `list_issues`, `list_projects`, `list_teams` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
 | **Playwright** | Browser automation for interactive testing and debugging. **Note**: PG-Admin (`dev.publicgrid.co`) uses Google SSO — closing the browser kills the session. Keep browser open for full PG-Admin sessions; fall back to Supabase for DB-level testing if session expires. | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
@@ -189,6 +189,16 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 - Radio group: "Public Grid handles everything" / "I will manage payments myself"
 - "Skip for now" button appears ONLY when "Public Grid handles everything" is selected
 - Encouraged conversion flow (pgtest, funnel, partner shortcodes) is a 2-step flow, NOT the standard 6-step. Use `newUserMoveInEncouraged()`.
+
+### SMS Verification
+- `DialpadSMS` table stores INBOUND SMS only. Outbound reminder SMS goes via Dialpad API directly — verify indirectly via consent flags.
+
+### BLNK Schema (Supabase `blnk` schema)
+- `blnk.transactions` — ledger transactions with `reference`, `effective_date`, `created_at`, `status`, `amount`
+- `blnk.balances` — charge account balances with `balance_id`, `identity_id`, `balance`, `inflight_balance`
+- `blnk.identity` — customer identities (148 in dev) linked to balances via `balances.identity_id`
+- Query via `executeSQL()` in `tests/resources/utils/postgres.ts` (Supabase Management API)
+- Blnk Migration project (Linear): ENG-2420/2421/2422/2423/2424/2426/2458 — test cases in `payment_comprehensive_test_matrix.md`
 
 ### "Set it up myself" Test Paths
 | Flow | Button | Result |
