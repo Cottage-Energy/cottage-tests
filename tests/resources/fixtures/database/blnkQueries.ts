@@ -542,6 +542,99 @@ export class BlnkQueries {
 
     return txn;
   }
+
+
+  // =========================================================================
+  // BLNK Migration — ENG-2421: Effective Date Verification
+  // =========================================================================
+
+  /**
+   * Verify that a BLNK transaction's effective_date matches the bill's dueDate.
+   * For post-migration transactions: effective_date = bill dueDate
+   * For pre-migration (backfilled): effective_date = created_at
+   */
+  async verifyEffectiveDate(reference: string, expectedDueDate: string): Promise<void> {
+    const rows = await executeSQL<{ effective_date: string; created_at: string }>(
+      `SELECT effective_date, created_at FROM blnk.transactions WHERE reference = $1`,
+      [reference]
+    );
+    expect(rows.length).toBeGreaterThan(0);
+    const txn = rows[0];
+
+    // Post-migration: effective_date should match the bill's due date
+    const effectiveDate = new Date(txn.effective_date).toISOString().split('T')[0];
+    const expected = new Date(expectedDueDate).toISOString().split('T')[0];
+    expect(effectiveDate).toBe(expected);
+    logger.info(`BLNK effective_date verified: ${reference} → ${effectiveDate} (expected ${expected})`);
+  }
+
+  /**
+   * Check if a transaction was backfilled (effective_date = created_at) vs new (effective_date = dueDate).
+   */
+  async checkTransactionMigrationStatus(reference: string): Promise<'backfilled' | 'post-migration'> {
+    const rows = await executeSQL<{ effective_date: string; created_at: string }>(
+      `SELECT effective_date, created_at FROM blnk.transactions WHERE reference = $1`,
+      [reference]
+    );
+    if (rows.length === 0) throw new Error(`Transaction ${reference} not found`);
+
+    const effective = new Date(rows[0].effective_date).getTime();
+    const created = new Date(rows[0].created_at).getTime();
+    // Within 1 second = backfilled
+    return Math.abs(effective - created) < 1000 ? 'backfilled' : 'post-migration';
+  }
+
+
+  // =========================================================================
+  // BLNK Migration — ENG-2458: Identity Linking Verification
+  // =========================================================================
+
+  /**
+   * Verify a BLNK identity exists and is linked to a balance for the given charge account.
+   */
+  async verifyIdentityLinkedToBalance(balanceId: string): Promise<{ identityId: string; balanceId: string }> {
+    const rows = await executeSQL<{ identity_id: string; balance_id: string }>(
+      `SELECT b.identity_id, b.balance_id
+       FROM blnk.balances b
+       WHERE b.balance_id = $1 AND b.identity_id IS NOT NULL`,
+      [balanceId]
+    );
+    expect(rows.length).toBe(1);
+    expect(rows[0].identity_id).toBeTruthy();
+    logger.info(`BLNK identity linked: balance ${balanceId} → identity ${rows[0].identity_id}`);
+    return { identityId: rows[0].identity_id, balanceId: rows[0].balance_id };
+  }
+
+  /**
+   * Get BLNK identity details by identity_id.
+   */
+  async getIdentity(identityId: string): Promise<{ identity_id: string; email_address: string; meta_data: Record<string, unknown> }> {
+    const rows = await executeSQL<{ identity_id: string; email_address: string; meta_data: Record<string, unknown> }>(
+      `SELECT identity_id, email_address, meta_data FROM blnk.identity WHERE identity_id = $1`,
+      [identityId]
+    );
+    expect(rows.length).toBe(1);
+    return rows[0];
+  }
+
+
+  // =========================================================================
+  // BLNK Migration — ENG-2420: Uniqueness Verification
+  // =========================================================================
+
+  /**
+   * Count transactions with a given reference — should always be exactly 1 after uniqueness constraint.
+   */
+  async verifyTransactionUniqueness(reference: string): Promise<number> {
+    const rows = await executeSQL<{ count: string }>(
+      `SELECT COUNT(*) as count FROM blnk.transactions WHERE reference = $1`,
+      [reference]
+    );
+    const count = parseInt(rows[0].count);
+    expect(count).toBe(1);
+    logger.info(`BLNK uniqueness verified: ${reference} → ${count} transaction(s)`);
+    return count;
+  }
 }
 
 export const blnkQueries = new BlnkQueries();
