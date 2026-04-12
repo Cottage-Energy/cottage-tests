@@ -9,11 +9,11 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | Step | Activity | Skill |
 |------|----------|-------|
 | 1. **Triage** | Read Linear tickets tagged for Testing/QA | `/test-plan` (Quick Triage phase) |
-| 2. **Research** | Gather context from Notion docs, Figma screens, GitHub PRs | `/review-pr` (for PRs), `/test-plan` (multi-source) |
-| 3. **Test Planning** | Write test plans and test cases from requirements | `/test-plan` |
-| 4. **Exploratory Testing** | Interactive exploration to find edge cases and bugs | `/exploratory-test` |
-| 5. **Automation** | Convert findings into Playwright e2e tests | `/new-test` |
-| 6. **Bug Reporting** | Log discovered bugs in Linear with evidence | `/log-bug` |
+| 2. **Research** | Gather context from Notion docs, Figma screens, GitHub PRs | `/test-plan` (PR analysis auto-triggers when PR link found) |
+| 3. **Test Planning** | Write test plans, test cases, and UX improvement opportunities from requirements | `/test-plan` |
+| 4. **Exploratory Testing** | Interactive exploration to find bugs, edge cases, and UX improvement opportunities | `/exploratory-test` |
+| 5. **Automation** | Convert findings into Playwright e2e tests | `/create-test` |
+| 6. **Bug & Improvement Reporting** | Log bugs and UX improvement suggestions in Linear with evidence | `/log-bug` |
 | 7. **Test Execution** | Run automated suites locally or via CI | `/run-tests` |
 
 ### Supporting Skills
@@ -21,17 +21,44 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | Skill | When to use |
 |-------|-------------|
 | `/fix-test` | A test is failing or flaky — diagnose and fix |
-| `/analyze-failure` | Classify CI/local failures, identify root cause |
-| `/ci-health` | Morning check — how are the tests doing? |
+| `/analyze-failure` | CI health check + failure analysis + root cause classification |
 | `/test-coverage` | Map what's automated, find gaps |
-| `/release-ready` | Go/no-go report before a release |
+| `/test-report` | QA summary, release readiness, or targeted report (optional .md export) |
+| `/test-data` | Set up test data — billing users, bills, subscriptions, feature flags |
 
 ### Main Outputs
 - Test plans and test cases (in `tests/test_plans/`)
 - Automated Playwright test scripts (in `tests/e2e_tests/`)
 - Test documentation (in Notion)
-- Bug reports (in Linear)
+- Bug reports and improvement tickets (in Linear)
+- UX & product improvement suggestions (from test planning and exploratory sessions)
 - Test execution results (exploratory + scripted)
+
+### Read-Only Source of Truth Rule (enforced — all external resources)
+**NEVER modify, overwrite, or alter content in external resources unless explicitly instructed.** This includes:
+- **Linear ticket descriptions** — owned by the creator. Post QA findings as **comments only** (use GraphQL `commentCreate`, NOT `update_issue` with description).
+- **Linear ticket status** — never move status unless explicitly told to
+- **Notion docs** — read-only reference. Add comments or create new pages, don't edit existing content.
+- **Figma designs** — observe and screenshot, don't modify
+- **GitHub PR descriptions** — read-only. Post review comments, don't edit the PR body.
+- **Database records** — only modify test data in dev. Never alter production or shared config data without explicit instruction.
+- **Any shared document or config** — treat as source of truth. Observe, reference, comment — don't overwrite.
+
+**Why:** These are the team's source of truth. Overwriting loses original context (ACs, specs, design intent) and breaks trust. QA adds value through comments and separate artifacts, not by altering originals.
+
+### User Impact Rule (enforced — all QA outputs)
+**Every bug, improvement, finding, and observation MUST include a User Impact statement** — describe what the user experiences in concrete, non-technical terms. This applies to:
+- Bug reports posted to Linear
+- Improvement tickets
+- Exploratory session summaries (bugs table, edge cases, UX observations)
+- Test plan UX observations
+- PR review findings
+- Failure analysis (product bugs)
+- Release readiness reports (open bugs)
+- QA summaries (bugs and improvements)
+
+Good: "User gets no indication the creation failed — they may think it succeeded"
+Bad: "409 error is unhandled in the catch block"
 
 ## MCP Servers (always prefer these over alternatives)
 
@@ -39,11 +66,11 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 | Server | Purpose | Use for |
 |--------|---------|---------|
-| **Linear** | Read tickets for Testing/QA, log bugs, track test-related issues, comment test plans back to tickets | `get_issue`, `save_issue`, `save_comment`, `list_comments`, `search_issues`, `list_issues`, `list_issue_statuses` |
+| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, update tickets with QA test plans. Uses `@mseep/linear-mcp@latest` (NOT `linear-mcp-server` which has response format bug). | `get_issue`, `search_issues`, `update_issue`, `create_issue`, `list_issues`, `list_projects`, `list_teams` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
-| **Playwright** | Browser automation for interactive testing and debugging | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
-| **Figma** | UI screens to verify visual correctness and compare against implementation | `get_design_context`, `get_screenshot` |
+| **Playwright** | Browser automation for interactive testing and debugging. **Note**: PG-Admin (`dev.publicgrid.co`) uses Google SSO — closing the browser kills the session. Keep browser open for full PG-Admin sessions; fall back to Supabase for DB-level testing if session expires. | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
+| **Figma** | UI screens to verify visual correctness and compare against implementation. **Note**: PG-App file is password-protected — MCP token auth cannot pass link passwords. Request manual screenshots when MCP returns access errors. | `get_design_context`, `get_screenshot` |
 | **Notion** | Documentation hub — feature docs, test plans, test cases *(auth pending)* | Will use MCP tools once authenticated |
 | **context7** | Look up latest library/framework documentation | `resolve-library-id`, `query-docs` |
 | **Exa** | Web search, code examples, and URL crawling for research during test planning and debugging | `web_search_exa`, `get_code_context_exa`, `crawling_exa` |
@@ -61,6 +88,23 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 Use these as `owner` and `repo` parameters for all GitHub MCP tool calls.
 
+## Partner API v2
+
+Public Grid exposes a REST API for third-party partners. Tests are in `tests/api_tests/v2/`.
+
+| Environment | Base URL |
+|-------------|----------|
+| Dev | `https://api-dev.publicgrd.com/v2` |
+| Staging | `https://api-staging.publicgrd.com/v2` |
+| Production | `https://api.onepublicgrid.com/v2` |
+
+- **Live docs**: `https://0bb57b59.developers-dkm.pages.dev/` (source of truth — NOT the PDF spec)
+- **Auth**: Bearer token via `API_V2_KEY` env var
+- **Base URL config**: `tests/resources/utils/environmentBaseUrl.ts` (has `api_v2` field per environment)
+- **Test data**: customer `pgtest+funnel+final0002@joinpublicgrid.com`, property UUID `67c3e4a3...`, 4 bills, lease `qa-apiv2-lease-001`
+- **Ticket**: ENG-2585
+- **Pattern**: helpers in `tests/resources/fixtures/api/` extend `PublicGridApiV2` base class
+
 ## Commands
 
 Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the report browser from blocking.
@@ -70,7 +114,12 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 - `PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/<feature>/` — run a feature area
 - `PLAYWRIGHT_HTML_OPEN=never npx playwright test --grep /@smoke/ --project=Chromium` — run smoke tests
 - `PLAYWRIGHT_HTML_OPEN=never npx playwright test --grep /@regression1/ --project=Chromium` — run regression scope
+- `BASE_URL=http://localhost:3001 PLAYWRIGHT_HTML_OPEN=never npx playwright test --project=Chromium` — run tests against TanStack local
 - Add `--headed` to watch the browser, `--debug` for Playwright Inspector
+
+### TanStack Local Testing
+- `BASE_URL=http://localhost:3001 PLAYWRIGHT_HTML_OPEN=never npx playwright test --project=Chromium` — run against TanStack local
+- `BASE_URL=http://localhost:3001 PLAYWRIGHT_HTML_OPEN=never npx playwright test --project=Smoke` — smoke suite (use `--project=Smoke`, NOT `--project=Chromium --grep /@smoke/`)
 
 ### CI Triggers
 - `gh workflow run main-workflow.yml -f scope=Smoke -f environment=dev -f logLevel=INFO -f notify=false` — trigger CI run
@@ -123,8 +172,15 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | Transfer | Same as billing transfer | |
 | Utility Verification | `/move-in?shortCode=pgtest` | Building has `isUtilityVerificationEnabled=TRUE`; user clicks "I will call and setup myself" |
 | Bill Upload / Savings | `/bill-upload/connect-account` | Requires `isBillUploadAvailable=TRUE` on UtilityCompany; zip `12249` (Con Edison) |
-| Verify Utilities | `/verify-utilities/connect-account` | Same `isBillUploadAvailable` prerequisite |
+| Verify Utilities | `/verify-utilities/connect-account` | Same `isBillUploadAvailable` prerequisite. **Separate `page.tsx`** from Bill Upload despite shared `(bill-upload)` route group |
 | Connect | `/connect` | |
+
+### Special Flows
+| Flow | Entry Point | Notes |
+|------|-------------|-------|
+| Canada | Add `?country=ca` to encourage conversion URL (e.g., `?shortCode=pgtest&country=ca`) | Manual address form: Address, Unit, City, Province dropdown, Postal code, Country=Canada |
+| Flex (bill splitting) | Dashboard → flex badge "More" (requires ACTIVE ElectricAccount) | "Split this bill" via getflex.com. 2% fee + 1% credit card. Create ComEd user → set status ACTIVE |
+| Light Address Revamp (ENG-2347) | TX shortcodes use Light type-ahead. "Can't find?" → Google fallback modal | See `tests/docs/onboarding-flows.md` for full gate logic and test addresses |
 
 ### Building Shortcodes
 | Shortcode | Description |
@@ -133,16 +189,83 @@ Triggered when: `isHandleBilling=false` on utility/building, OR `isBillingRequir
 | `pgtest` | Short move-in (`useEncourageConversion=TRUE`, `isUtilityVerificationEnabled=TRUE`) |
 | `txtest` | TX dereg encourage conversion (`useEncourageConversion=TRUE`, ElectricCompany=`TX-DEREG`) |
 
+### User Types & Post-Auth Routes
+| User Type | DB Table | Post-Auth Route | Entry |
+|-----------|----------|-----------------|-------|
+| CottageUser | `CottageUsers` | `/app/*` (Overview, Billing, Services, Household) | Standard move-in, transfer, finish-reg |
+| LightUser | `LightUsers` | `/portal/*` | Light move-in (ESI ID path) |
+
+### Move-in Payment Step (Step 6)
+- Radio group: "Public Grid handles everything" / "I will manage payments myself"
+- "Skip for now" button appears ONLY when "Public Grid handles everything" is selected
+- Encouraged conversion flow (pgtest, funnel, partner shortcodes) is a 2-step flow, NOT the standard 6-step. Use `newUserMoveInEncouraged()`.
+
+### SMS Verification
+- `DialpadSMS` table stores INBOUND SMS only. Outbound reminder SMS goes via Dialpad API directly — verify indirectly via consent flags.
+
+### BLNK Schema (Supabase `blnk` schema)
+- `blnk.transactions` — ledger transactions with `reference`, `effective_date`, `created_at`, `status`, `amount`
+- `blnk.balances` — charge account balances with `balance_id`, `identity_id`, `balance`, `inflight_balance`
+- `blnk.identity` — customer identities (148 in dev) linked to balances via `balances.identity_id`
+- Query via `executeSQL()` in `tests/resources/utils/postgres.ts` (Supabase Management API)
+- Blnk Migration project (Linear): ENG-2420/2421/2422/2423/2424/2426/2458 — test cases in `payment_comprehensive_test_matrix.md`
+
+### "Set it up myself" Test Paths
+| Flow | Button | Result |
+|------|--------|--------|
+| Standard move-in | "I will do the setup myself" (Utility Setup) | Savings alert page |
+| Encourage (pgtest) | "I will call and setup myself" | Contact Provider page (utility verification) |
+| Light (any) | "I will do/set it up myself" | Contact Provider page (via encourage page on TanStack) |
+
 ### Partner Theme Shortcodes
-| Shortcode | Theme | Brand Color |
-|-----------|-------|-------------|
-| `autotest` | Moved | Blue |
-| `funnel4324534` | Funnel | Dark navy |
-| `venn325435435` | Venn | Coral/orange |
-| `renew4543665999` | Renew | Deep indigo |
+| Shortcode | Theme | Brand Color | Flow Type | Notes |
+|-----------|-------|-------------|-----------|-------|
+| `autotest` | Moved | Blue | Standard 6-step | RE available on utility setup step |
+| `moved5439797test` | Moved | Blue | Standard 5-step | RE available on utility setup step |
+| `venn73458test` | Venn | Coral/orange `rgb(234,117,85)` | Encouraged conversion | RE NOT enabled (MoveInPartner) |
+| `funnel4324534` | Funnel | Dark navy | Standard (not Building) | Partner shortcode, not in Building table |
+| `venn325435435` | Venn | Coral/orange | Standard (not Building) | Partner shortcode, not in Building table |
+| `renew4543665999` | Renew | Deep indigo | Standard (not Building) | Partner shortcode, not in Building table |
+
+### Waitlist Test Addresses
+Waitlist can appear in: **move-in**, **transfer**, **bill-upload**, **verify-utilities**, and **encouraged conversion** flows.
+
+| Address / ZIP | Flow | Result |
+|---------------|------|--------|
+| `155 N Nebraska Ave, Casper, WY 82609` | Standard move-in (no shortCode) | Waitlist page + Slack alert fires |
+| `155 N Nebraska Ave, Casper, WY 82609` | Transfer flow | "Not able to service this area" + Slack alert fires |
+| `155 N Nebraska Ave, Casper, WY 82609` | Encouraged conversion (MoveInPartner, e.g. `venn73458test`) | "We couldn't find service" dialog → `isUtilityVerificationEnabled=OFF` → waitlist; ON → utility verification (PR #1170) |
+| `155 N Nebraska Ave, Casper, WY 82609` | Encouraged conversion (Building, e.g. `pgtest`) | No dialog — Building shortcodes use pre-configured utilities, zip lookup bypassed |
+| `500 N Capitol Ave, Lansing, MI 48933` | Standard move-in / Transfer | Also triggers waitlist (no matching utility) |
+| ZIP `12249` | Bill upload / Verify utilities | Waitlist — "We haven't reached 12249 yet" |
+
+### Bill Upload Test ZIPs
+| ZIP | Utility | Result |
+|-----|---------|--------|
+| `10001` | Con Edison | Bill upload available — proceeds to upload page |
+| `12249` | National Grid MA | Waitlist — "We haven't reached 12249 yet" |
+| `75063` | TX-DEREG | Texas bill drop flow |
+
+
+## Payment UI Reference
+
+### Pay Bill Modal
+- Submit button text is "Pay bill" (NOT "Pay now"). Use `Submit_Pay_Bill_Modal()` scoped to dialog.
+- `Select_Pay_In_Full_If_Flex_Enabled()` must ALWAYS click "Pay in full" when visible — it reveals the Stripe iframe. Without clicking, the Stripe form never loads.
+- Flex option appears in the "Paying with" radiogroup as "Split your bills into smaller payments" — NOT a radio in the Amount section.
+- AutopayPaymentModal only appears with BLNK-processed outstanding balance + valid card + no previous failures.
+
+### Account Page — Payment Tab
+- Tab is "Payment" (not "Payment Information"), button is "Edit details" (not "Edit"), save is "Save details" (not "Save").
+- Auto-pay toggle on Account page is a `switch` role (not checkbox). In edit mode it IS a checkbox.
+
+### SMS Verification
+- `DialpadSMS` table stores INBOUND SMS only. Outbound reminder SMS goes via Dialpad API directly — verify indirectly via consent flags.
 
 ## Tech Stack
 TypeScript, Playwright, Supabase (database), Fastmail (email/OTP verification), Inngest (async job triggers)
+
+Email content verification uses Fastmail JMAP API via Node.js — see `tests/docs/preparing-for-move-touchpoint.md` for the pattern.
 
 ## Inngest Integration
 Inngest functions in the `services` repo can be triggered via REST API in dev using `INNGEST_EVENT_KEY` from `.env`.
@@ -157,9 +280,32 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 |----------|-----------------|---------|
 | `trigger-transaction-generation` | `transaction-generation-trigger` | Creates pending `SubscriptionMetadata` for active subscriptions |
 | `trigger-subscriptions-payment` | `subscriptions-payment-trigger` | Processes pending metadata into payments |
+| `preparing-for-move` | `preparing-for-move` | Pre-move-in reminder email (2 days before startDate) |
+| `send-email` | `email.send` | Generic email dispatch |
+| `trigger-ledger-payment-reminders` | `ledger.payment.reminders` | Payment reminder pipeline — supports `data.emails` filter in dev |
+| `trigger-accounts-offboarding-reconciliation` | `trigger.accounts.offboarding.reconciliation` | Reconciles NEEDS_OFF_BOARDING → ACTIVE after payment |
 
-**Important**: Inngest API always returns 200 — doesn't mean a function handled the event. Event names must match exactly.
-**In production**: These are cron-triggered (1PM/3PM EST), not event-triggered — can only invoke manually via Inngest dashboard.
+**Cron-only functions** (cannot be triggered via event API — must wait for `*/5` schedule or invoke from Inngest dashboard):
+
+| Function | Cron | Purpose |
+|----------|------|---------|
+| `balance-ledger-batch` | `*/5 * * * *` (TZ America/New_York) | Processes approved bills → `processed`, recalculates balances, creates Payment in `requires_capture` |
+| `stripe-payment-capture-batch` | `*/5 * * * *` | Captures payments in `requires_capture` → `succeeded` |
+
+**Bill processing pipeline** (sequential — each step needs a cron cycle):
+1. Insert bill with `ingestionState = 'approved'`
+2. `balance-ledger-batch` → bill becomes `processed`, Payment created in `requires_capture`
+3. `stripe-payment-capture-batch` → Payment becomes `succeeded`
+4. Only then can the next approved bill be processed
+5. **Requires billing user** (`maintainedFor` IS NOT NULL) — non-billing users' bills stay `approved` forever
+
+**Important**: Inngest API always returns 200 — doesn't mean a function handled the event. Event names must match exactly. Cron functions return 200 to event sends but are NOT triggered by them.
+**In production**: Event-triggered functions above are cron-triggered (1PM/3PM EST) — can only invoke manually via Inngest dashboard.
+
+**Reading Inngest function source**: When a ticket involves an Inngest function, read the source via GitHub API to understand trigger mechanism and eligibility criteria:
+`gh api repos/Cottage-Energy/services/contents/<path> --jq '.content' | base64 -d`
+
+**TanStack Inngest integration**: The TanStack migration has its own Inngest package at `packages/tanstack-inngest/src/functions/` in cottage-nextjs. These are local server-side functions (NOT the `services` repo). TanStack server-side errors appear in the browser console with a `[Server] LOG` prefix. When debugging TanStack email/event issues, check both the browser console for `[Server]` errors and the network tab for the `_serverFn/` POST calls.
 
 ## Environments
 Environment base URLs are configured in `tests/resources/utils/environmentBaseUrl.ts`. Tests select the environment via the `ENVIRONMENT` env var.
@@ -167,7 +313,7 @@ Environment base URLs are configured in `tests/resources/utils/environmentBaseUr
 | Environment | When to use |
 |-------------|-------------|
 | `dev` | Default for local runs and most CI runs |
-| `staging` | Pre-release validation, `/release-ready` checks |
+| `staging` | Pre-release validation, `/test-report` release checks |
 | `production` | Read-only verification only — never run destructive tests |
 
 ## CI/CD
@@ -184,15 +330,23 @@ Tests run via GitHub Actions (`main-workflow.yml`). Scheduled regressions run da
 | Regression6 | Mobile Chrome | Extended mobile |
 | Regression7 | Mobile Safari | Extended mobile |
 
+### CI Notes — Payment Tests
+- Payment tests take ~30 min each (move-in 5 min + bill pipeline crons `*/5` min x multiple cycles). Limit to 1 payment test per CI scope.
+- Smoke scope runs 2 browsers (Chromium + Mobile Safari) — payment tests can timeout the job. Use Regression1 (Chromium only) for payment test runs.
+- API v2 tests require `API_V2_KEY` in CI secrets — currently only configured in `.env` locally.
+- **DemandResponseEnrollment FK constraint**: cleanup must delete `DemandResponseEnrollment` before `ElectricAccount` to avoid FK violation.
+
 ## Skill Chaining
 
 Skills route to each other based on outcomes. Common chains:
 
-- **Ticket lands** → `/triage-ticket` → `/test-plan` → `/new-test` → `/run-tests`
-- **Exploratory session** → `/exploratory-test` → `/log-bug` (for bugs found) → `/new-test` (for regression tests)
-- **CI failure** → `/ci-health` → `/analyze-failure` → `/fix-test` (test issue) or `/log-bug` (product bug)
-- **PR review** → `/review-pr` → `/test-plan` → `/exploratory-test` or `/new-test`
-- **Release check** → `/release-ready` (aggregates `/ci-health` + Linear bugs + open PRs + feature flags)
+- **Ticket lands** → `/test-plan` → `/test-data` (setup) → `/create-test` → `/run-tests`
+- **Exploratory session** → `/exploratory-test` → `/log-bug` (bugs + improvements) → `/create-test` (regression tests)
+- **CI failure / Morning check** → `/analyze-failure` (env health + CI dashboard + root cause) → `/fix-test` (test issue) or `/log-bug` (product bug)
+- **PR review** → `/test-plan` (PR analysis auto-triggers) → `/exploratory-test` or `/create-test`
+- **Release check** → `/test-report` release mode (CI + bugs + PRs + feature flags → go/no-go)
+- **Weekly reporting** → `/test-report` summary mode (Linear + GitHub + CI + test plans)
+- **Test data needed** → `/test-data` (recipes for billing users, bills, subscriptions, flags)
 
 After completing any skill, suggest the logical next skill based on the outcome.
 

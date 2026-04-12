@@ -70,7 +70,7 @@ Scan the test suite and report what's covered, what's not, and where the gaps ar
 ## Gaps & Recommendations
 
 ### Missing Automation
-- [Feature/flow with no test coverage] — suggest `/new-test`
+- [Feature/flow with no test coverage] — suggest `/create-test`
 
 ### Smoke Coverage Gaps
 - [Critical flow not in smoke suite] — consider adding `@smoke` tag

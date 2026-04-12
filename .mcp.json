@@ -31,6 +31,13 @@
     "exa": {
       "type": "http",
       "url": "https://mcp.exa.ai/mcp"
+    },
+    "linear": {
+      "command": "npx.cmd",
+      "args": ["-y", "@mseep/linear-mcp@latest"],
+      "env": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      }
     }
   }
 }

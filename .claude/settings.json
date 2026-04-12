@@ -12,7 +12,8 @@
       "Bash(gh api:*)",
       "Edit(/.claude/skills/test-plan/**)",
       "Bash(PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/connect-account/ --project=Chromium)",
-      "Bash(PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/connect-account/verify_utilities/ --project=Chromium)"
+      "Bash(PLAYWRIGHT_HTML_OPEN=never npx playwright test tests/e2e_tests/connect-account/verify_utilities/ --project=Chromium)",
+      "Edit(/.claude/skills/exploratory-test/**)"
     ]
   }
 }

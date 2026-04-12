@@ -115,7 +115,7 @@ test.describe('Auto-Apply Savings Card', () => {
     });
 
     test('TC-068 + TC-070 + TC-095: Auto-apply card text, layout, and rendering', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION6],
     }, async ({ page, connectOverviewPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -149,7 +149,7 @@ test.describe('Auto-Apply Savings Card', () => {
     });
 
     test('isConnectReady=false: Connect utility button NOT visible', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION6],
     }, async ({ page, connectOverviewPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -174,7 +174,7 @@ test.describe('Auto-Apply Savings Card', () => {
     });
 
     test('isConnectReady=true: Connect utility button IS visible', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION6],
     }, async ({ page, connectOverviewPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -199,7 +199,7 @@ test.describe('Auto-Apply Savings Card', () => {
     });
 
     test('TC-072: Upload bill button opens upload bill modal', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION6],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -223,7 +223,7 @@ test.describe('Auto-Apply Savings Card', () => {
     });
 
     test('TC-071: Connect utility button opens connect modal, can switch to upload bill', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION6],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 

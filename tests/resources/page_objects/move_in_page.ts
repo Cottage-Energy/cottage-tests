@@ -1131,15 +1131,40 @@ export class MoveInPage{
     async Skip_Payment_Details(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
-        await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
 
-        // Wait for the payment page to fully render (Stripe iframes load)
+        // Debug: capture page state if title not found quickly
+        try {
+            await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
+        } catch (error) {
+            const currentUrl = this.page.url();
+            const pageTitle = await this.page.title();
+            log.error('Skip_Payment_Details: Payment title NOT found', {
+                url: currentUrl,
+                title: pageTitle,
+                bodyText: await this.page.locator('body').textContent().catch(() => 'N/A'),
+            });
+            await this.page.screenshot({ path: 'debug-skip-payment-stuck.png' }).catch(() => {});
+            throw error;
+        }
+
+        // Wait for the payment page to fully render
         await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-        // Check if "Skip for now" is already visible (e.g. when no PG toggle is shown)
+        // New UI: radio group with "I will manage payments myself" + Continue button
+        const selfManageRadio = this.page.getByRole('radio', { name: /I will manage payments myself/ });
+        const selfManageVisible = await selfManageRadio.isVisible().catch(() => false);
+
+        if (selfManageVisible) {
+            await selfManageRadio.check({ timeout: TIMEOUTS.MEDIUM });
+            await this.page.waitForTimeout(TIMEOUTS.SHORT);
+            await this.Move_In_Continue_Button.click({ timeout: TIMEOUTS.MEDIUM });
+            await this.page.waitForTimeout(TIMEOUTS.MEDIUM);
+            return;
+        }
+
+        // Legacy fallback: "Skip for now" button (older UI)
         let skipVisible = await this.Move_In_Skip_Button.isVisible().catch(() => false);
 
-        // If not visible, check if the PG radio exists and select it to reveal "Skip for now"
         if (!skipVisible) {
             const pgRadioVisible = await this.Move_In_Pay_Through_PG_Title.isVisible().catch(() => false);
             if (pgRadioVisible) {

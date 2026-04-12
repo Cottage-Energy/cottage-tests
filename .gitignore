@@ -45,3 +45,4 @@ listDevices.*
 
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json
+.claude/scheduled_tasks.lock

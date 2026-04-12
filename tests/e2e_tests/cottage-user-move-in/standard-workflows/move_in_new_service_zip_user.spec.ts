@@ -30,7 +30,7 @@ test.describe.configure({mode: "serial"});
 test.describe('Move In New Service Zip User', () => {
 
 
-  test('COMED New User', { tag: TEST_TAGS.REGRESSION1 }, async ({moveInpage, page}) => {
+  test('COMED New User', { tag: [TEST_TAGS.REGRESSION4] }, async ({moveInpage, page}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     MoveIn = await newUserMoveInAutoPayment(page,'COMED', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -44,7 +44,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Add Auto Payment', { tag: TEST_TAGS.REGRESSION2 }, async ({moveInpage, page}) => {
+  test('CON-EDISON New User Add Auto Payment', { tag: [TEST_TAGS.REGRESSION5] }, async ({moveInpage, page}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     MoveIn = await newUserMoveInAutoPayment(page, 'CON-EDISON', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -59,7 +59,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('EVERSOURCE New User Add Manual Payment', {tag: [ '@regression5'],}, async ({moveInpage, page}) => {
+  test('EVERSOURCE New User Add Manual Payment', {tag: [TEST_TAGS.REGRESSION6],}, async ({moveInpage, page}) => {
     test.setTimeout(600000);
     MoveIn = await newUserMoveInManualPayment(page, 'EVERSOURCE', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -73,7 +73,7 @@ test.describe('Move In New Service Zip User', () => {
   });
 
 
-  test('CON-EDISON New User Skip Add Payment', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION1],}, async ({moveInpage, overviewPage, page}) => {
+  test('CON-EDISON New User Skip Add Payment', {tag: [TEST_TAGS.REGRESSION7],}, async ({moveInpage, overviewPage, page}) => {
     test.setTimeout(TIMEOUTS.TEST);
     MoveIn = await newUserMoveInSkipPayment(page, 'CON-EDISON', null, true,true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);

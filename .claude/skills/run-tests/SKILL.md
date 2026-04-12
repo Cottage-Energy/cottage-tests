@@ -92,7 +92,7 @@ gh run list --workflow=main-workflow.yml --limit 5
 gh run view <run_id> --log-failed
 ```
 
-Chain to `/ci-health` to get a structured summary of results.
+Chain to `/analyze-failure` to get a structured summary of results.
 
 ---
 
@@ -159,10 +159,10 @@ Flag as likely environment or setup issue — check base URL, browser install, e
 ## 6. Post-Run Actions
 Based on results, suggest next steps:
 - **All green** → "Tests passing. Ready to commit or push."
-- **Failures after `/new-test`** → "New test has issues. Want me to `/fix-test`?"
+- **Failures after `/create-test`** → "New test has issues. Want me to `/fix-test`?"
 - **Failures after `/fix-test`** → "Fix didn't hold. Let me re-investigate."
 - **Flaky (passes on retry)** → "Test is flaky — passed on retry [N]. Consider `/fix-test` to stabilize."
-- **CI failures** → Chain to `/ci-health` or `/analyze-failure`
+- **CI failures** → Chain to `/analyze-failure`
 
 ## 7. Tools Used
 

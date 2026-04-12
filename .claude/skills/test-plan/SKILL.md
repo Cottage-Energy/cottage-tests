@@ -1,6 +1,6 @@
 ---
 name: test-plan
-description: Generate a structured test plan from a ticket, PR, or feature description
+description: Generate a structured test plan from a ticket, PR, or feature description — includes PR analysis and risk scoring when PR link is found
 user-invocable: true
 ---
 
@@ -27,15 +27,53 @@ Accept any combination of inputs — a Linear ticket is NOT required. Route by w
   - Edge states visible in design (empty states, error states)
 - Map design elements to test interactions and assertions
 
+### API Spec / Documentation Link
+When the source is an API design doc, OpenAPI spec, PDF, or live docs site:
+- **Prefer live docs over PDF exports** — PDFs go stale fast. Ask for a docs site URL (Cloudflare Pages, ReadMe, Swagger UI, etc.) if a PDF is provided
+- Use `WebFetch` to crawl the docs site — get overview, authentication, each endpoint reference, schemas, pagination, errors, and rate limiting pages
+- **Probe the live API before finalizing test cases** — specs drift from implementation. Use `curl` to hit each endpoint and capture actual response shapes. Compare against what docs say.
+- For each endpoint, extract: HTTP method, path, path params, query params, request body fields (required vs optional), response schema, error codes
+- Categorize planned test cases as: happy path, validation (400), auth (401/403), not found (404), conflict (409), pagination, data format conventions
+- **Always note spec-vs-reality discrepancies** — flag as "API bug" (code wrong), "doc bug" (docs wrong), or "improvement" (works but could be better)
+- Cross-reference with `tests/api_tests/` for existing API test patterns (e.g., `RegisterApi` helper pattern)
+
 ### GitHub PR Link
 - Use `mcp__github__get_pull_request` and `mcp__github__get_pull_request_files` to read the diff
+- `mcp__github__get_pull_request_status` to check CI status — are tests already failing on this PR?
+- **If GitHub MCP returns 404** (common for `services`, `cottage-nextjs`, `pg-admin`), fall back to CLI: `gh pr view <number> --repo Cottage-Energy/<repo> --json title,body,state,files` and `gh pr diff <number> --repo Cottage-Energy/<repo>`
 - Identify UI changes, API changes, DB changes, business logic changes
+- **When a PR link is found** (provided directly or linked in a Linear ticket) → automatically run Step 1c PR Analysis
+
+### Inngest Function Source (when ticket involves backend/email/async jobs)
+When a ticket references the `services` repo or mentions Inngest, email templates, or async processing:
+- **Read the function source** via GitHub API: `gh api repos/Cottage-Energy/services/contents/<path> --jq '.content' | base64 -d`
+- Identify: trigger mechanism (cron vs event + event name), eligibility criteria (what DB conditions must be met), what data the function uses
+- This is critical for writing accurate test preconditions and understanding the testable window
+- Cross-reference with `tests/docs/inngest-functions.md` for known event names and patterns
+
+### Linear Project Link (multi-milestone planning)
+When the user provides a Linear **project** URL (e.g., `linear.app/public-grid/project/<slug>/overview`):
+- Use `mcp__linear__get_project` with the **full slug** from the URL (e.g., `multi-processor-payment-system-54806c1fd524`) — short name alone may not match
+- Pass `includeMembers: true`, `includeMilestones: true`, `includeResources: true` to get full context
+- Use `mcp__linear__list_issues` with `project: "<Project Name>"` to pull all tickets
+- **Large result handling**: Project issue lists can be very large (70+ tickets = 100K+ chars). Parse with `node -e` to group by `projectMilestone.name` — do NOT try to read the raw JSON file directly
+- Group tickets by milestone and create a **milestone-phased test plan**:
+  - Each milestone gets its own test case section
+  - Add a **Ticket → Test Case Mapping** table so test cases can be activated as individual tickets move to development
+  - Identify epic/parent tickets vs. task tickets (epics often have no milestone assignment)
+- Template adjustments for project-level plans:
+  - File naming: `{project_name}.md` (no ticket ID prefix)
+  - Overview includes milestone summary table with ticket counts and risk levels
+  - "Phased Activation" section in Automation Plan — which tests activate per milestone
+  - "Test Infrastructure Changes" section — new POMs, fixtures, types, test data needed
+- After saving, offer to save a memory file for the project so future sessions have context when individual tickets arrive
 
 ### Linear Ticket (optional)
 - Use `mcp__linear__get_issue` for requirements, labels, linked issues
 - **Check ticket comments**: Use `mcp__linear__list_comments` to read all comments on the ticket — comments often contain linked tickets, Figma URLs, Notion links, PR references, and contextual decisions not captured in the description
 - **Follow linked tickets**: For each linked/related ticket mentioned in comments or the description, use `mcp__linear__get_issue` to pull its context too. Related tickets often contain acceptance criteria, edge cases, and technical details that expand the test scope significantly.
 - Follow any links to Notion docs, Figma screens, or PRs from the ticket
+- **When the ticket references a flow by name** (e.g., "bill upload", "verify utilities", "move-in"), look it up in `tests/docs/onboarding-flows.md` to confirm the exact URL, entry point, and code path. Similar-sounding flows can be completely different code paths — e.g., Bill Upload and Verify Utilities share a Next.js route group `(bill-upload)` but have separate `page.tsx` files. A PR fixing one may not fix the other.
 
 ### Conversation Context
 - User-provided details, pasted content, or verbal descriptions
@@ -63,6 +101,60 @@ When mermaid flowchart blocks are found in Notion content or pasted by the user:
 - **Terminal states** — end nodes become expected results for assertions
 - **Error/failure paths** — paths leading to error states become negative test cases
 - Map each distinct path through the flowchart to one or more test cases in the plan
+
+## 1c. PR Analysis (auto-triggers when PR link is found)
+
+When a PR link is found — either provided directly or discovered in a Linear ticket — run this analysis to enrich the test plan with code-level context. Skip if no PR link exists.
+
+### Classify Changes Per File
+For each changed file in the PR, classify:
+
+| Category | Examples |
+|----------|---------|
+| **UI** | New/modified components, pages, forms, modals, changed text/labels/buttons (affects POM locators) |
+| **API** | New/modified endpoints, request/response shapes, changed validation, error handling |
+| **Database** | Migrations, new tables/columns, changed constraints, queries, feature flags |
+| **Business Logic** | Validation rules, calculations, state transitions, permissions, conditional rendering |
+| **Configuration** | Env vars, feature flags, third-party integrations, build/deploy config |
+
+### Assess Risk Level
+
+| Level | Criteria |
+|-------|----------|
+| **High** | Shared UI components (affects multiple pages), DB schema changes, auth/authz changes, navigation/routing changes, move-in or payment flow changes |
+| **Medium** | Single feature UI/logic changes, new API endpoints, feature flag gating |
+| **Low** | Styling-only, documentation, test-only, dev tooling, CI config |
+
+### Map Test Impact
+- `Glob` + `Grep` in `tests/e2e_tests/` for tests covering the changed feature area
+- Check `tests/resources/page_objects/` for locators referencing changed elements → list POMs to update
+- Check `tests/resources/fixtures/` for queries hitting changed tables → list fixtures to update
+- Identify new functionality with no test coverage → feed into test case generation (Step 4)
+
+### Visual Diff (when PR has UI changes and is deployed to dev)
+If the PR is merged/deployed and includes UI changes:
+1. `mcp__playwright__browser_navigate` to affected page(s) on dev
+2. `mcp__playwright__browser_take_screenshot` to capture live state
+3. If Figma link available → `mcp__figma__get_screenshot` for design comparison
+4. Check: layout, typography, colors, component states, responsive behavior
+5. Flag differences as **Bug** (wrong vs design), **Improvement** (could be better), or **Intentional** (PR changed this on purpose)
+
+### PR Analysis Output (included in triage summary)
+```
+### PR Analysis: #[NUMBER] — [TITLE]
+**Repo**: [owner/repo] | **CI**: [passing/failing] | **Risk**: [HIGH/MEDIUM/LOW]
+
+| File | Category | Change |
+|------|----------|--------|
+| [file] | UI | [what changed] |
+| [file] | Database | [what changed] |
+
+**Test Impact**:
+- Existing tests to verify: [list]
+- POMs to update: [list or "none"]
+- Fixtures to update: [list or "none"]
+- New tests needed: [fed into Step 4]
+```
 
 ## 2. Quick Triage Summary
 Before writing detailed test cases, present a triage summary so the user can confirm scope:
@@ -95,6 +187,20 @@ From the gathered context, define:
 - **Out of scope**: What's explicitly excluded
 - **Prerequisites**: Test data, environment setup, feature flags
 - **Dependencies**: Other features or services involved
+
+## 3b. Identify UX & Improvement Opportunities
+While analyzing the feature context (designs, live app, PRs, ticket), actively note anything that could be improved from a user experience perspective — even if it's working as coded. You're reviewing the feature more thoroughly than most people on the team, so use that perspective.
+
+**Look for:**
+- **Flow friction** — unnecessary steps, redundant inputs, state lost on navigation
+- **Confusing UI** — ambiguous labels, unclear icons, screens that require re-reading
+- **Inconsistency** — same action worded differently across flows, mismatched patterns
+- **Missing feedback** — no loading indicator, no success confirmation, unhelpful error messages
+- **Accessibility** — missing labels, poor keyboard flow, low contrast
+- **Empty/error states** — generic or missing messaging when things go wrong or data is absent
+- **Mobile gaps** — touch targets, overflow, content not adapted for small screens
+
+Capture these in the "UX & Improvement Opportunities" section of the test plan. They don't block test planning — they're a valuable byproduct of your analysis.
 
 ## 4. Write Test Cases
 For each scenario, define:
@@ -152,6 +258,14 @@ For each scenario, define:
 |----|-------|-------------|-----------------|----------|
 | TC-030 | [title] | [what to check in Supabase] | [expected] | P1 |
 
+### UX & Improvement Opportunities
+| ID | Screen/Step | Observation | Impact | Suggestion |
+|----|------------|-------------|--------|------------|
+| UX-001 | [where in the flow] | [what could be better — friction, confusion, inconsistency, missing feedback] | [user impact — drop-off risk, confusion, frustration] | [concrete improvement idea] |
+| UX-002 | [where] | [observation] | [impact] | [suggestion] |
+
+> These are not test failures — the feature works as specified. These are opportunities to improve the user experience identified during test planning. File actionable ones as improvement tickets via `/log-bug`.
+
 ## Automation Plan
 - **Smoke**: [which test cases to include in smoke suite]
 - **Regression**: [which regression scope to assign]
@@ -169,8 +283,21 @@ For each scenario, define:
 
 ### Comment Back to Linear Ticket
 When a Linear ticket was used as input (i.e., an `issueId` is available from Step 1):
-- Use `mcp__linear__save_comment` to post the test plan back to the ticket
-- Pass the `issueId` from the ticket and format the `body` as Markdown:
+
+**IMPORTANT**: NEVER modify the ticket description. Post the test plan as a **COMMENT** only. The `@mseep/linear-mcp` package does NOT have a comment tool — use the Linear GraphQL API directly:
+```javascript
+// Post comment via Linear GraphQL API (NOT update_issue)
+fetch('https://api.linear.app/graphql', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'Authorization': process.env.LINEAR_API_KEY },
+  body: JSON.stringify({
+    query: 'mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success } }',
+    variables: { issueId: '<issue-uuid>', body: commentMarkdown }
+  })
+});
+```
+
+Format the comment `body` as Markdown:
 
 ```markdown
 ## Test Plan: [Feature Name]
@@ -193,6 +320,9 @@ When a Linear ticket was used as input (i.e., an `issueId` is available from Ste
 - **Regression**: [cases targeted for regression]
 - **Exploratory only**: [cases staying manual]
 
+### UX Observations
+- [Count] improvement opportunities identified (see full plan for details)
+
 ### Risks
 - [Key risks or blockers, if any]
 
@@ -206,10 +336,16 @@ When a Linear ticket was used as input (i.e., an `issueId` is available from Ste
 
 ## 7. Next Steps
 After the test plan is approved:
-- `/new-test` to scaffold automated test cases (will reference this plan)
+- `/create-test` to scaffold automated test cases (will reference this plan)
 - `/exploratory-test` to interactively investigate items marked "Exploratory only"
 - `/log-bug` if issues are found during analysis
 - `/run-tests` to execute tests after they're created
+
+### Documentation Check
+After saving the test plan, check if the feature involves a backend flow or Inngest function not yet documented:
+- New Inngest event name or function? → Update `tests/docs/inngest-functions.md`
+- New onboarding flow variant, email template, or integration pattern? → Create/update a doc in `tests/docs/`
+- This keeps the docs folder current as a byproduct of test planning, not as a separate chore
 
 ---
 
@@ -231,6 +367,14 @@ After the test plan is approved:
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
+
+### Session: 2026-03-26 (Multi-Processor Payment System — Project-level plan)
+- **New input type: Linear Project link**. First time planning at the project level (not single ticket). Required `mcp__linear__get_project` + `mcp__linear__list_issues` with project filter. Added "Linear Project Link" section to Step 1.
+- **`get_project` needs full URL slug**: Short name (`multi-processor-payment-system`) returned "not found". Full slug from URL (`multi-processor-payment-system-54806c1fd524`) worked.
+- **Large issue lists overflow tool output**: 72 tickets = 106K chars, too large to read directly. Must parse with `node -e` and group by `projectMilestone.name` (not `milestone` — that field doesn't exist on project issues).
+- **Ticket-to-test-case mapping was essential**: With 72 tickets across 7 milestones, a mapping table (ticket → test case IDs) makes the plan actionable as tickets roll through development one by one.
+- **Milestone-phased structure worked well**: Each milestone as its own test case section + a "Phased Activation" plan for when to enable tests. Also added "Test Infrastructure Changes" section for new POMs/fixtures/types needed.
+- **Save project context to memory**: Created a memory file so future conversations can pick up individual tickets with full project context.
 
 ### Session: 2026-03-13 (ENG-2402 Connect Account)
 - **Missed ticket comments and linked tickets**: The original test plan was built from the main ticket description + PR diff only. The user had to explicitly ask to check linked tickets (ENG-2365, ENG-2363, ENG-2370, ENG-2371, ENG-2372) which contained critical ACs that expanded the test plan from ~85 to 108 cases. Added `mcp__linear__list_comments` step and explicit "follow linked tickets" instruction to Step 1.

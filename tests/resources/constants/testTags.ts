@@ -13,6 +13,8 @@ export const TEST_TAGS = {
   REGRESSION3: '@regression3',
   REGRESSION4: '@regression4',
   REGRESSION5: '@regression5',
+  REGRESSION6: '@regression6',
+  REGRESSION7: '@regression7',
   
   /** Feature-specific tags */
   MOVE_IN: '@move-in',
@@ -50,7 +52,7 @@ export const TEST_TAGS = {
   P3: '@p3',
   
   /** Combined tags */
-  ALL_REGRESSION: ['@regression1', '@regression2', '@regression3', '@regression4', '@regression5'],
+  ALL_REGRESSION: ['@regression1', '@regression2', '@regression3', '@regression4', '@regression5', '@regression6', '@regression7'],
   SMOKE_REGRESSION1: ['@smoke', '@regression1'],
 } as const;
 

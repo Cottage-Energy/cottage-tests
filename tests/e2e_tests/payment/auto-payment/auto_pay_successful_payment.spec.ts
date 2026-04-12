@@ -1,6 +1,7 @@
 ﻿import { APIRequestContext } from '@playwright/test';
 import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions, PaymentUtilities } from '../../../resources/fixtures';
+import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+import { AutoPaymentChecks } from '../../../resources/fixtures/payment';
 import { utilityQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
 import { AdminApi } from '../../../resources/api/admin_api';
@@ -9,7 +10,7 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
 
 
 let AdminApiContext: APIRequestContext;
-const paymentUtilities = new PaymentUtilities();
+const paymentUtilities = new AutoPaymentChecks();
 let MoveIn: any;
 
 
@@ -51,7 +52,7 @@ test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
-  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', {tag: [ '@regression2'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', { tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -74,7 +75,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('PSEG Electric & Gas Valid Auto Payment Move In Added', {tag: [ '@regression4'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('PSEG Electric & Gas Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -109,7 +110,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', {tag: ['@smoke', '@regression6'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', { tag: [TEST_TAGS.SMOKE, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -136,7 +137,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -171,7 +172,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('DUKE Gas Only Valid Auto Payment Move In Added', async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('DUKE Gas Only Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION4, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
     
     test.setTimeout(1800000);
 
@@ -213,7 +214,7 @@ test.describe('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     
-    test('COMED Electric Only Valid Bank Payment Move In Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Electric Only Valid Bank Payment Move In Added', { tag: [TEST_TAGS.REGRESSION5, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY
         test.setTimeout(1800000);
     
@@ -239,7 +240,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression3'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.REGRESSION6, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -261,7 +262,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
     
-    test('BGE DTE Electric & Gas Valid Bank Payment Move In Added', {tag: ['@smoke', '@regression5'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE DTE Electric & Gas Valid Bank Payment Move In Added', { tag: [TEST_TAGS.REGRESSION7, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -296,7 +297,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
 
-    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', {tag: ['@regression7'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     
@@ -318,7 +319,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test('BGE Gas Only Valid Bank Payment Finish Account Added', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE Gas Only Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
         
         test.setTimeout(1800000);
     

@@ -268,6 +268,11 @@ After fixing one test, check if the same issue affects others:
 ## Retrospective
 After completing this skill, check: did any step not match reality? Did a tool not work as expected? Did you discover a better approach? If so, update this SKILL.md with what you learned.
 
+### Session: 2026-04-11 (Payment test overhaul)
+- **Stripe iframe requires "Pay in full" click**: `Select_Pay_In_Full_If_Flex_Enabled()` must click "Pay in full" to trigger Stripe iframe load. The iframe doesn't appear automatically when Flex is enabled — the radiogroup selection reveals it.
+- **Skip Payment Details handles two paths**: `Skip_Payment_Details()` must handle both "I will manage payments myself" radio (new UI) AND "Skip for now" button (which only appears when "Public Grid handles everything" is selected).
+- **DemandResponseEnrollment FK blocks cleanup**: Must delete `DemandResponseEnrollment` records before `ElectricAccount` deletion in `afterEach`, or cleanup fails with FK constraint error.
+
 ### Session: 2026-03-13 (BillUploadPage locator fix)
 - **Exact text locators are brittle**: `BillUploadPage.uploadBillHeading` used `getByRole('heading', { name: 'Upload your bill' })` — broke when PR #1088 changed the heading to "Upload document". Fixed with regex `/Upload document/i`. Added "prefer regex over exact text" recommendation to the Flaky Locator diagnosis section.
 - **Fix was quick and isolated**: The structured diagnostic flow (read test → identify change → see live app → fix POM → verify) worked well. Total turnaround was fast because Playwright MCP had already confirmed the new heading text during the exploratory session.

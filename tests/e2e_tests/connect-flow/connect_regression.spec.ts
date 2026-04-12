@@ -105,7 +105,7 @@ test.describe('Connect Regression', () => {
     });
 
     test('TC-099: Connect account has no billing UI', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION3],
     }, async ({ page, connectOverviewPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 

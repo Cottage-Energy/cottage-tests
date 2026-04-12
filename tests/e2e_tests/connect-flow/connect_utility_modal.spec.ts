@@ -129,7 +129,7 @@ test.describe('Connect Utility Modal — Form View', () => {
     });
 
     test('TC-010 + TC-014 + TC-015: Modal title, security notice, and button layout (Con Edison)', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION4],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -160,7 +160,7 @@ test.describe('Connect Utility Modal — Form View', () => {
     });
 
     test('TC-016: "Upload bill" alternative link visible (ComEd)', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION4],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -181,7 +181,7 @@ test.describe('Connect Utility Modal — Form View', () => {
     });
 
     test('TC-017: "Upload bill" switches to upload bill modal (National Grid MA)', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION4],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 

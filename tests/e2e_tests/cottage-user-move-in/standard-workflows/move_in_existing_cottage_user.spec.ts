@@ -82,7 +82,7 @@ test.describe('Move In Existing User: Cottageuser, ElectricAccount &/or GasAccou
     });
 
 
-    test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION5],}, async ({page, moveInpage, servicesPage}) => {
+    test('Eversource Cottageuser, Electric & Gas Account Exist', {tag: [TEST_TAGS.REGRESSION1],}, async ({page, moveInpage, servicesPage}) => {
       test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
 
       const PGuser = await generateTestUserData();
@@ -736,7 +736,7 @@ test.describe.fixme('Move In Existing User: Cottageuser Exist Only Late Drop Off
   });
 
 
-  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: [TEST_TAGS.SMOKE, TEST_TAGS.REGRESSION4],}, async ({page, moveInpage, overviewPage}) => {
+  test('EVERSOURCE DTE Cottageuser Exist Only', {tag: [TEST_TAGS.REGRESSION6],}, async ({page, moveInpage, overviewPage}) => {
     test.setTimeout(900000);
 
     const PGuser = await generateTestUserData();

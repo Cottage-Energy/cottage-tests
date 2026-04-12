@@ -335,6 +335,66 @@ export async function Check_Update_Payment_Method_Email(Email: string) {
 
 
 
+/**
+ * Payment reminder email — standard overdue (days 5, 10, 15)
+ * Subject: "ACTION REQUIRED: Overdue Payment for {billType} Bill"
+ * Source: services/packages/inngest/functions/billing/ledger/reminders/reminder-email.ts
+ */
+export async function Check_Payment_Reminder_Email(Email: string, AmountTotal: string | number, billType: 'Electric' | 'Gas' | 'Electric and Gas' = 'Electric') {
+    const maxRetries = 120;
+    let content: ReturnType<typeof fastMail.fetchEmails> extends Promise<infer T> ? T : never[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `ACTION REQUIRED: Overdue Payment for ${billType}`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) break;
+        await delay(1000);
+    }
+    if (!content || content.length === 0) {
+        throw new Error(`Failed to find standard reminder email for ${Email} after ${maxRetries} attempts`);
+    }
+    const firstKey = Object.keys(content[0].bodyValues)[0];
+    const email_body = content[0].bodyValues[firstKey].value;
+    await expect(email_body).toContain(`$${AmountTotal}`);
+}
+
+
+/**
+ * Payment reminder email — shutoff warning (days 16-24)
+ * Subject: "Urgent: {billType} Shutoff Notice for your Public Grid Account"
+ * Source: services/packages/inngest/functions/billing/ledger/reminders/reminder-email.ts
+ */
+export async function Check_Shutoff_Warning_Email(Email: string, billType: 'Electric' | 'Gas' | 'Electric and Gas' = 'Electric') {
+    const maxRetries = 120;
+    let content: ReturnType<typeof fastMail.fetchEmails> extends Promise<infer T> ? T : never[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `Urgent: ${billType} Shutoff Notice for your Public Grid Account`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) break;
+        await delay(1000);
+    }
+    if (!content || content.length === 0) {
+        throw new Error(`Failed to find shutoff warning email for ${Email} after ${maxRetries} attempts`);
+    }
+}
+
+
+/**
+ * Payment reminder email — final shutoff (day 25+)
+ * Subject: "Final Notice: {billType} Service Scheduled for Shutoff"
+ * Source: services/packages/inngest/functions/billing/ledger/reminders/reminder-email.ts
+ */
+export async function Check_Final_Shutoff_Email(Email: string, billType: 'Electric' | 'Gas' | 'Electric and Gas' = 'Electric') {
+    const maxRetries = 120;
+    let content: ReturnType<typeof fastMail.fetchEmails> extends Promise<infer T> ? T : never[] = [];
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        content = await fastMail.fetchEmails({to: Email, subject: `Final Notice: ${billType} Service Scheduled for Shutoff`, from: "Public Grid Team <support@onepublicgrid.com>"});
+        if (content && content.length > 0) break;
+        await delay(1000);
+    }
+    if (!content || content.length === 0) {
+        throw new Error(`Failed to find final shutoff email for ${Email} after ${maxRetries} attempts`);
+    }
+}
+
+
 export const FastmailActions = {
     Get_OTP,
     Check_Utility_Account_OTW,
@@ -349,5 +409,8 @@ export const FastmailActions = {
     Check_Electric_And_Gas_Bill_Is_Ready_For_Payment,
     Check_Bill_Payment_Confirmation,
     Check_Failed_Payment_Email,
-    Check_Update_Payment_Method_Email
+    Check_Update_Payment_Method_Email,
+    Check_Payment_Reminder_Email,
+    Check_Shutoff_Warning_Email,
+    Check_Final_Shutoff_Email,
 };
