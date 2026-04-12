@@ -25,7 +25,7 @@ test.afterEach(async ({ page }) => {
 test.describe('Connect Registration Form', () => {
 
     test('TC-001: Connect page heading and form elements', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION2],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_UI);
 
@@ -47,7 +47,7 @@ test.describe('Connect Registration Form', () => {
     });
 
     test('TC-088: Duplicate email shows error toast', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION2],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
         const timestamp = Date.now();

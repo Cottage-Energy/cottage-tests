@@ -54,7 +54,7 @@ test.describe('P2-02: Manual to Auto-Pay Transition', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — manual user enables auto-pay, next bill auto-pays', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
@@ -143,7 +143,7 @@ test.describe('P2-03: Manual to Auto-Pay — Pay Now Outstanding', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — manual user with outstanding, toggle auto-pay, pay now', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
@@ -239,7 +239,7 @@ test.describe('P2-04: Manual to Auto-Pay — Do It Later', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — manual user with outstanding, toggle auto-pay, do it later, next bill auto-pays', {
-    tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
@@ -349,7 +349,7 @@ test.describe('P2-08: Payment Method Switch — Card to Bank', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — auto-pay card user switches to bank, bill auto-pays with no fee', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
@@ -435,7 +435,7 @@ test.describe('P2-09: Payment Method Switch — Bank to Card', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — auto-pay bank user switches to card, bill auto-pays with fee', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 

@@ -30,7 +30,7 @@ test.describe('Valid Card Auto Payment', () => {
   
   // Run COMED tests 100     times
   for (let i = 1; i <= 100; i++) {
-    test(`COMED Electric Only Valid Auto Payment Move In Added - Run ${i}`, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test(`COMED Electric Only Valid Auto Payment Move In Added - Run ${i}`, {tag: [TEST_TAGS.PAYMENT],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(1800000);
 
@@ -50,7 +50,7 @@ test.describe('Valid Card Auto Payment', () => {
 
   // Run EVERSOURCE tests 100 times
   for (let i = 1; i <= 100; i++) {
-    test(`EVERSOURCE Electric Only Valid Auto Payment Move In Added - Run ${i}`, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test(`EVERSOURCE Electric Only Valid Auto Payment Move In Added - Run ${i}`, {tag: [TEST_TAGS.PAYMENT],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
       
       test.setTimeout(1800000);
 
@@ -70,7 +70,7 @@ test.describe('Valid Card Auto Payment', () => {
 
   // Run BGE tests 100 times
   for (let i = 1; i <= 100; i++) {
-    test(`BGE Gas Only Valid Auto Payment Move In Added - Run ${i}`, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test(`BGE Gas Only Valid Auto Payment Move In Added - Run ${i}`, {tag: [TEST_TAGS.PAYMENT],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
 
       test.setTimeout(1800000);
 
@@ -90,7 +90,7 @@ test.describe('Valid Card Auto Payment', () => {
 
   // Run DELMARVA tests 100 times
   for (let i = 1; i <= 100; i++) {
-    test(`DELMARVA Electric & Gas Only Valid Auto Payment Move In Added - Run ${i}`, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test(`DELMARVA Electric & Gas Only Valid Auto Payment Move In Added - Run ${i}`, {tag: [TEST_TAGS.PAYMENT],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
 
       test.setTimeout(1800000);
 
@@ -112,7 +112,7 @@ test.describe('Valid Card Auto Payment', () => {
 
   // Run NGMA tests 100 times
   for (let i = 1; i <= 100; i++) {
-    test(`NGMA Electric & Gas Only Valid Auto Payment Move In Added - Run ${i}`, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test(`NGMA Electric & Gas Only Valid Auto Payment Move In Added - Run ${i}`, {tag: [TEST_TAGS.PAYMENT],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
 
       test.setTimeout(1800000);
 
@@ -134,7 +134,7 @@ test.describe('Valid Card Auto Payment', () => {
 
   // Run PGE PSEG tests 100 times
   for (let i = 1; i <= 100; i++) {
-    test(`PGE PSEG Electric & Gas Only Valid Auto Payment Move In Added - Run ${i}`, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test(`PGE PSEG Electric & Gas Only Valid Auto Payment Move In Added - Run ${i}`, {tag: [TEST_TAGS.PAYMENT],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
 
       test.setTimeout(1800000);
 

@@ -31,7 +31,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@smoke','@regression2'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [TEST_TAGS.SMOKE],}, async ({moveInpage,page}) => {
     test.setTimeout(480000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "BGE", null);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
@@ -45,7 +45,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Gas Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => { // Use BGE and NGMA
+  test('New User for ShortCode Gas Only', {tag: [TEST_TAGS.REGRESSION2],}, async ({moveInpage,page}) => { // Use BGE and NGMA
     test.setTimeout(480000);
     await utilityQueries.updateCompaniesToBuilding("autotest", null, "NGMA");
     
@@ -60,7 +60,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Same Company', {tag: ['@regression7'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas Same Company', {tag: [TEST_TAGS.REGRESSION1],}, async ({moveInpage,page}) => {
     test.setTimeout(480000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "BGE", "BGE");
     
@@ -77,7 +77,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas EVERSOURCE Same Company', {tag: ['@regression7'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas EVERSOURCE Same Company', {tag: [TEST_TAGS.REGRESSION4],}, async ({moveInpage,page}) => {
     test.setTimeout(480000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "EVERSOURCE", "EVERSOURCE");
     
@@ -92,7 +92,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas NGMA Same Company', {tag: ['@regression7'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas NGMA Same Company', {tag: [TEST_TAGS.REGRESSION5],}, async ({moveInpage,page}) => {
     test.setTimeout(480000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "NGMA", "NGMA");
     
@@ -107,7 +107,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric and Gas Different Company', {tag: [ '@regression6'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric and Gas Different Company', {tag: [TEST_TAGS.REGRESSION3],}, async ({moveInpage,page}) => {
     test.setTimeout(600000);
     await utilityQueries.updateCompaniesToBuilding("autotest", "BGE", "CON-EDISON");
     
@@ -130,7 +130,7 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
   test.describe.configure({mode: "serial"});
   
 
-  test('New User for ShortCode Electric Only', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric Only', {tag: [TEST_TAGS.REGRESSION6],}, async ({moveInpage,page}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     await utilityQueries.updateCompaniesToBuilding("autotest", "COSERV", null);
     
@@ -145,7 +145,7 @@ test.describe('Short Code TX Dereg/ Coserv New User Electric &/or Gas', () => {
   });
 
 
-  test('New User for ShortCode Electric & Gas', {tag: [ '@regression1'],}, async ({moveInpage,page}) => {
+  test('New User for ShortCode Electric & Gas', {tag: [TEST_TAGS.REGRESSION7],}, async ({moveInpage,page}) => {
     test.setTimeout(TIMEOUTS.TEST_MOVE_IN);
     await utilityQueries.updateCompaniesToBuilding("autotest", "COSERV", "COSERV");
     

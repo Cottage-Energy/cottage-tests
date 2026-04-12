@@ -32,7 +32,7 @@ test.afterEach(async ({ page }) => {
 test.describe('Invalid Card to Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"}); 
 
-    test('COMED COMED Electric Only Profile Added to Failed Message Update', {tag: ['@regression1'],}, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
+    test('COMED COMED Electric Only Profile Added to Failed Message Update', { tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage}) => {
       
         test.setTimeout(1800000);
     

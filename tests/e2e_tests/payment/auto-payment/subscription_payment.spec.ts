@@ -60,7 +60,7 @@ test.describe('Subscription Payment — Inngest Pipeline', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Active subscription generates metadata and processes payment via Inngest', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage }) => {
     test.setTimeout(1800000);
 
@@ -199,7 +199,7 @@ test.describe('Subscription Lifecycle — Cancel & Re-subscribe', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Cancel subscription stops metadata generation, re-subscribe resumes', {
-    tag: [TEST_TAGS.REGRESSION4, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage }) => {
     test.setTimeout(1800000);
 

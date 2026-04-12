@@ -61,7 +61,7 @@ test.describe('DB-012: Fee Calculation Accuracy', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Card payment — fee = bankersRound(amount * 0.03 + 30)', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -108,7 +108,7 @@ test.describe('DB-012: Fee Calculation Accuracy', () => {
   });
 
   test('Bank payment — zero fee, no fee transaction', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -152,7 +152,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Balance transitions: before → ingestion → inflight → success', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -236,7 +236,7 @@ test.describe('DB-014: Cross-Table Consistency', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Payment ↔ Remittance ↔ BLNK ↔ TransactionMetadata (electric only)', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -332,7 +332,7 @@ test.describe('DB-014: Cross-Table Consistency', () => {
   });
 
   test('Separate charge accounts — electric + gas consistency', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -417,7 +417,7 @@ test.describe('DB-011: Transaction Descriptions & References', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('All BLNK txn descriptions and references match catalog', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -498,7 +498,7 @@ test.describe('DB-015: Remittance ↔ Contribution Matching', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Each contribution has matching UtilityRemittance with correct amount', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -562,7 +562,7 @@ test.describe('DB-001: Bill Ingestion BLNK Verification', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Approved bill creates APPLIED BLNK transaction with correct reference', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page }) => {
     test.setTimeout(1800000);
 
@@ -620,7 +620,7 @@ test.describe('BLNK-04: Identity Linking Verification', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('BLNK-04a: New user charge account has BLNK identity linked to balance', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -663,7 +663,7 @@ test.describe('BLNK-01: Effective Date on Bill Transactions', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('BLNK-01a: New bill transaction effective_date matches bill dueDate', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -714,7 +714,7 @@ test.describe('BLNK-02: Transaction Uniqueness', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('BLNK-02a: Bill ingestion produces exactly 1 BLNK transaction per reference', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [...TEST_TAGS.ALL_REGRESSION],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 

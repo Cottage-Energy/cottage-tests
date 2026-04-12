@@ -105,7 +105,7 @@ test.describe('Setup Tracker', () => {
     });
 
     test('TC-074: Connect account user sees "Savings applied automatically" in Step 2', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION4],
     }, async ({ page, connectOverviewPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 

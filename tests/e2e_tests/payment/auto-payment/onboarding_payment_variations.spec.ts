@@ -33,7 +33,7 @@ test.describe('Onboarding Payment Variations — Encouraged Conversion', () => {
 
 
   test('P2-10: Encouraged conversion + billing (pgtest, Electric only)', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
 
     test.setTimeout(1800000);
@@ -60,7 +60,7 @@ test.describe('Onboarding Payment Variations — Encouraged Conversion', () => {
 
 
   test('P2-11: Encouraged conversion E+G (pgtest, SDGE Electric + Gas)', {
-    tag: [TEST_TAGS.REGRESSION4, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
 
     test.setTimeout(1800000);
@@ -90,7 +90,7 @@ test.describe('Onboarding Payment Variations — Partner Shortcode', () => {
 
 
   test('P2-12: Partner shortcode (funnel4324534, non-building)', {
-    tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
 
     test.setTimeout(1800000);
@@ -121,7 +121,7 @@ test.describe('Onboarding Payment Variations — Finish Registration', () => {
 
 
   test('P2-13: Finish registration flow (API-created user)', {
-    tag: [TEST_TAGS.REGRESSION5, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
 
     test.setTimeout(1800000);

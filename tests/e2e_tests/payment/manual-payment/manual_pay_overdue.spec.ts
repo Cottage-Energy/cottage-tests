@@ -251,7 +251,7 @@ test.describe('Reminder Progression', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('P2-20: 5 days overdue — standard reminder email sent', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -291,7 +291,7 @@ test.describe('Reminder Progression', () => {
 
 
   test('P2-21: 15 days overdue — escalated reminder sent', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -328,7 +328,7 @@ test.describe('Reminder Progression', () => {
 
 
   test('P2-22: 18 days overdue — shutoff warning email and SMS sent', {
-    tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -383,7 +383,7 @@ test.describe('Offboarding Triggers', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('P2-23: 25+ days overdue — account transitions to NEEDS_OFF_BOARDING', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -423,7 +423,7 @@ test.describe('Offboarding Triggers', () => {
 
 
   test('P2-26: Separate accounts — electric overdue, gas stays ACTIVE', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -477,7 +477,7 @@ test.describe('Offboarding Triggers', () => {
 
 
   test('P2-27: Same charge account — both accounts offboarded', {
-    tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -534,7 +534,7 @@ test.describe('Recovery Paths', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('P2-24: 25+ days overdue — full payment restores ACTIVE status', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -607,7 +607,7 @@ test.describe('Recovery Paths', () => {
 
 
   test('P2-25: 25+ days overdue — partial payment stays NEEDS_OFF_BOARDING', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 

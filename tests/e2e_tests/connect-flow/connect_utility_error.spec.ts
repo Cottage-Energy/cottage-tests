@@ -112,7 +112,7 @@ test.describe('Connect Utility Error & Upload Bill E2E', () => {
     });
 
     test('Connect failed: bad credentials show error screen with correct UI', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION5],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -139,7 +139,7 @@ test.describe('Connect Utility Error & Upload Bill E2E', () => {
     });
 
     test('Connect fail → Try again: returns to credential form', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION5],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -170,7 +170,7 @@ test.describe('Connect Utility Error & Upload Bill E2E', () => {
     });
 
     test('Connect fail → Upload bill fallback: switches to upload bill modal', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION5],
     }, async ({ page, connectOverviewPage, connectUtilityModalPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -199,7 +199,7 @@ test.describe('Connect Utility Error & Upload Bill E2E', () => {
     });
 
     test('Upload bill e2e: file upload completes and overview updates to tracker', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION5],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 

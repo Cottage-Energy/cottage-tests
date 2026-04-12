@@ -112,7 +112,7 @@ test.describe('Bill Upload Modal', () => {
     });
 
     test('TC-046 + TC-047 + TC-049: Modal idle view — title, drop zone, and button layout', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION7],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -145,7 +145,7 @@ test.describe('Bill Upload Modal', () => {
     });
 
     test('TC-050: "Connect account" alternative link visible', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION7],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -166,7 +166,7 @@ test.describe('Bill Upload Modal', () => {
     });
 
     test('TC-057 + TC-059 + TC-061: Ready view — title, re-upload link, upload enabled', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION7],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -196,7 +196,7 @@ test.describe('Bill Upload Modal', () => {
     });
 
     test('TC-058: File size NOT displayed in ready view', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION7],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 
@@ -221,7 +221,7 @@ test.describe('Bill Upload Modal', () => {
     });
 
     test('TC-060: Re-upload resets to idle view', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION7],
     }, async ({ page, connectOverviewPage, uploadBillModalPage }) => {
         test.setTimeout(TIMEOUTS.TEST_PAYMENT);
 

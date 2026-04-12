@@ -57,7 +57,7 @@ test.describe('Manual Card Payment Failed — Card Recovery', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric Only — manual card fails, update card, re-pay succeeds', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.REGRESSION5, TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -150,7 +150,7 @@ test.describe('Manual Card Payment Failed — Card Recovery', () => {
 
 
   test('EVERSOURCE EVERSOURCE Electric & Gas — manual card fails, update card, re-pay', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.REGRESSION6, TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -243,7 +243,7 @@ test.describe('Manual Card Payment Failed — Card Recovery', () => {
 
 
   test('DUKE Gas Only — manual card fails, update card, re-pay', {
-    tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.REGRESSION7, TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -314,7 +314,7 @@ test.describe('Manual Payment Failed — Cross-Method Recovery', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — card fails, switch to bank, manual pay succeeds', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
@@ -394,7 +394,7 @@ test.describe('Auto-Pay Failed — Manual Pay Backup', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — auto-pay fails, user manually pays, next bill still auto-pays', {
-    tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 
@@ -491,7 +491,7 @@ test.describe('Payment Mode Transitions', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('Auto-pay to manual: disable auto-pay, next bill requires manual payment', {
-    tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, profilePage, context }) => {
     test.setTimeout(1800000);
 

@@ -25,7 +25,7 @@ test.afterEach(async ({ page }) => {
 test.describe('Connect Registration Form — Detailed UI', () => {
 
     test('TC-002: Bill-savings image renders above heading', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION1],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_UI);
 
@@ -39,7 +39,7 @@ test.describe('Connect Registration Form — Detailed UI', () => {
     });
 
     test('TC-003: Form fields render correctly', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION1],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_UI);
 
@@ -65,7 +65,7 @@ test.describe('Connect Registration Form — Detailed UI', () => {
     });
 
     test('TC-004: Submit button disabled when fields are empty', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION1],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_UI);
 
@@ -84,7 +84,7 @@ test.describe('Connect Registration Form — Detailed UI', () => {
     });
 
     test('TC-007: Legal links visible at bottom', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.UI],
+        tag: [TEST_TAGS.REGRESSION1],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_UI);
 
@@ -102,7 +102,7 @@ test.describe('Connect Registration Form — Detailed UI', () => {
     });
 
     test('TC-008: Utility company field hidden for LIGHT/TX-DEREG area', {
-        tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.E2E],
+        tag: [TEST_TAGS.REGRESSION1],
     }, async ({ connectPage }) => {
         test.setTimeout(TIMEOUTS.TEST_UI);
 

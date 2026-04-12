@@ -58,7 +58,7 @@ test.describe('Flex Payment — Pay in Full', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — flex-enabled user sees split bill option, pays in full', {
-    tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -138,7 +138,7 @@ test.describe('Flex Payment — Split Bill Redirect', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('COMED Electric — split bill option redirects to getflex.com', {
-    tag: [TEST_TAGS.REGRESSION5, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
@@ -215,7 +215,7 @@ test.describe('Flex Payment — Non-Flex User', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('NGMA Electric — non-flex user does NOT see split bill option', {
-    tag: [TEST_TAGS.REGRESSION4, TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
     test.setTimeout(1800000);
 
