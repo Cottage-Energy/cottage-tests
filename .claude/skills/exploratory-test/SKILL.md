@@ -495,7 +495,7 @@ npx playwright test tests/e2e_tests/exploratory/explore_my_investigation.spec.ts
 
 ## 4. Cleanup After Session
 
-**CRITICAL: Upload screenshots BEFORE deleting local files.** The cleanup sequence must be: (1) upload to tmpfiles.org, (2) embed in Linear ticket **comment** via `save_comment`, (3) THEN delete local PNGs. Deleting before uploading loses evidence permanently. **NEVER modify the ticket description** — it belongs to the creator/dev.
+**CRITICAL: Upload screenshots BEFORE deleting local files.** The cleanup sequence must be: (1) upload to tmpfiles.org, (2) embed in Linear ticket **comment** via GraphQL `commentCreate` (the MCP `update_issue` tool modifies the description — NEVER use it for posting findings), (3) THEN delete local PNGs. Deleting before uploading loses evidence permanently. **NEVER modify the ticket description** — it belongs to the creator/dev. All external resources (ticket descriptions, Notion docs, Figma designs) are read-only sources of truth.
 
 Before finishing any exploratory session (interactive or scripted), clean up generated artifacts:
 
@@ -560,7 +560,7 @@ When capturing screenshots during exploratory sessions and needing to attach the
 1. `mcp__playwright__browser_take_screenshot` to save PNG files locally
 2. Upload to **tmpfiles.org**: `curl -s -o /tmp/upload.json -F "file=@screenshot.png" https://tmpfiles.org/api/v1/upload && cat /tmp/upload.json` — returns a JSON with URL
 3. Convert URL: replace `tmpfiles.org/` with `tmpfiles.org/dl/` for the direct link
-4. **Post screenshots in a ticket comment**: Use `mcp__linear__save_comment` with the `issueId` to embed images. **NEVER modify the ticket description** — it belongs to the creator/dev. tmpfiles.org links expire in ~1 hour, but the comment preserves the test record.
+4. **Post screenshots in a ticket comment**: Use Linear GraphQL `commentCreate` mutation to post to the ticket. The `@mseep/linear-mcp` does NOT have a comment tool — use the GraphQL API directly. **NEVER use `update_issue` to modify the ticket description** — it belongs to the creator/dev. tmpfiles.org links expire in ~1 hour, but the comment preserves the test record.
 5. Clean up local PNG files after upload
 
 **Why not base64 directly?** MCP tool parameters can't handle large base64-encoded images. The tmpfiles.org upload → URL embed in comment pattern is the reliable workaround.

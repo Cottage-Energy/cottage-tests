@@ -34,6 +34,18 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 - UX & product improvement suggestions (from test planning and exploratory sessions)
 - Test execution results (exploratory + scripted)
 
+### Read-Only Source of Truth Rule (enforced — all external resources)
+**NEVER modify, overwrite, or alter content in external resources unless explicitly instructed.** This includes:
+- **Linear ticket descriptions** — owned by the creator. Post QA findings as **comments only** (use GraphQL `commentCreate`, NOT `update_issue` with description).
+- **Linear ticket status** — never move status unless explicitly told to
+- **Notion docs** — read-only reference. Add comments or create new pages, don't edit existing content.
+- **Figma designs** — observe and screenshot, don't modify
+- **GitHub PR descriptions** — read-only. Post review comments, don't edit the PR body.
+- **Database records** — only modify test data in dev. Never alter production or shared config data without explicit instruction.
+- **Any shared document or config** — treat as source of truth. Observe, reference, comment — don't overwrite.
+
+**Why:** These are the team's source of truth. Overwriting loses original context (ACs, specs, design intent) and breaks trust. QA adds value through comments and separate artifacts, not by altering originals.
+
 ### User Impact Rule (enforced — all QA outputs)
 **Every bug, improvement, finding, and observation MUST include a User Impact statement** — describe what the user experiences in concrete, non-technical terms. This applies to:
 - Bug reports posted to Linear

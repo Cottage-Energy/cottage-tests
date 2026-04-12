@@ -283,8 +283,21 @@ For each scenario, define:
 
 ### Comment Back to Linear Ticket
 When a Linear ticket was used as input (i.e., an `issueId` is available from Step 1):
-- Use `mcp__linear__save_comment` to post the test plan back to the ticket
-- Pass the `issueId` from the ticket and format the `body` as Markdown:
+
+**IMPORTANT**: NEVER modify the ticket description. Post the test plan as a **COMMENT** only. The `@mseep/linear-mcp` package does NOT have a comment tool — use the Linear GraphQL API directly:
+```javascript
+// Post comment via Linear GraphQL API (NOT update_issue)
+fetch('https://api.linear.app/graphql', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'Authorization': process.env.LINEAR_API_KEY },
+  body: JSON.stringify({
+    query: 'mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success } }',
+    variables: { issueId: '<issue-uuid>', body: commentMarkdown }
+  })
+});
+```
+
+Format the comment `body` as Markdown:
 
 ```markdown
 ## Test Plan: [Feature Name]
