@@ -78,8 +78,8 @@ export class OverviewPage {
         this.Overview_User_Menu = (firstName: string) => page.locator(`//div[contains(text(),"${firstName}")]`);
         this.Overview_Profile_Button = page.getByRole('menuitem', { name: 'Profile' });
 
-        this.Overview_Failed_Payment_Alert = page.getByText('Automatic Payment Failed.');
-        this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('link', { name: 'Update Payment Information' });
+        this.Overview_Failed_Payment_Alert = page.getByText('Automatic payment failed!');
+        this.Overview_Failed_Payment_Update_Payment_Link = page.getByRole('button', { name: 'Update payment' });
 
         this.Overview_New_Terms_Modal_Title = page.getByRole('heading', { name: 'We\'ve made updates to our' });
         this.Overview_New_Terms_Modal_Content = page.getByText('We have expanded our services');
