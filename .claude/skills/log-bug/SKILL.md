@@ -228,9 +228,7 @@ Title: [IMPROVEMENT] <concise description of the improvement>
 
 ## 7. Create the Issue
 
-**IMPORTANT**: Only CREATE new issues. NEVER modify existing ticket descriptions — they are the source of truth owned by the creator. To add QA findings to an existing ticket, post a COMMENT using the Linear GraphQL API (`commentCreate` mutation).
-
-- `mcp__linear__create_issue` to create the ticket in Linear (new MCP tool name)
+- `mcp__linear__create_issue` to create the ticket in Linear
 - Set fields based on ticket type:
 
 ### For Bugs
