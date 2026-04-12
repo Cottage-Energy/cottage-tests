@@ -9,10 +9,10 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | Step | Activity | Skill |
 |------|----------|-------|
 | 1. **Triage** | Read Linear tickets tagged for Testing/QA | `/test-plan` (Quick Triage phase) |
-| 2. **Research** | Gather context from Notion docs, Figma screens, GitHub PRs | `/review-pr` (for PRs), `/test-plan` (multi-source) |
+| 2. **Research** | Gather context from Notion docs, Figma screens, GitHub PRs | `/test-plan` (PR analysis auto-triggers when PR link found) |
 | 3. **Test Planning** | Write test plans, test cases, and UX improvement opportunities from requirements | `/test-plan` |
 | 4. **Exploratory Testing** | Interactive exploration to find bugs, edge cases, and UX improvement opportunities | `/exploratory-test` |
-| 5. **Automation** | Convert findings into Playwright e2e tests | `/new-test` |
+| 5. **Automation** | Convert findings into Playwright e2e tests | `/create-test` |
 | 6. **Bug & Improvement Reporting** | Log bugs and UX improvement suggestions in Linear with evidence | `/log-bug` |
 | 7. **Test Execution** | Run automated suites locally or via CI | `/run-tests` |
 
@@ -21,12 +21,10 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 | Skill | When to use |
 |-------|-------------|
 | `/fix-test` | A test is failing or flaky — diagnose and fix |
-| `/analyze-failure` | Classify CI/local failures, identify root cause |
-| `/ci-health` | Morning pre-flight — env health, CI pass/fail, flaky test trends |
+| `/analyze-failure` | CI health check + failure analysis + root cause classification |
 | `/test-coverage` | Map what's automated, find gaps |
-| `/release-ready` | Go/no-go report before a release |
+| `/test-report` | QA summary, release readiness, or targeted report (optional .md export) |
 | `/test-data` | Set up test data — billing users, bills, subscriptions, feature flags |
-| `/qa-summary` | Weekly/sprint QA summary for the team — tickets, bugs, improvements, CI trends |
 
 ### Main Outputs
 - Test plans and test cases (in `tests/test_plans/`)
@@ -303,7 +301,7 @@ Environment base URLs are configured in `tests/resources/utils/environmentBaseUr
 | Environment | When to use |
 |-------------|-------------|
 | `dev` | Default for local runs and most CI runs |
-| `staging` | Pre-release validation, `/release-ready` checks |
+| `staging` | Pre-release validation, `/test-report` release checks |
 | `production` | Read-only verification only — never run destructive tests |
 
 ## CI/CD
@@ -330,13 +328,12 @@ Tests run via GitHub Actions (`main-workflow.yml`). Scheduled regressions run da
 
 Skills route to each other based on outcomes. Common chains:
 
-- **Ticket lands** → `/test-plan` → `/test-data` (setup) → `/new-test` → `/run-tests`
-- **Exploratory session** → `/exploratory-test` → `/log-bug` (bugs + improvements) → `/new-test` (regression tests)
-- **CI failure** → `/ci-health` → `/analyze-failure` → `/fix-test` (test issue) or `/log-bug` (product bug)
-- **PR review** → `/review-pr` → `/test-plan` → `/exploratory-test` or `/new-test`
-- **Release check** → `/release-ready` (aggregates `/ci-health` + Linear bugs + open PRs + feature flags)
-- **Weekly reporting** → `/qa-summary` (aggregates Linear + GitHub + CI + test plans)
-- **Morning check** → `/ci-health` (env health + CI + flaky trends) → `/fix-test` or `/analyze-failure` as needed
+- **Ticket lands** → `/test-plan` → `/test-data` (setup) → `/create-test` → `/run-tests`
+- **Exploratory session** → `/exploratory-test` → `/log-bug` (bugs + improvements) → `/create-test` (regression tests)
+- **CI failure / Morning check** → `/analyze-failure` (env health + CI dashboard + root cause) → `/fix-test` (test issue) or `/log-bug` (product bug)
+- **PR review** → `/test-plan` (PR analysis auto-triggers) → `/exploratory-test` or `/create-test`
+- **Release check** → `/test-report` release mode (CI + bugs + PRs + feature flags → go/no-go)
+- **Weekly reporting** → `/test-report` summary mode (Linear + GitHub + CI + test plans)
 - **Test data needed** → `/test-data` (recipes for billing users, bills, subscriptions, flags)
 
 After completing any skill, suggest the logical next skill based on the outcome.

@@ -1,6 +1,6 @@
 ---
 name: test-plan
-description: Generate a structured test plan from a ticket, PR, or feature description
+description: Generate a structured test plan from a ticket, PR, or feature description — includes PR analysis and risk scoring when PR link is found
 user-invocable: true
 ---
 
@@ -39,8 +39,10 @@ When the source is an API design doc, OpenAPI spec, PDF, or live docs site:
 
 ### GitHub PR Link
 - Use `mcp__github__get_pull_request` and `mcp__github__get_pull_request_files` to read the diff
+- `mcp__github__get_pull_request_status` to check CI status — are tests already failing on this PR?
 - **If GitHub MCP returns 404** (common for `services`, `cottage-nextjs`, `pg-admin`), fall back to CLI: `gh pr view <number> --repo Cottage-Energy/<repo> --json title,body,state,files` and `gh pr diff <number> --repo Cottage-Energy/<repo>`
 - Identify UI changes, API changes, DB changes, business logic changes
+- **When a PR link is found** (provided directly or linked in a Linear ticket) → automatically run Step 1c PR Analysis
 
 ### Inngest Function Source (when ticket involves backend/email/async jobs)
 When a ticket references the `services` repo or mentions Inngest, email templates, or async processing:
@@ -99,6 +101,60 @@ When mermaid flowchart blocks are found in Notion content or pasted by the user:
 - **Terminal states** — end nodes become expected results for assertions
 - **Error/failure paths** — paths leading to error states become negative test cases
 - Map each distinct path through the flowchart to one or more test cases in the plan
+
+## 1c. PR Analysis (auto-triggers when PR link is found)
+
+When a PR link is found — either provided directly or discovered in a Linear ticket — run this analysis to enrich the test plan with code-level context. Skip if no PR link exists.
+
+### Classify Changes Per File
+For each changed file in the PR, classify:
+
+| Category | Examples |
+|----------|---------|
+| **UI** | New/modified components, pages, forms, modals, changed text/labels/buttons (affects POM locators) |
+| **API** | New/modified endpoints, request/response shapes, changed validation, error handling |
+| **Database** | Migrations, new tables/columns, changed constraints, queries, feature flags |
+| **Business Logic** | Validation rules, calculations, state transitions, permissions, conditional rendering |
+| **Configuration** | Env vars, feature flags, third-party integrations, build/deploy config |
+
+### Assess Risk Level
+
+| Level | Criteria |
+|-------|----------|
+| **High** | Shared UI components (affects multiple pages), DB schema changes, auth/authz changes, navigation/routing changes, move-in or payment flow changes |
+| **Medium** | Single feature UI/logic changes, new API endpoints, feature flag gating |
+| **Low** | Styling-only, documentation, test-only, dev tooling, CI config |
+
+### Map Test Impact
+- `Glob` + `Grep` in `tests/e2e_tests/` for tests covering the changed feature area
+- Check `tests/resources/page_objects/` for locators referencing changed elements → list POMs to update
+- Check `tests/resources/fixtures/` for queries hitting changed tables → list fixtures to update
+- Identify new functionality with no test coverage → feed into test case generation (Step 4)
+
+### Visual Diff (when PR has UI changes and is deployed to dev)
+If the PR is merged/deployed and includes UI changes:
+1. `mcp__playwright__browser_navigate` to affected page(s) on dev
+2. `mcp__playwright__browser_take_screenshot` to capture live state
+3. If Figma link available → `mcp__figma__get_screenshot` for design comparison
+4. Check: layout, typography, colors, component states, responsive behavior
+5. Flag differences as **Bug** (wrong vs design), **Improvement** (could be better), or **Intentional** (PR changed this on purpose)
+
+### PR Analysis Output (included in triage summary)
+```
+### PR Analysis: #[NUMBER] — [TITLE]
+**Repo**: [owner/repo] | **CI**: [passing/failing] | **Risk**: [HIGH/MEDIUM/LOW]
+
+| File | Category | Change |
+|------|----------|--------|
+| [file] | UI | [what changed] |
+| [file] | Database | [what changed] |
+
+**Test Impact**:
+- Existing tests to verify: [list]
+- POMs to update: [list or "none"]
+- Fixtures to update: [list or "none"]
+- New tests needed: [fed into Step 4]
+```
 
 ## 2. Quick Triage Summary
 Before writing detailed test cases, present a triage summary so the user can confirm scope:
@@ -267,7 +323,7 @@ When a Linear ticket was used as input (i.e., an `issueId` is available from Ste
 
 ## 7. Next Steps
 After the test plan is approved:
-- `/new-test` to scaffold automated test cases (will reference this plan)
+- `/create-test` to scaffold automated test cases (will reference this plan)
 - `/exploratory-test` to interactively investigate items marked "Exploratory only"
 - `/log-bug` if issues are found during analysis
 - `/run-tests` to execute tests after they're created

@@ -1,5 +1,5 @@
 ---
-name: new-test
+name: create-test
 description: Scaffold a new Playwright e2e or API test spec following project conventions
 user-invocable: true
 ---

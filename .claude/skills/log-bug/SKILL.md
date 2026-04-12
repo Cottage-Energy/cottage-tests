@@ -252,7 +252,7 @@ Title: [IMPROVEMENT] <concise description of the improvement>
 - Share the created issue link/ID with the user
 
 ### For Bugs
-- If the bug is reproducible with automation → suggest `/new-test` to create a regression test
+- If the bug is reproducible with automation → suggest `/create-test` to create a regression test
 - If the bug came from an exploratory session → suggest `/exploratory-test` to create a scripted reproduction
 - If the bug blocks existing tests → link the bug to the failing test for tracking
 

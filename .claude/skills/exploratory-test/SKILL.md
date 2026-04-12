@@ -346,7 +346,7 @@ After both phases, produce a structured summary:
 - Areas NOT tested (and why): [list]
 
 ### Recommended Next Steps
-- `/new-test` to automate [specific AC or edge case]
+- `/create-test` to automate [specific AC or edge case]
 - `/fix-test` if existing tests need updating
 - `/test-plan` if the feature needs full test plan coverage
 - `/log-bug` to file improvement tickets for UX observations worth acting on
@@ -518,8 +518,8 @@ Do NOT skip cleanup — leftover artifacts bloat the repo and can be accidentall
 ## 5. Graduating an Exploratory Test
 
 When the investigation is complete:
-1. **Found a bug** → `/log-bug` to file in Linear, then `/new-test` to create a regression test that guards against recurrence
-2. **Validated an edge case** → convert to a formal test with hard assertions and a regression tag using `/new-test`
+1. **Found a bug** → `/log-bug` to file in Linear, then `/create-test` to create a regression test that guards against recurrence
+2. **Validated an edge case** → convert to a formal test with hard assertions and a regression tag using `/create-test`
 3. **Confirmed expected behavior** → delete the exploratory test — it served its purpose
 4. **Inconclusive** → document findings in the spec comments and keep for future investigation
 
@@ -635,7 +635,7 @@ After completing this skill, check: did any step not match reality? Did a tool n
 
 ### Session: 2026-03-13 (ENG-2402 Connect Account)
 - **Supabase column discovery**: Wasted 4+ attempts guessing column names. Added instruction to always query `information_schema.columns` first.
-- **OTP email pollution**: Two exploratory sessions triggered multiple OTP emails for the same shared test users. This caused the subsequent `/new-test` spec to fail because `Get_OTP` asserts exactly 1 email. Added to Common Blockers table.
+- **OTP email pollution**: Two exploratory sessions triggered multiple OTP emails for the same shared test users. This caused the subsequent `/create-test` spec to fail because `Get_OTP` asserts exactly 1 email. Added to Common Blockers table.
 - **Mutually exclusive cards**: Connect ELIGIBLE users see auto-apply card; non-connect users see renewable energy card. These are exclusive — never both. This kind of business logic discovery is valuable to capture in the session summary.
 
 ### Session: 2026-03-16 (ENG-2406 PG Admin Deep Testing)

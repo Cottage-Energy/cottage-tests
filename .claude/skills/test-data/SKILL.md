@@ -6,7 +6,7 @@ user-invocable: true
 
 # Test Data Setup
 
-Utility skill for creating and managing test data. Called by other skills (`/new-test`, `/exploratory-test`, `/run-tests`) or standalone.
+Utility skill for creating and managing test data. Called by other skills (`/create-test`, `/exploratory-test`, `/run-tests`) or standalone.
 
 ## Usage
 
