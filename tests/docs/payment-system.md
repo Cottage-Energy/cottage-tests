@@ -1470,6 +1470,84 @@ Every BLNK transaction type in the system, listed by when it's created.
 
 ---
 
+## Blnk Migration — Upcoming Changes
+
+These are active tickets in the Blnk Migration project (Linear) that will affect payment/ledger behavior. Test cases are in `tests/test_plans/payment_comprehensive_test_matrix.md`.
+
+### Effective Date (ENG-2421 + ENG-2422)
+- BLNK transactions will have `effective_date` = bill `dueDate` (not `created_at`)
+- Due date waterfall will query by `effective_date` for post-migration bills
+- Historical transactions backfilled with `effective_date = created_at`
+- **Test impact**: `blnkQueries.ts` needs `effective_date` assertion; balance calculation tests need updating
+
+### Uniqueness Constraint (ENG-2420)
+- BLNK v0.13.5 enforces unique `transactions.reference` at DB level
+- Our code handles the rejection gracefully (lookup existing, continue)
+- Previously ~6,700 duplicate QUEUED transactions existed
+- **Test impact**: Need concurrent ingestion test to verify no duplicates
+
+### Failed Transaction Webhooks (ENG-2424)
+- BLNK emits webhook on transaction failure (not just Stripe)
+- Our handler updates charge account state + triggers downstream actions
+- Webhook authenticity verified via `X-Blnk-Signature` header
+- **Test impact**: Need BLNK-specific webhook handling test (separate from Stripe webhook tests)
+
+### Identity Linking (ENG-2458)
+- BLNK identities linked to customer balances via `PGBlnkClient`
+- Called during `createChargeAccountsForUser()`
+- Enables identity-scoped queries and notifications
+- **Test impact**: Need identity verification in `blnkQueries.ts`
+
+### Error Webhooks (ENG-2423)
+- BLNK `system.error` events routed to Slack via existing notification pipeline
+- **Test impact**: Observability verification — check Slack alert on BLNK error
+
+### Filter API Migration (ENG-2426)
+- Non-critical reads migrated from direct DB to BLNK Filter API
+- Latency-sensitive paths (balance during payment) stay on direct DB
+- **Test impact**: Our `blnkQueries.ts` queries via Supabase `blnk` schema may need adaptation if direct DB queries are deprecated
+
+---
+
+## Blnk Migration — Upcoming Changes
+
+These are active tickets in the Blnk Migration project (Linear) that will affect payment/ledger behavior. Test cases are in `tests/test_plans/payment_comprehensive_test_matrix.md` under "Blnk Migration Test Cases".
+
+### Effective Date (ENG-2421 + ENG-2422)
+- BLNK transactions will have `effective_date` = bill `dueDate` (not `created_at`)
+- Due date waterfall will query by `effective_date` for post-migration bills
+- Historical transactions backfilled with `effective_date = created_at`
+- **Test impact**: `blnkQueries.ts` needs `effective_date` assertion; balance calculation tests need updating
+
+### Uniqueness Constraint (ENG-2420)
+- BLNK v0.13.5 enforces unique `transactions.reference` at DB level
+- Our code handles the rejection gracefully (lookup existing, continue)
+- Previously ~6,700 duplicate QUEUED transactions existed
+- **Test impact**: Need concurrent ingestion test to verify no duplicates
+
+### Failed Transaction Webhooks (ENG-2424)
+- BLNK emits webhook on transaction failure (not just Stripe)
+- Our handler updates charge account state + triggers downstream actions
+- Webhook authenticity verified via `X-Blnk-Signature` header
+- **Test impact**: Need BLNK-specific webhook handling test (separate from Stripe webhook tests)
+
+### Identity Linking (ENG-2458)
+- BLNK identities linked to customer balances via `PGBlnkClient`
+- Called during `createChargeAccountsForUser()`
+- Enables identity-scoped queries and notifications
+- **Test impact**: Need identity verification in `blnkQueries.ts`
+
+### Error Webhooks (ENG-2423)
+- BLNK `system.error` events routed to Slack via existing notification pipeline
+- **Test impact**: Observability verification — check Slack alert on BLNK error
+
+### Filter API Migration (ENG-2426)
+- Non-critical reads migrated from direct DB to BLNK Filter API
+- Latency-sensitive paths (balance during payment) stay on direct DB
+- **Test impact**: Our `blnkQueries.ts` queries via Supabase `blnk` schema may need adaptation if direct DB queries are deprecated
+
+---
+
 ## CI Execution
 
 - Payment tests need ~30 min each (move-in ~5 min + bill pipeline 20-25 min waiting for Inngest crons).

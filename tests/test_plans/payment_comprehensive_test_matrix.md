@@ -205,6 +205,61 @@
 
 ---
 
+## Blnk Migration Test Cases (Project: Blnk Migration)
+
+These test cases cover the Blnk Migration project tickets that affect payment/ledger behavior.
+
+### BLNK-01: Effective Date on Bill Transactions (ENG-2421)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-01a | New bill ingested → BLNK transaction created | `effective_date` = bill's `dueDate`, NOT `created_at` | P1 |
+| BLNK-01b | Bill due 2026-04-15, created 2026-03-20 | `effective_date = 2026-04-15`, `created_at = 2026-03-20` | P1 |
+| BLNK-01c | Historical (pre-migration) transaction | `effective_date = created_at` (backfilled) | P2 |
+
+### BLNK-02: Uniqueness Error Fallback (ENG-2420)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-02a | Bill ingested with reference that already exists | System looks up existing transaction, continues processing | P1 |
+| BLNK-02b | Two concurrent ingestion attempts for same bill | Exactly 1 transaction created, both processes complete | P1 |
+| BLNK-02c | Fallback path triggered | Info-level log emitted (not error) | P2 |
+
+### BLNK-03: Failed Transaction Webhooks (ENG-2424)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-03a | BLNK transaction fails after queuing | Webhook received and processed by our system | P1 |
+| BLNK-03b | Failed webhook for bill payment | Charge account state updated, downstream actions triggered | P1 |
+| BLNK-03c | Duplicate webhook delivery | Idempotent processing — no duplicate state changes | P2 |
+| BLNK-03d | Webhook logged | Full transaction context in logs for debugging | P2 |
+
+### BLNK-04: BLNK Identity Linking (ENG-2458)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-04a | New user creates charge account | BLNK identity created and linked to balance | P1 |
+| BLNK-04b | Identity-scoped query | Can query transactions/balances by identity | P2 |
+
+### BLNK-05: Error Webhooks → Slack (ENG-2423)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-05a | BLNK internal error occurs | `system.error` webhook sent to our endpoint | P1 |
+| BLNK-05b | Error webhook received | Slack notification posted with error details | P1 |
+| BLNK-05c | No errors → no webhooks | Normal operation produces no `system.error` events | P2 |
+
+### BLNK-06: Due Date Waterfall with Effective Date (ENG-2422)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-06a | Post-migration bills only | `findNearestDueDate` queries BLNK by `effective_date` directly | P1 |
+| BLNK-06b | Mix of pre- and post-migration bills | Uses `effective_date` for new, metadata join for historical | P1 |
+| BLNK-06c | `calculateDueBalance` with all post-migration | Single BLNK call with `effective_date <= today` | P2 |
+
+### BLNK-07: Filter API Adoption (ENG-2426)
+| ID | Scenario | Expected | Priority |
+|----|----------|----------|----------|
+| BLNK-07a | Transaction lookup by reference | Uses Filter API, returns same results as direct DB query | P2 |
+| BLNK-07b | Metadata query | Uses Filter API with dot-notation for `meta_data` fields | P2 |
+| BLNK-07c | Balance lookup during payment | Still uses direct DB query (latency-sensitive) | P2 |
+
+---
+
 ## File Architecture
 
 ### Spec Files (restructured)
