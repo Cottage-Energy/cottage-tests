@@ -118,12 +118,14 @@ export class OverviewPage {
         //
         // Detection and action are separated so Setup_Password errors propagate
         // instead of being silently swallowed by the catch.
+        // Use the same locator Setup_Password() uses. Longer timeout (10s)
+        // because the dialog renders asynchronously via Supabase auth callback
+        // after page load — 3s was too short.
         let hasPasswordDialog = false;
         try {
-            const passwordTitle = this.page.getByText(/Set up your new password|create a new password/i);
-            hasPasswordDialog = await passwordTitle.isVisible({ timeout: 3000 });
+            hasPasswordDialog = await this.Overview_Setup_Password_Title.isVisible({ timeout: 10000 });
         } catch {
-            // Detection failed (e.g. page not loaded yet) — proceed normally
+            // Detection failed — proceed normally
         }
         if (hasPasswordDialog) {
             await this.Setup_Password();
