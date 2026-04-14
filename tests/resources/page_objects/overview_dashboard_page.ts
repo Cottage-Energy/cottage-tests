@@ -115,13 +115,18 @@ export class OverviewPage {
         // DOM-removing (which doesn't survive page reloads), we actually complete
         // the password setup. This persists the password to Supabase, clearing
         // the reset flag permanently.
+        //
+        // Detection and action are separated so Setup_Password errors propagate
+        // instead of being silently swallowed by the catch.
+        let hasPasswordDialog = false;
         try {
             const passwordTitle = this.page.getByText(/Set up your new password|create a new password/i);
-            if (await passwordTitle.isVisible({ timeout: 3000 })) {
-                await this.Setup_Password();
-            }
+            hasPasswordDialog = await passwordTitle.isVisible({ timeout: 3000 });
         } catch {
-            // No password dialog — proceed normally
+            // Detection failed (e.g. page not loaded yet) — proceed normally
+        }
+        if (hasPasswordDialog) {
+            await this.Setup_Password();
         }
 
         while (retries < maxRetries) {
