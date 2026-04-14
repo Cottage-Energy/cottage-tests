@@ -16,6 +16,8 @@ import {
 import { TIMEOUTS, TEST_TAGS, RETRY_CONFIG } from '../../resources/constants';
 import { logger } from '../../resources/utils/logger';
 import { supabase } from '../../resources/utils/supabase';
+import { executeSQL, executeSQLSingle } from '../../resources/utils/postgres';
+import type { BlnkTransaction } from '../../resources/types';
 import * as PaymentData from '../../resources/data/payment-data.json';
 
 /**
@@ -178,7 +180,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
     // STEP 1: Snapshot BEFORE bill insertion
     const beforeSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
     const initialBalance = beforeSnapshot.balance;
-    logger.info('BEFORE bill:', JSON.stringify(beforeSnapshot));
+    logger.info('BEFORE bill', { snapshot: beforeSnapshot });
 
     // STEP 2: Insert approved bill
     const billAmountCents = PGuserUsage.ElectricAmount;
@@ -192,7 +194,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
 
     // Snapshot AFTER ingestion — balance should increase by bill amount
     const afterIngestionSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
-    logger.info('AFTER ingestion:', JSON.stringify(afterIngestionSnapshot));
+    logger.info('AFTER ingestion', { snapshot: afterIngestionSnapshot });
 
     // Bill txn is APPLIED immediately, so balance increases
     const expectedBalanceAfterIngestion = initialBalance + billAmountDollars;
@@ -207,7 +209,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
     // Snapshot DURING inflight — inflight_debit_balance should increase
     // (payment txn is INFLIGHT, debiting from charge account to @Stripe)
     const duringInflightSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
-    logger.info('DURING inflight:', JSON.stringify(duringInflightSnapshot));
+    logger.info('DURING inflight', { snapshot: duringInflightSnapshot });
 
     // inflight_debit_balance > 0 means there's a pending debit
     expect(duringInflightSnapshot.inflight_debit_balance).toBeGreaterThan(0);
@@ -220,7 +222,7 @@ test.describe('DB-013: Balance at Each Pipeline Step', () => {
 
     // Snapshot AFTER success — balance should be back near zero (or reduced)
     const afterSuccessSnapshot = await blnkQueries.getChargeAccountBalance(chargeAccountId);
-    logger.info('AFTER success:', JSON.stringify(afterSuccessSnapshot));
+    logger.info('AFTER success', { snapshot: afterSuccessSnapshot });
 
     // After payment succeeds, inflight should resolve
     // The outstanding balance (balance + inflight) should be ~0
@@ -741,4 +743,223 @@ test.describe('BLNK-02: Transaction Uniqueness', () => {
 
     logger.info('BLNK-02a PASS: Single BLNK transaction per bill reference');
   });
+});
+
+// =============================================================================
+// BLNK Transaction State Lifecycle (BLQ-003 through BLQ-007)
+// =============================================================================
+//
+// DB-only invariants on BLNK transaction statuses: APPLIED, INFLIGHT, QUEUED,
+// REJECTED, VOID. Added 2026-04-14 after Cian's review surfaced `QUEUED` as
+// undocumented. These tests do not do UI/move-in — they query the live BLNK
+// schema directly via executeSQL. Protect against:
+//   - Bill ingestion / manual pay switching to `skip_queue:false` (would
+//     introduce QUEUED where none is expected)
+//   - REJECTED status re-activating after being dormant since Nov 2025
+//
+// Intentionally NOT automated (race too tight; BLQ-006/007 prove lifecycle):
+//   - BLQ-001 (auto-pay txn observable in QUEUED)
+//   - BLQ-002 (QUEUED → INFLIGHT transition)
+
+interface StatusCountRow {
+  status: string;
+  count: string; // Postgres COUNT returns bigint as string
+}
+
+interface BalanceInflightRow {
+  balance_id: string;
+  inflight_debit_balance: string;
+  inflight_balance: string;
+}
+
+test.describe('BLNK Transaction State Lifecycle (DB-level)', () => {
+  test.describe.configure({ retries: 0 });
+
+  // BLQ-003: Bill ingestion txn NEVER in QUEUED ----------------------------
+  test(
+    'BLQ-003: bill ingestion transactions are never in QUEUED status',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async () => {
+      test.setTimeout(TIMEOUTS.DEFAULT * 2);
+
+      // Bill ingestion uses skip_queue:true (packages/ledgers/services/bill-ingestion.ts:~130)
+      // so bills bypass QUEUED entirely and go straight to APPLIED.
+      //
+      // Scan the last 90 days of bill references — any QUEUED result would
+      // indicate the bill ingestion path regressed to skip_queue:false.
+      const billTxnsInQueued = await executeSQL<BlnkTransaction>(
+        `SELECT transaction_id, reference, status, created_at
+         FROM blnk.transactions
+         WHERE reference LIKE $1
+           AND status = 'QUEUED'
+           AND created_at > NOW() - INTERVAL '90 days'
+         ORDER BY created_at DESC
+         LIMIT 10`,
+        ['%-bill-%']
+      );
+
+      logger.info(`BLQ-003: Bill ingestion QUEUED scan — found ${billTxnsInQueued.length}`);
+      expect(
+        billTxnsInQueued,
+        'Bill ingestion transactions must never appear in QUEUED — they use skip_queue:true'
+      ).toHaveLength(0);
+    }
+  );
+
+  // BLQ-004: Manual pay txn NEVER in QUEUED --------------------------------
+  test(
+    'BLQ-004: manual pay users (isAutoPaymentEnabled=false) have no payment txns in QUEUED',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async () => {
+      test.setTimeout(TIMEOUTS.DEFAULT * 2);
+
+      // Manual pay uses skip_queue:true
+      // (packages/utilities/src/payments/payment-processor.ts:~130 —
+      // `skip_queue: this.config.paymentType === "manual"`). First observable
+      // BLNK status is INFLIGHT, transitioning to APPLIED on success.
+      //
+      // Discriminator: CottageUsers.isAutoPaymentEnabled=false at the moment a
+      // payment was made. Since the column reflects current state (not
+      // historical), we look at recent (last 7 days) Payments by users who are
+      // CURRENTLY in manual mode — a reasonable proxy: most users don't flip
+      // between modes frequently. Restrict to last 7 days so the queue worker
+      // has long since transitioned any QUEUED txns.
+      const manualPaymentTxns = await executeSQL<{
+        reference: string;
+        status: string;
+        email: string;
+        payment_id: string;
+      }>(
+        `SELECT bt.reference, bt.status, cu.email, p.id AS payment_id
+         FROM "Payment" p
+         JOIN "CottageUsers" cu ON cu.id = p."paidBy"
+         JOIN blnk.transactions bt ON bt.transaction_id = p."ledgerTransactionID"
+         WHERE cu."isAutoPaymentEnabled" = false
+           AND p.created_at > NOW() - INTERVAL '7 days'
+           AND bt.status = 'QUEUED'
+         LIMIT 10`,
+        []
+      );
+
+      logger.info(
+        `BLQ-004: Manual-mode user Payments with QUEUED BLNK txns (last 7 days) — found ${manualPaymentTxns.length}`
+      );
+      expect(
+        manualPaymentTxns,
+        'Manual-mode users should never have payment txns observed in QUEUED after 7 days — ' +
+          'manual pay uses skip_queue:true and bypasses the queue entirely.'
+      ).toHaveLength(0);
+    }
+  );
+
+  // BLQ-005: checkTransactionStatus signature accepts QUEUED (type-level) --
+  test(
+    'BLQ-005: checkTransactionStatus signature accepts QUEUED (type-level)',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async () => {
+      // Type-level invariant — if signature regresses to exclude 'QUEUED',
+      // this file fails to compile. At runtime we exercise the method with a
+      // nonexistent reference to prove it's callable with 'QUEUED'.
+      const doesNotExist = `blq-005-sentinel-${Date.now()}`;
+
+      await expect(
+        blnkQueries.checkTransactionStatus(doesNotExist, 'QUEUED', 1)
+      ).rejects.toThrow(/expected QUEUED/);
+
+      logger.info('BLQ-005: checkTransactionStatus accepts QUEUED as expectedStatus');
+    }
+  );
+
+  // BLQ-006: REJECTED is dormant -------------------------------------------
+  test(
+    'BLQ-006: REJECTED status is dormant (no new transactions in the last 60 days)',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async () => {
+      // 51 REJECTED transactions exist in dev, the most recent on 2025-11-05.
+      // No active code path creates REJECTED. 60-day rolling window keeps the
+      // assertion meaningful as time passes.
+      const recentRejected = await executeSQL<BlnkTransaction>(
+        `SELECT transaction_id, reference, status, created_at
+         FROM blnk.transactions
+         WHERE status = 'REJECTED'
+           AND created_at > NOW() - INTERVAL '60 days'
+         ORDER BY created_at DESC
+         LIMIT 10`,
+        []
+      );
+
+      logger.info(`BLQ-006: Recent (last 60 days) REJECTED scan — found ${recentRejected.length}`);
+      expect(
+        recentRejected,
+        'REJECTED should remain dormant. New REJECTED transactions indicate a code path change — update docs + test plan.'
+      ).toHaveLength(0);
+
+      // Historical set sanity check — 51 pre-Nov entries should still exist.
+      const historicalCounts = await executeSQL<StatusCountRow>(
+        `SELECT status, COUNT(*)::text AS count
+         FROM blnk.transactions
+         WHERE status = 'REJECTED'
+         GROUP BY status`,
+        []
+      );
+      const total = historicalCounts.length === 0 ? 0 : Number(historicalCounts[0].count);
+      logger.info(`BLQ-006: Total REJECTED transactions (all-time) — ${total}`);
+      expect(total, 'Historical REJECTED records should not disappear').toBeGreaterThanOrEqual(1);
+    }
+  );
+
+  // BLQ-007: Balance calc treats QUEUED as INFLIGHT ------------------------
+  test(
+    'BLQ-007: QUEUED txns contribute to inflight_debit_balance (treated as INFLIGHT)',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async () => {
+      test.setTimeout(TIMEOUTS.DEFAULT * 2);
+
+      // services/packages/ledgers/services/balance.ts:~255 explicitly maps
+      // QUEUED → INFLIGHT for balance calculations. A QUEUED debit should
+      // therefore be reflected in inflight fields, exactly like INFLIGHT.
+      const balancesWithQueued = await executeSQL<{
+        source: string;
+        destination: string;
+        amount: string;
+        reference: string;
+      }>(
+        `SELECT source, destination, amount::text, reference
+         FROM blnk.transactions
+         WHERE status = 'QUEUED'
+           AND created_at > NOW() - INTERVAL '30 days'
+         ORDER BY created_at DESC
+         LIMIT 5`,
+        []
+      );
+
+      if (balancesWithQueued.length === 0) {
+        logger.info('BLQ-007: No QUEUED transactions in last 30 days — skipping');
+        test.skip(true, 'No live QUEUED transactions to verify. Re-run after auto-pay activity.');
+        return;
+      }
+
+      const sample = balancesWithQueued[0];
+      logger.info(
+        `BLQ-007: Sampling QUEUED txn — source=${sample.source}, amount=${sample.amount}, reference=${sample.reference}`
+      );
+
+      const sourceBalance = await executeSQLSingle<BalanceInflightRow>(
+        `SELECT balance_id, inflight_debit_balance::text, inflight_balance::text
+         FROM blnk.balances
+         WHERE balance_id = $1`,
+        [sample.source]
+      );
+
+      const inflightDebit = Number(sourceBalance.inflight_debit_balance);
+      const inflightNet = Number(sourceBalance.inflight_balance);
+
+      const touchesInflight = inflightDebit !== 0 || inflightNet !== 0;
+      expect(
+        touchesInflight,
+        `Balance ${sample.source} has a QUEUED debit but its inflight fields are all zero. ` +
+          `This suggests balance calc does NOT treat QUEUED as INFLIGHT anymore — regression.`
+      ).toBe(true);
+    }
+  );
 });

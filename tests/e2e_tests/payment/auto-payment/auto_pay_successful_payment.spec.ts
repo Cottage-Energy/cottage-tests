@@ -2,8 +2,9 @@
 import { test, expect } from '../../../resources/page_objects';
 import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
 import { AutoPaymentChecks } from '../../../resources/fixtures/payment';
-import { utilityQueries } from '../../../resources/fixtures/database';
+import { utilityQueries, accountQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import { AdminApi } from '../../../resources/api/admin_api';
 import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -11,7 +12,7 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
 
 let AdminApiContext: APIRequestContext;
 const paymentUtilities = new AutoPaymentChecks();
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 
 //test.beforeAll(async ({playwright,page}) => {
@@ -39,7 +40,9 @@ test.beforeEach(async ({ playwright, page },testInfo) => {
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    if (MoveIn?.pgUserEmail) {
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    }
     await page.close();
 });
   
@@ -340,5 +343,54 @@ test.describe('Valid Bank Auto Payment', () => {
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, MoveIn, PGuserUsage);
     });
 
+});
+
+// =============================================================================
+// PR-005b: Delinquency cleared by auto-pay (Cian review 2026-04-14)
+// =============================================================================
+// Same invariant as PR-005a (see manual_pay_successful_payment.spec.ts) but
+// via the auto-pay code path. PaymentProcessor.recalculateDelinquency() fires
+// for both paths — this test proves auto-pay doesn't regress.
+test.describe('PR-005b: Delinquency cleared by auto-pay', () => {
+    test.describe.configure({ mode: 'serial' });
+
+    test(
+        'COMED electric — isDelinquent=true + delinquentDays=30 → cleared after auto-pay cycle',
+        { tag: [TEST_TAGS.PAYMENT] },
+        async ({ overviewPage, page }) => {
+            test.setTimeout(1800000);
+
+            const PGuserUsage = await generateTestUserData();
+
+            await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', null);
+            await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+            MoveIn = await newUserMoveInAutoPayment(page, 'COMED', null, true, true);
+
+            await page.goto('/sign-in');
+            await overviewPage.Setup_Password();
+            await overviewPage.Accept_New_Terms_And_Conditions();
+            await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+            await overviewPage.Enter_Auto_Payment_Details(
+                PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC,
+                PGuserUsage.Country, PGuserUsage.Zip
+            );
+
+            const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+            await accountQueries.setElectricDelinquent(electricAccountId, 30);
+
+            const before = await accountQueries.getElectricDelinquency(electricAccountId);
+            expect(before.isDelinquent, 'delinquency seed failed').toBe(true);
+
+            // Full auto-pay success flow: inserts bill, approves, waits for
+            // balance-ledger-batch + stripe-capture crons, asserts succeeded.
+            await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
+
+            await accountQueries.waitForElectricDelinquencyCleared(electricAccountId, 30, 2000);
+
+            const after = await accountQueries.getElectricDelinquency(electricAccountId);
+            expect(after.isDelinquent, 'auto-pay should clear isDelinquent').toBe(false);
+            expect(after.delinquentDays, 'auto-pay should zero delinquentDays').toBe(0);
+        }
+    );
 });
 

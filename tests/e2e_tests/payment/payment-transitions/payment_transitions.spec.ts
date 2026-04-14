@@ -14,6 +14,7 @@ import {
   blnkQueries,
 } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import { logger } from '../../../resources/utils/logger';
 import { supabase } from '../../../resources/utils/supabase';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -28,7 +29,7 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * - P2-08: Payment method switch — Card to Bank (no fee)
  * - P2-09: Payment method switch — Bank to Card (3% fee)
  */
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling('autotest', true);

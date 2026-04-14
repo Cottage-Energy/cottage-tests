@@ -1132,18 +1132,30 @@ export class MoveInPage{
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
 
-        // Debug: capture page state if title not found quickly
+        // Snapshot state at entry — useful for pinpointing whether we arrived at
+        // the payment step at all, vs. got stuck at OTP / "creating account" /
+        // an intermediate confirmation. Logged BEFORE the 90s wait so failure
+        // logs include both the entry state and the post-wait state.
+        log.debug('Skip_Payment_Details entry', {
+            url: this.page.url(),
+            visibleHeadings: await this.page.locator('h1, h2').allTextContents().catch(() => []),
+        });
+
         try {
             await expect(this.Move_In_Payment_Details_Title).toBeVisible({timeout:90000});
         } catch (error) {
             const currentUrl = this.page.url();
             const pageTitle = await this.page.title();
-            log.error('Skip_Payment_Details: Payment title NOT found', {
+            const visibleHeadings = await this.page.locator('h1, h2, h3').allTextContents().catch(() => []);
+            const visibleButtons = await this.page.getByRole('button').allTextContents().catch(() => []);
+            log.error('Skip_Payment_Details: Payment title NOT found after 90s', {
                 url: currentUrl,
                 title: pageTitle,
-                bodyText: await this.page.locator('body').textContent().catch(() => 'N/A'),
+                visibleHeadings,
+                visibleButtons,
+                bodyText: (await this.page.locator('body').textContent().catch(() => 'N/A'))?.slice(0, 500),
             });
-            await this.page.screenshot({ path: 'debug-skip-payment-stuck.png' }).catch(() => {});
+            await this.page.screenshot({ path: 'debug-skip-payment-stuck.png', fullPage: true }).catch(() => {});
             throw error;
         }
 

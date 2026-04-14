@@ -204,10 +204,18 @@ export class BlnkQueries {
 
   /**
    * Poll until a transaction with the given reference reaches the expected status.
+   *
+   * Note on QUEUED: BLNK transactions created with `skip_queue: false` (auto-pay path)
+   * start in QUEUED before the BLNK queue worker transitions them to INFLIGHT. Bill
+   * ingestion and manual pay use `skip_queue: true` and never enter QUEUED. The
+   * polling loop here tolerates transient QUEUED naturally — callers should still
+   * assert against the terminal expected state (APPLIED/INFLIGHT/VOID). QUEUED is
+   * exposed in the signature so a caller can explicitly wait on QUEUED if diagnosing
+   * queue-worker behavior.
    */
   async checkTransactionStatus(
     reference: string,
-    expectedStatus: 'APPLIED' | 'INFLIGHT' | 'VOID',
+    expectedStatus: 'APPLIED' | 'INFLIGHT' | 'QUEUED' | 'VOID',
     maxRetries: number = RETRY_CONFIG.BILL_PROCESSING_MAX_RETRIES
   ): Promise<BlnkTransaction> {
     let retries = 0;

@@ -757,6 +757,36 @@ export class OverviewPage {
         await submitBtn.click();
     }
 
+    /**
+     * Select the "Other Amount" radio in the Pay Bill modal and enter a partial
+     * amount. Verified live (2026-04-14): modal radiogroup has "Total Amount Due"
+     * (default) + "Other Amount" which reveals a `$` textbox when selected.
+     * Transaction Fee + Total recompute dynamically on input.
+     *
+     * Use this for PR-005c-style partial-payment tests. Amount is in dollars
+     * (e.g., pass 40 to pay $40). Caller is responsible for choosing an amount
+     * less than the outstanding balance.
+     */
+    async Enter_Partial_Pay_Amount(amountDollars: number): Promise<void> {
+        const modal = this.page.getByRole('dialog');
+        await expect(modal).toBeVisible({ timeout: 30000 });
+
+        const otherAmountRadio = modal.getByRole('radio', { name: 'Other Amount' });
+        await expect(otherAmountRadio).toBeVisible({ timeout: 10000 });
+        await otherAmountRadio.click();
+
+        // The $ textbox appears adjacent to the "Other Amount" label. Radix
+        // usually doesn't give it a name, so we scope to the textbox inside
+        // the amount radiogroup.
+        const amountInput = modal.getByRole('textbox').last();
+        await expect(amountInput).toBeVisible({ timeout: 10000 });
+        await amountInput.fill(String(amountDollars));
+
+        // Wait for fee/total recompute — dollar amount typed should cause
+        // Transaction Fee to update from $0.00 to a non-zero value.
+        await this.page.waitForTimeout(500);
+    }
+
     async Check_Payment_Failed_Message_In_Modal(): Promise<void> {
         const failedMsg = this.page.getByText('Your last payment didn\'t go through').first();
         await expect(failedMsg).toBeVisible({ timeout: 30000 });

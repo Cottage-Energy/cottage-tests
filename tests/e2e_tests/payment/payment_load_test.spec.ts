@@ -2,10 +2,11 @@
 import { newUserMoveInAutoPayment, generateTestUserData, CleanUp, FastmailActions } from '../../resources/fixtures';
 import { accountQueries, billQueries } from '../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../resources/constants';
+import type { MoveInResult } from '../../resources/types';
 import { AdminApi } from '../../resources/api/admin_api';
 import environmentBaseUrl from '../../resources/utils/environmentBaseUrl';
 import * as PaymentData from '../../resources/data/payment-data.json';
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 
 //test.beforeAll(async ({playwright,page}) => {

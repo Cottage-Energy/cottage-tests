@@ -16,7 +16,8 @@ export { accountQueries, billQueries, paymentQueries, blnkQueries, userQueries }
 export { supabase } from '../../utils/supabase';
 export { FastmailActions } from '../fastmail_actions';
 export { logger } from '../../utils/logger';
-export * as PaymentData from '../../data/payment-data.json';
+import PaymentDataJson from '../../data/payment-data.json';
+export { PaymentDataJson as PaymentData };
 export type { MoveInResult } from '../../types';
 export type { TestUser } from '../../types';
 
@@ -64,6 +65,9 @@ export async function getPaymentDetailsSingleChargeAccount(MoveIn: MoveInResult)
     const cottageUserId = MoveIn.cottageUserId;
     const electricAccountId = await accountQueries.getElectricAccountId(MoveIn.cottageUserId);
     const gasAccountId = await accountQueries.getGasAccountId(MoveIn.cottageUserId);
+    if (!electricAccountId || !gasAccountId) {
+        throw new Error(`Single CA helper requires both accounts. electric=${electricAccountId}, gas=${gasAccountId}`);
+    }
     const chargeAccountId = await accountQueries.getCheckChargeAccount(electricAccountId, gasAccountId);
 
     return {
@@ -87,6 +91,9 @@ export async function getPaymentDetailsMultipleChargeAccounts(MoveIn: MoveInResu
     const cottageUserId = MoveIn.cottageUserId;
     const electricAccountId = await accountQueries.getElectricAccountId(MoveIn.cottageUserId);
     const gasAccountId = await accountQueries.getGasAccountId(MoveIn.cottageUserId);
+    if (!electricAccountId || !gasAccountId) {
+        throw new Error(`Multi CA helper requires both accounts. electric=${electricAccountId}, gas=${gasAccountId}`);
+    }
     const electricChargeAccountId = await accountQueries.getCheckChargeAccount(electricAccountId, null);
     const gasChargeAccountId = await accountQueries.getCheckChargeAccount(null, gasAccountId);
 

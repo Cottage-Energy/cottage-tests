@@ -322,7 +322,7 @@ test.describe('3DS Card — Auto-Pay Failure', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('3DS card auto-pay fails — cannot do 3DS in background', {
-    tag: ['@regression6', TEST_TAGS.PAYMENT],
+    tag: [TEST_TAGS.REGRESSION6, TEST_TAGS.PAYMENT],
   }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage }) => {
     test.setTimeout(1800000);
 
