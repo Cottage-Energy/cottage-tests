@@ -652,6 +652,7 @@ test.describe('PR-005a: Delinquency cleared by manual payment', () => {
       MoveIn = await newUserMoveInManualPayment(page, 'COMED', null, true, true);
 
       await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
       await overviewPage.Accept_New_Terms_And_Conditions();
 
       const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -709,6 +710,7 @@ test.describe('PR-005f: Multi-CA delinquency independence', () => {
       MoveIn = await newUserMoveInManualPayment(page, 'COMED', 'NGMA', true, false);
 
       await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
       await overviewPage.Accept_New_Terms_And_Conditions();
 
       const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -765,6 +767,7 @@ test.describe('PR-005g: GasAccount delinquency cleared by manual payment', () =>
       MoveIn = await newUserMoveInManualPayment(page, null, 'DUKE', true, true);
 
       await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
       await overviewPage.Accept_New_Terms_And_Conditions();
 
       const gasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);

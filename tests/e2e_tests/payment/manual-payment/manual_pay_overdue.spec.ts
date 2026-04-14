@@ -730,6 +730,7 @@ test.describe('PR-005c: Partial payment keeps delinquency', () => {
       MoveIn = await newUserMoveInManualPayment(page, 'COMED', null, true, true);
 
       await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
       await overviewPage.Accept_New_Terms_And_Conditions();
 
       const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
@@ -799,6 +800,7 @@ test.describe('PR-005e: Partial below $1 threshold clears delinquency', () => {
       MoveIn = await newUserMoveInManualPayment(page, 'COMED', null, true, true);
 
       await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
       await overviewPage.Accept_New_Terms_And_Conditions();
 
       const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);

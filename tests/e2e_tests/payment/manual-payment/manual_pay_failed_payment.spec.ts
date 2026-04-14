@@ -593,6 +593,7 @@ test.describe('PR-005h: Failed payment does NOT clear delinquency', () => {
       );
 
       await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
       await overviewPage.Accept_New_Terms_And_Conditions();
 
       const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
