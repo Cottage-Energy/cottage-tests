@@ -36,7 +36,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 ### Read-Only Source of Truth Rule (enforced — all external resources)
 **NEVER modify, overwrite, or alter content in external resources unless explicitly instructed.** This includes:
-- **Linear ticket descriptions** — owned by the creator. Post QA findings as **comments only** (use GraphQL `commentCreate`, NOT `update_issue` with description).
+- **Linear ticket descriptions** — owned by the creator. Post QA findings as **comments only** (use GraphQL `commentCreate`, NOT `update_issue` with description). To edit an existing QA comment (e.g., consolidated retest status), use `commentUpdate(id, input: { body })` — it's OK to edit your OWN comments to keep a consolidated status current.
 - **Linear ticket status** — never move status unless explicitly told to
 - **Notion docs** — read-only reference. Add comments or create new pages, don't edit existing content.
 - **Figma designs** — observe and screenshot, don't modify
@@ -310,11 +310,12 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 ## Environments
 Environment base URLs are configured in `tests/resources/utils/environmentBaseUrl.ts`. Tests select the environment via the `ENVIRONMENT` env var.
 
-| Environment | When to use |
-|-------------|-------------|
-| `dev` | Default for local runs and most CI runs |
-| `staging` | Pre-release validation, `/test-report` release checks |
-| `production` | Read-only verification only — never run destructive tests |
+| Environment | URL | When to use |
+|-------------|-----|-------------|
+| `dev` | `https://dev.publicgrid.energy` | **Next.js** deployment — default for local runs and most CI runs |
+| `tanstack-dev` | `https://tanstack-dev.onepublicgrid.com` | Dedicated **TanStack Start** preview for ENG-2188 migration QA. Has its own Supabase auth — dev credentials (e.g., `pgtest+reminder002`) may not work here. Confirm via absence of `_next/static` bundles + presence of TanStack devtools. |
+| `staging` | `https://staging.*` | Pre-release validation, `/test-report` release checks |
+| `production` | `https://onepublicgrid.com` | Read-only verification only — never run destructive tests |
 
 ## CI/CD
 Tests run via GitHub Actions (`main-workflow.yml`). Scheduled regressions run daily at 5 AM UTC.

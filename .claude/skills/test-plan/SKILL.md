@@ -285,14 +285,20 @@ For each scenario, define:
 When a Linear ticket was used as input (i.e., an `issueId` is available from Step 1):
 
 **IMPORTANT**: NEVER modify the ticket description. Post the test plan as a **COMMENT** only. The `@mseep/linear-mcp` package does NOT have a comment tool — use the Linear GraphQL API directly:
+
+**This step is REQUIRED, not optional.** If `mcp__linear__get_issue` returned 401 or any auth error, that does NOT excuse skipping the comment — fall back to the GraphQL approach below. Only skip if the user explicitly asked you to (or if no Linear ticket exists for this work). The comment is how the rest of the team learns QA coverage exists; silently skipping it makes the work invisible.
+
+**Env var trap when running Node:** `source .env` only sets bash shell vars — child processes (`node`) get nothing. Use `set -a; source .env; set +a` so `process.env.LINEAR_API_KEY` is actually populated. Verify with `node -e "console.log(!!process.env.LINEAR_API_KEY)"` if a mutation returns 401 despite the key being correct.
+
 ```javascript
 // Post comment via Linear GraphQL API (NOT update_issue)
+// Resolve ENG-XXXX → UUID first via the issue query, then commentCreate with the UUID.
 fetch('https://api.linear.app/graphql', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json', 'Authorization': process.env.LINEAR_API_KEY },
   body: JSON.stringify({
-    query: 'mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success } }',
-    variables: { issueId: '<issue-uuid>', body: commentMarkdown }
+    query: 'mutation($input: CommentCreateInput!) { commentCreate(input: $input) { success comment { id url } } }',
+    variables: { input: { issueId: '<issue-uuid>', body: commentMarkdown } }
   })
 });
 ```
@@ -379,3 +385,9 @@ After completing this skill, check: did any step not match reality? Did a tool n
 ### Session: 2026-03-13 (ENG-2402 Connect Account)
 - **Missed ticket comments and linked tickets**: The original test plan was built from the main ticket description + PR diff only. The user had to explicitly ask to check linked tickets (ENG-2365, ENG-2363, ENG-2370, ENG-2371, ENG-2372) which contained critical ACs that expanded the test plan from ~85 to 108 cases. Added `mcp__linear__list_comments` step and explicit "follow linked tickets" instruction to Step 1.
 - **Database context was essential**: Understanding `isConnectReady`, `isConnectAccount`, `cottageConnectUserType`, and account status fields was critical for writing accurate test preconditions. The DB context step worked well once we queried `information_schema.columns` first.
+
+### Session: 2026-04-14 (ENG-2687 Moved Direct to Consumer)
+- **Treating Linear MCP 401 as "skip the comment" was wrong.** When `mcp__linear__get_issue` returned 401, I saved the test plan to disk but skipped posting the summary comment. The user had to explicitly call this out ("why didn't you comment on the ticket?"). The skill DOES say to use the GraphQL API directly when the MCP can't post — I read it but treated MCP failure as authorization to skip rather than as the trigger to fall back. Tightened Step 6 to make this REQUIRED, not optional.
+- **`source .env` doesn't pass vars to Node** — caught me twice in the same session. `LINEAR_API_KEY` was set in bash but `process.env.LINEAR_API_KEY` was `undefined` in Node child processes, so the `commentCreate` mutation got an empty `Authorization` header → 401. Fix: `set -a; source .env; set +a`. Same trap applies to FASTMAIL_API_KEY, MOVED_API_KEY, etc. Documented in Step 6 + saved to memory as `feedback_env_export_for_node.md`.
+- **API path probing surfaced 8 doc bugs in one session.** Spec said `/api/v1/moved/embed`; reality is `/v1/...` (404 on the documented path). Always `curl` the documented path FIRST before writing types — the 30-second probe caught discrepancies that would have wasted hours of test rewrite. Added emphasis to the "Probe the live API before finalizing test cases" instruction in the API Spec section of Step 1.
+- **Spec-vs-reality table is high-value output.** Documenting D1..D8 + B1..B5 in the test plan let me file all 8 as `[IMPROVEMENT]` tickets with concrete evidence, and gave the backend team a single source of truth instead of trickling discoveries one by one. The format (`# | Type | Doc says | Reality | Severity`) worked well — keeping it as a template.

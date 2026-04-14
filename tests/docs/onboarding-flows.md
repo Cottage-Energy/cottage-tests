@@ -195,6 +195,57 @@ The Light address search has a fallback system when users can't find their addre
 | `txtest` | Encourage conversion flow for Light/TX dereg. **Note**: Address search does ESI ID lookup — selecting an ESI ID routes to Light flow (`/move-in/light`), NOT `welcome-encouraged.tsx`. Use "Can't find your address?" → manual entry to reach TX-DEREG encouraged conversion page. | `useEncourageConversion = TRUE`, ElectricCompany = `TX-DEREG` |
 | `moved1903` | Encouraged conversion, NO demand response provider. Useful as negative test for DR toggle visibility. Has extra "quick questions" step (how long staying, employment, programs) between welcome and About You. | `useEncourageConversion = TRUE`, `shouldShowDemandResponse = TRUE`, `demandResponseProviderID = NULL` |
 
+## Partner Attribution
+
+Partner attribution determines which external partner gets credit for a user — used for commercial commitments (referral fees), analytics dashboards, and partner-specific reporting. It's separate from partner theming.
+
+### Tables involved
+
+| Table | Key columns | Purpose |
+|-------|-------------|---------|
+| `MoveInPartner` | `id`, `name`, `isThemed`, `useEncouragedConversion`, `imgURL`, `themeID` | Registered external partners (Moved, Venn, Renew, Funnel, Simpson, etc.) |
+| `Referrals` | `referred` (→ `CottageUsers.id`), `referredBy` (→ `MoveInPartner.id`), `referralStatus` | Links each completed user registration to exactly one partner |
+| `Property` | `externalLeaseID` | Partner-provided unique identifier (e.g., Moved's `internalID` → embed URL `leaseID` → this column). Preserved even when `Referrals.referredBy` falls back. |
+
+### How attribution is resolved (current state, 2026-04-14)
+
+Attribution flows from the `shortCode` URL param to the `MoveInPartner` ID at registration time. The resolver is **not a simple 1:1 map** — different shortcodes resolve to the same partner, and only registered shortcodes resolve at all.
+
+| shortCode (in URL) | Resolves to MoveInPartner | Notes |
+|--------------------|---------------------------|-------|
+| `autotest`, `pgtest`, `txtest` | Varies by Building config | Resolved via `Building.shortCode` → `MoveInPartner` join |
+| `moved5439797test`, `venn73458test`, `funnel4324534`, `renew4543665999` | Moved / Venn / Funnel / Renew | Registered partner shortcodes per the ENG-2588 RE A/B experiment setup |
+| `moved` (D2C embed API output) | **Simpson (fallback) — BUG (ENG-2694)** | Not registered; should resolve to Moved. Until fixed, filter by `Property.externalLeaseID LIKE 'moved-%'` to recover D2C users from analytics. |
+| Unknown / missing | Simpson (dev default) | Fallback partner when no match; `isThemed=false, useEncouragedConversion=false` |
+
+### Verification query
+
+Use this when testing any partner-integration flow to confirm the user is attributed correctly:
+
+```sql
+SELECT
+  cu.email,
+  mip.name AS attributed_partner,
+  r."referralStatus",
+  p."externalLeaseID",
+  p."unitNumber"
+FROM "Referrals" r
+JOIN "CottageUsers" cu ON cu.id = r.referred
+LEFT JOIN "ElectricAccount" ea ON ea."cottageUserID" = cu.id
+LEFT JOIN "Property" p ON p."electricAccountID" = ea.id
+JOIN "MoveInPartner" mip ON mip.id = r."referredBy"
+WHERE cu.email = '<test user email>';
+```
+
+**Attribution correctness rule**: `attributed_partner` must match the expected partner name (e.g., "Moved" for Moved-driven flows). "Simpson" in a partner-integration test = attribution bug, not success.
+
+### The `externalLeaseID` fallback
+
+Partner D2C integrations that pass an `internalID` in their API payload get it stored on `Property.externalLeaseID`. This is independent of `Referrals.referredBy` and survives attribution-resolver failures. It's a useful trace for:
+- Cross-referencing PG-side users back to partner-side records
+- Filtering partner-specific cohorts in analytics when `Referrals.referredBy` is wrong (see ENG-2694 for an active example)
+- Verifying data integrity even when the partner link is broken
+
 ## Test Data Quick Reference
 
 | Data Point | Value | Notes |

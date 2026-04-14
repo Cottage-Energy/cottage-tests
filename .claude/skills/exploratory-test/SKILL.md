@@ -84,6 +84,26 @@ After each significant interaction, `mcp__playwright__browser_snapshot` to see t
 - **Network verification** — `mcp__playwright__browser_network_requests` to check API calls succeeded
 - **Console check** — `mcp__playwright__browser_console_messages` for JS errors
 
+#### d2. Partner attribution verification (REQUIRED when testing partner integrations)
+When the feature under test is a partner-driven flow — partner shortcodes (`autotest`, `pgtest`, `venn73458test`, `moved5439797test`, etc.), D2C embed APIs (Moved D2C, future Renew/Venn D2C), or anything that claims to tie a user to an external partner — you MUST complete the flow end-to-end and verify partner attribution at the DB level. "The theme renders correctly" is not evidence of correct attribution.
+
+**Minimum checks:**
+1. Complete the move-in / registration flow through to the success screen (non-billing path is fastest)
+2. Query `Referrals` joined to `MoveInPartner`:
+   ```sql
+   SELECT mip.name AS attributed_partner, r."referralStatus", p."externalLeaseID"
+   FROM "Referrals" r
+   JOIN "CottageUsers" cu ON cu.id = r.referred
+   LEFT JOIN "ElectricAccount" ea ON ea."cottageUserID" = cu.id
+   LEFT JOIN "Property" p ON p."electricAccountID" = ea.id
+   JOIN "MoveInPartner" mip ON mip.id = r."referredBy"
+   WHERE cu.email = '<test user email>';
+   ```
+3. Assert `attributed_partner` matches the expected partner name — NOT a fallback partner (Simpson, etc.).
+4. If a `leaseID` / `externalLeaseID` was part of the input, verify it's stored on `Property.externalLeaseID`.
+
+**Why this matters:** the UI can render the correct partner theme (logo, colors, copy) while the backend attribution falls back to a default partner. Both are wired through separate code paths. A theme-rendering pass tells you nothing about commercial attribution correctness. Learned from ENG-2687 — Moved D2C's `shortCode=moved` rendered the Moved theme perfectly but wrote `Referrals.referredBy = "Simpson"` for every single test user (filed as ENG-2694 Critical). The bug would have shipped if the exploratory session had stopped at "theme looks right".
+
 #### e. Compare against Figma (if design link provided)
 - `mcp__figma__get_screenshot` for the expected design
 - `mcp__playwright__browser_take_screenshot` for the live app at matching viewport
@@ -788,3 +808,9 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **DB-level testing validates business logic when UI is blocked**: When PG-Admin session expired, testing case-sensitive ID behavior via `INSERT INTO "UtilityCompany"` directly in Supabase was faster and more conclusive than UI testing. This is a reusable pattern: for CRUD pages, test constraint/validation logic at the DB level, then test UX/feedback at the UI level.
 - **Create form defaults vs DB column defaults are separate concerns**: The PG-Admin create form uses its own defaults (e.g., `isSSNRequired=false`, thresholds `30/30`) that differ from DB column defaults (`isSSNRequired=true`, thresholds `5/25`). Note these as observations, not bugs — the form explicitly sets all values on submit. But flag when form defaults contradict business expectations (e.g., SSN should be required by default for most utilities).
 - **Unhandled 409 causes React error #520**: TanStack server function returning 409 (duplicate ID) wasn't caught by the frontend error handler. The React boundary caught it as error #520, and the dialog closed silently with no user feedback. When testing CRUD create flows, always test duplicate/conflict scenarios — 409 handling is frequently missed.
+
+### Session: 2026-04-14 (ENG-2687 Moved D2C — Critical attribution bug found only after gap-test prompt)
+- **Partner theme rendering ≠ partner attribution.** The most valuable finding of the session (ENG-2694 Critical) was only surfaced because Christian explicitly asked "did we test the DB too?" after the initial exploratory session. Without that prompt, the ticket would have shipped with a green 49/49 API test count while silently mis-attributing every Moved D2C user to the fallback partner "Simpson". The UI rendered the Moved theme flawlessly the entire time. Added Phase 1d2 (Partner attribution verification) to make this a required check for any partner-integration test, not an optional add-on.
+- **The `externalLeaseID` trace is the tell.** Moved D2C users had `externalLeaseID` populated (from the API's `internalID` → `leaseID` URL param) but `Referrals.referredBy = Simpson`. The 489 correctly-attributed Moved users in the same 30-day window all had `externalLeaseID = NULL` (they came via `moved5439797test` shortcode, not the D2C API). Comparing these two populations in one query is a reliable way to spot split-code-path attribution bugs — always check "does the real system produce the same shape of data via both the legacy and new paths?"
+- **Non-billing path is the fast lane for end-to-end testing.** Walked through Welcome → Address → Utility Setup → "I will do the setup myself" → Submit → "Awesome!" in ~5 minutes total. Skipping Stripe iframe + About You step (because Moved prefilled most fields via URL params) made DB verification practical in a single session. For any partner integration where the question is "does attribution write correctly", always use the non-billing path unless billing itself is the thing under test.
+- **Direct-page postMessage capture fails silently.** Installing `window.parent.postMessage` interceptor on a direct `browser_navigate` to the embed URL captured 0 events at flow completion. This doesn't prove postMessage is unimplemented — it may gate on `window.self !== window.top`. To test postMessage properly, need a real iframe parent harness. Attempted a local Python HTTP server approach; `cd /tmp && python3 -m http.server &` in bash had the server-current-dir not match `/tmp` (Git Bash path resolution quirk on Windows). Deferred postMessage testing until backend documents the contract + provides a known-good parent harness example.

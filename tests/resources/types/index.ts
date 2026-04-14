@@ -8,3 +8,4 @@ export * from './database.types';
 export * from './register.types';
 export * from './apiV2.types';
 export * from './alertsEnrollment.types';
+export * from './movedEmbed.types';

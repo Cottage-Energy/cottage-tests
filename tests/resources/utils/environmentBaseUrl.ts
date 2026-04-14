@@ -6,6 +6,7 @@ export default{
     dev:{
         admin_api:'https://ojaryxuxdh.execute-api.us-east-1.amazonaws.com',
         home:'https://dev.publicgrid.energy',
+        tanstack:'https://tanstack-dev.onepublicgrid.com',
         pg_admin:'https://dev.publicgrid.co',
         api_v2:'https://api-dev.publicgrd.com/v2',
     },
