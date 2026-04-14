@@ -110,6 +110,26 @@ export class OverviewPage {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
 
+        // Dismiss "Set up your new password" dialog if present — it blocks
+        // the terms modal and all other interactions. Supabase triggers this
+        // for some freshly-created users. Removing via DOM is safe because
+        // tests that need to TEST the password flow use Setup_Password() explicitly.
+        try {
+            const passwordDialog = this.page.locator('[role="alertdialog"]').filter({
+                hasText: /new password|Set up your/,
+            });
+            if (await passwordDialog.isVisible({ timeout: 2000 })) {
+                await this.page.evaluate(() => {
+                    document.querySelectorAll('[role="alertdialog"]').forEach(d => {
+                        if (d.textContent?.includes('new password')) d.remove();
+                    });
+                });
+                await this.page.waitForTimeout(500);
+            }
+        } catch {
+            // No password dialog — proceed normally
+        }
+
         while (retries < maxRetries) {
             vis = await this.Overview_New_Terms_Modal_Title.isVisible();
             if (vis == true) {
@@ -118,8 +138,6 @@ export class OverviewPage {
             retries++;
             await new Promise(resolve => setTimeout(resolve, 500)); // wait for 0.5 seconds
         }
-        
-        console.log("Updated Terms:",vis);
 
         if(vis == true){
             await expect(this.Overview_New_Terms_Modal_Title).toBeVisible({timeout:30000});
