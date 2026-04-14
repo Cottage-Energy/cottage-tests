@@ -110,21 +110,15 @@ export class OverviewPage {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForLoadState('load');
 
-        // Dismiss "Set up your new password" dialog if present — it blocks
-        // the terms modal and all other interactions. Supabase triggers this
-        // for some freshly-created users. Removing via DOM is safe because
-        // tests that need to TEST the password flow use Setup_Password() explicitly.
+        // Handle "Set up your new password" dialog if present — Supabase now
+        // triggers this for ALL freshly-created move-in users in dev. Instead of
+        // DOM-removing (which doesn't survive page reloads), we actually complete
+        // the password setup. This persists the password to Supabase, clearing
+        // the reset flag permanently.
         try {
-            const passwordDialog = this.page.locator('[role="alertdialog"]').filter({
-                hasText: /new password|Set up your/,
-            });
-            if (await passwordDialog.isVisible({ timeout: 2000 })) {
-                await this.page.evaluate(() => {
-                    document.querySelectorAll('[role="alertdialog"]').forEach(d => {
-                        if (d.textContent?.includes('new password')) d.remove();
-                    });
-                });
-                await this.page.waitForTimeout(500);
+            const passwordTitle = this.page.getByText(/Set up your new password|create a new password/i);
+            if (await passwordTitle.isVisible({ timeout: 3000 })) {
+                await this.Setup_Password();
             }
         } catch {
             // No password dialog — proceed normally
