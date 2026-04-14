@@ -787,6 +787,36 @@ export class OverviewPage {
         await this.page.waitForTimeout(500);
     }
 
+    // ─── AutopayPaymentModal ───
+    // Appears when a user with outstanding balance + VALID card enables auto-pay.
+    // Verified live 2026-04-14: triggered by clicking "Enable" button in TIP section
+    // on the overview page. Renders as an INLINE card (NOT dialog role).
+    // Contents: "Thanks for enabling autopay!" + "Outstanding balance: $XX.XX"
+    //           + "Do it later" button + "Pay now" button
+    // Account page path (switch toggle) may render as dialog — untested.
+
+    async Check_Autopay_Payment_Modal_Visible(): Promise<void> {
+        const heading = this.page.getByText('Thanks for enabling autopay!');
+        await expect(heading).toBeVisible({ timeout: 30000 });
+    }
+
+    async Click_Autopay_Pay_Now(): Promise<void> {
+        const payNow = this.page.getByRole('button', { name: /pay now/i });
+        await expect(payNow).toBeVisible({ timeout: 10000 });
+        await payNow.click();
+    }
+
+    async Click_Autopay_Do_It_Later(): Promise<void> {
+        const doItLater = this.page.getByRole('button', { name: /do it later/i });
+        await expect(doItLater).toBeVisible({ timeout: 10000 });
+        await doItLater.click();
+    }
+
+    async Check_Autopay_Outstanding_Amount(expectedDollars: string): Promise<void> {
+        const balanceText = this.page.getByText(`Outstanding balance: $${expectedDollars}`);
+        await expect(balanceText).toBeVisible({ timeout: 10000 });
+    }
+
     async Check_Payment_Failed_Message_In_Modal(): Promise<void> {
         const failedMsg = this.page.getByText('Your last payment didn\'t go through').first();
         await expect(failedMsg).toBeVisible({ timeout: 30000 });
