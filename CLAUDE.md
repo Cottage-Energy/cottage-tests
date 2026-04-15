@@ -46,6 +46,16 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 **Why:** These are the team's source of truth. Overwriting loses original context (ACs, specs, design intent) and breaks trust. QA adds value through comments and separate artifacts, not by altering originals.
 
+### Flow Completion Rule (enforced — all exploratory and interactive testing)
+**Every flow MUST be completed to its final page.** "Page renders" or "first 2 steps work" is NOT a pass. For every flow:
+1. Complete to success/error/redirect page — no stopping partway
+2. Verify DB state: user type, status, flags, relationships
+3. Check ALL email content — read the body, not just count. Look for `<template></template>` (blank body)
+4. If a flow has a payment step, fill the card and submit — don't stop at "Stripe iframe loaded"
+5. If blocked, find another way (OTP sign-in, create new user, use test data) — never mark "untested"
+
+**Why:** On Apr 14 ENG-2188, a CRITICAL bug (Light payment post-confirm fails) was found only because the user pushed to complete the TX bill drop flow to the very end. Blank email bodies and DB sync bugs were also found only through content verification. Cutting corners misses bugs.
+
 ### User Impact Rule (enforced — all QA outputs)
 **Every bug, improvement, finding, and observation MUST include a User Impact statement** — describe what the user experiences in concrete, non-technical terms. This applies to:
 - Bug reports posted to Linear
@@ -66,7 +76,7 @@ Bad: "409 error is unhandled in the catch block"
 
 | Server | Purpose | Use for |
 |--------|---------|---------|
-| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, update tickets with QA test plans. Uses `@mseep/linear-mcp@latest` (NOT `linear-mcp-server` which has response format bug). | `get_issue`, `search_issues`, `update_issue`, `create_issue`, `list_issues`, `list_projects`, `list_teams` |
+| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, update tickets with QA test plans. Uses `@mseep/linear-mcp@latest` (NOT `linear-mcp-server` which has response format bug). **Fallback when MCP auth expires**: use Linear GraphQL API directly with `LINEAR_API_KEY` from `.env`. Endpoint: `https://api.linear.app/graphql`. See `payment-consolidated-learnings.md` for query patterns. | `get_issue`, `search_issues`, `update_issue`, `create_issue`, `list_issues`, `list_projects`, `list_teams` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
 | **Playwright** | Browser automation for interactive testing and debugging. **Note**: PG-Admin (`dev.publicgrid.co`) uses Google SSO — closing the browser kills the session. Keep browser open for full PG-Admin sessions; fall back to Supabase for DB-level testing if session expires. | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
@@ -253,11 +263,25 @@ Waitlist can appear in: **move-in**, **transfer**, **bill-upload**, **verify-uti
 - Submit button text is "Pay bill" (NOT "Pay now"). Use `Submit_Pay_Bill_Modal()` scoped to dialog.
 - `Select_Pay_In_Full_If_Flex_Enabled()` must ALWAYS click "Pay in full" when visible — it reveals the Stripe iframe. Without clicking, the Stripe form never loads.
 - Flex option appears in the "Paying with" radiogroup as "Split your bills into smaller payments" — NOT a radio in the Amount section.
-- AutopayPaymentModal only appears with BLNK-processed outstanding balance + valid card + no previous failures.
+- Partial payment: "Other Amount" radio reveals a `$` textbox for custom amount. Fee + total recompute dynamically.
+
+### AutopayPaymentModal
+- Triggered by **Overview page "Enable" button** (TIP section) — NOT by Account page switch toggle.
+- Account page switch toggles auto-pay silently with NO modal.
+- Role is **`alertdialog`** (NOT `dialog`). Do not use `getByRole('dialog')` to find it.
+- Contents: "Thanks for enabling autopay!" + "Outstanding balance: $XX.XX" + "Pay now" / "Do it later" buttons.
+- Only appears when user has outstanding balance + valid card.
 
 ### Account Page — Payment Tab
 - Tab is "Payment" (not "Payment Information"), button is "Edit details" (not "Edit"), save is "Save details" (not "Save").
 - Auto-pay toggle on Account page is a `switch` role (not checkbox). In edit mode it IS a checkbox.
+
+### Password Dialog (affects ALL new move-in users)
+- Supabase triggers "Set up your new password" `alertdialog` for ALL freshly-created move-in users in dev.
+- Appears BEFORE the terms modal (if both are pending). Blocks all page interactions.
+- Tests must call `Setup_Password()` before `Accept_New_Terms_And_Conditions()` to handle it.
+- `getByText` detection of the dialog is unreliable — prefer `page.locator('[role="alertdialog"]')` for detection.
+- DOM removal (`document.querySelector('[role="alertdialog"]').remove()`) does NOT survive `page.reload()` — must complete the form.
 
 ### SMS Verification
 - `DialpadSMS` table stores INBOUND SMS only. Outbound reminder SMS goes via Dialpad API directly — verify indirectly via consent flags.
@@ -298,6 +322,7 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 3. `stripe-payment-capture-batch` → Payment becomes `succeeded`
 4. Only then can the next approved bill be processed
 5. **Requires billing user** (`maintainedFor` IS NOT NULL) — non-billing users' bills stay `approved` forever
+6. **Requires ChargeAccount with `ledgerBalanceID`** — without this, `balance-ledger-batch` silently skips the bill. ChargeAccount is created by the registration Inngest pipeline during move-in, NOT by manually setting `ElectricAccount.status = 'ACTIVE'`. If a test user has no ChargeAccount, bills will stay `approved` forever even though the cron runs.
 
 **Important**: Inngest API always returns 200 — doesn't mean a function handled the event. Event names must match exactly. Cron functions return 200 to event sends but are NOT triggered by them.
 **In production**: Event-triggered functions above are cron-triggered (1PM/3PM EST) — can only invoke manually via Inngest dashboard.
@@ -316,6 +341,16 @@ Environment base URLs are configured in `tests/resources/utils/environmentBaseUr
 | `tanstack-dev` | `https://tanstack-dev.onepublicgrid.com` | Dedicated **TanStack Start** preview for ENG-2188 migration QA. Has its own Supabase auth — dev credentials (e.g., `pgtest+reminder002`) may not work here. Confirm via absence of `_next/static` bundles + presence of TanStack devtools. |
 | `staging` | `https://staging.*` | Pre-release validation, `/test-report` release checks |
 | `production` | `https://onepublicgrid.com` | Read-only verification only — never run destructive tests |
+
+## Migration / Parity Testing (enforced for framework migrations)
+
+When testing a framework migration (e.g., Next.js → TanStack), follow this methodology:
+
+1. **Verify deployment URL first** — confirm you're on the TARGET deployment, not the source. Check for stack markers (`_next/static` = Next.js, TanStack devtools = TanStack).
+2. **Side-by-side parity** — for every flow, open source AND target deployments. Screenshot both. Compare: URL params, field values, toggle defaults, button visibility, checkbox initial state, field attributes.
+3. **Inspect beyond happy path** — don't just check "did the flow complete?" Inspect: URL bar for encoded params, form field `disabled`/`name`/`checked` attributes via `browser_evaluate`, component visibility for different user states (guest vs logged in).
+4. **Code audit = test cases** — when a developer posts a code audit, every item becomes a test case. Triage into UI-testable vs code-only, then test the UI-testable ones immediately.
+5. **Create test conditions** — never mark something "untested" because you lack a specific user/state. Create the user, set the flag, trigger the condition.
 
 ## CI/CD
 Tests run via GitHub Actions (`main-workflow.yml`). Scheduled regressions run daily at 5 AM UTC.

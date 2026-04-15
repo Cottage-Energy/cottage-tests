@@ -37,6 +37,14 @@ Before investigating, understand what you're looking at. Process all available s
 ### From conversation (verbal description)
 - User describes the issue — extract what needs to be tested and expected behavior
 
+### From a migration / parity ticket
+When testing a framework migration (e.g., Next.js → TanStack):
+- **Verify deployment URL first** — confirm you're on the TARGET deployment (`tanstack-dev.onepublicgrid.com`), not the source (`dev.publicgrid.energy`). Check for stack markers (`_next/static` = Next.js, TanStack devtools = TanStack).
+- **Side-by-side parity testing** — for every flow, open source AND target deployments. Screenshot both. Compare: URL params, field values, toggle defaults, button visibility, checkbox initial state, field attributes (`disabled`, `name`, `checked`).
+- **Inspect beyond happy path** — don't just check "did the flow complete?" Use `browser_evaluate` to inspect DOM attributes: `disabled`, `name`, `value`, `checked` on form fields. Check URL bar for encoded params (e.g., `%22` = literal double quotes). Check component visibility for guest vs logged-in users.
+- **Code audit items = test cases** — when a developer posts a code audit, every item becomes a QA test case. Triage into UI-testable / network-testable / code-only (see `feedback_audit_item_triage.md`). Test the UI-testable ones immediately — don't wait to be asked.
+- **Create test conditions proactively** — never mark something "untested" because you lack a specific user/state. Create the user via move-in, set flags via Supabase, insert test data. If you need a Light user, create one via txtest. If you need a passwordless user, set `shouldResetPassword: true`.
+
 ### Check existing coverage
 - `Glob` + `Grep` in `tests/e2e_tests/` to find any existing tests for the area under investigation
 - Note what's already automated and what gaps exist
@@ -116,9 +124,19 @@ When the feature under test is a partner-driven flow — partner shortcodes (`au
   - Content — placeholder text, labels, button copy match design
 - Flag differences as either **Bug** (wrong implementation) or **Improvement** (design could be better)
 
-#### f. Record the AC result
+#### f. Complete every flow to the end (ENFORCED)
+**NEVER stop a flow partway through.** "Page renders" or "step 2 of 5 works" is NOT a pass. For every flow tested:
+1. Complete to the final page (success, error, or dashboard redirect)
+2. Verify DB state: `mcp__supabase__execute_sql` to check user type, status, flags, relationships
+3. Check ALL emails: use Fastmail JMAP to read actual content — look for `<template></template>` (blank body)
+4. If the flow has a payment step, fill the Stripe card and submit — use real test PDFs from `tests/resources/data/` for file uploads (tiny PNGs get rejected)
+5. If blocked (can't sign in, session lost), use OTP sign-in via Fastmail JMAP to recover — never skip the flow
+
+**Why:** On Apr 14, a CRITICAL bug (Light payment post-confirm fails) was found only by completing the TX bill drop → Light switch flow to the payment step. Blank email bodies were found only by reading email content. DB sync bugs found only by querying after sign-in.
+
+#### g. Record the AC result
 For each AC, log:
-- **PASS** — behavior matches expectation, screenshot captured
+- **PASS** — behavior matches expectation, DB verified, emails checked, screenshot captured
 - **FAIL** — behavior deviates → immediately chain to `/log-bug` with:
   - Steps to reproduce (exact clicks performed)
   - Expected vs actual behavior
@@ -609,10 +627,10 @@ When multiple independent test areas need exploration (e.g., different browsers,
 
 | Blocker | Symptom | Workaround |
 |---------|---------|------------|
-| Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page | `page.evaluate(() => document.querySelector('[role="alertdialog"]').remove())` |
+| Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page. Appears for ALL freshly-created move-in users in dev. Shows BEFORE terms modal. | **Complete the Setup_Password form** (fill "PublicGrid#1" in both fields, click "Set new password"). DOM removal does NOT survive `page.reload()` — must complete the form. For automated tests: call `overviewPage.Setup_Password()` before `Accept_New_Terms_And_Conditions()`. |
 | `/sign-out` 404 | Direct navigation to `/sign-out` returns 404 | Clear cookies via `page.evaluate` then navigate to `/sign-in` |
 | GitHub MCP 404 | `mcp__github__get_pull_request` or `list_pull_requests` returns "Not Found" for cottage-nextjs, pg-admin, or other repos | Fall back to `gh pr list --repo Cottage-Energy/<repo> --state merged --limit 10 --json number,title,mergedAt,author` or `gh pr view <number> --repo Cottage-Energy/<repo> --json ...` |
-| Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
+| Linear MCP auth expires | Linear tools return "Authentication required" | Re-run `ToolSearch` — may re-trigger auth. **Fallback**: use Linear GraphQL API directly with `LINEAR_API_KEY` from `.env`. Endpoint: `https://api.linear.app/graphql`. See `payment-consolidated-learnings.md` for query patterns (commentCreate, commentUpdate, issueUpdate, searchIssues). |
 | OTP email pollution | Interactive sessions trigger OTP emails that accumulate for shared test accounts | After exploration, note which test accounts had OTPs triggered — automated tests using those accounts may fail until emails clear. Consider using `getLatestOTP()` pattern (take most recent email) instead of asserting exactly 1 email |
 | Start Service Date dialog | Every save on accounts with date discrepancy (Start Date ≠ Start Service Date) triggers "Start Service Date Change Detected" dialog | Dismiss with Cancel to avoid committing date changes. This is unrelated to the feature under test — don't mistake it for feature behavior |
 | Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `source .env && curl -X PUT "https://wzlacfmshqvjhjczytan.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer $SUPABASE_API_KEY" -H "apikey: $SUPABASE_API_KEY" -H "Content-Type: application/json" -d '{"password": "NewPassword123!"}'`. Both `Authorization` and `apikey` headers are required. Env var is `SUPABASE_API_KEY` (not `SUPABASE_SERVICE_ROLE_KEY`). |
@@ -633,6 +651,7 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | No `jq` on Windows | bash JSON parsing fails | Use `node -e` with `JSON.parse()` instead of `curl | jq` |
 | Inngest cron functions not triggerable via event API | `inn.gs/e/balance-ledger.batch` returns 200 but does nothing — cron functions ignore event sends | Wait for `*/5` cron cycle (~5 min) or invoke from Inngest dashboard. Don't waste time retrying event sends. |
 | Bills stuck in `approved` | `balance-ledger-batch` won't process bills for non-billing users | User must have `maintainedFor` IS NOT NULL on ElectricAccount — requires billing move-in path ("Public Grid handles everything" + Stripe card). Non-billing users (`maintainedFor = null`) stay `approved` forever. |
+| Bills stuck in `approved` (billing user) | Billing user has `maintainedFor` set but bills still not processing | **ChargeAccount with `ledgerBalanceID` is required.** The cron silently skips bills where the account has no ChargeAccount. ChargeAccount is created by the **registration Inngest pipeline** during move-in — NOT by manually setting `ElectricAccount.status = 'ACTIVE'`. If a test user created via MCP move-in doesn't have a ChargeAccount, the registration pipeline didn't complete. Check: `SELECT ca.id, ca."ledgerBalanceID" FROM "ChargeAccount" ca WHERE ca."electricAccountID" = <id>`. |
 | Second bill won't process | First bill's payment is in `requires_capture`, blocking next bill | Pipeline is sequential: ledger batch → stripe capture → then next bill. Wait for `stripe-payment-capture-batch` cron, or set 2nd bill directly to `processed` for FE-only testing. |
 | Light session caching | Second Light flow test skips to success page | Close browser or clear cookies/localStorage/sessionStorage between each Light flow test |
 | Light phone validation | `1111111111` returns 400 Invalid phone number | Use `(646) 437-6170` for Light flow, `1111111111` for standard move-in |

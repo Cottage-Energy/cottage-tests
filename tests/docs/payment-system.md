@@ -1440,6 +1440,17 @@ Then wait for `balance-ledger-batch` cron (*/5 in dev) to process.
 - **Billing user**: `maintainedFor IS NOT NULL` → bills processed, payments created, remittances generated
 - **Non-billing user**: `maintainedFor IS NULL` → bills stay `approved`/`viewable` forever, no payment processing
 
+### Charge Account Creation
+
+ChargeAccount records (with `ledgerBalanceID` linking to BLNK balance) are created by the **registration Inngest pipeline** during the move-in flow — NOT by manually setting `ElectricAccount.status = 'ACTIVE'`.
+
+**Prerequisite for bill processing**: `balance-ledger-batch` requires a ChargeAccount with a valid `ledgerBalanceID`. Without it, the cron silently skips the bill — it stays `approved` forever even though the user is a billing user (`maintainedFor IS NOT NULL`).
+
+**Test implication**: Manually creating a billing user via direct DB updates (setting `status = ACTIVE`, `registrationJobCompleted = true`) does NOT create the ChargeAccount. You must either:
+1. Complete the full move-in flow via UI (which triggers the registration pipeline)
+2. Use an existing user that already has a ChargeAccount
+3. Verify ChargeAccount exists before inserting bills: `SELECT ca.id, ca."ledgerBalanceID" FROM "ChargeAccount" ca WHERE ca."electricAccountID" = <id>`
+
 ### Single vs Separate Charge Accounts
 
 - **Single**: Electric + gas from same company → one ChargeAccount → one payment covers both

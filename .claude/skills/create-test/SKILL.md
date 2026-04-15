@@ -381,6 +381,9 @@ test.describe('API: Feature Name', () => {
 - **Prefer regex locators** in POMs for text-based locators — e.g., `page.getByRole('heading', { name: /Upload document/i })` instead of exact `'Upload document'`. Regex survives minor UI text changes without breaking tests.
 - **OTP-based tests**: Do NOT use `FastmailActions.Get_OTP()` for shared test accounts — it asserts `content.length === 1` which breaks when prior sessions left stale OTP emails. Instead, create a custom `getLatestOTP()` that takes the most recent email. Import `Email` type from `tests/resources/utils/fastmail/types` for proper typing.
 - **Tests sharing the same OTP user** should be combined into a single test or run sequentially with a single sign-in, to avoid triggering multiple OTP emails that pollute each other.
+- **NEVER use `page.evaluate()` to fill form inputs** — it sets the DOM value but does NOT trigger React controlled component state. Form validation will still see the field as empty. Always use Playwright's native `fill()` method (`page.locator(...).fill(value)` or `browser_fill_form` via MCP).
+- **Password dialog for new users**: ALL freshly-created move-in users get a "Set up your new password" alertdialog. Tests must call `overviewPage.Setup_Password()` before `Accept_New_Terms_And_Conditions()`.
+- **ChargeAccount prerequisite for bill tests**: `balance-ledger-batch` requires a `ChargeAccount` with `ledgerBalanceID`. This is created by the registration Inngest pipeline, NOT by manually setting `status = ACTIVE`. If your test user has no ChargeAccount, inserted bills will stay `approved` forever.
 
 ## 8. Validate Before Done (Verification Before Completion)
 
