@@ -22,7 +22,11 @@
 
 - **Always compare with source (dev) before reporting parity issues.** Without comparison, you risk false positives — flagging expected behavior as bugs.
 
-- **Complete every flow to its final page.** "Page renders" or "step 2 of 5 works" is NOT a pass. Critical bugs (Light payment post-confirm failure, blank email bodies, DB sync issues) were found ONLY by completing flows end-to-end.
+- **Complete every flow to its final page — cutting corners WILL miss Critical bugs.** On Apr 14, I repeatedly cut corners: testing "step 2 of 5" and calling it PASS, checking "page loads" without completing the form, counting emails without reading content. Christian had to push multiple times to finish flows. What I missed by cutting corners:
+  - **Bug #6 (CRITICAL)**: Light payment post-confirm fails — Stripe succeeds but server handler crashes. Only found when Christian said "you are not testing tx bill drop completely."
+  - **Blank email content**: I counted 4 emails and called it PASS. Christian said "I saw emails that is empty" — I hadn't read the HTML body. Templates were `<template></template>` (blank).
+  - **LightUsers.email sync bug**: Only found by completing the full sign-out + sign-back-in cycle.
+  - Every shortcut I took hid a bug. The rule is: reach the final page, verify DB state, read email content. If there's a payment step, fill the card and submit. If blocked, find another way (OTP sign-in, new user). Never mark "PASS" on partial completion.
 
 - **Separate deployments may have separate auth.** Credentials from one environment may not work on another. Always verify or create fresh users on the target.
 
