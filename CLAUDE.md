@@ -458,6 +458,8 @@ Environment base URLs are configured in `tests/resources/utils/environmentBaseUr
 
 ## Migration / Parity Testing (enforced for framework migrations)
 
+**READ FIRST**: `tests/docs/migration-qa-learnings.md` — 50+ learnings from 20+ ENG-2188 sessions covering methodology, TanStack-specific findings, session management, bug discovery techniques, and tool/workflow patterns.
+
 When testing a framework migration (e.g., Next.js → TanStack), follow this methodology:
 
 1. **Verify deployment URL first** — confirm you're on the TARGET deployment, not the source. Check for stack markers (`_next/static` = Next.js, TanStack devtools = TanStack).
