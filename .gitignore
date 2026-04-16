@@ -43,6 +43,12 @@ ss-*.png
 screenshot-*.png
 listDevices.*
 
+# Exploratory session artifacts (screenshots and snapshots dumped in repo root)
+/*.png
+/*.jpg
+/*.jpeg
+/*.yml
+
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json
 .claude/scheduled_tasks.lock

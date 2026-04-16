@@ -58,8 +58,7 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
-            // FIXME: Check_Electric_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual)
         ]);
         await billQueries.checkElectricBillProcessing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -171,10 +170,8 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
-            // FIXME: Check_Electric_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
-            // FIXME: Check_Gas_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await Promise.all([
             billQueries.checkElectricBillProcessing(ElectricAccountId),
@@ -310,8 +307,7 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
-            // FIXME: Check_Gas_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await billQueries.checkGasBillProcessing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -703,8 +699,7 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
-            // FIXME: Check_Electric_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal)
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual)
         ]);
         await billQueries.checkElectricBillProcessing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -816,10 +811,8 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
-            // FIXME: Check_Electric_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountTotal),
-            // FIXME: Check_Gas_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await Promise.all([
             billQueries.checkElectricBillProcessing(ElectricAccountId),
@@ -955,8 +948,7 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
-            // FIXME: Check_Gas_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountTotal)
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await billQueries.checkGasBillProcessing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1061,8 +1053,7 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Not_Visible(),
-            // FIXME: Check_Electric_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual)
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual)
         ]);
         await billQueries.checkElectricBillProcessing(ElectricAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -1172,10 +1163,8 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Electricity_Card_Contain_Bill_Details(ElectricAccountId, PGuserUsage.ElectricAmountActual, PGuserUsage.ElectricUsage),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
-            // FIXME: Check_Electric_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Electric_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
-            // FIXME: Check_Gas_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Electric_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await Promise.all([
             billQueries.checkElectricBillProcessing(ElectricAccountId),
@@ -1309,8 +1298,7 @@ export class FailedPaymentChecks {
             overviewPage.Check_Get_Started_Widget_Not_Visible(),
             overviewPage.Check_Gas_Card_Contain_Bill_Details(GasAccountId, PGuserUsage.GasAmountActual, PGuserUsage.GasUsage),
             overviewPage.Check_Electricity_Card_Not_Visible(),
-            // FIXME: Check_Gas_Bill_Scheduled_Payment_Email not yet implemented in FastmailActions
-            // FastmailActions.Check_Gas_Bill_Scheduled_Payment_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+            FastmailActions.Check_Gas_Bill_Is_Ready(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
         ]);
         await billQueries.checkGasBillProcessing(GasAccountId);
         await page.reload({ waitUntil: 'domcontentloaded' });
