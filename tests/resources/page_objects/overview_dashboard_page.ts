@@ -1,6 +1,7 @@
 ﻿import { type Page, type Locator, expect } from '@playwright/test';
 import { billQueries } from '../fixtures/database';
 import { format } from 'date-fns';
+import { TIMEOUTS } from '../constants';
 
 export class OverviewPage {
 
@@ -90,9 +91,13 @@ export class OverviewPage {
 
         this.Overview_Setup_Password_Title = page.getByText(/Set up your new password|Set Up Your Password/i);
         this.Overview_Setup_Password_Description = page.getByText(/To keep your account secure|password was recently reset/i);
-        this.Overview_Setup_Password_Field = page.locator('input[name="password"]');
-        this.Overview_Setup_Password_Confirm_Password_Field = page.locator('input[name="confirmPassword"]');
-        this.Overview_Setup_Password_Set_Password_Button = page.getByRole('button', { name: /Set (new )?password/i });
+        // TanStack alertdialog renders textboxes without name attributes — use
+        // label-based locators scoped to the alertdialog so we match reliably on
+        // both Next.js (input[name="password"]) and TanStack (label "New password").
+        const passwordDialog = page.getByRole('alertdialog');
+        this.Overview_Setup_Password_Field = passwordDialog.getByLabel('New password');
+        this.Overview_Setup_Password_Confirm_Password_Field = passwordDialog.getByLabel('Repeat new password');
+        this.Overview_Setup_Password_Set_Password_Button = passwordDialog.getByRole('button', { name: /Set (new )?password/i });
 
         // Account setup stepper — payment info selection (shown when user skipped payment during move-in)
         this.Overview_Add_Payment_Info_Title = page.getByText('Add your payment info');
@@ -159,35 +164,46 @@ export class OverviewPage {
 
     }
 
-    async Setup_Password(password:string = "PublicGrid#1"){
-        await expect(this.Overview_Setup_Password_Title).toBeVisible({timeout:30000});
-        await expect(this.Overview_Setup_Password_Description).toBeVisible({timeout:30000});
+    async Setup_Password(password:string = "PublicGrid#1"): Promise<void> {
+        await expect(this.Overview_Setup_Password_Title).toBeVisible({timeout:TIMEOUTS.DEFAULT});
+        await expect(this.Overview_Setup_Password_Description).toBeVisible({timeout:TIMEOUTS.DEFAULT});
 
-        await this.Overview_Setup_Password_Field.fill("pg");
-        await this.Overview_Setup_Password_Confirm_Password_Field.fill("pg");
-        await this.page.waitForTimeout(200);
-        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+        // Helper: fill + press Tab to blur the field. TanStack's controlled inputs
+        // require an explicit blur/change event to trigger form validation — plain
+        // fill() alone does not reliably enable the submit button.
+        const fillAndBlur = async (locator: Locator, value: string): Promise<void> => {
+            await locator.fill(value);
+            await locator.press('Tab');
+        };
 
-        await this.Overview_Setup_Password_Field.fill("publicgrid");
-        await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid");
-        await this.page.waitForTimeout(200);
-        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+        await fillAndBlur(this.Overview_Setup_Password_Field, "pg");
+        await fillAndBlur(this.Overview_Setup_Password_Confirm_Password_Field, "pg");
+        await this.page.waitForTimeout(TIMEOUTS.FAST_POLL_INTERVAL);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:TIMEOUTS.DEFAULT});
 
-        await this.Overview_Setup_Password_Field.fill("publicgrid1");
-        await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid");
-        await this.page.waitForTimeout(200);
-        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+        await fillAndBlur(this.Overview_Setup_Password_Field, "publicgrid");
+        await fillAndBlur(this.Overview_Setup_Password_Confirm_Password_Field, "publicgrid");
+        await this.page.waitForTimeout(TIMEOUTS.FAST_POLL_INTERVAL);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:TIMEOUTS.DEFAULT});
 
-        await this.Overview_Setup_Password_Field.fill("publicgrid!1");
-        await this.Overview_Setup_Password_Confirm_Password_Field.fill("publicgrid#1");
-        await this.page.waitForTimeout(200);
-        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:30000});
+        await fillAndBlur(this.Overview_Setup_Password_Field, "publicgrid1");
+        await fillAndBlur(this.Overview_Setup_Password_Confirm_Password_Field, "publicgrid");
+        await this.page.waitForTimeout(TIMEOUTS.FAST_POLL_INTERVAL);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:TIMEOUTS.DEFAULT});
 
-        await this.Overview_Setup_Password_Field.fill(password);
-        await this.Overview_Setup_Password_Confirm_Password_Field.fill(password);
-        await this.page.waitForTimeout(200);
-        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeEnabled({timeout:30000});
+        await fillAndBlur(this.Overview_Setup_Password_Field, "publicgrid!1");
+        await fillAndBlur(this.Overview_Setup_Password_Confirm_Password_Field, "publicgrid#1");
+        await this.page.waitForTimeout(TIMEOUTS.FAST_POLL_INTERVAL);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeDisabled({timeout:TIMEOUTS.DEFAULT});
+
+        await fillAndBlur(this.Overview_Setup_Password_Field, password);
+        await fillAndBlur(this.Overview_Setup_Password_Confirm_Password_Field, password);
+        await this.page.waitForTimeout(TIMEOUTS.FAST_POLL_INTERVAL);
+        await expect(this.Overview_Setup_Password_Set_Password_Button).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
         await this.Overview_Setup_Password_Set_Password_Button.click();
+
+        // Wait for the alertdialog to close after password submission
+        await expect(this.Overview_Setup_Password_Title).not.toBeVisible({timeout:TIMEOUTS.DEFAULT});
     }
 
     async Select_Pay_In_Full_If_Flex_Enabled(): Promise<void> {

@@ -182,6 +182,8 @@ When an AC seems "not testable from UI," manipulate the underlying data through 
 3. Change ALL variables (e.g., NULL every dueDate) → expose the real fallback behavior
 4. This narrows down exactly where behavior diverges from expected
 
+**Payment testing prerequisite**: Before any payment-related exploratory session, read `tests/docs/payment-system.md` (system reference) and `tests/docs/payment-testing-guide.md` (test infrastructure — check classes, DB queries, POM methods, email checks, UI state mappings, spec coverage).
+
 **Technique: Pay-then-insert cycle** (for billing/payment scenarios)
 1. Pay all outstanding bills via UI → balance = $0
 2. Manipulate existing data via Supabase if needed (e.g., NULL dueDates)
@@ -202,8 +204,21 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 Key event names:
 - `transaction-generation-trigger` — creates pending `SubscriptionMetadata` for active subscriptions
 - `subscriptions-payment-trigger` — processes pending metadata into payments
+- `auto-pay-reconciliation-trigger` — retries failed autopay after user updates payment method. See [auto-pay-reconciliation-trigger-pipeline.md](../../../../../.claude/projects/c--Users-CHRISTIAN-Documents-GitHub-cottage-tests/memory/auto-pay-reconciliation-trigger-pipeline.md) for full 3-function fan-out recipe.
 
 **Important**: Inngest API always returns 200 regardless of whether a function handled the event. Event names must match exactly (check `services` repo source for correct names). In production these are cron-triggered, not event-triggered.
+
+**Technique: auto-pay reconciliation recipe** (for "failed autopay → user updates card → verify success")
+When testing the `auto-pay-reconciliation-trigger` flow:
+1. Create billing user with **declined card** (`4000000000000341`) + autopay ON
+2. Insert approved bill → wait for `balance-ledger-batch` + `stripe-payment-capture-batch` crons
+3. Verify `Payment.status = 'failed'` with `errorCode = 'card_declined'`
+4. User updates card to `4242424242424242` via Account → Payment tab → Edit details
+5. Verify `CottageUsers.stripePaymentMethodID` changed; autopay still ON (isAutoPaymentEnabled = true)
+6. Fire: `curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" -H "Content-Type: application/json" -d '{"name": "auto-pay-reconciliation-trigger", "data": {}}'`
+7. Watch Inngest dashboard: expect 3 runs in sequence (trigger → batch → per-user)
+8. Verify new Payment row with `status = 'succeeded'` + "Your Bill Payment Confirmation" email (NOT "Payment Failed")
+Gotcha: `auto-pay-reconciliation-batch` sleeps 5s × batchNumber — even batch 1 has a 5s delay. Plan for 10-30s between trigger fire and per-user processing.
 
 **Cron-only functions** (CANNOT be triggered via event API — must wait for `*/5` schedule or invoke from Inngest dashboard):
 - `balance-ledger-batch` — processes approved bills → `processed`, creates Payment in `requires_capture`

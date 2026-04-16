@@ -1,4 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
+import { TIMEOUTS } from '../constants';
 
 export class SidebarChat {
     //variables
@@ -55,39 +56,64 @@ export class SidebarChat {
 
 
     //methods
-    async Expand_Sidebar(){
-        await expect(this.Public_Grid_Icon).toBeEnabled({timeout:30000});
+
+    /**
+     * Wait for any Radix alertdialog overlay to close before interacting with
+     * sidebar icons. On TanStack, the password-setup alertdialog renders a
+     * fixed overlay div (`data-state="open"`, `opacity-[0.3]`) that intercepts
+     * all pointer events. If the dialog is still open when sidebar navigation
+     * is attempted, hover/click will hang until test timeout.
+     */
+    private async Ensure_No_Overlay(): Promise<void> {
+        const overlay = this.page.locator('div[data-state="open"][aria-hidden="true"]').first();
+        try {
+            await overlay.waitFor({ state: 'hidden', timeout: TIMEOUTS.MEDIUM });
+        } catch {
+            // Overlay still present — likely an undismissed alertdialog. Press Escape
+            // to close it (Radix dialogs close on Escape), then wait again.
+            await this.page.keyboard.press('Escape');
+            await overlay.waitFor({ state: 'hidden', timeout: TIMEOUTS.MEDIUM });
+        }
+    }
+
+    async Expand_Sidebar(): Promise<void> {
+        await this.Ensure_No_Overlay();
+        await expect(this.Public_Grid_Icon).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
         await this.Public_Grid_Icon.hover();
         await this.Public_Grid_Icon.click();
-        await expect(this.Public_Grid_Logo).toBeVisible({timeout:30000});
+        await expect(this.Public_Grid_Logo).toBeVisible({timeout:TIMEOUTS.DEFAULT});
     }
 
-    async Goto_Overview_Page_Via_Icon(){
-        await expect(this.Overview_Icon).toBeEnabled({timeout:30000});
+    async Goto_Overview_Page_Via_Icon(): Promise<void> {
+        await this.Ensure_No_Overlay();
+        await expect(this.Overview_Icon).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
         await this.Overview_Icon.hover();
         await this.Overview_Icon.click();
-        await expect(this.Overview_Page_Title).toBeVisible({timeout:30000});
+        await expect(this.Overview_Page_Title).toBeVisible({timeout:TIMEOUTS.DEFAULT});
     }
 
-    async Goto_Billing_Page_Via_Icon(){
-        await expect(this.Billing_Icon).toBeEnabled({timeout:30000});
+    async Goto_Billing_Page_Via_Icon(): Promise<void> {
+        await this.Ensure_No_Overlay();
+        await expect(this.Billing_Icon).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
         await this.Billing_Icon.hover();
         await this.Billing_Icon.click();
-        await expect(this.Billing_Page_Title).toBeVisible({timeout:90000});
+        await expect(this.Billing_Page_Title).toBeVisible({timeout:TIMEOUTS.LONG});
     }
 
-    async Goto_Service_Page_Via_Icon(){
-        await expect(this.Services_Icon).toBeEnabled({timeout:30000});
+    async Goto_Service_Page_Via_Icon(): Promise<void> {
+        await this.Ensure_No_Overlay();
+        await expect(this.Services_Icon).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
         await this.Services_Icon.hover();
         await this.Services_Icon.click();
-        await expect(this.Services_Page_Title).toBeVisible({timeout:30000});
+        await expect(this.Services_Page_Title).toBeVisible({timeout:TIMEOUTS.DEFAULT});
     }
 
-    async Goto_Support_Page_Via_Icon(){
-        await expect(this.Support_Icon).toBeEnabled({timeout:30000});
+    async Goto_Support_Page_Via_Icon(): Promise<void> {
+        await this.Ensure_No_Overlay();
+        await expect(this.Support_Icon).toBeEnabled({timeout:TIMEOUTS.DEFAULT});
         await this.Support_Icon.hover();
         await this.Support_Icon.click();
-        await expect(this.Support_Page_Title).toBeVisible({timeout:30000});
+        await expect(this.Support_Page_Title).toBeVisible({timeout:TIMEOUTS.DEFAULT});
     }
 
 }
