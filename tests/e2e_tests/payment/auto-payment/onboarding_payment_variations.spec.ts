@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling("autotest", true);
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
   await utilityQueries.updateBuildingOfferRenewableEnergy("autotest", false);
-  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+  // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
