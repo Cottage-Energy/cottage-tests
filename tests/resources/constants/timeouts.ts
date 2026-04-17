@@ -48,6 +48,9 @@ export const TIMEOUTS = {
 
   /** Test timeout for exploratory tests (300s / 5min) */
   TEST_EXPLORATORY: 300000,
+
+  /** Test timeout for performance measurements (120s / 2min) */
+  TEST_PERFORMANCE: 120000,
   
   /** Polling interval for retry loops */
   POLL_INTERVAL: 1000,
@@ -60,6 +63,9 @@ export const TIMEOUTS = {
   
   /** Brief pause for UI stabilization */
   UI_STABILIZE: 1000,
+
+  /** Wait for layout shifts to settle after page load (CLS measurement) */
+  CLS_SETTLE: 2000,
 } as const;
 
 /**

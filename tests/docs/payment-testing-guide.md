@@ -100,6 +100,27 @@ Same as autopay Steps 1-2, then:
 - `billPaidNotif` (false → true after succeeded)
 - `billServiceFee` (card: amount, bank: null)
 
+### Bank-Specific Differences (verified 2026-04-16)
+- **Lifecycle**: Bank skips `scheduled_for_payment` → `requires_capture`. Goes directly `processing` → `succeeded`
+- **Fee**: Bank = $0. No `transaction_fee`/`fee_transfer` BLNK entries. Payments tab shows "-" for fee
+- **Failure**: Bank failure **disables autopay** (`isAutoPaymentEnabled` → false). Card failure keeps it ON
+- **Failure email**: Bank = "[Urgent] - Update Your Payment Method". Card = "Payment Failed - Action Required"
+- **After failure**: New bills may NOT process for bank-failed users (pipeline blocks when failed + autopay OFF). Use clean users for testing
+- **Test banks (OAuth)**: `Success ••••6789`, `Failure ••••1116`, `Insufficient Funds ••••2227`
+
+### Edge Cases (verified 2026-04-16)
+- **Autopay disabled mid-pipeline**: Payment in `scheduled_for_payment` → user disables autopay → payment **`canceled`** (Step 9 validates state). Bill stays outstanding, user pays manually. Safe behavior.
+- **Fee transition on cross-method recovery**: Bank→Card adds BLNK fee entries ($0 → 3%+$0.30). Card→Bank removes them. Pay bill modal updates dynamically.
+- **Failed payment blocks new bills**: User with failed payment + autopay OFF → new approved bills stay stuck at `approved`. Pipeline won't process until payment state resolved.
+
+### BLNK Assertions to Embed in Payment Tests
+When testing payment flows, also verify these BLNK ACs as additional assertions:
+- **On bill insert**: Check no duplicate BLNK entries for same reference (ENG-2420)
+- **On bill processed**: Check `effective_date` + `meta_data.dueDate` set correctly (ENG-2421/2422)
+- **On new user**: Check `blnk.balances.identity_id` is linked (ENG-2458)
+- **On payment succeeded**: Verify full BLNK chain: bill → payment → fee (card) → remittance → fee_transfer (card)
+- **On payment failed**: Check BLNK VOID entry, check `#dev-ledgers-alerts` Slack (ENG-2423/2424)
+
 ---
 
 ## Check Classes

@@ -127,6 +127,20 @@ export default defineConfig({
       },
     },
 
+    {
+      name: 'Performance',
+      grep: /@performance/,
+      testDir: './tests/performance_tests',
+      retries: 0,
+      fullyParallel: false,
+      use: {
+        ...devices['Desktop Chrome'],
+        screenshot: 'off',
+        video: 'off',
+        trace: 'off',
+      },
+    },
+
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',

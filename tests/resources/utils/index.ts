@@ -13,3 +13,6 @@ export { default as baseEnvUrl } from './environmentBaseUrl';
 
 // Supabase client
 export { supabase } from './supabase';
+
+// Performance measurement utilities
+export * from './performanceHelper';

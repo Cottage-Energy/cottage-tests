@@ -1464,6 +1464,38 @@ ChargeAccount records (with `ledgerBalanceID` linking to BLNK balance) are creat
 - Auto-pay not processed for Flex users
 - "Pay in Full" option available if Flex enabled + outstanding balance
 
+### Bank vs Card Failure Behavior (verified 2026-04-16)
+
+| Behavior | Card | Bank (`us_bank_account`) |
+|----------|------|--------------------------|
+| Payment lifecycle | `scheduled_for_payment` → `requires_capture` → `succeeded` | `processing` → `succeeded` (single-step ACH) |
+| On failure: autopay | Stays ON (recoverable) | **DISABLED** (`isAutoPaymentEnabled` → false) |
+| Failure email | "Payment Failed - Action Required" | "[Urgent] - Update Your Payment Method" |
+| BLNK fee entries | `transaction_fee` + `fee_transfer` created | NO fee entries (bank is fee-free) |
+| BLNK on failure | Entries VOID'd | Entries VOID'd + compensating VOID entry |
+| New bills after failure | Pipeline continues processing | **Pipeline may BLOCK** — new bills stay `approved` when user has failed payment + autopay OFF |
+
+### Autopay Disable Mid-Pipeline (edge case — verified 2026-04-16)
+
+The bill processing pipeline is **NOT atomic**. If autopay is disabled AFTER a Payment is created (`scheduled_for_payment`) but BEFORE capture:
+
+1. Step 9 (`validate-payment-and-user-state`) checks `isAutoPaymentEnabled`
+2. Finds autopay OFF → **cancels the payment** (status → `canceled`)
+3. Bill stays `processed`, visible, unpaid — outstanding balance remains
+4. BLNK entries remain QUEUED/INFLIGHT (not immediately VOID'd)
+5. User must pay manually via "Pay bill" button
+
+**This is correct/safe behavior** — no double-charge risk. The system respects the user's intent even mid-pipeline. The `canceled` payment status appears in the Payments tab history.
+
+### Fee Transition on Cross-Method Recovery (verified 2026-04-16)
+
+When a user switches payment method type during recovery (e.g., failed bank → card):
+
+- **BLNK entries**: `transaction_fee` + `fee_transfer` entries APPEAR when switching from bank to card
+- **Pay bill modal**: "3% fee" badge and Transaction Fee row appear/disappear dynamically based on current PM type
+- **Amount charged**: Bank recovery = bill amount only. Card recovery = bill + fee (3% + $0.30)
+- **Example**: $65 bank payment failed → switched to card → recovery charged $67.25 ($65 + $2.25 fee)
+
 ### Legacy System
 
 - `Payments` + `Charges` tables frozen since July 2025

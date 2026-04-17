@@ -15,7 +15,7 @@ Before writing test cases from scratch, check if a test plan already exists:
 - If no plan exists → proceed with gathering context from the user
 
 ## 1b. Determine Test Type
-Detect whether this is an **e2e test** (UI interaction) or an **API test** (endpoint validation):
+Detect whether this is an **e2e test** (UI interaction), **API test** (endpoint validation), or **performance test** (page load metrics):
 
 | Signal | Type |
 |--------|------|
@@ -23,9 +23,21 @@ Detect whether this is an **e2e test** (UI interaction) or an **API test** (endp
 | Target is a REST endpoint, webhook, or backend service | API |
 | User says "test this flow", "test this page", references a URL | E2E |
 | Target involves UI interaction, forms, navigation | E2E |
+| User says "performance test", "page load", "web vitals", "LCP", "TTFB" | Performance |
+| Target is measuring speed, bundle size, or load time | Performance |
 
 - **E2E** → continue to Step 2 (below)
 - **API** → skip to Step 2-API
+- **Performance** → skip to Step 2-Perf
+
+## 2-Perf. Performance Test Placement
+- Place in `tests/performance_tests/`
+- Add page to `PUBLIC_PAGES` or `AUTHENTICATED_PAGES` array in the existing spec (prefer extending existing specs over creating new ones)
+- If the page needs custom thresholds, add to `PAGE_SPECIFIC_THRESHOLDS` in `tests/resources/constants/performanceThresholds.ts`
+- Tag with `TEST_TAGS.PERFORMANCE`
+- Import from `@playwright/test` directly (NOT from page_objects — perf tests don't need POM fixtures)
+- Use `performanceHelper` functions: `injectPerformanceObservers`, `collectPerformanceMetrics`, `assertPerformanceThresholds`, `logPerformanceSummary`
+- See `tests/docs/performance-testing-guide.md` for full architecture and patterns
 
 ## 2. Determine Placement (E2E)
 - Ask which feature area: `connect-account`, `cottage-user-move-in`, `homepage`, `payment`, or a new one
