@@ -1,58 +1,37 @@
-﻿import { APIRequestContext } from '@playwright/test';
-import { test, expect } from '../../../resources/page_objects';
-import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp, FastmailActions } from '../../../resources/fixtures';
+﻿import { test, expect } from '../../../resources/page_objects';
+import { newUserMoveInAutoPayment, newUserMoveInSkipPayment, newUserMoveInAutoBankAccount, generateTestUserData, CleanUp } from '../../../resources/fixtures';
 import { AutoPaymentChecks } from '../../../resources/fixtures/payment';
-import { utilityQueries } from '../../../resources/fixtures/database';
-import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
-import { AdminApi } from '../../../resources/api/admin_api';
-import environmentBaseUrl from '../../../resources/utils/environmentBaseUrl';
+import { utilityQueries, accountQueries } from '../../../resources/fixtures/database';
+import { TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
 
-let AdminApiContext: APIRequestContext;
 const paymentUtilities = new AutoPaymentChecks();
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 
-//test.beforeAll(async ({playwright,page}) => {
-    
-//});
-
-test.beforeEach(async ({ playwright, page },testInfo) => {
-  /*const env = process.env.ENV || 'dev';
-  const baseUrl = environmentBaseUrl[env].admin_api;
-  const adminToken = process.env.ADMIN_TOKEN;
-
-  AdminApiContext = await playwright.request.newContext({
-    baseURL: baseUrl,
-    extraHTTPHeaders: {
-      Authorization: `Bearer ${adminToken}`,
-      Accept: 'application/json',
-    },
-  });*/
-  
+test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling("autotest",true);
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
   await utilityQueries.updateBuildingOfferRenewableEnergy("autotest", false);
-  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+  // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
-  
-test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+
+test.afterEach(async ({ page }) => {
+    if (MoveIn?.pgUserEmail) {
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    }
     await page.close();
 });
-  
-/*test.afterAll(async ({ page }) => {
-
-});*/
 
 
 test.describe('Valid Card Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
   
-  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', { tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('EVERSOURCE Electric Only Valid Auto Payment Finish Account Added', { tag: [TEST_TAGS.REGRESSION1, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
     
     test.setTimeout(1800000);
 
@@ -63,7 +42,7 @@ test.describe('Valid Card Auto Payment', () => {
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE", null, true, false);
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
+    await page.goto('/sign-in');
     
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
@@ -75,7 +54,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('PSEG Electric & Gas Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('PSEG Electric & Gas Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION2, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
     
     test.setTimeout(1800000);
 
@@ -86,23 +65,7 @@ test.describe('Valid Card Auto Payment', () => {
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page,"PSEG","PSEG", true, true);
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -110,7 +73,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', { tag: [TEST_TAGS.SMOKE, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('SDGE SCE Electric & Gas Valid Auto Payment Finish Account Added', { tag: [TEST_TAGS.SMOKE, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
     
     test.setTimeout(1800000);
 
@@ -121,11 +84,8 @@ test.describe('Valid Card Auto Payment', () => {
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInSkipPayment(page,"SDGE","SCE", true, true);
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
+    await page.goto('/sign-in');
     
-    // TODO: New post-sign-in payment flow — finishAccountSetupPage removed
-    // After sign-in, user is prompted to add payment method inline
-    // await finishAccountSetupPage.Enter_Auto_Payment_Details_After_Skip(...)
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
@@ -137,7 +97,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('NGMA NGMA Electric & Gas Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION3, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
     
     test.setTimeout(1800000);
 
@@ -148,23 +108,7 @@ test.describe('Valid Card Auto Payment', () => {
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page,"NGMA","NGMA", true, true);
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -172,7 +116,7 @@ test.describe('Valid Card Auto Payment', () => {
   });
 
 
-  test('DUKE Gas Only Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION4, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+  test('DUKE Gas Only Valid Auto Payment Move In Added', { tag: [TEST_TAGS.REGRESSION4, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
     
     test.setTimeout(1800000);
 
@@ -183,23 +127,7 @@ test.describe('Valid Card Auto Payment', () => {
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page, null,"DUKE", false, true);
 
-    await page.goto('/sign-in'); //TEMPORARY FIX
-    /*
-    // Store the current page
-    const pages = browser.contexts()[0].pages();
-    const currentPage = pages[pages.length - 1];
-
-    // Wait for the new tab to open
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        await moveInpage.Click_Dashboard_Link()
-    ]);
-
-    // Close the previous tab
-    await currentPage.close();
-
-    // Switch to the new tab
-    await newPage.bringToFront();*/
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -214,7 +142,7 @@ test.describe('Valid Bank Auto Payment', () => {
     test.describe.configure({mode: "serial"});
     
     
-    test('COMED Electric Only Valid Bank Payment Move In Added', { tag: [TEST_TAGS.REGRESSION5, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('COMED Electric Only Valid Bank Payment Move In Added', { tag: [TEST_TAGS.REGRESSION5, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
         //MAKE IT COMED BLDG. with ELECTRIC ONLY
         test.setTimeout(1800000);
     
@@ -225,14 +153,8 @@ test.describe('Valid Bank Auto Payment', () => {
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoBankAccount(page, "COMED", null, true, true);
     
-        await page.goto('/sign-in'); //TEMPORARY FIX
+        await page.goto('/sign-in');
         
-        /*const [newTab] = await Promise.all([
-            page.waitForEvent('popup'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        await newTab.bringToFront();*/
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -240,7 +162,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.REGRESSION6, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('DELMARVA Electric & Gas Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.REGRESSION6, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
         
         test.setTimeout(1800000);
     
@@ -251,7 +173,7 @@ test.describe('Valid Bank Auto Payment', () => {
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"DELMARVA","DELMARVA", true, true);
     
-        await page.goto('/sign-in'); //TEMPORARY FIX
+        await page.goto('/sign-in');
         
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
@@ -262,7 +184,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
     
-    test('BGE DTE Electric & Gas Valid Bank Payment Move In Added', { tag: [TEST_TAGS.REGRESSION7, TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE DTE Electric & Gas Valid Bank Payment Move In Added', { tag: [TEST_TAGS.REGRESSION7, TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
         
         test.setTimeout(1800000);
     
@@ -273,23 +195,7 @@ test.describe('Valid Bank Auto Payment', () => {
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInAutoBankAccount(page,"BGE","DTE", true, true);
     
-        await page.goto('/sign-in'); //TEMPORARY FIX
-        /*
-        // Store the current page
-        const pages = browser.contexts()[0].pages();
-        const currentPage = pages[pages.length - 1];
-    
-        // Wait for the new tab to open
-        const [newPage] = await Promise.all([
-            context.waitForEvent('page'),
-            await moveInpage.Click_Dashboard_Link()
-        ]);
-    
-        // Close the previous tab
-        await currentPage.close();
-    
-        // Switch to the new tab
-        await newPage.bringToFront();*/
+        await page.goto('/sign-in');
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
 
@@ -297,7 +203,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
     
 
-    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('EVERSOURCE EVERSOURCE Electric & Gas Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
         
         test.setTimeout(1800000);
     
@@ -308,7 +214,7 @@ test.describe('Valid Bank Auto Payment', () => {
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page,"EVERSOURCE","EVERSOURCE", true, true);
     
-        await page.goto('/sign-in'); //TEMPORARY FIX
+        await page.goto('/sign-in');
         
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
@@ -319,7 +225,7 @@ test.describe('Valid Bank Auto Payment', () => {
     });
 
 
-    test('BGE Gas Only Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.PAYMENT] }, async ({moveInpage, overviewPage, page, sidebarChat, billingPage, context}) => {
+    test('BGE Gas Only Valid Bank Payment Finish Account Added', { tag: [TEST_TAGS.PAYMENT] }, async ({ overviewPage, page }) => {
         
         test.setTimeout(1800000);
     
@@ -330,7 +236,7 @@ test.describe('Valid Bank Auto Payment', () => {
         await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
         MoveIn = await newUserMoveInSkipPayment(page, null, "BGE", true, true);
     
-        await page.goto('/sign-in'); //TEMPORARY FIX
+        await page.goto('/sign-in');
         
         await overviewPage.Setup_Password();
         await overviewPage.Accept_New_Terms_And_Conditions();
@@ -340,5 +246,54 @@ test.describe('Valid Bank Auto Payment', () => {
         await paymentUtilities.Auto_Bank_Payment_Gas_Checks(page, MoveIn, PGuserUsage);
     });
 
+});
+
+// =============================================================================
+// PR-005b: Delinquency cleared by auto-pay (Cian review 2026-04-14)
+// =============================================================================
+// Same invariant as PR-005a (see manual_pay_successful_payment.spec.ts) but
+// via the auto-pay code path. PaymentProcessor.recalculateDelinquency() fires
+// for both paths — this test proves auto-pay doesn't regress.
+test.describe('PR-005b: Delinquency cleared by auto-pay', () => {
+    test.describe.configure({ mode: 'serial' });
+
+    test(
+        'COMED electric — isDelinquent=true + delinquentDays=30 → cleared after auto-pay cycle',
+        { tag: [TEST_TAGS.PAYMENT] },
+        async ({ overviewPage, page }) => {
+            test.setTimeout(1800000);
+
+            const PGuserUsage = await generateTestUserData();
+
+            await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', null);
+            await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+            MoveIn = await newUserMoveInAutoPayment(page, 'COMED', null, true, true);
+
+            await page.goto('/sign-in');
+            await overviewPage.Setup_Password();
+            await overviewPage.Accept_New_Terms_And_Conditions();
+            await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
+            await overviewPage.Enter_Auto_Payment_Details(
+                PaymentData.ValidCardNUmber, PGuserUsage.CardExpiry, PGuserUsage.CVC,
+                PGuserUsage.Country, PGuserUsage.Zip
+            );
+
+            const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+            await accountQueries.setElectricDelinquent(electricAccountId, 30);
+
+            const before = await accountQueries.getElectricDelinquency(electricAccountId);
+            expect(before.isDelinquent, 'delinquency seed failed').toBe(true);
+
+            // Full auto-pay success flow: inserts bill, approves, waits for
+            // balance-ledger-batch + stripe-capture crons, asserts succeeded.
+            await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
+
+            await accountQueries.waitForElectricDelinquencyCleared(electricAccountId, 30, 2000);
+
+            const after = await accountQueries.getElectricDelinquency(electricAccountId);
+            expect(after.isDelinquent, 'auto-pay should clear isDelinquent').toBe(false);
+            expect(after.delinquentDays, 'auto-pay should zero delinquentDays').toBe(0);
+        }
+    );
 });
 

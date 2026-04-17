@@ -181,6 +181,131 @@ export class AccountQueries {
     log.debug('Charge Account ID', { chargeAccountId: chargeAccountId.toString() });
     return chargeAccountId.toString();
   }
+
+  /**
+   * Seed delinquency state on an ElectricAccount for payment-clearance tests.
+   * Use this to simulate the state left by the reminder pipeline without
+   * actually running it (the reminder pipeline's delinquency logic is covered
+   * by PR-005). The point of PR-005a/b is to verify that
+   * `PaymentProcessor.recalculateDelinquency()` clears it on payment success.
+   */
+  async setElectricDelinquent(
+    electricAccountId: string,
+    delinquentDays: number
+  ): Promise<void> {
+    const { error } = await supabase
+      .from('ElectricAccount')
+      .update({ isDelinquent: true, delinquentDays })
+      .eq('id', electricAccountId);
+    if (error) {
+      log.error('Failed to set ElectricAccount delinquent', { electricAccountId, error: error.message });
+      throw error;
+    }
+    log.info('Seeded ElectricAccount delinquency', { electricAccountId, delinquentDays });
+  }
+
+  /**
+   * Fetch current delinquency state on an ElectricAccount.
+   */
+  async getElectricDelinquency(
+    electricAccountId: string
+  ): Promise<{ isDelinquent: boolean; delinquentDays: number }> {
+    const { data, error } = await supabase
+      .from('ElectricAccount')
+      .select('isDelinquent,delinquentDays')
+      .eq('id', electricAccountId)
+      .single();
+    if (error) {
+      log.error('Failed to fetch ElectricAccount delinquency', { electricAccountId, error: error.message });
+      throw error;
+    }
+    return {
+      isDelinquent: Boolean(data?.isDelinquent),
+      delinquentDays: Number(data?.delinquentDays ?? 0),
+    };
+  }
+
+  /**
+   * Poll until delinquency clears (isDelinquent=false, delinquentDays=0) or timeout.
+   * Used to verify PaymentProcessor.recalculateDelinquency() fired after a payment.
+   */
+  async waitForElectricDelinquencyCleared(
+    electricAccountId: string,
+    maxRetries: number = 30,
+    pollIntervalMs: number = 2000
+  ): Promise<void> {
+    for (let i = 0; i < maxRetries; i++) {
+      const state = await this.getElectricDelinquency(electricAccountId);
+      if (!state.isDelinquent && state.delinquentDays === 0) {
+        log.info('ElectricAccount delinquency cleared', { electricAccountId, polls: i + 1 });
+        return;
+      }
+      await new Promise(r => setTimeout(r, pollIntervalMs));
+    }
+    const final = await this.getElectricDelinquency(electricAccountId);
+    throw new Error(
+      `ElectricAccount ${electricAccountId} delinquency did not clear after ${maxRetries} polls. ` +
+        `Final: isDelinquent=${final.isDelinquent}, delinquentDays=${final.delinquentDays}.`
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Gas delinquency (symmetric to Electric — same code path in
+  // PaymentProcessor.recalculateDelinquency but via GasAccount.isDelinquent)
+  // ---------------------------------------------------------------------------
+
+  async setGasDelinquent(
+    gasAccountId: string,
+    delinquentDays: number
+  ): Promise<void> {
+    const { error } = await supabase
+      .from('GasAccount')
+      .update({ isDelinquent: true, delinquentDays })
+      .eq('id', gasAccountId);
+    if (error) {
+      log.error('Failed to set GasAccount delinquent', { gasAccountId, error: error.message });
+      throw error;
+    }
+    log.info('Seeded GasAccount delinquency', { gasAccountId, delinquentDays });
+  }
+
+  async getGasDelinquency(
+    gasAccountId: string
+  ): Promise<{ isDelinquent: boolean; delinquentDays: number }> {
+    const { data, error } = await supabase
+      .from('GasAccount')
+      .select('isDelinquent,delinquentDays')
+      .eq('id', gasAccountId)
+      .single();
+    if (error) {
+      log.error('Failed to fetch GasAccount delinquency', { gasAccountId, error: error.message });
+      throw error;
+    }
+    return {
+      isDelinquent: Boolean(data?.isDelinquent),
+      delinquentDays: Number(data?.delinquentDays ?? 0),
+    };
+  }
+
+  async waitForGasDelinquencyCleared(
+    gasAccountId: string,
+    maxRetries: number = 30,
+    pollIntervalMs: number = 2000
+  ): Promise<void> {
+    for (let i = 0; i < maxRetries; i++) {
+      const state = await this.getGasDelinquency(gasAccountId);
+      if (!state.isDelinquent && state.delinquentDays === 0) {
+        log.info('GasAccount delinquency cleared', { gasAccountId, polls: i + 1 });
+        return;
+      }
+      await new Promise(r => setTimeout(r, pollIntervalMs));
+    }
+    const final = await this.getGasDelinquency(gasAccountId);
+    throw new Error(
+      `GasAccount ${gasAccountId} delinquency did not clear after ${maxRetries} polls. ` +
+        `Final: isDelinquent=${final.isDelinquent}, delinquentDays=${final.delinquentDays}.`
+    );
+  }
 }
 
 export const accountQueries = new AccountQueries();

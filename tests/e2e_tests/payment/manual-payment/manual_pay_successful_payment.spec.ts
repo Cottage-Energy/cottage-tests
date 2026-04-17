@@ -3,10 +3,11 @@ import { newUserMoveInManualPayment, newUserMoveInSkipPayment, newUserMoveInManu
 import { ManualPaymentChecks } from '../../../resources/fixtures/payment';
 import { utilityQueries, accountQueries, billQueries } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import * as PaymentData from '../../../resources/data/payment-data.json';
 
 const paymentUtilities = new ManualPaymentChecks();
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 
 //test.beforeAll(async ({playwright,page}) => {
@@ -16,12 +17,14 @@ let MoveIn: any;
 test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling("autotest",true);
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
-  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+  // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
   
 test.afterEach(async ({ page },testInfo) => {
-    await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    if (MoveIn?.pgUserEmail) {
+      await CleanUp.Test_User_Clean_Up(MoveIn.pgUserEmail);
+    }
     //await page.close();
 });
   
@@ -620,4 +623,173 @@ test.describe('Valid Bank Manual Payment', () => {
 
 });
 
+// =============================================================================
+// PR-005a: Delinquency cleared by manual payment (Cian review 2026-04-14)
+// =============================================================================
+// Closes the automation gap from Cian's review of payment_system_ledger_flows.md.
+// The docs previously claimed `isDelinquent` was cleared ONLY by the reminder
+// pipeline. Cian pointed out that PaymentProcessor.recalculateDelinquency()
+// also fires on every successful payment (services
+// packages/utilities/src/payments/payment-processor.ts:~233).
+//
+// Test strategy: seed `isDelinquent=true`, `delinquentDays=30` on the
+// ElectricAccount directly (simulating what the reminder cron would have set),
+// then run the standard manual-pay flow and assert flags clear WITHOUT waiting
+// for the next reminder cron.
+test.describe('PR-005a: Delinquency cleared by manual payment', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  test(
+    'COMED electric — isDelinquent=true + delinquentDays=30 → cleared after manual card payment',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async ({ overviewPage, page, sidebarChat, billingPage }) => {
+      test.setTimeout(1800000);
+
+      const PGuserUsage = await generateTestUserData();
+
+      await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', null);
+      await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+      MoveIn = await newUserMoveInManualPayment(page, 'COMED', null, true, true);
+
+      await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
+      await overviewPage.Accept_New_Terms_And_Conditions();
+
+      const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+
+      // Seed delinquency — simulates what the reminder pipeline would have set
+      await accountQueries.setElectricDelinquent(electricAccountId, 30);
+
+      const before = await accountQueries.getElectricDelinquency(electricAccountId);
+      expect(before.isDelinquent, 'delinquency seed failed').toBe(true);
+
+      await billQueries.insertElectricBill(
+        electricAccountId,
+        PGuserUsage.ElectricAmount,
+        PGuserUsage.ElectricUsage
+      );
+      await page.waitForTimeout(500);
+      await paymentUtilities.Manual_Card_Payment_Electric_Checks(
+        page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, electricAccountId
+      );
+
+      // Payment succeeded. PaymentProcessor.recalculateDelinquency() should
+      // have fired. Poll for up to 60s — if it takes longer, the handler
+      // likely isn't being called on the manual-pay path.
+      await accountQueries.waitForElectricDelinquencyCleared(electricAccountId, 30, 2000);
+
+      const after = await accountQueries.getElectricDelinquency(electricAccountId);
+      expect(after.isDelinquent, 'manual pay should clear isDelinquent').toBe(false);
+      expect(after.delinquentDays, 'manual pay should zero delinquentDays').toBe(0);
+    }
+  );
+});
+
+// =============================================================================
+// PR-005f: Multi-CA per-account delinquency independence
+// =============================================================================
+// When a user has SEPARATE charge accounts (electric + gas on different
+// companies), paying one utility should only clear THAT account's
+// isDelinquent. PaymentProcessor.recalculateDelinquency iterates charge
+// accounts — a bug could either clear both or neither.
+//
+// Uses COMED electric + NGMA gas (separate charge accounts — different companies).
+test.describe('PR-005f: Multi-CA delinquency independence', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  test(
+    'COMED electric + NGMA gas (separate CAs) — pay electric only → only electric clears',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async ({ overviewPage, page, sidebarChat, billingPage }) => {
+      test.setTimeout(1800000);
+
+      const PGuserUsage = await generateTestUserData();
+
+      await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', 'NGMA');
+      await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+      MoveIn = await newUserMoveInManualPayment(page, 'COMED', 'NGMA', true, false);
+
+      await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
+      await overviewPage.Accept_New_Terms_And_Conditions();
+
+      const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+      const gasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
+
+      // Seed delinquency on BOTH accounts
+      await accountQueries.setElectricDelinquent(electricAccountId, 30);
+      await accountQueries.setGasDelinquent(gasAccountId, 30);
+
+      // Pay ONLY the electric bill (not gas)
+      await billQueries.insertElectricBill(
+        electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage
+      );
+      await page.waitForTimeout(500);
+      await paymentUtilities.Manual_Card_Payment_Electric_Checks(
+        page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, electricAccountId
+      );
+
+      // Wait for electric's delinquency to clear
+      await accountQueries.waitForElectricDelinquencyCleared(electricAccountId, 30, 2000);
+
+      // Assert: electric cleared, gas STAYS delinquent
+      const electricAfter = await accountQueries.getElectricDelinquency(electricAccountId);
+      const gasAfter = await accountQueries.getGasDelinquency(gasAccountId);
+
+      expect(electricAfter.isDelinquent, 'electric should clear after its bill is paid').toBe(false);
+      expect(
+        gasAfter.isDelinquent,
+        'gas should REMAIN delinquent — its bill was never paid (independence)'
+      ).toBe(true);
+    }
+  );
+});
+
+// =============================================================================
+// PR-005g: GasAccount delinquency clearing (symmetric to PR-005a)
+// =============================================================================
+// Same invariant as PR-005a but for GasAccount.isDelinquent. Uses DUKE gas-only
+// (no electric account). If PaymentProcessor.recalculateDelinquency only
+// handles electric, gas-only users with paid bills would stay flagged.
+test.describe('PR-005g: GasAccount delinquency cleared by manual payment', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  test(
+    'DUKE gas-only — isDelinquent=true on GasAccount → cleared after manual gas payment',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async ({ overviewPage, page, sidebarChat, billingPage }) => {
+      test.setTimeout(1800000);
+
+      const PGuserUsage = await generateTestUserData();
+
+      await utilityQueries.updateCompaniesToBuilding('autotest', null, 'DUKE');
+      await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+      MoveIn = await newUserMoveInManualPayment(page, null, 'DUKE', true, true);
+
+      await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
+      await overviewPage.Accept_New_Terms_And_Conditions();
+
+      const gasAccountId = await accountQueries.checkGetGasAccountId(MoveIn.cottageUserId);
+      await accountQueries.setGasDelinquent(gasAccountId, 30);
+
+      const before = await accountQueries.getGasDelinquency(gasAccountId);
+      expect(before.isDelinquent, 'delinquency seed failed').toBe(true);
+
+      await billQueries.insertGasBill(
+        gasAccountId, PGuserUsage.GasAmount, PGuserUsage.GasUsage
+      );
+      await page.waitForTimeout(500);
+      await paymentUtilities.Manual_Card_Payment_Gas_Checks(
+        page, overviewPage, billingPage, sidebarChat, MoveIn, PGuserUsage, gasAccountId
+      );
+
+      await accountQueries.waitForGasDelinquencyCleared(gasAccountId, 30, 2000);
+
+      const after = await accountQueries.getGasDelinquency(gasAccountId);
+      expect(after.isDelinquent, 'gas payment should clear isDelinquent on GasAccount').toBe(false);
+      expect(after.delinquentDays, 'should zero delinquentDays on GasAccount').toBe(0);
+    }
+  );
+});
 

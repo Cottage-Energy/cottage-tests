@@ -15,7 +15,7 @@ Before writing test cases from scratch, check if a test plan already exists:
 - If no plan exists → proceed with gathering context from the user
 
 ## 1b. Determine Test Type
-Detect whether this is an **e2e test** (UI interaction) or an **API test** (endpoint validation):
+Detect whether this is an **e2e test** (UI interaction), **API test** (endpoint validation), or **performance test** (page load metrics):
 
 | Signal | Type |
 |--------|------|
@@ -23,9 +23,21 @@ Detect whether this is an **e2e test** (UI interaction) or an **API test** (endp
 | Target is a REST endpoint, webhook, or backend service | API |
 | User says "test this flow", "test this page", references a URL | E2E |
 | Target involves UI interaction, forms, navigation | E2E |
+| User says "performance test", "page load", "web vitals", "LCP", "TTFB" | Performance |
+| Target is measuring speed, bundle size, or load time | Performance |
 
 - **E2E** → continue to Step 2 (below)
 - **API** → skip to Step 2-API
+- **Performance** → skip to Step 2-Perf
+
+## 2-Perf. Performance Test Placement
+- Place in `tests/performance_tests/`
+- Add page to `PUBLIC_PAGES` or `AUTHENTICATED_PAGES` array in the existing spec (prefer extending existing specs over creating new ones)
+- If the page needs custom thresholds, add to `PAGE_SPECIFIC_THRESHOLDS` in `tests/resources/constants/performanceThresholds.ts`
+- Tag with `TEST_TAGS.PERFORMANCE`
+- Import from `@playwright/test` directly (NOT from page_objects — perf tests don't need POM fixtures)
+- Use `performanceHelper` functions: `injectPerformanceObservers`, `collectPerformanceMetrics`, `assertPerformanceThresholds`, `logPerformanceSummary`
+- See `tests/docs/performance-testing-guide.md` for full architecture and patterns
 
 ## 2. Determine Placement (E2E)
 - Ask which feature area: `connect-account`, `cottage-user-move-in`, `homepage`, `payment`, or a new one
@@ -381,6 +393,9 @@ test.describe('API: Feature Name', () => {
 - **Prefer regex locators** in POMs for text-based locators — e.g., `page.getByRole('heading', { name: /Upload document/i })` instead of exact `'Upload document'`. Regex survives minor UI text changes without breaking tests.
 - **OTP-based tests**: Do NOT use `FastmailActions.Get_OTP()` for shared test accounts — it asserts `content.length === 1` which breaks when prior sessions left stale OTP emails. Instead, create a custom `getLatestOTP()` that takes the most recent email. Import `Email` type from `tests/resources/utils/fastmail/types` for proper typing.
 - **Tests sharing the same OTP user** should be combined into a single test or run sequentially with a single sign-in, to avoid triggering multiple OTP emails that pollute each other.
+- **NEVER use `page.evaluate()` to fill form inputs** — it sets the DOM value but does NOT trigger React controlled component state. Form validation will still see the field as empty. Always use Playwright's native `fill()` method (`page.locator(...).fill(value)` or `browser_fill_form` via MCP).
+- **Password dialog for new users**: ALL freshly-created move-in users get a "Set up your new password" alertdialog. Tests must call `overviewPage.Setup_Password()` before `Accept_New_Terms_And_Conditions()`.
+- **ChargeAccount prerequisite for bill tests**: `balance-ledger-batch` requires a `ChargeAccount` with `ledgerBalanceID`. This is created by the registration Inngest pipeline, NOT by manually setting `status = ACTIVE`. If your test user has no ChargeAccount, inserted bills will stay `approved` forever.
 
 ## 8. Validate Before Done (Verification Before Completion)
 

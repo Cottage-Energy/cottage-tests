@@ -220,10 +220,8 @@ export class ManualPaymentChecks {
           billingPage.Check_Gas_Bill_Status(PGuserUsage.GasUsage.toString(), "Pending"),
           billingPage.Check_Gas_Bill_View_Button(PGuserUsage.GasUsage.toString()),
           billingPage.Check_Gas_Bill_Amount(PGuserUsage.GasUsage.toString(), PGuserUsage.GasAmountActual),
-          // FIXME: Check_Electric_Bill_Ready_Email not yet implemented in FastmailActions
-          // FastmailActions.Check_Electric_Bill_Ready_Email(MoveIn.pgUserEmail, PGuserUsage.ElectricUsage, PGuserUsage.ElectricAmountActual),
-          // FIXME: Check_Gas_Bill_Ready_Email not yet implemented in FastmailActions
-          // FastmailActions.Check_Gas_Bill_Ready_Email(MoveIn.pgUserEmail, PGuserUsage.GasUsage, PGuserUsage.GasAmountActual)
+          FastmailActions.Check_Electric_Bill_Is_Ready_For_Payment(MoveIn.pgUserEmail, PGuserUsage.ElectricAmountActual),
+          FastmailActions.Check_Gas_Bill_Is_Ready_For_Payment(MoveIn.pgUserEmail, PGuserUsage.GasAmountActual)
       ]);
 
       await billingPage.Click_Pay_Bill_Button();

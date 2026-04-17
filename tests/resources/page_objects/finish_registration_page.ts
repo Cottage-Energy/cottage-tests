@@ -202,6 +202,38 @@ export class FinishRegistrationPage {
     await expect(this.doItLaterButton).toBeVisible();
   }
 
+  /**
+   * Fill identity verification fields and submit.
+   * Used by P2-13 (finish-reg → payment onboarding).
+   * Verified live 2026-04-14: step 2 shows DOB (prefilled), move-in date
+   * (prefilled), SSN (required), Previous Address (required).
+   */
+  async completeIdentityVerification(ssn: string, priorAddress: string): Promise<void> {
+    log.info('Completing identity verification', { hasSsn: !!ssn });
+    await this.completeHeading.waitFor({ timeout: TIMEOUTS.MEDIUM });
+
+    // SSN
+    await this.ssnInput.fill(ssn);
+
+    // Previous address — uses autocomplete, type slowly then pick first suggestion
+    await this.priorAddressInput.click();
+    await this.priorAddressInput.pressSequentially(priorAddress, { delay: 50 });
+    // Wait for autocomplete dropdown, then select first option
+    const suggestion = this.page.getByRole('option').first();
+    try {
+      await suggestion.waitFor({ timeout: TIMEOUTS.SHORT });
+      await suggestion.click();
+    } catch {
+      // No autocomplete dropdown — address was typed as free text
+      log.info('No autocomplete dropdown — using typed address as-is');
+    }
+
+    // Submit
+    await expect(this.verifyAndCompleteButton).toBeEnabled({ timeout: TIMEOUTS.SHORT });
+    await this.verifyAndCompleteButton.click();
+    log.info('Clicked Verify & Complete');
+  }
+
   /** Verify legal consent links are present with correct hrefs */
   async verifyLegalLinks(): Promise<void> {
     log.info('Verifying legal links');

@@ -12,7 +12,7 @@ let MoveIn: any;
 test.beforeEach(async ({ page },testInfo) => {
   await utilityQueries.updateBuildingBilling("autotest",true);
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
-  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+  // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await utilityQueries.updateBuildingOfferRenewableEnergy("autotest", true);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
@@ -65,7 +65,7 @@ test.describe('Short Code Billing New User Electric &/or Gas', () => {
     await utilityQueries.updateCompaniesToBuilding("autotest", "BGE", "BGE");
     
     await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
-    await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+    // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
     await page.goto('/move-in?shortCode=autotest',{ waitUntil: 'domcontentloaded' });
     MoveIn = await newUserMoveInAutoPayment(page, "BGE", "BGE", true, true);
     await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);

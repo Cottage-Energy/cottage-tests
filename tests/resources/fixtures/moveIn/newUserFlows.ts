@@ -117,12 +117,26 @@ export async function newUserMoveIn(options: MoveInOptions): Promise<MoveInResul
   await moveInPage.Enter_ID_Info_Prev_Add(MoveInData.COMEDaddress, electricCompany, gasCompany);
   await moveInPage.Submit_Move_In_Button();
 
-  // Wait for page to transition after ID submission (server creates user, may take a few seconds)
+  // Wait for page to transition after ID submission. Server creates the user
+  // which can take 5-15s in dev under load. Also wait for network idle so any
+  // post-create redirect (e.g. to the payment step) has settled before we probe
+  // for the payment title in Skip_Payment_Details / handlePayment.
   await moveInPage.page.waitForLoadState('domcontentloaded');
-  await moveInPage.page.waitForTimeout(5000);
+  try {
+    await moveInPage.page.waitForLoadState('networkidle', { timeout: 15000 });
+  } catch {
+    log.debug('networkidle not reached after ID submit; continuing anyway');
+  }
+  await moveInPage.page.waitForTimeout(3000);
 
   // Step 7: Payment Handling
   const paymentPageVisible = await moveInPage.Check_Payment_Page_Visibility(electricCompany, gasCompany);
+  log.debug('Post-ID-submit state', {
+    url: moveInPage.page.url(),
+    paymentPageVisible,
+    electricCompany,
+    gasCompany,
+  });
 
   if (paymentPageVisible) {
     await handlePayment(

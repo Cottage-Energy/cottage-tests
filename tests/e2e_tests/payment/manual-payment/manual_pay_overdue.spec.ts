@@ -13,6 +13,7 @@ import {
   smsQueries,
 } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import { logger } from '../../../resources/utils/logger';
 import { supabase } from '../../../resources/utils/supabase';
 import * as FastmailActions from '../../../resources/fixtures/fastmail_actions';
@@ -31,12 +32,12 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * users from silent service disconnection by sending escalating warnings
  * and providing a clear path to restore service after payment.
  */
-let MoveIn: ReturnType<typeof Object.create>;
+let MoveIn: MoveInResult | undefined;
 
 test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling('autotest', true);
   await utilityQueries.updateBuildingUseEncourageConversion('autotest', false);
-  await utilityQueries.updatePartnerUseEncourageConversion('Moved', false);
+  // await utilityQueries.updatePartnerUseEncourageConversion('Moved', false);
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
@@ -695,4 +696,144 @@ test.describe('Recovery Paths', () => {
 
     logger.info('P2-25: Partial payment stays NEEDS_OFF_BOARDING — PASS');
   });
+});
+
+// =============================================================================
+// PR-005c: Partial payment keeps delinquency (Cian review 2026-04-14)
+// =============================================================================
+// Complements P2-25 (above) which asserts account STATUS stays NEEDS_OFF_BOARDING
+// after partial pay. PR-005c asserts the isDelinquent/delinquentDays FIELDS
+// behave correctly: partial payment with remaining balance >= $1 must NOT
+// clear `isDelinquent` because calculateDelinquency's balance check fails.
+//
+// This is distinct from P2-25 because:
+//   - P2-25 checks ElectricAccount.status (NEEDS_OFF_BOARDING after 25+ days)
+//   - PR-005c checks ElectricAccount.isDelinquent / delinquentDays (post-payment)
+//   - P2-25 uses 25+ days overdue + offboarding reconciliation
+//   - PR-005c uses any delinquent state + PaymentProcessor.recalculateDelinquency
+//
+// UI verified 2026-04-14: partial payment via "Other Amount" radio in the
+// standard Pay Bill modal.
+test.describe('PR-005c: Partial payment keeps delinquency', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  test(
+    'COMED electric — isDelinquent=true, partial pay via Other Amount → delinquency remains',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async ({ overviewPage, page }) => {
+      test.setTimeout(1800000);
+
+      const PGuserUsage = await generateTestUserData();
+
+      await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', null);
+      await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+      MoveIn = await newUserMoveInManualPayment(page, 'COMED', null, true, true);
+
+      await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
+      await overviewPage.Accept_New_Terms_And_Conditions();
+
+      const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+
+      await billQueries.insertElectricBill(
+        electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage
+      );
+      await page.waitForTimeout(500);
+
+      // Seed delinquency pre-payment
+      await accountQueries.setElectricDelinquent(electricAccountId, 30);
+
+      // Partial amount: half the outstanding (in dollars — ElectricAmount is cents)
+      const partialDollars = Math.floor((PGuserUsage.ElectricAmount / 100) / 2);
+
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(1000);
+      await overviewPage.Click_Pay_Bill_Button();
+      await overviewPage.Check_Pay_Outstanding_Balance_Modal();
+      await overviewPage.Enter_Partial_Pay_Amount(partialDollars);
+      await overviewPage.Submit_Pay_Bill_Modal();
+      await page.waitForTimeout(10000);
+
+      // Core assertion: partial payment should NOT clear delinquency when
+      // remaining balance is still >= $1.00. Poll for up to 60s — if
+      // recalculateDelinquency wrongly clears the flag, we'll observe it.
+      const finalState = await (async () => {
+        for (let i = 0; i < 30; i++) {
+          const s = await accountQueries.getElectricDelinquency(electricAccountId);
+          if (!s.isDelinquent) return s;
+          await page.waitForTimeout(2000);
+        }
+        return accountQueries.getElectricDelinquency(electricAccountId);
+      })();
+
+      logger.info(`PR-005c: Delinquency after partial payment — isDelinquent=${finalState.isDelinquent}, days=${finalState.delinquentDays}`);
+      expect(
+        finalState.isDelinquent,
+        'Partial payment (balance still > $1) must not clear isDelinquent'
+      ).toBe(true);
+    }
+  );
+});
+
+// =============================================================================
+// PR-005e: Partial payment bringing balance below $1 CLEARS delinquency
+// =============================================================================
+// Threshold branch test. calculateDelinquency checks dueBalance >= $1.00 AND
+// daysOverdue > 0. If partial pay drops balance to $0.50, the dueBalance
+// branch fails → delinquency should clear even though payment was partial.
+//
+// Uses the same flow as PR-005c but pays ALL-BUT-50-CENTS so the residual
+// balance is below $1.00.
+test.describe('PR-005e: Partial below $1 threshold clears delinquency', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  test(
+    'COMED electric — partial payment leaving $0.50 balance → delinquency clears',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async ({ overviewPage, page }) => {
+      test.setTimeout(1800000);
+
+      const PGuserUsage = await generateTestUserData();
+
+      await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', null);
+      await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+      MoveIn = await newUserMoveInManualPayment(page, 'COMED', null, true, true);
+
+      await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
+      await overviewPage.Accept_New_Terms_And_Conditions();
+
+      const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+
+      await billQueries.insertElectricBill(
+        electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage
+      );
+      await page.waitForTimeout(500);
+
+      await accountQueries.setElectricDelinquent(electricAccountId, 30);
+
+      // Pay everything except 50 cents. ElectricAmount is in cents, we want
+      // to leave $0.50 = 50 cents unpaid. Amount to pay in dollars:
+      const billDollars = PGuserUsage.ElectricAmount / 100;
+      const partialDollars = Number((billDollars - 0.50).toFixed(2));
+
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(1000);
+      await overviewPage.Click_Pay_Bill_Button();
+      await overviewPage.Check_Pay_Outstanding_Balance_Modal();
+      await overviewPage.Enter_Partial_Pay_Amount(partialDollars);
+      await overviewPage.Submit_Pay_Bill_Modal();
+
+      // Wait for payment success + recalculateDelinquency. Because residual
+      // balance is < $1.00, calculateDelinquency should return
+      // shouldUntagElectric=true → delinquency clears.
+      await accountQueries.waitForElectricDelinquencyCleared(electricAccountId, 45, 2000);
+
+      const after = await accountQueries.getElectricDelinquency(electricAccountId);
+      expect(
+        after.isDelinquent,
+        'Balance below $1.00 threshold should clear isDelinquent via recalculateDelinquency'
+      ).toBe(false);
+    }
+  );
 });

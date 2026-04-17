@@ -29,6 +29,8 @@ Three execution modes — pick the right one based on what the user needs.
 | Regression scope | `npx playwright test --grep /@regression1/ --project=Chromium` |
 | By tag | `npx playwright test --grep /@move-in/` |
 | Exploratory | `npx playwright test --project=Exploratory` |
+| Performance suite | `npx playwright test --project=Performance` |
+| Performance (TanStack) | `BASE_URL=https://tanstack-dev.onepublicgrid.com npx playwright test --project=Performance` |
 | All tests | `npx playwright test` |
 
 ### Run mode flags
@@ -38,6 +40,7 @@ Three execution modes — pick the right one based on what the user needs.
 | Headed | `--headed` | Watch the test run live |
 | Debug | `--debug` | Step through with Playwright Inspector |
 | Specific browser | `--project=Chromium\|Firefox\|Safari\|Mobile_Chrome\|Mobile_Safari` | Cross-browser check |
+| Performance | `--project=Performance` | Chromium-only, no retries, serial |
 
 ### Execute
 Always include `PLAYWRIGHT_HTML_OPEN=never` to prevent the report browser from blocking.

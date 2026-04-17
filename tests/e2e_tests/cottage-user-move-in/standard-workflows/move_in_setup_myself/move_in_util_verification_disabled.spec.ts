@@ -12,8 +12,8 @@ test.beforeEach(async ({ page },testInfo) => {
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
   // Disable utility verification flag on both Building and MoveInPartner
   await utilityQueries.updateBuildingUtilityVerification("autotest", false);
-  await utilityQueries.updatePartnerUtilityVerification("Moved", false);
-  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+  // await utilityQueries.updatePartnerUtilityVerification("Moved", false);
+  // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/',{ waitUntil: 'domcontentloaded' })
 });
 

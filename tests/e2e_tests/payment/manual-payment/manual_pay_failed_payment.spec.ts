@@ -14,6 +14,7 @@ import {
   blnkQueries,
 } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import { supabase } from '../../../resources/utils/supabase';
 import { logger } from '../../../resources/utils/logger';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -33,12 +34,12 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * Utility combos: electric only, gas only, electric+gas
  * Recovery paths: card→card, card→bank, bank→card
  */
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling('autotest', true);
   await utilityQueries.updateBuildingUseEncourageConversion('autotest', false);
-  await utilityQueries.updatePartnerUseEncourageConversion('Moved', false);
+  // await utilityQueries.updatePartnerUseEncourageConversion('Moved', false);
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
@@ -561,4 +562,80 @@ test.describe('Payment Mode Transitions', () => {
 
     logger.info('Auto to Manual transition: bill not auto-paid, manual pay succeeded: PASS');
   });
+});
+
+// =============================================================================
+// PR-005h: Failed payment does NOT clear delinquency
+// =============================================================================
+// Negative test: recalculateDelinquency fires ONLY on successful payment, not
+// on failure. If the hook were wrongly moved outside the success branch, a
+// declining card could wrongly clear isDelinquent. This guards against that
+// class of regression.
+//
+// Uses the existing invalid-card fixture pattern (PaymentData.InvalidCardNumber
+// causes Stripe to decline the charge). Confirms that after the failure,
+// delinquency flags are unchanged.
+test.describe('PR-005h: Failed payment does NOT clear delinquency', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  test(
+    'COMED electric — invalid card fails, isDelinquent stays true (not cleared by failure)',
+    { tag: [TEST_TAGS.PAYMENT] },
+    async ({ overviewPage, page }) => {
+      test.setTimeout(1800000);
+
+      const PGuserUsage = await generateTestUserData();
+
+      await utilityQueries.updateCompaniesToBuilding('autotest', 'COMED', null);
+      await page.goto('/move-in?shortCode=autotest', { waitUntil: 'domcontentloaded' });
+      MoveIn = await newUserMoveInManualPayment(
+        page, 'COMED', null, true, false, false, PaymentData.InvalidCardNumber
+      );
+
+      await page.goto('/sign-in');
+      await overviewPage.Setup_Password();
+      await overviewPage.Accept_New_Terms_And_Conditions();
+
+      const electricAccountId = await accountQueries.checkGetElectricAccountId(MoveIn.cottageUserId);
+
+      // Seed delinquency pre-failure
+      await accountQueries.setElectricDelinquent(electricAccountId, 30);
+
+      // Insert bill and attempt payment with invalid card (will fail)
+      await billQueries.insertElectricBill(
+        electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage
+      );
+      await page.waitForTimeout(500);
+
+      const billId = await billQueries.getElectricBillId(
+        electricAccountId, PGuserUsage.ElectricAmount, PGuserUsage.ElectricUsage
+      );
+      await billQueries.approveElectricBill(billId);
+      await page.waitForTimeout(10000);
+      await billQueries.checkElectricBillStatus(electricAccountId, 'waiting_for_user');
+
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(1000);
+      await overviewPage.Click_Pay_Bill_Button();
+      await overviewPage.Check_Pay_Outstanding_Balance_Modal();
+      await overviewPage.Submit_Pay_Bill_Modal();
+
+      // Wait for the failure to resolve. Stripe card decline is quick (seconds).
+      // We wait a generous 30s to ensure recalculateDelinquency had its chance
+      // to (wrongly) fire. If it did, we'd see isDelinquent=false.
+      await page.waitForTimeout(30000);
+
+      const after = await accountQueries.getElectricDelinquency(electricAccountId);
+      expect(
+        after.isDelinquent,
+        'Failed payment must NOT clear isDelinquent — recalculateDelinquency only runs on success'
+      ).toBe(true);
+      expect(
+        after.delinquentDays,
+        'delinquentDays should remain at seeded value (30) on failure'
+      ).toBe(30);
+
+      logger.info('PR-005h: Failed payment preserved delinquency state — PASS');
+    }
+  );
 });

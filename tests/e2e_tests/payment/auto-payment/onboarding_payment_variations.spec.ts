@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling("autotest", true);
   await utilityQueries.updateBuildingUseEncourageConversion("autotest", false);
   await utilityQueries.updateBuildingOfferRenewableEnergy("autotest", false);
-  await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
+  // await utilityQueries.updatePartnerUseEncourageConversion("Moved", false);
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
@@ -122,7 +122,7 @@ test.describe('Onboarding Payment Variations — Finish Registration', () => {
 
   test('P2-13: Finish registration flow (API-created user)', {
     tag: [TEST_TAGS.PAYMENT],
-  }, async ({ moveInpage, overviewPage, page, sidebarChat, billingPage, context }) => {
+  }, async ({ overviewPage, page, finishRegistrationPage }) => {
 
     test.setTimeout(1800000);
 
@@ -137,6 +137,7 @@ test.describe('Onboarding Payment Variations — Finish Registration', () => {
         lastName: PGuserUsage.LastName,
         email: PGuserUsage.Email,
         phone: '1111111111',
+        dateOfBirth: '1990-05-15',
       },
       property: {
         street: '123 Main St',
@@ -168,20 +169,34 @@ test.describe('Onboarding Payment Variations — Finish Registration', () => {
       smsConsent: false,
     };
 
-    // Step 2: Navigate to finish registration URL
-    // TODO: Verify via Playwright MCP the exact finish-registration flow:
-    //       1. User clicks finish-reg link from email (or navigate directly)
-    //       2. User completes identity verification (DOB + SSN + previous address)
-    //       3. User is prompted to add payment method
-    //       The finishRegUrl may point to a different domain or path.
-    await page.goto(finishRegUrl, { waitUntil: 'domcontentloaded' });
+    // Step 2: Navigate to finish-registration URL and complete address step
+    // Verified via Playwright MCP 2026-04-14: 2-step flow
+    //   Step 1: Address (prefilled from API params) → Continue
+    //   Step 2: Identity verification (DOB prefilled, SSN + previous address required)
+    await finishRegistrationPage.goto(finishRegUrl);
+    await finishRegistrationPage.waitForAddressStep();
+    await finishRegistrationPage.clickContinue();
 
-    // Step 3: Complete registration (identity verification)
-    // TODO: The finish-registration flow requires DOB, SSN, and previous address.
-    //       These steps use MoveInPage methods but the page structure may differ.
-    //       Verify the exact form fields and flow via Playwright MCP before enabling.
+    // Step 2b: Company questions (if present — ComEd triggers this)
+    await finishRegistrationPage.answerCompanyQuestionsAndContinue();
 
-    // Step 4: Set up password and payment method
+    // Step 3: Complete identity verification (DOB prefilled from API, need SSN + prior address)
+    await finishRegistrationPage.completeIdentityVerification(
+      PGuserUsage.SSN,
+      '808 Chicago Ave, Dixon, IL 61021'
+    );
+
+    // Step 4: Wait for registration to complete and redirect
+    await page.waitForLoadState('domcontentloaded');
+    try {
+      await page.waitForLoadState('networkidle', { timeout: 15000 });
+    } catch {
+      // networkidle may not fire — continue
+    }
+    await page.waitForTimeout(5000);
+
+    // Step 5: Sign in and set up payment
+    await page.goto('/sign-in');
     await overviewPage.Setup_Password();
     await overviewPage.Accept_New_Terms_And_Conditions();
     await overviewPage.Select_Pay_In_Full_If_Flex_Enabled();
@@ -193,7 +208,7 @@ test.describe('Onboarding Payment Variations — Finish Registration', () => {
       PGuserUsage.Zip,
     );
 
-    // Payment Checks — Electric only (finish-reg creates electric account)
+    // Payment Checks — Electric only (finish-reg creates electric account via ComEd)
     await paymentUtilities.Auto_Card_Payment_Electric_Checks(page, MoveIn, PGuserUsage);
   });
 });

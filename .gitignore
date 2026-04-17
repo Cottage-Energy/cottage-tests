@@ -37,11 +37,20 @@ tmpclaude-*-cwd
 # Playwright MCP logs
 .playwright-mcp/
 
+# Performance test results (local baselines)
+tests/performance_tests/results/
+
 # Debug and temp files
 debug-*
 ss-*.png
 screenshot-*.png
 listDevices.*
+
+# Exploratory session artifacts (screenshots and snapshots dumped in repo root)
+/*.png
+/*.jpg
+/*.jpeg
+/*.yml
 
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json

@@ -37,6 +37,14 @@ Before investigating, understand what you're looking at. Process all available s
 ### From conversation (verbal description)
 - User describes the issue — extract what needs to be tested and expected behavior
 
+### From a migration / parity ticket
+When testing a framework migration (e.g., Next.js → TanStack):
+- **Verify deployment URL first** — confirm you're on the TARGET deployment (`tanstack-dev.onepublicgrid.com`), not the source (`dev.publicgrid.energy`). Check for stack markers (`_next/static` = Next.js, TanStack devtools = TanStack).
+- **Side-by-side parity testing** — for every flow, open source AND target deployments. Screenshot both. Compare: URL params, field values, toggle defaults, button visibility, checkbox initial state, field attributes (`disabled`, `name`, `checked`).
+- **Inspect beyond happy path** — don't just check "did the flow complete?" Use `browser_evaluate` to inspect DOM attributes: `disabled`, `name`, `value`, `checked` on form fields. Check URL bar for encoded params (e.g., `%22` = literal double quotes). Check component visibility for guest vs logged-in users.
+- **Code audit items = test cases** — when a developer posts a code audit, every item becomes a QA test case. Triage into UI-testable / network-testable / code-only (see `feedback_audit_item_triage.md`). Test the UI-testable ones immediately — don't wait to be asked.
+- **Create test conditions proactively** — never mark something "untested" because you lack a specific user/state. Create the user via move-in, set flags via Supabase, insert test data. If you need a Light user, create one via txtest. If you need a passwordless user, set `shouldResetPassword: true`.
+
 ### Check existing coverage
 - `Glob` + `Grep` in `tests/e2e_tests/` to find any existing tests for the area under investigation
 - Note what's already automated and what gaps exist
@@ -84,6 +92,26 @@ After each significant interaction, `mcp__playwright__browser_snapshot` to see t
 - **Network verification** — `mcp__playwright__browser_network_requests` to check API calls succeeded
 - **Console check** — `mcp__playwright__browser_console_messages` for JS errors
 
+#### d2. Partner attribution verification (REQUIRED when testing partner integrations)
+When the feature under test is a partner-driven flow — partner shortcodes (`autotest`, `pgtest`, `venn73458test`, `moved5439797test`, etc.), D2C embed APIs (Moved D2C, future Renew/Venn D2C), or anything that claims to tie a user to an external partner — you MUST complete the flow end-to-end and verify partner attribution at the DB level. "The theme renders correctly" is not evidence of correct attribution.
+
+**Minimum checks:**
+1. Complete the move-in / registration flow through to the success screen (non-billing path is fastest)
+2. Query `Referrals` joined to `MoveInPartner`:
+   ```sql
+   SELECT mip.name AS attributed_partner, r."referralStatus", p."externalLeaseID"
+   FROM "Referrals" r
+   JOIN "CottageUsers" cu ON cu.id = r.referred
+   LEFT JOIN "ElectricAccount" ea ON ea."cottageUserID" = cu.id
+   LEFT JOIN "Property" p ON p."electricAccountID" = ea.id
+   JOIN "MoveInPartner" mip ON mip.id = r."referredBy"
+   WHERE cu.email = '<test user email>';
+   ```
+3. Assert `attributed_partner` matches the expected partner name — NOT a fallback partner (Simpson, etc.).
+4. If a `leaseID` / `externalLeaseID` was part of the input, verify it's stored on `Property.externalLeaseID`.
+
+**Why this matters:** the UI can render the correct partner theme (logo, colors, copy) while the backend attribution falls back to a default partner. Both are wired through separate code paths. A theme-rendering pass tells you nothing about commercial attribution correctness. Learned from ENG-2687 — Moved D2C's `shortCode=moved` rendered the Moved theme perfectly but wrote `Referrals.referredBy = "Simpson"` for every single test user (filed as ENG-2694 Critical). The bug would have shipped if the exploratory session had stopped at "theme looks right".
+
 #### e. Compare against Figma (if design link provided)
 - `mcp__figma__get_screenshot` for the expected design
 - `mcp__playwright__browser_take_screenshot` for the live app at matching viewport
@@ -96,9 +124,19 @@ After each significant interaction, `mcp__playwright__browser_snapshot` to see t
   - Content — placeholder text, labels, button copy match design
 - Flag differences as either **Bug** (wrong implementation) or **Improvement** (design could be better)
 
-#### f. Record the AC result
+#### f. Complete every flow to the end (ENFORCED)
+**NEVER stop a flow partway through.** "Page renders" or "step 2 of 5 works" is NOT a pass. For every flow tested:
+1. Complete to the final page (success, error, or dashboard redirect)
+2. Verify DB state: `mcp__supabase__execute_sql` to check user type, status, flags, relationships
+3. Check ALL emails: use Fastmail JMAP to read actual content — look for `<template></template>` (blank body)
+4. If the flow has a payment step, fill the Stripe card and submit — use real test PDFs from `tests/resources/data/` for file uploads (tiny PNGs get rejected)
+5. If blocked (can't sign in, session lost), use OTP sign-in via Fastmail JMAP to recover — never skip the flow
+
+**Why:** On Apr 14, a CRITICAL bug (Light payment post-confirm fails) was found only by completing the TX bill drop → Light switch flow to the payment step. Blank email bodies were found only by reading email content. DB sync bugs found only by querying after sign-in.
+
+#### g. Record the AC result
 For each AC, log:
-- **PASS** — behavior matches expectation, screenshot captured
+- **PASS** — behavior matches expectation, DB verified, emails checked, screenshot captured
 - **FAIL** — behavior deviates → immediately chain to `/log-bug` with:
   - Steps to reproduce (exact clicks performed)
   - Expected vs actual behavior
@@ -144,6 +182,8 @@ When an AC seems "not testable from UI," manipulate the underlying data through 
 3. Change ALL variables (e.g., NULL every dueDate) → expose the real fallback behavior
 4. This narrows down exactly where behavior diverges from expected
 
+**Payment testing prerequisite**: Before any payment-related exploratory session, read `tests/docs/payment-system.md` (system reference) and `tests/docs/payment-testing-guide.md` (test infrastructure — check classes, DB queries, POM methods, email checks, UI state mappings, spec coverage).
+
 **Technique: Pay-then-insert cycle** (for billing/payment scenarios)
 1. Pay all outstanding bills via UI → balance = $0
 2. Manipulate existing data via Supabase if needed (e.g., NULL dueDates)
@@ -164,8 +204,21 @@ curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" \
 Key event names:
 - `transaction-generation-trigger` — creates pending `SubscriptionMetadata` for active subscriptions
 - `subscriptions-payment-trigger` — processes pending metadata into payments
+- `auto-pay-reconciliation-trigger` — retries failed autopay after user updates payment method. See [auto-pay-reconciliation-trigger-pipeline.md](../../../../../.claude/projects/c--Users-CHRISTIAN-Documents-GitHub-cottage-tests/memory/auto-pay-reconciliation-trigger-pipeline.md) for full 3-function fan-out recipe.
 
 **Important**: Inngest API always returns 200 regardless of whether a function handled the event. Event names must match exactly (check `services` repo source for correct names). In production these are cron-triggered, not event-triggered.
+
+**Technique: auto-pay reconciliation recipe** (for "failed autopay → user updates card → verify success")
+When testing the `auto-pay-reconciliation-trigger` flow:
+1. Create billing user with **declined card** (`4000000000000341`) + autopay ON
+2. Insert approved bill → wait for `balance-ledger-batch` + `stripe-payment-capture-batch` crons
+3. Verify `Payment.status = 'failed'` with `errorCode = 'card_declined'`
+4. User updates card to `4242424242424242` via Account → Payment tab → Edit details
+5. Verify `CottageUsers.stripePaymentMethodID` changed; autopay still ON (isAutoPaymentEnabled = true)
+6. Fire: `curl -s -X POST "https://inn.gs/e/$INNGEST_EVENT_KEY" -H "Content-Type: application/json" -d '{"name": "auto-pay-reconciliation-trigger", "data": {}}'`
+7. Watch Inngest dashboard: expect 3 runs in sequence (trigger → batch → per-user)
+8. Verify new Payment row with `status = 'succeeded'` + "Your Bill Payment Confirmation" email (NOT "Payment Failed")
+Gotcha: `auto-pay-reconciliation-batch` sleeps 5s × batchNumber — even batch 1 has a 5s delay. Plan for 10-30s between trigger fire and per-user processing.
 
 **Cron-only functions** (CANNOT be triggered via event API — must wait for `*/5` schedule or invoke from Inngest dashboard):
 - `balance-ledger-batch` — processes approved bills → `processed`, creates Payment in `requires_capture`
@@ -589,10 +642,10 @@ When multiple independent test areas need exploration (e.g., different browsers,
 
 | Blocker | Symptom | Workaround |
 |---------|---------|------------|
-| Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page | `page.evaluate(() => document.querySelector('[role="alertdialog"]').remove())` |
+| Password reset dialog | `[role="alertdialog"]` with "Set up your new password" blocks the page. Appears for ALL freshly-created move-in users in dev. Shows BEFORE terms modal. | **Complete the Setup_Password form** (fill "PublicGrid#1" in both fields, click "Set new password"). DOM removal does NOT survive `page.reload()` — must complete the form. For automated tests: call `overviewPage.Setup_Password()` before `Accept_New_Terms_And_Conditions()`. |
 | `/sign-out` 404 | Direct navigation to `/sign-out` returns 404 | Clear cookies via `page.evaluate` then navigate to `/sign-in` |
 | GitHub MCP 404 | `mcp__github__get_pull_request` or `list_pull_requests` returns "Not Found" for cottage-nextjs, pg-admin, or other repos | Fall back to `gh pr list --repo Cottage-Energy/<repo> --state merged --limit 10 --json number,title,mergedAt,author` or `gh pr view <number> --repo Cottage-Energy/<repo> --json ...` |
-| Linear MCP auth expires | Linear tools not found in ToolSearch | Re-run `ToolSearch` with `select:mcp__linear__save_comment` — may re-trigger auth |
+| Linear MCP auth expires | Linear tools return "Authentication required" | Re-run `ToolSearch` — may re-trigger auth. **Fallback**: use Linear GraphQL API directly with `LINEAR_API_KEY` from `.env`. Endpoint: `https://api.linear.app/graphql`. See `payment-consolidated-learnings.md` for query patterns (commentCreate, commentUpdate, issueUpdate, searchIssues). |
 | OTP email pollution | Interactive sessions trigger OTP emails that accumulate for shared test accounts | After exploration, note which test accounts had OTPs triggered — automated tests using those accounts may fail until emails clear. Consider using `getLatestOTP()` pattern (take most recent email) instead of asserting exactly 1 email |
 | Start Service Date dialog | Every save on accounts with date discrepancy (Start Date ≠ Start Service Date) triggers "Start Service Date Change Detected" dialog | Dismiss with Cancel to avoid committing date changes. This is unrelated to the feature under test — don't mistake it for feature behavior |
 | Unknown test user password | Can't sign in to customer FE as a test user because password is unknown/expired | Use Supabase admin API: `source .env && curl -X PUT "https://wzlacfmshqvjhjczytan.supabase.co/auth/v1/admin/users/<user-id>" -H "Authorization: Bearer $SUPABASE_API_KEY" -H "apikey: $SUPABASE_API_KEY" -H "Content-Type: application/json" -d '{"password": "NewPassword123!"}'`. Both `Authorization` and `apikey` headers are required. Env var is `SUPABASE_API_KEY` (not `SUPABASE_SERVICE_ROLE_KEY`). |
@@ -613,6 +666,7 @@ When multiple independent test areas need exploration (e.g., different browsers,
 | No `jq` on Windows | bash JSON parsing fails | Use `node -e` with `JSON.parse()` instead of `curl | jq` |
 | Inngest cron functions not triggerable via event API | `inn.gs/e/balance-ledger.batch` returns 200 but does nothing — cron functions ignore event sends | Wait for `*/5` cron cycle (~5 min) or invoke from Inngest dashboard. Don't waste time retrying event sends. |
 | Bills stuck in `approved` | `balance-ledger-batch` won't process bills for non-billing users | User must have `maintainedFor` IS NOT NULL on ElectricAccount — requires billing move-in path ("Public Grid handles everything" + Stripe card). Non-billing users (`maintainedFor = null`) stay `approved` forever. |
+| Bills stuck in `approved` (billing user) | Billing user has `maintainedFor` set but bills still not processing | **ChargeAccount with `ledgerBalanceID` is required.** The cron silently skips bills where the account has no ChargeAccount. ChargeAccount is created by the **registration Inngest pipeline** during move-in — NOT by manually setting `ElectricAccount.status = 'ACTIVE'`. If a test user created via MCP move-in doesn't have a ChargeAccount, the registration pipeline didn't complete. Check: `SELECT ca.id, ca."ledgerBalanceID" FROM "ChargeAccount" ca WHERE ca."electricAccountID" = <id>`. |
 | Second bill won't process | First bill's payment is in `requires_capture`, blocking next bill | Pipeline is sequential: ledger batch → stripe capture → then next bill. Wait for `stripe-payment-capture-batch` cron, or set 2nd bill directly to `processed` for FE-only testing. |
 | Light session caching | Second Light flow test skips to success page | Close browser or clear cookies/localStorage/sessionStorage between each Light flow test |
 | Light phone validation | `1111111111` returns 400 Invalid phone number | Use `(646) 437-6170` for Light flow, `1111111111` for standard move-in |
@@ -788,3 +842,15 @@ After completing this skill, check: did any step not match reality? Did a tool n
 - **DB-level testing validates business logic when UI is blocked**: When PG-Admin session expired, testing case-sensitive ID behavior via `INSERT INTO "UtilityCompany"` directly in Supabase was faster and more conclusive than UI testing. This is a reusable pattern: for CRUD pages, test constraint/validation logic at the DB level, then test UX/feedback at the UI level.
 - **Create form defaults vs DB column defaults are separate concerns**: The PG-Admin create form uses its own defaults (e.g., `isSSNRequired=false`, thresholds `30/30`) that differ from DB column defaults (`isSSNRequired=true`, thresholds `5/25`). Note these as observations, not bugs — the form explicitly sets all values on submit. But flag when form defaults contradict business expectations (e.g., SSN should be required by default for most utilities).
 - **Unhandled 409 causes React error #520**: TanStack server function returning 409 (duplicate ID) wasn't caught by the frontend error handler. The React boundary caught it as error #520, and the dialog closed silently with no user feedback. When testing CRUD create flows, always test duplicate/conflict scenarios — 409 handling is frequently missed.
+
+### Session: 2026-04-14 (ENG-2687 Moved D2C — Critical attribution bug found only after gap-test prompt)
+- **Partner theme rendering ≠ partner attribution.** The most valuable finding of the session (ENG-2694 Critical) was only surfaced because Christian explicitly asked "did we test the DB too?" after the initial exploratory session. Without that prompt, the ticket would have shipped with a green 49/49 API test count while silently mis-attributing every Moved D2C user to the fallback partner "Simpson". The UI rendered the Moved theme flawlessly the entire time. Added Phase 1d2 (Partner attribution verification) to make this a required check for any partner-integration test, not an optional add-on.
+- **The `externalLeaseID` trace is the tell.** Moved D2C users had `externalLeaseID` populated (from the API's `internalID` → `leaseID` URL param) but `Referrals.referredBy = Simpson`. The 489 correctly-attributed Moved users in the same 30-day window all had `externalLeaseID = NULL` (they came via `moved5439797test` shortcode, not the D2C API). Comparing these two populations in one query is a reliable way to spot split-code-path attribution bugs — always check "does the real system produce the same shape of data via both the legacy and new paths?"
+- **Non-billing path is the fast lane for end-to-end testing.** Walked through Welcome → Address → Utility Setup → "I will do the setup myself" → Submit → "Awesome!" in ~5 minutes total. Skipping Stripe iframe + About You step (because Moved prefilled most fields via URL params) made DB verification practical in a single session. For any partner integration where the question is "does attribution write correctly", always use the non-billing path unless billing itself is the thing under test.
+- **Direct-page postMessage capture fails silently.** Installing `window.parent.postMessage` interceptor on a direct `browser_navigate` to the embed URL captured 0 events at flow completion. This doesn't prove postMessage is unimplemented — it may gate on `window.self !== window.top`. To test postMessage properly, need a real iframe parent harness. Attempted a local Python HTTP server approach; `cd /tmp && python3 -m http.server &` in bash had the server-current-dir not match `/tmp` (Git Bash path resolution quirk on Windows). Deferred postMessage testing until backend documents the contract + provides a known-good parent harness example.
+
+### Session: 2026-04-17 (ENG-2715 Matrix — false-positive "Critical bugs" + partner name not in DB)
+- **Re-read the AC verbatim before escalating a finding as a bug during Phase 2 edge case testing.** Matrix session found two override+mismatched-geography cases (T9d Casper WY + `electricCompany=COSERV`, T9e Dallas TX + `gasCompany=PSEG`) that bypassed waitlist/serviceability. Initially flagged as "Critical bugs filed" in Phase 3 summary. User pushed back: AC3 explicitly reads "bypassing the standard company lookup" — waitlist + zip mapping ARE part of "standard company lookup". Both findings were working-as-specified, not bugs. Had to revise the Linear comment via `commentUpdate` to downgrade and reframe as "UX-3 (invisible override) is the real mitigation gap". Especially important for override/bypass features where the AC explicitly permits skipping a gate. See `memory/feedback_reread_AC_before_flagging_bug.md`.
+- **Matrix testing produces exponential findings — save incrementally.** 4 shortcodes × 4 addresses × 2 modes = 32 combos (before try-to-break adds 5 more). Writing to an append-only NOTES.md in `.exploratory/{ticket}-matrix/` as each cell finished kept findings organized and prevented session-death data loss. Pattern: `cat >> NOTES.md << 'EOF' ... EOF` after each Continue-click + screenshot. Faster than batch-summarizing at the end, and survives if the session hits the screenshot size cap.
+- **Building shortCode + TX address has 3 different UI paths depending on whether prefill / typing / override is active.** Discovered a 3rd address-step UI variant ("Is this your address?" confirmation page) that I hadn't seen before. Appears on autotest + URL prefill and on cross-state prefill (e.g., TX zip + IL address → Google re-geocodes). This is worth noting as an additional variant in any onboarding-flows.md address-step table.
+- **Partner name verification, again.** I took "Mynd" from the user's paraphrase of Zack's video (actual name: Mindflow per transcript, corrupted by cap.so AI summarizer). Neither "Mynd" nor "Mindflow" exists in `MoveInPartner`. Before citing a partner name in a session summary or exploratory report, query `MoveInPartner` via Supabase MCP. See `memory/feedback_verify_partner_name_against_db.md`.

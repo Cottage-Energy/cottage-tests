@@ -14,6 +14,7 @@ import {
   blnkQueries,
 } from '../../../resources/fixtures/database';
 import { TIMEOUTS, TEST_TAGS } from '../../../resources/constants';
+import type { MoveInResult } from '../../../resources/types';
 import { logger } from '../../../resources/utils/logger';
 import { supabase } from '../../../resources/utils/supabase';
 import * as PaymentData from '../../../resources/data/payment-data.json';
@@ -28,13 +29,13 @@ import * as PaymentData from '../../../resources/data/payment-data.json';
  * - P2-08: Payment method switch — Card to Bank (no fee)
  * - P2-09: Payment method switch — Bank to Card (3% fee)
  */
-let MoveIn: any;
+let MoveIn: MoveInResult | undefined;
 
 test.beforeEach(async ({ page }) => {
   await utilityQueries.updateBuildingBilling('autotest', true);
   await utilityQueries.updateBuildingUseEncourageConversion('autotest', false);
   await utilityQueries.updateBuildingOfferRenewableEnergy('autotest', false);
-  await utilityQueries.updatePartnerUseEncourageConversion('Moved', false);
+  // await utilityQueries.updatePartnerUseEncourageConversion('Moved', false);
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 });
 
@@ -177,26 +178,25 @@ test.describe('P2-03: Manual to Auto-Pay — Pay Now Outstanding', () => {
     await sidebarChat.Goto_Billing_Page_Via_Icon();
     await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
 
-    // Navigate to Account > Payment tab and toggle auto-pay ON
-    await page.goto('/app/account');
-    const paymentTab = page.getByRole('tab', { name: 'Payment' });
-    await paymentTab.click();
+    // Enable auto-pay via Overview "Enable" button (TIP section).
+    // VERIFIED via Playwright MCP (2026-04-14):
+    //   - Account page switch does NOT trigger AutopayPaymentModal — just toggles silently
+    //   - Overview "Enable" button DOES trigger the modal with Pay now / Do it later
+    //   - Modal role is `alertdialog` (NOT `dialog`)
+    await page.goto('/app/overview', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    const autoPaySwitch = page.getByRole('switch');
-    await autoPaySwitch.click();
+    const enableBtn = page.getByRole('button', { name: 'Enable' });
+    await expect(enableBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await enableBtn.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    // VERIFIED via Playwright MCP (2026-04-11):
-    // - If card is in FAILED state: no modal appears, card shows "Automatic payment failed! Update method"
-    // - If card is VALID: AutopayPaymentModal dialog should appear with pay/later options
-    // This test uses a VALID card (newUserMoveInManualPayment with valid card), so modal expected
-    const modal = page.getByRole('dialog');
-    await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    // AutopayPaymentModal — renders as alertdialog with outstanding balance + pay/later options
+    const autopayConfirm = page.getByText('Thanks for enabling autopay!');
+    await expect(autopayConfirm).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     // Click "Pay now" to clear outstanding balance immediately
-    // NOTE: Exact button text needs verification — try "Pay bill" first (consistent with pay modal)
-    const payNowBtn = modal.getByRole('button', { name: /pay.*bill|pay.*now/i });
+    const payNowBtn = page.getByRole('button', { name: /pay now/i });
     await expect(payNowBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
     await payNowBtn.click();
     await page.waitForTimeout(10000);
@@ -273,24 +273,21 @@ test.describe('P2-04: Manual to Auto-Pay — Do It Later', () => {
     await billingPage.Check_Outstanding_Balance_Amount(PGuserUsage.ElectricAmountActual);
 
     // Navigate to Account > Payment tab and toggle auto-pay ON
-    await page.goto('/app/account');
-    const paymentTab = page.getByRole('tab', { name: 'Payment' });
-    await paymentTab.click();
+    // Enable auto-pay via Overview "Enable" button — triggers AutopayPaymentModal
+    // VERIFIED via Playwright MCP (2026-04-14): Account page switch does NOT trigger modal
+    await page.goto('/app/overview', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    const autoPaySwitch = page.getByRole('switch');
-    await autoPaySwitch.click();
+    const enableBtn = page.getByRole('button', { name: 'Enable' });
+    await expect(enableBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await enableBtn.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    // VERIFIED via Playwright MCP (2026-04-11):
-    // AutopayPaymentModal only appears when card is VALID + outstanding balance exists
-    // With FAILED card: shows "Automatic payment failed! Update method" instead (no modal)
-    const modal = page.getByRole('dialog');
-    await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    const autopayConfirm = page.getByText('Thanks for enabling autopay!');
+    await expect(autopayConfirm).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     // Click "Do it later" — outstanding stays unpaid
-    // NOTE: Exact button text needs verification — try common patterns
-    const laterBtn = modal.getByRole('button', { name: /later|skip|not now/i });
+    const laterBtn = page.getByRole('button', { name: /do it later/i });
     await expect(laterBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
     await laterBtn.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);

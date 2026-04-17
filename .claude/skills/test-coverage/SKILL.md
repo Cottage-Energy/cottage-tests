@@ -9,8 +9,8 @@ user-invocable: true
 Scan the test suite and report what's covered, what's not, and where the gaps are.
 
 ## 1. Scan Test Files
-- Use `Glob` to list all `*.spec.ts` files under `tests/e2e_tests/`
-- Group by feature area: `cottage-user-move-in`, `light-user-move-in`, `payment`, `connect-account`, `homepage`, `exploratory`
+- Use `Glob` to list all `*.spec.ts` files under `tests/e2e_tests/`, `tests/api_tests/`, and `tests/performance_tests/`
+- Group by feature area: `cottage-user-move-in`, `light-user-move-in`, `payment`, `connect-account`, `homepage`, `exploratory`, `api`, `performance`
 
 ## 2. Extract Tags from Each Test
 - Use `Grep` to find all `tag:` declarations in spec files
@@ -35,6 +35,8 @@ Scan the test suite and report what's covered, what's not, and where the gaps ar
 | connect-account | [N] | [N] | [N] | [N] | [N] |
 | homepage | [N] | [N] | [N] | [N] | [N] |
 | exploratory | [N] | [N] | — | — | [N] |
+| api | [N] | [N] | — | — | — |
+| performance | [N] | [N] | — | — | — |
 
 ## Coverage by Regression Scope
 | Scope | Browser | Test Count |
