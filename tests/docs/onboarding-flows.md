@@ -167,6 +167,81 @@ The Light address search has a fallback system when users can't find their addre
 - `2900 Canton St, Dallas TX 75226, unit 524` → ESI ID `10443720007633191`
 - `14100 Will Clayton Pkwy, Humble TX 77346, unit 21308` → ESI ID `1008901020901561560119`
 
+### ENG-2715: Address Validation, Prefill Clear, Utility Override (PR #1217, merged 2026-04-17)
+Built on top of ENG-2347. Three behavior changes plus two Pay Bills modal polish changes.
+
+**AC1 — Validation state (check / X) on `LightAddressAutocomplete`** — renders in 3 places only:
+- `app/move-in/forms/building-selection.tsx` (standard `/move-in` when `shouldUseLightAddressAutocomplete=true`)
+- `app/move-in/light/encouraged-conversion/light-encouraged-address.tsx` (Light encouraged step; reached via `?shortCode=txtest` or after ESI detection)
+- `app/(bill-upload)/texas-flow/address-search/page.tsx` (texas-flow bill upload)
+
+**NOT applied on `address-encouraged-default-form.tsx`** — PR removed `LightAddressAutocomplete` from it. That form now uses Google `AddressAutocomplete`, which has its own pre-existing green-check (unrelated to this PR).
+
+States:
+| State | Input | Visual |
+|-------|-------|--------|
+| Empty | no value | neutral — no indicator, Continue disabled |
+| Unresolved | typed, no ESI selected, OR `isAddressSearching`, OR form error | **red border** (invalid) |
+| Valid | address picked with ESI ID, no processing, no errors | **green check** `<svg class="lucide lucide-check text-green-500">` |
+
+DOM pattern: state is rendered via CSS classes (NO `data-invalid`/`data-valid`/`aria-invalid` attrs). Green indicator color `rgb(23, 178, 106)`.
+
+**AC2 — Prefilled TX address cleared when Light partial-search returns 0**
+- New machine state `checkingPrefilledAddressLight` in `app/move-in/machines/building-selection/index.ts`
+- Logic in `light-prefilled-address-check-logic.ts`
+- Fires when user arrives at standard `/move-in` with `?streetAddress=...&city=...&state=TX&zip=...` params
+- Partial-search 0 results → field cleared, user starts from scratch
+- Partial-search ≥1 results → prefill preserved, user can refine
+- **Does NOT fire on `?shortCode=txtest` encouraged path** — that route doesn't read address prefill URL params at all (verified empirically — both ESI-covered and non-covered prefills landed empty)
+
+**AC3 — Utility override params skip ESI confirmation modal**
+- URL params: `?electricCompany=<utilityCode-or-name>` and/or `?gasCompany=<utilityCode-or-name>`
+- Skips `runConfirmationSearch` → proceeds directly to next step
+- Changes step count on standard move-in from **5 → 6** (adds utility setup step)
+- Works even when `UtilityCompany.utilityCode` is NULL — e.g. `?electricCompany=COSERV` resolves to the CoServ record which has no utilityCode (verified 2026-04-17)
+- Use case: Mynd partner onboarding for CoServ/TXDREG-split ZIPs where default zip mapping picks TXDREG
+
+**AC4 — Unregistered shortCode + override still routes correctly**
+- `?shortCode=moved&electricCompany=COSERV` — `moved` is a MoveInPartner (not a Building), so building validation fails
+- Machine falls through to `companyOverride` path, still applies CoServ, skips confirmation modal
+- Lands on encouraged conversion welcome confirmation page with "Service is started with CoServ on your behalf"
+
+**AC6/AC7 — Pay Bills modal polish** (unrelated to address flows):
+- `updating` state now has child states `choosing` + `editing`
+- Flex-qualifying users (Flex-enabled property + not yet Flex customer) see `PaymentOptionsWithExternal` picker — footer hidden
+- Clicking "Pay in full" transitions to `editing` — footer reappears (Save details / Cancel)
+- Clicking "Learn more about Flex" closes Pay Bills sheet (matches "Split my bill" behavior)
+- **Gotcha**: machine state persists across modal close/reopen — once picker is dismissed via Pay in full, refresh page to re-show picker
+
+**"Can't find your address?" control type varies by context**:
+| Context | Control type |
+|---------|--------------|
+| Standard `/move-in` address step (Google autocomplete, no TX) | inline text + "Open up a chat" link |
+| Standard `/move-in` with TX address (LightAddressAutocomplete active) | underlined purple **link** (opens fallback modal) |
+| `?shortCode=txtest` Light encouraged | **button** (opens fallback modal) |
+
+**Utility resolution priority order** (verified 2026-04-17 via matrix exploratory):
+1. **URL override param** (`?electricCompany=X` / `?gasCompany=X`) — always wins, even over Building config
+2. **Building shortCode config** (pgtest→SDGE, autotest→ComEd) — wins over zip-based lookup
+3. **Light ESI match** for TX-eligible zips — triggers ESI confirmation modal on standard flow
+4. **Zip-based utility mapping** — fallback when no shortCode/override
+5. **Waitlist** — when zip has no matching utility
+
+**Prefill behavior differs by shortCode** (verified 2026-04-17):
+| Shortcode | TX-eligible prefill (e.g. CoServ/TXDREG) behavior | Provider shown |
+|-----------|--------------------------------------------------|----------------|
+| standard (none) | AC2 clear fires — field cleared if Light partial-search returns 0; preserved if ≥1 | (from Light/zip lookup) |
+| `autotest` (Building + useEncourageConversion=false) | **PRESERVED** on "Is this your address?" confirmation page | Building's ComEd (even for TX address) |
+| `pgtest` (Building + useEncourageConversion=true) | **PRESERVED** on encouraged welcome; auto-advances past terms | Building's SDGE/SoCalGas — **logos may be broken** (alt text visible) when utility doesn't match entered zip (see ENG-2717) |
+| `txtest` (Light encouraged) | **IGNORED entirely** — empty address field on load regardless of prefill params | N/A |
+
+**Three address-step UI variants exist**:
+1. **Standard address step**: "Enter your address" heading + Google/Light autocomplete + Unit field + Can't find link/button (non-Light shortcodes, empty state)
+2. **"Is this your address?" confirmation**: appears on `autotest` + URL prefill and on cross-state prefill (e.g., TX zip + IL address → Google re-geocodes). Shows read-only address + "Your provider is: [utility]" + Edit + Back/Continue.
+3. **Light encouraged "Confirm your address"**: on `txtest` or any Light-activated path. Has the LightAddressAutocomplete with Light type-ahead (red border on unresolved, green check on ESI-selected).
+
+**AC3 override trust contract** (by design per AC text): `?electricCompany=X` / `?gasCompany=X` "force specific utility companies on the user, bypassing the standard company lookup" — this includes zip-to-utility mapping AND waitlist serviceability gate. Partners using the override take ownership of routing correctness; PG trusts the code. Example verified 2026-04-17: `?electricCompany=COSERV` + Casper WY waitlist address → user completes CoServ signup in WY (no waitlist fall-through). Mitigation: surface utility name on address step so user can catch partner misconfig (tracked as UX-3 in ENG-2715).
+
 ### Flex (Bill Splitting)
 - **Visibility**: Only appears when ElectricAccount status = `ACTIVE`
 - **Where**: Overview dashboard — purple "flex" badge + "Bite-sized payments for your bills — More"

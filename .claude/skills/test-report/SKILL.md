@@ -228,3 +228,8 @@ Do NOT auto-save — only save when the user explicitly asks.
 
 ## Retrospective
 After completing this skill, check: did any step not match reality? Update this SKILL.md with what you learned.
+
+### Session: 2026-04-17 (ENG-2715 Targeted Report — "Mynd partner" fabrication)
+- **Verify partner/entity names against the DB before building a release verdict.** I wrote a full targeted report for ENG-2715 framed around "the Mynd partner use case" — ship/no-ship verdict, mitigations, monitoring plan, all centered on a partner that doesn't exist. The name came from the user's paraphrase of Zack's video, which actually said "Mindflow" (cap.so AI summary collapsed it to "Mynd"). Running a 30-second `SELECT name FROM "MoveInPartner" WHERE name ILIKE '%mynd%'` would have returned 0 rows and stopped the fabrication. Report had to be reframed from "Mynd go/no-go" to "URL-override partner integration go/no-go".
+- **Rule added**: when a report cites a specific partner or integration as the business driver, verify against the `MoveInPartner` table before finalizing. If the name doesn't resolve, reframe generically ("URL-override integration target", "the partner caller") and/or ask the user to clarify. Applies to Summary, Release, and Targeted modes equally. See `memory/feedback_verify_partner_name_against_db.md`.
+- **Verdict framing should survive entity corrections.** The technical conclusions (AC3 works end-to-end; UX-3 is the mitigation gap) were correct — only the partner attribution was wrong. Lesson: separate the technical verdict ("what ships works") from the business framing ("who it ships for") so one can be corrected without rewriting the other.
