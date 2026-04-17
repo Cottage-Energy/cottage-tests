@@ -209,6 +209,26 @@ Do NOT auto-save — only save when the user explicitly asks.
 
 ---
 
+## Evidence Validation (run before finalizing any output — ENFORCED)
+
+Before posting a report or writing the .md file, audit every PASS row for **evidence-of-effect**, not **evidence-of-artifact**. An artifact (an email arrived, a toast appeared, a page rendered, a link was extracted) is proof the flow's UPSTREAM step worked — it is NOT proof the flow's DOWNSTREAM effect happened.
+
+Scan PASS rows for these phrases in the evidence/notes column:
+- "email received" / "email delivered" / "reset email sent" / "verification email arrived" / "N chars HTML"
+- "link extracted" / "link clicked" / "navigated to X" (without confirming what X actually rendered)
+- "toast appeared" / "success message shown" / "form submitted"
+- "page renders" / "step N/M works" / "redirected to Y" (without confirming the landing page is functional, not a 500)
+
+If the evidence matches and the flow has a downstream effect (session established, DB write, password changed, email verified, subscription created, payment captured), the row is **BLOCKED, not PASS**, until the effect is verified. Downgrade and flag in the report under a new `⚠️ Coverage Gaps` section — do not silently ship a PASS.
+
+**Heuristic:** for any recovery/verification/state-change flow, ask "what STATE of the system did this flow attempt to change, and did I verify that state after?" If the answer is "I only verified the artifact that the system produced along the way", the evidence is incomplete.
+
+**Why:** On 2026-04-17 discovered ENG-2721 (TanStack password reset fully broken — `/auth/confirm` 500s on valid tokens). The Apr 14 AND Apr 15 retest reports BOTH shipped with "Forgot password ✅ PASS" based only on "submitted email, reset email received (10,482 chars)". The link was never clicked. The form was never seen. The password was never changed. The sign-in was never attempted. Two PASS rows went to Tomy + Cian; the CRITICAL bug hid for 3 days. See `memory/feedback_email_received_not_pass_on_recovery.md`.
+
+**Tradeoff:** this check will occasionally downgrade a genuinely-completed flow whose evidence string happens to be short. That's acceptable — false BLOCKED surfaces; false PASS hides.
+
+---
+
 ## Distribution
 - Post to Linear as a comment on a tracking ticket (if one exists) or as a standalone document
 - Or share directly with the user for manual distribution
