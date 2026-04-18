@@ -203,3 +203,60 @@ log.section('New Test Section');
 - [ ] No magic numbers in code
 - [ ] `test.skip()` has a reason string (ticket or precondition)
 - [ ] All page interactions through POM classes (no raw `page.getByRole/Text/Label/TestId/locator` in spec files)
+
+## 🛂 Enforcement
+
+These rules are enforced in CI on pull requests by `.github/workflows/standards-gate.yml`. The gate is **two-tier + diff-aware**:
+
+### Tier 1 — BLOCKING (violations you introduce)
+- **New `.spec.ts` files added by your PR**: full content is checked. Any violation fails the gate.
+- **Existing `.spec.ts` files modified by your PR**: only the lines your diff ADDS are checked. A pre-existing violation on an unchanged line does NOT fail. A new violation on a line you added DOES fail.
+
+### Tier 2 — WARN-ONLY (pre-existing violations in files you touched)
+Pre-existing violations in files your PR modifies are reported as GitHub `::warning::` annotations. They **do not block merge**. This is the boy-scout-rule nudge: "you're in this file anyway, consider cleaning up what's here."
+
+### What the gate checks (same 6 patterns in both tiers)
+
+| Check | What's banned | Allowed alternative |
+|-------|---------------|---------------------|
+| POM violations | `page.getByRole/Text/Label/TestId/locator` in spec files | Locator on a POM class in `tests/resources/page_objects/` |
+| `any` types | `: any`, `as any` | Proper type import from `tests/resources/types/` |
+| `console.*` | `console.log/error/warn/info/debug` | `createLogger('Name')` from `utils/logger.ts` |
+| Raw tag strings | `tag: ['@smoke']` | `tag: [TEST_TAGS.SMOKE]` |
+| Magic timeouts | `setTimeout(1800000)`, `waitForTimeout(500)`, `timeout: 10000` | `TIMEOUTS.*` constants |
+| Naked skips | `test.skip()` with no reason | `test.skip(condition, 'reason tied to a ticket or precondition')` |
+
+### Effect on common workflows
+
+- **`/create-test`** creates new files → Tier 1 full-content check → **must be clean**.
+- **`/fix-test`** typically modifies existing files → only diff lines blocked → **your changes must be clean, pre-existing debt in the same file just warns**.
+- **PR that doesn't touch `.spec.ts`** → gate skips entirely.
+
+### Exempted framework primitives
+Allowed raw in specs (they're not UI interactions): `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate`, `page.keyboard`, `page.mouse`.
+
+### Run the gate locally before pushing
+
+For new files (full content):
+```bash
+F="your/new/spec.spec.ts"
+grep -nE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(" "$F"
+grep -nE ":\s*any\b|as\s+any\b" "$F"
+grep -nE "console\.(log|error|warn|info|debug)" "$F"
+grep -nE "tag:\s*\[\s*['\"]@" "$F"
+grep -nE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}" "$F"
+grep -nE "test\.skip\(\s*\)" "$F"
+```
+
+For modifications to existing files (only your diff):
+```bash
+git diff --unified=0 main -- path/to/spec.ts | grep -E '^\+[^+]' | grep -E "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(|:\s*any\b|console\.|tag:\s*\[\s*['\"]@|(setTimeout|waitForTimeout)\([0-9]+\)|test\.skip\(\s*\)"
+```
+
+Any output = refactor before opening the PR.
+
+### What the gate does NOT do
+
+- Does NOT run `npm run lint` or `npm run typecheck` against the full repo — pre-existing baseline is 1998 lint errors + TypeScript errors in `database.types.ts`. Running those whole-repo would fail every PR. When the baseline is cleaned up (ENG-2724 Phase 0), add `npm run lint && npm run typecheck` as required CI checks.
+- Does NOT run Playwright tests. Test runs happen in `.github/workflows/main-workflow.yml` unchanged.
+- Does NOT block PRs on pre-existing debt. The goal is "no new violations" while the historical debt is cleaned up in staged PRs tracked in ENG-2724.

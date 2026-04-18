@@ -1,0 +1,173 @@
+name: Standards Gate
+
+# Two-tier gate for CODE_STANDARDS.md + POM rule:
+#
+#   1. BLOCKING — new code added in this PR must follow standards.
+#        - New spec files: grep the full content.
+#        - Modified spec files: grep ONLY the lines added/changed in this PR.
+#      If any violation is on a line this PR introduced, the gate fails.
+#
+#   2. WARN-ONLY — pre-existing violations in modified files.
+#      Reported as GitHub annotations (::warning::) but do NOT fail the check.
+#      This is the "boy scout rule nudge" — touched a debt file? Here's what
+#      was already there, consider cleaning it up. Does not block merge.
+#
+# Never runs Playwright tests. Never runs whole-repo lint/typecheck (baseline
+# is 1998 lint errors + TS errors). Purely PR-scoped.
+#
+# Pre-existing debt catalog: ENG-2724.
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  standards-gate:
+    name: Standards Gate (diff-scoped)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need base ref for diff
+
+      - name: Classify changed spec files
+        id: classify
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+
+          # All spec files added/modified/renamed/copied, still existing at HEAD
+          ALL=$(git diff --name-only --diff-filter=AMRC "$BASE" "$HEAD" -- 'tests/e2e_tests/**/*.spec.ts' | tr '\n' ' ')
+
+          # Split: files that existed at BASE are "modified" (scan added lines only),
+          # files that didn't are "new" (scan full content).
+          NEW=""
+          MODIFIED=""
+          for f in $ALL; do
+            if git cat-file -e "$BASE:$f" 2>/dev/null; then
+              MODIFIED="$MODIFIED $f"
+            else
+              NEW="$NEW $f"
+            fi
+          done
+
+          echo "new=$NEW" >> "$GITHUB_OUTPUT"
+          echo "modified=$MODIFIED" >> "$GITHUB_OUTPUT"
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "head=$HEAD" >> "$GITHUB_OUTPUT"
+
+          echo "--- Classification ---"
+          echo "NEW files (strict check): $NEW"
+          echo "MODIFIED files (added-lines check): $MODIFIED"
+
+      # ─────────────────────────────────────────────────────────────────────
+      # TIER 1 — BLOCKING: violations introduced by THIS PR
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Block — violations in NEW files (full content)
+        if: steps.classify.outputs.new != ''
+        run: |
+          FAIL=0
+          for f in ${{ steps.classify.outputs.new }}; do
+            echo "::group::Checking new file: $f"
+
+            if grep -nE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(" "$f"; then
+              echo "::error file=$f::Raw page.* locator in new spec. Use a POM class from tests/resources/page_objects/"
+              FAIL=1
+            fi
+            if grep -nE ":\s*any\b|as\s+any\b" "$f"; then
+              echo "::error file=$f::Explicit 'any' type. Use types from tests/resources/types/"
+              FAIL=1
+            fi
+            if grep -nE "console\.(log|error|warn|info|debug)" "$f"; then
+              echo "::error file=$f::console.* in new spec. Use createLogger('Name') from utils/logger.ts"
+              FAIL=1
+            fi
+            if grep -nE "tag:\s*\[\s*['\"]@" "$f"; then
+              echo "::error file=$f::Raw tag string. Use TEST_TAGS.* from constants/testTags.ts"
+              FAIL=1
+            fi
+            if grep -nE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}" "$f"; then
+              echo "::error file=$f::Magic timeout number. Use TIMEOUTS.* from constants/timeouts.ts"
+              FAIL=1
+            fi
+            if grep -nE "test\.skip\(\s*\)" "$f"; then
+              echo "::error file=$f::Naked test.skip(). Use test.skip(condition, 'reason')"
+              FAIL=1
+            fi
+
+            echo "::endgroup::"
+          done
+          exit $FAIL
+
+      - name: Block — violations on ADDED LINES of modified files
+        if: steps.classify.outputs.modified != ''
+        run: |
+          BASE="${{ steps.classify.outputs.base }}"
+          HEAD="${{ steps.classify.outputs.head }}"
+          FAIL=0
+
+          for f in ${{ steps.classify.outputs.modified }}; do
+            echo "::group::Checking added lines: $f"
+
+            # Get only lines ADDED by this PR (not context, not removals).
+            # `--unified=0` = no context; `^+[^+]` = added lines (not +++ header).
+            added_lines=$(git diff --unified=0 "$BASE" "$HEAD" -- "$f" | grep -E '^\+[^+]' || true)
+
+            if [ -z "$added_lines" ]; then
+              echo "No added lines in $f (deletions only)."
+              echo "::endgroup::"
+              continue
+            fi
+
+            # Check the added lines against each pattern. grep -c returns count.
+            hits=""
+
+            if echo "$added_lines" | grep -qE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\("; then
+              echo "::error file=$f::Added line(s) use raw page.* locator. Route through a POM class."
+              hits="1"
+            fi
+            if echo "$added_lines" | grep -qE ":\s*any\b|as\s+any\b"; then
+              echo "::error file=$f::Added line(s) have explicit 'any' type."
+              hits="1"
+            fi
+            if echo "$added_lines" | grep -qE "console\.(log|error|warn|info|debug)"; then
+              echo "::error file=$f::Added line(s) call console.*. Use createLogger."
+              hits="1"
+            fi
+            if echo "$added_lines" | grep -qE "tag:\s*\[\s*['\"]@"; then
+              echo "::error file=$f::Added line(s) use raw tag strings. Use TEST_TAGS.*"
+              hits="1"
+            fi
+            if echo "$added_lines" | grep -qE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}"; then
+              echo "::error file=$f::Added line(s) use magic timeout numbers. Use TIMEOUTS.*"
+              hits="1"
+            fi
+            if echo "$added_lines" | grep -qE "test\.skip\(\s*\)"; then
+              echo "::error file=$f::Added line(s) use naked test.skip(). Provide a reason."
+              hits="1"
+            fi
+
+            if [ -n "$hits" ]; then FAIL=1; fi
+            echo "::endgroup::"
+          done
+          exit $FAIL
+
+      # ─────────────────────────────────────────────────────────────────────
+      # TIER 2 — WARN-ONLY: pre-existing violations in modified files
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Warn — pre-existing violations in modified files (boy scout nudge)
+        if: steps.classify.outputs.modified != ''
+        continue-on-error: true
+        run: |
+          for f in ${{ steps.classify.outputs.modified }}; do
+            # Any violation at all in the file (even if not added by this PR)
+            count=0
+            count=$(grep -cE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(|:\s*any\b|as\s+any\b|console\.(log|error|warn|info|debug)|tag:\s*\[\s*['\"]@|(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}|test\.skip\(\s*\)" "$f" || true)
+
+            if [ "$count" -gt 0 ]; then
+              echo "::warning file=$f::$count pre-existing standards violation(s). Boy scout rule: consider cleaning up as part of this PR. Tracked in ENG-2724."
+            fi
+          done
