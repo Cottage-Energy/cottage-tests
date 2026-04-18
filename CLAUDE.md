@@ -184,11 +184,29 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 - No `console.log` — use structured logger from `tests/resources/utils/logger.ts`
 - No magic numbers — use `TIMEOUTS` and `RETRY_CONFIG` from `tests/resources/constants/`
 - No raw tag strings — use `TEST_TAGS` constants (e.g., `TEST_TAGS.SMOKE`, not `'@smoke'`)
-- All page interactions through POM classes in `tests/resources/page_objects/`
+- All page interactions through POM classes in `tests/resources/page_objects/` — POM compliance is measured **per line**, not per file. Skipped tests, edge-case locators, and failure-terminus assertions (invalid-cred errors, auth-code-error pages) all count. Acceptable remaining `page.*` calls in specs: `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate` (framework primitives, not UI interactions).
 - Locator priority: `getByRole` > `getByText` > `getByLabel` > `getByTestId` > `locator('css')` (last resort)
 - POM locators must be `readonly` class properties; all POM methods must have explicit return types
 - Tests must clean up created data in `afterEach` hooks
+- `test.skip()` requires a reason string. Allowed forms: `test.skip('title', tag, fn)` (test definition with body skipped), `test.skip(condition, 'reason')` (runtime skip with reason), `test.describe.skip(...)` (parked block). Banned: naked `test.skip()` with no args or boolean-only.
 - See `CODE_STANDARDS.md` for full coding standards
+
+### Verify standards before claiming compliance
+Before reporting any new/modified spec, POM, or fixture as "done," run the mechanical audit locally. Takes 30 seconds and catches violations reading-top-to-bottom misses:
+```bash
+# Run against the specific files you changed (not the whole repo)
+FILES="<your changed .spec.ts files>"
+grep -nE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(" $FILES    # POM
+grep -nE ":\s*any\b|as\s+any\b" $FILES                                            # any
+grep -nE "console\.(log|error|warn|info|debug)" $FILES                            # console
+grep -nE "tag:\s*\[\s*['\"]@" $FILES                                              # raw tags
+grep -nE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}" $FILES      # magic timeouts
+grep -nE "test\.skip\(\s*\)" $FILES                                               # naked skips
+```
+
+Any output = refactor before reporting done. POM compliance is measured per-line — skipped tests, edge-case locators, and failure-terminus assertions (invalid-cred errors, auth-code-error pages) all count. Acceptable remaining `page.*` calls in specs: `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate` (framework primitives, not UI interactions).
+
+**Why:** On 2026-04-18 I told the user "all 3 specs follow CODE_STANDARDS.md" before running the audit. 30-second grep found 14 POM violations in my own specs plus 538 pre-existing across 21 other specs. Declaring compliance without a machine check fails repeatedly. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` and `memory/feedback_pom_compliance_is_per_line.md`.
 
 ## Structure
 - `tests/e2e_tests/` — test specs organized by feature (move-in, payment, homepage, connect-account)

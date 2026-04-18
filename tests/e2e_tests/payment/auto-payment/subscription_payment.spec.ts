@@ -90,9 +90,7 @@ test.describe('Subscription Payment — Inngest Pipeline', () => {
       .throwOnError();
 
     if (!subscription) {
-      logger.warn('No active RenewableSubscription found — user may not have opted into RE during move-in');
-      logger.info('Skipping Inngest subscription test — requires active subscription');
-      test.skip();
+      test.skip(true, 'No active RenewableSubscription — user did not opt into RE during move-in (precondition for subscription pipeline test)');
       return;
     }
 
@@ -108,8 +106,7 @@ test.describe('Subscription Payment — Inngest Pipeline', () => {
       });
       logger.info(`transaction-generation-trigger response: ${genResponse.status}`);
     } else {
-      logger.warn('INNGEST_EVENT_KEY not set — cannot trigger transaction generation');
-      test.skip();
+      test.skip(true, 'INNGEST_EVENT_KEY not set in env — required to trigger transaction-generation pipeline. Set in .env or CI secrets.');
       return;
     }
 
@@ -207,8 +204,7 @@ test.describe('Subscription Lifecycle — Cancel & Re-subscribe', () => {
     const inngestKey = process.env.INNGEST_EVENT_KEY;
 
     if (!inngestKey) {
-      logger.warn('INNGEST_EVENT_KEY not set — skipping subscription lifecycle test');
-      test.skip();
+      test.skip(true, 'INNGEST_EVENT_KEY not set in env — required to trigger subscription-lifecycle pipeline. Set in .env or CI secrets.');
       return;
     }
 
@@ -235,8 +231,7 @@ test.describe('Subscription Lifecycle — Cancel & Re-subscribe', () => {
       .throwOnError();
 
     if (!subscription) {
-      logger.warn('No active RenewableSubscription — skipping cancel/re-subscribe test');
-      test.skip();
+      test.skip(true, 'No active RenewableSubscription — cancel/re-subscribe lifecycle requires initial RE opt-in during move-in');
       return;
     }
 

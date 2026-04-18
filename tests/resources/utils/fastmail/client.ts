@@ -50,7 +50,7 @@ export class FastmailClient {
     const inboxId = data["methodResponses"][0][1]["ids"][0];
 
     if (!inboxId) {
-      throw new console.log("Could not get an inbox.");
+      throw new Error("Could not get an inbox.");
     }
 
     return inboxId;

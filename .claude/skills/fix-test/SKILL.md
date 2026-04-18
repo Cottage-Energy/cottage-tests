@@ -249,6 +249,27 @@ After fixing one test, check if the same issue affects others:
 - Maintain code standards: no `any`, no `console.log`, use constants
 - Always run the test after fixing to verify
 - If the app has a bug, file it (`/log-bug`) — don't make the test accept wrong behavior
+- `test.skip()` requires a reason string. If the fix isn't ready, use `test.skip(true, 'reason tied to ticket or precondition')`, never naked `test.skip()`
+- **Boy scout rule — encouraged.** Touching a debt-file? Clean up pre-existing violations if the change is cheap. Don't let a giant refactor derail a simple test fix.
+
+## 8b. Verify standards before reporting done (RUN THIS)
+Before reporting a fix complete, machine-check the lines your diff adds for standards violations. Takes 30 seconds, catches what reading-top-to-bottom misses:
+
+```bash
+# Check only the lines your diff adds (scoped to one file at a time):
+SPEC="tests/e2e_tests/path/to/your/spec.spec.ts"
+
+git diff --unified=0 main -- "$SPEC" | grep -E '^\+[^+]' | grep -nE "\
+page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(|\
+:\s*any\b|as\s+any\b|\
+console\.(log|error|warn|info|debug)|\
+tag:\s*\[\s*['\"]@|\
+(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}|\
+test\.skip\(\s*\)\
+"
+```
+
+ANY output = your fix adds a new violation. Refactor before reporting done. POM compliance is per-line — skipped tests, edge-case locators, and failure-terminus assertions all count. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` + `memory/feedback_pom_compliance_is_per_line.md`.
 
 ---
 
