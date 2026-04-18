@@ -250,10 +250,10 @@ After fixing one test, check if the same issue affects others:
 - Always run the test after fixing to verify
 - If the app has a bug, file it (`/log-bug`) — don't make the test accept wrong behavior
 - `test.skip()` requires a reason string. If the fix isn't ready, use `test.skip(true, 'reason tied to ticket or precondition')`, never naked `test.skip()`
-- **Boy scout rule — encouraged.** Touching a debt-file? Clean up pre-existing violations if the change is cheap. Don't let a giant refactor derail a simple test fix.
+- **Boy scout rule — encouraged, not required.** The CI gate only BLOCKS on violations in lines your diff ADDS. Pre-existing violations in the file are reported as `::warning::` annotations but don't fail the check. If cheap, clean them up as part of your PR — but don't let a giant refactor derail a simple test fix.
 
-## 8b. Verify standards before reporting done (RUN THIS)
-Before reporting a fix complete, machine-check the lines your diff adds for standards violations. Takes 30 seconds, catches what reading-top-to-bottom misses:
+## 8b. Mandatory Standards Gate — RUN THIS before reporting the fix done
+The CI gate at `.github/workflows/standards-gate.yml` is diff-aware: for files that already exist, it only blocks on lines your PR adds. Mirror that locally before pushing:
 
 ```bash
 # Check only the lines your diff adds (scoped to one file at a time):
@@ -269,7 +269,9 @@ test\.skip\(\s*\)\
 "
 ```
 
-ANY output = your fix adds a new violation. Refactor before reporting done. POM compliance is per-line — skipped tests, edge-case locators, and failure-terminus assertions all count. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` + `memory/feedback_pom_compliance_is_per_line.md`.
+ANY output = your fix adds a new violation. Refactor before reporting done. Pre-existing violations in the same file are OK for merging — they show as warnings — but consider cleaning them up if the change is cheap.
+
+If you also CREATED a new POM or fixture, those get the strict full-content check (see `/create-test` Section 8). Mixed PRs: new files strict, modified files diff-only. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` + `memory/feedback_pom_compliance_is_per_line.md`.
 
 ---
 

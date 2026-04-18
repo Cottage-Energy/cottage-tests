@@ -191,8 +191,8 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 - `test.skip()` requires a reason string. Allowed forms: `test.skip('title', tag, fn)` (test definition with body skipped), `test.skip(condition, 'reason')` (runtime skip with reason), `test.describe.skip(...)` (parked block). Banned: naked `test.skip()` with no args or boolean-only.
 - See `CODE_STANDARDS.md` for full coding standards
 
-### Verify standards before claiming compliance
-Before reporting any new/modified spec, POM, or fixture as "done," run the mechanical audit locally. Takes 30 seconds and catches violations reading-top-to-bottom misses:
+### Standards Gate (enforced — verify before claiming compliance)
+Before reporting any new/modified spec, POM, or fixture as "done," run the mechanical audit. It takes 30 seconds and catches violations reading-top-to-bottom misses:
 ```bash
 # Run against the specific files you changed (not the whole repo)
 FILES="<your changed .spec.ts files>"
@@ -202,9 +202,14 @@ grep -nE "console\.(log|error|warn|info|debug)" $FILES                          
 grep -nE "tag:\s*\[\s*['\"]@" $FILES                                              # raw tags
 grep -nE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}" $FILES      # magic timeouts
 grep -nE "test\.skip\(\s*\)" $FILES                                               # naked skips
+npm run lint && npm run typecheck
 ```
+Any output from the grep-on-changed-files audit = refactor before "done." This is also enforced in CI by `.github/workflows/standards-gate.yml` on PRs, as a **two-tier diff-aware gate**:
 
-Any output = refactor before reporting done. POM compliance is measured per-line — skipped tests, edge-case locators, and failure-terminus assertions (invalid-cred errors, auth-code-error pages) all count. Acceptable remaining `page.*` calls in specs: `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate` (framework primitives, not UI interactions).
+- **Tier 1 (BLOCKING)** — violations introduced by THIS PR. New spec files are checked full-content. Modified spec files are checked ONLY on the lines the PR adds. If a violation lands on a line your PR introduced, the gate fails.
+- **Tier 2 (WARN-ONLY)** — pre-existing violations in files this PR touches. Annotated as `::warning::` on the PR but does NOT fail the check. This is the boy-scout-rule nudge: "you're already in this file — consider cleaning up what's here."
+
+Effect: code from `/create-test` (new files) must be clean — the gate enforces it. Code from `/fix-test` (usually modifying existing files) only needs your DIFF to be clean — pre-existing debt in the same file warns but doesn't block. Historical debt is tracked in ENG-2724 and does NOT block unrelated PRs.
 
 **Why:** On 2026-04-18 I told the user "all 3 specs follow CODE_STANDARDS.md" before running the audit. 30-second grep found 14 POM violations in my own specs plus 538 pre-existing across 21 other specs. Declaring compliance without a machine check fails repeatedly. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` and `memory/feedback_pom_compliance_is_per_line.md`.
 
