@@ -12,6 +12,11 @@ import { ConnectOverviewPage } from '../connect_overview_page';
 import { UploadBillModalPage } from '../upload_bill_modal_page';
 import { ConnectUtilityModalPage } from '../connect_utility_modal_page';
 import { FinishRegistrationPage } from '../finish_registration_page';
+import { ForgotPasswordPage } from '../forgot_password_page';
+import { ResetPasswordPage } from '../reset_password_page';
+import { ResidentInvitePage } from '../resident_invite_page';
+import { WaitlistPage } from '../waitlist_page';
+import { SignInPage } from '../sign_in_page';
 
 /**
  * Page object fixtures type definition
@@ -30,6 +35,11 @@ interface PageFixtures {
   uploadBillModalPage: UploadBillModalPage;
   connectUtilityModalPage: ConnectUtilityModalPage;
   finishRegistrationPage: FinishRegistrationPage;
+  forgotPasswordPage: ForgotPasswordPage;
+  resetPasswordPage: ResetPasswordPage;
+  residentInvitePage: ResidentInvitePage;
+  waitlistPage: WaitlistPage;
+  signInPage: SignInPage;
 }
 
 /**
@@ -86,6 +96,26 @@ const testPages = base.extend<PageFixtures>({
 
   finishRegistrationPage: async ({ page }, use) => {
     await use(new FinishRegistrationPage(page));
+  },
+
+  forgotPasswordPage: async ({ page }, use) => {
+    await use(new ForgotPasswordPage(page));
+  },
+
+  resetPasswordPage: async ({ page }, use) => {
+    await use(new ResetPasswordPage(page));
+  },
+
+  residentInvitePage: async ({ page }, use) => {
+    await use(new ResidentInvitePage(page));
+  },
+
+  waitlistPage: async ({ page }, use) => {
+    await use(new WaitlistPage(page));
+  },
+
+  signInPage: async ({ page }, use) => {
+    await use(new SignInPage(page));
   },
 });
 

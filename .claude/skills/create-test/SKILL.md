@@ -410,7 +410,25 @@ test.describe('API: Feature Name', () => {
 - Cleanup in `afterEach`
 - No magic numbers
 - No raw selectors in spec files — all through page objects
+- `test.skip()` requires a reason string (ticket or data-precondition)
 - Check existing tests in the same feature folder for patterns to follow
+
+### Verify standards before claiming done (RUN THIS)
+`/create-test` creates new `.spec.ts` files. Do NOT report done based on reading the file top-to-bottom — machine-check it. Takes 30 seconds and catches violations skim-reading misses:
+
+```bash
+FILES="<the new .spec.ts + .ts files you created this session>"
+grep -nE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(" $FILES    # POM
+grep -nE ":\s*any\b|as\s+any\b" $FILES                                            # any
+grep -nE "console\.(log|error|warn|info|debug)" $FILES                            # console
+grep -nE "tag:\s*\[\s*['\"]@" $FILES                                              # raw tags
+grep -nE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}" $FILES      # magic timeouts
+grep -nE "test\.skip\(\s*\)" $FILES                                               # naked skips
+```
+
+ANY output from ANY grep = refactor, do NOT report done. POM compliance is per-line — skipped tests, edge-case locators, and failure-terminus assertions (invalid-cred errors, auth-code-error pages) all count. Acceptable `page.*` calls in specs: `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate` (framework primitives, not UI interactions).
+
+**Why:** On 2026-04-18 I shipped 3 specs, told the user "follows CODE_STANDARDS.md," then the user asked me to verify. 30-second grep found 14 POM violations in my own files. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` and `memory/feedback_pom_compliance_is_per_line.md`.
 
 ### Anti-rationalization guards — STOP if you catch yourself thinking:
 | Thought | What to do instead |

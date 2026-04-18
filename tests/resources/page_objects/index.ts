@@ -16,6 +16,11 @@ export { ConnectUtilityModalPage } from './connect_utility_modal_page';
 export { SidebarChat } from './sidebar_chat';
 export { SupportPage } from './support_page';
 export { FinishRegistrationPage } from './finish_registration_page';
+export { ForgotPasswordPage } from './forgot_password_page';
+export { ResetPasswordPage } from './reset_password_page';
+export { ResidentInvitePage } from './resident_invite_page';
+export { WaitlistPage } from './waitlist_page';
+export { SignInPage } from './sign_in_page';
 
 // Base fixture exports
 export { test, expect } from './base/baseFixture';

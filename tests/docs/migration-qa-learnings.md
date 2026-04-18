@@ -84,6 +84,12 @@
 
 - **State transition cycle testing catches persistence bugs.** Test Activate -> Cancel -> Re-activate with users WITH and WITHOUT existing data.
 
+- **Evidence-of-artifact is not evidence-of-effect.** For any recovery/verification/state-change flow (forgot-password, OTP, email-change, magic-link, email confirmation), "email received" / "link extracted" / "toast appeared" / "page rendered" proves the upstream step worked — NOT the downstream effect. A PASS requires confirming the state the flow attempted to change (session established, password updated, email verified). Auth recovery flows require the full click-link -> form renders -> submit -> sign-in-with-new-creds -> old-creds-rejected -> link-single-use sequence, and cannot live as a one-row check inside a 50-row retest matrix — they need a dedicated flow sweep. ENG-2721 (TanStack `/auth/confirm` 500s on valid recovery tokens) hid for 3 days behind two "Forgot password ✅ PASS" retest rows whose only evidence was "reset email received (10,482 chars)".
+
+- **Framework primitive differences are migration landmines.** NextJS `NextResponse.redirect()` carries set-cookie headers and wires cookies via `createRouteHandlerClient({ cookies })`. TanStack plain-web `Response.redirect()` does NOT — Supabase session cookies written by `verifyOtp()` are dropped, AND the cookie-adapter can throw during session persistence, producing a raw JSON 500 on the success path while the error path (no verifyOtp) works fine. Handler code looks structurally identical between NextJS and TanStack; only a full end-to-end flow test exposes the gap. When auditing TanStack handlers that call Supabase auth mutations (`verifyOtp`, `signInWithPassword`, `signInWithOtp`, `updateUser`, `exchangeCodeForSession`), verify the handler uses a cookie-persistent redirect pattern, NOT plain `Response.redirect()`.
+
+- **Test both success AND error paths when an endpoint 500s.** Invalid-token / empty-param / malformed-payload paths are separate code branches from the success path. Firing a clearly-invalid input proved `/auth/confirm`'s error branch redirected cleanly to `/auth-code-error` while the success branch 500'd — narrowing the bug from "whole endpoint" to "specific branch" and making the fix scope one-branch instead of whole-handler.
+
 ---
 
 ## 5. Payment Pipeline Discoveries

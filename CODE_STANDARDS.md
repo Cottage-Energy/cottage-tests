@@ -201,3 +201,5 @@ log.section('New Test Section');
 - [ ] Error handling with helper functions
 - [ ] Test cleanup in `afterEach`
 - [ ] No magic numbers in code
+- [ ] `test.skip()` has a reason string (ticket or precondition)
+- [ ] All page interactions through POM classes (no raw `page.getByRole/Text/Label/TestId/locator` in spec files)

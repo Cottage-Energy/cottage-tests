@@ -18,7 +18,6 @@ test.describe('Homepage Navigation', () => {
   test.describe.configure({ mode: "serial" });
   
   test('Go to About', { tag: [...TEST_TAGS.ALL_REGRESSION] }, async ({ page }) => {
-    //test.skip(true, 'About Us page returns 404 on dev — ENG-2400');
     await homePage.click_About();
   });
   

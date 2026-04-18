@@ -309,8 +309,7 @@ test.describe('API v2: GET /buildings/{buildingID}', () => {
 });
 
 test.describe('API v2: POST /buildings/create', () => {
-  // BLOCKED: POST /buildings/create is not implemented yet (returns 404)
-  test.skip();
+  test.skip(true, 'BLOCKED: POST /buildings/create endpoint not implemented yet (returns 404). Unskip when backend adds the endpoint.');
 
   let api: BuildingsApiV2;
 

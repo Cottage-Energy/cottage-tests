@@ -196,8 +196,7 @@ test.describe('API v2: POST /customers/search', () => {
 // ═══════════════════════════════════════════════
 
 test.describe('API v2: POST /customers/auth', () => {
-  // BLOCKED: POST /customers/auth is not implemented yet (returns 404)
-  test.skip();
+  test.skip(true, 'BLOCKED: POST /customers/auth (SSO) endpoint not implemented yet (returns 404). Unskip when backend adds the endpoint.');
 
   let api: CustomersApiV2;
   let partnerCode: string;

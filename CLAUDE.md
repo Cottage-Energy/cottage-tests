@@ -62,7 +62,7 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 
 **Why:** On Apr 16, a full payment-matrix session ignored 14+ existing payment session files AND the `autoPaymentChecks.ts` step-by-step sequence. Went ad-hoc, manually manipulated test data (`UPDATE ingestionState='processed'`), broke the natural pipeline, then wrongly dismissed a real Critical bug as "test data interference." The existing test code had every check already defined — just needed to follow it.
 
-### Flow Completion Rule (enforced — all exploratory and interactive testing)
+### Flow Completion Rule (enforced — all exploratory, interactive, AND retest-matrix testing)
 **Every flow MUST be completed to its final page.** "Page renders" or "first 2 steps work" is NOT a pass. For every flow:
 1. Complete to success/error/redirect page — no stopping partway
 2. Verify DB state: user type, status, flags, relationships
@@ -70,7 +70,11 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 4. If a flow has a payment step, fill the card and submit — don't stop at "Stripe iframe loaded"
 5. If blocked, find another way (OTP sign-in, create new user, use test data) — never mark "untested"
 
-**Why:** On Apr 14 ENG-2188, a CRITICAL bug (Light payment post-confirm fails) was found only because the user pushed to complete the TX bill drop flow to the very end. Blank email bodies and DB sync bugs were also found only through content verification. Cutting corners misses bugs.
+**Evidence-of-artifact is NOT evidence-of-effect.** Receiving an email, extracting a link, seeing a toast, or landing on a page is proof the UPSTREAM step worked. It is NOT proof the DOWNSTREAM effect happened. For any recovery, verification, or state-change flow (forgot-password, email-change, OTP, magic-link, email confirmation, password reset, subscription activate/cancel, payment capture), a PASS requires confirming the STATE the flow attempted to change — not the artifact the flow produced along the way. If you only verified the artifact, the row is **BLOCKED, not PASS**. BLOCKED surfaces the gap; PASS hides it.
+
+Auth recovery flows specifically require: click the link → verify the destination page renders (not a 500) → fill + submit the destination form → verify the effect (session established, password changed, email verified) → sign in with the new creds → confirm old creds / pre-verification state is rejected → confirm the link is single-use. These flows cannot be a one-row check inside a 50-row retest matrix — they require a dedicated flow sweep.
+
+**Why:** On Apr 14 ENG-2188, a CRITICAL bug (Light payment post-confirm fails) was found only because the TX bill drop flow was pushed all the way to the end. Blank email bodies and DB sync bugs were found only through content verification. On Apr 17 a second CRITICAL (ENG-2721: password reset fully broken — `/auth/confirm` 500s) hid for 3 days behind two consecutive "Forgot password ✅ PASS" retest rows whose evidence was only "reset email received (10,482 chars)" — the link was never clicked, the form was never seen, the password was never changed, sign-in was never attempted. See `memory/feedback_email_received_not_pass_on_recovery.md`.
 
 ### User Impact Rule (enforced — all QA outputs)
 **Every bug, improvement, finding, and observation MUST include a User Impact statement** — describe what the user experiences in concrete, non-technical terms. This applies to:
@@ -180,11 +184,29 @@ Always prefix local test runs with `PLAYWRIGHT_HTML_OPEN=never` to prevent the r
 - No `console.log` — use structured logger from `tests/resources/utils/logger.ts`
 - No magic numbers — use `TIMEOUTS` and `RETRY_CONFIG` from `tests/resources/constants/`
 - No raw tag strings — use `TEST_TAGS` constants (e.g., `TEST_TAGS.SMOKE`, not `'@smoke'`)
-- All page interactions through POM classes in `tests/resources/page_objects/`
+- All page interactions through POM classes in `tests/resources/page_objects/` — POM compliance is measured **per line**, not per file. Skipped tests, edge-case locators, and failure-terminus assertions (invalid-cred errors, auth-code-error pages) all count. Acceptable remaining `page.*` calls in specs: `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate` (framework primitives, not UI interactions).
 - Locator priority: `getByRole` > `getByText` > `getByLabel` > `getByTestId` > `locator('css')` (last resort)
 - POM locators must be `readonly` class properties; all POM methods must have explicit return types
 - Tests must clean up created data in `afterEach` hooks
+- `test.skip()` requires a reason string. Allowed forms: `test.skip('title', tag, fn)` (test definition with body skipped), `test.skip(condition, 'reason')` (runtime skip with reason), `test.describe.skip(...)` (parked block). Banned: naked `test.skip()` with no args or boolean-only.
 - See `CODE_STANDARDS.md` for full coding standards
+
+### Verify standards before claiming compliance
+Before reporting any new/modified spec, POM, or fixture as "done," run the mechanical audit locally. Takes 30 seconds and catches violations reading-top-to-bottom misses:
+```bash
+# Run against the specific files you changed (not the whole repo)
+FILES="<your changed .spec.ts files>"
+grep -nE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(" $FILES    # POM
+grep -nE ":\s*any\b|as\s+any\b" $FILES                                            # any
+grep -nE "console\.(log|error|warn|info|debug)" $FILES                            # console
+grep -nE "tag:\s*\[\s*['\"]@" $FILES                                              # raw tags
+grep -nE "(setTimeout|waitForTimeout)\([0-9]+\)|timeout:\s*[0-9]{3,}" $FILES      # magic timeouts
+grep -nE "test\.skip\(\s*\)" $FILES                                               # naked skips
+```
+
+Any output = refactor before reporting done. POM compliance is measured per-line — skipped tests, edge-case locators, and failure-terminus assertions (invalid-cred errors, auth-code-error pages) all count. Acceptable remaining `page.*` calls in specs: `page.goto`, `page.waitForURL`, `page.waitForResponse`, `page.waitForTimeout`, `page.context`, `page.addInitScript`, `page.on`, `page.evaluate` (framework primitives, not UI interactions).
+
+**Why:** On 2026-04-18 I told the user "all 3 specs follow CODE_STANDARDS.md" before running the audit. 30-second grep found 14 POM violations in my own specs plus 538 pre-existing across 21 other specs. Declaring compliance without a machine check fails repeatedly. See `memory/feedback_run_standards_audit_before_claiming_compliance.md` and `memory/feedback_pom_compliance_is_per_line.md`.
 
 ## Structure
 - `tests/e2e_tests/` — test specs organized by feature (move-in, payment, homepage, connect-account)

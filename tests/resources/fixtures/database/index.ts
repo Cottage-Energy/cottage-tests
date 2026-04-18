@@ -10,3 +10,4 @@ export * from './utilityQueries';
 export * from './cleanupQueries';
 export * from './blnkQueries';
 export * from './smsQueries';
+export * from './householdQueries';
