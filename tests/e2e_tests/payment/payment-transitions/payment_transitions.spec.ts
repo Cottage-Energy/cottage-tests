@@ -88,13 +88,11 @@ test.describe('P2-02: Manual to Auto-Pay Transition', () => {
 
     // Navigate to Account > Payment tab and enable auto-pay via switch
     await page.goto('/app/account');
-    const paymentTab = page.getByRole('tab', { name: 'Payment' });
-    await paymentTab.click();
+    await profilePage.Profile_Payment_Info_Tab.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     // Toggle auto-pay switch ON
-    const autoPaySwitch = page.getByRole('switch');
-    await autoPaySwitch.click();
+    await profilePage.Profile_Autopay_Switch.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     // Verify auto-pay is now ON in DB
@@ -186,19 +184,16 @@ test.describe('P2-03: Manual to Auto-Pay — Pay Now Outstanding', () => {
     await page.goto('/app/overview', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    const enableBtn = page.getByRole('button', { name: 'Enable' });
-    await expect(enableBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-    await enableBtn.click();
+    await expect(overviewPage.Overview_Enable_Autopay_Button).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await overviewPage.Overview_Enable_Autopay_Button.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     // AutopayPaymentModal — renders as alertdialog with outstanding balance + pay/later options
-    const autopayConfirm = page.getByText('Thanks for enabling autopay!');
-    await expect(autopayConfirm).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await expect(overviewPage.Overview_Autopay_Modal_Confirm_Text).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     // Click "Pay now" to clear outstanding balance immediately
-    const payNowBtn = page.getByRole('button', { name: /pay now/i });
-    await expect(payNowBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-    await payNowBtn.click();
+    await expect(overviewPage.Overview_Autopay_Modal_Pay_Now_Button).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await overviewPage.Overview_Autopay_Modal_Pay_Now_Button.click();
     await page.waitForTimeout(10000);
 
     // Verify auto-pay is ON
@@ -278,18 +273,15 @@ test.describe('P2-04: Manual to Auto-Pay — Do It Later', () => {
     await page.goto('/app/overview', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    const enableBtn = page.getByRole('button', { name: 'Enable' });
-    await expect(enableBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-    await enableBtn.click();
+    await expect(overviewPage.Overview_Enable_Autopay_Button).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await overviewPage.Overview_Enable_Autopay_Button.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
-    const autopayConfirm = page.getByText('Thanks for enabling autopay!');
-    await expect(autopayConfirm).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await expect(overviewPage.Overview_Autopay_Modal_Confirm_Text).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     // Click "Do it later" — outstanding stays unpaid
-    const laterBtn = page.getByRole('button', { name: /do it later/i });
-    await expect(laterBtn).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
-    await laterBtn.click();
+    await expect(overviewPage.Overview_Autopay_Modal_Later_Button).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
+    await overviewPage.Overview_Autopay_Modal_Later_Button.click();
     await page.waitForTimeout(TIMEOUTS.MEDIUM);
 
     // Verify auto-pay is ON even though we deferred payment

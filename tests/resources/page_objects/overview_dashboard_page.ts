@@ -43,6 +43,16 @@ export class OverviewPage {
     readonly Overview_Split_My_Bill_Option: Locator
     readonly Overview_Sidebar_Add_Payment_Button: Locator
 
+    // Autopay enable flow — triggered by the TIP-section "Enable" button on
+    // /app/overview. Opens AutopayPaymentModal (role=alertdialog, NOT dialog).
+    // Modal contains "Thanks for enabling autopay!" header + Pay now / Do it
+    // later buttons. Only triggered from Overview; Account page switch updates
+    // the DB flag silently without this modal (verified 2026-04-14 MCP).
+    readonly Overview_Enable_Autopay_Button: Locator
+    readonly Overview_Autopay_Modal_Confirm_Text: Locator
+    readonly Overview_Autopay_Modal_Pay_Now_Button: Locator
+    readonly Overview_Autopay_Modal_Later_Button: Locator
+
     //locators
     constructor(page: Page) {
         this.page = page;
@@ -104,6 +114,12 @@ export class OverviewPage {
         this.Overview_Pay_In_Full_Option = page.getByText('Pay in full').first();
         this.Overview_Split_My_Bill_Option = page.getByText('Split my bill').first();
         this.Overview_Sidebar_Add_Payment_Button = page.getByRole('button', { name: 'Add payment method' });
+
+        // Autopay enable flow (AutopayPaymentModal)
+        this.Overview_Enable_Autopay_Button = page.getByRole('button', { name: 'Enable' });
+        this.Overview_Autopay_Modal_Confirm_Text = page.getByText('Thanks for enabling autopay!');
+        this.Overview_Autopay_Modal_Pay_Now_Button = page.getByRole('button', { name: /pay now/i });
+        this.Overview_Autopay_Modal_Later_Button = page.getByRole('button', { name: /do it later/i });
     }
 
     //methods
