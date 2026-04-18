@@ -214,8 +214,7 @@ test.describe('Bill Upload Modal', () => {
         await uploadBillModalPage.selectFile(SAMPLE_PDF);
 
         // File size patterns like "1.2 MB", "500 KB", etc should NOT be visible
-        const fileSizePattern = page.getByText(/\d+\.?\d*\s*(KB|MB|GB)/i);
-        await expect(fileSizePattern).not.toBeVisible({ timeout: TIMEOUTS.SHORT });
+        await expect(uploadBillModalPage.fileSizeDisplay).not.toBeVisible({ timeout: TIMEOUTS.SHORT });
 
         log.info('TC-058 PASS: File size not displayed');
     });

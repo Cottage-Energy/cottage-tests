@@ -16,6 +16,12 @@ export class BillingPage {
     readonly Billing_Save_Payment_Button: Locator
     readonly Billing_Success_Message: Locator
 
+    // Pay Bill modal (role=dialog). Scoped locator that specs can use to
+    // scope sub-queries into the modal without creating a raw `page.getByRole`
+    // in the spec file. Methods inside the POM still use `page.getByRole` —
+    // that's where the POM is allowed to own the selector.
+    readonly Billing_Pay_Bill_Modal: Locator
+
 
     //locators
     constructor(page: Page) {
@@ -32,6 +38,8 @@ export class BillingPage {
 
         this.Billing_Save_Payment_Button = page.getByRole('button', { name: 'Save details' });
         this.Billing_Success_Message = page.getByText('🥳 Success', { exact: true });
+
+        this.Billing_Pay_Bill_Modal = page.getByRole('dialog');
 
     }
 

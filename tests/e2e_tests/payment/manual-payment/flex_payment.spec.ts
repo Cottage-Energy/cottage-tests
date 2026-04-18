@@ -94,7 +94,7 @@ test.describe('Flex Payment — Pay in Full', () => {
     // VERIFIED via Playwright MCP (2026-04-11): Flex is a clickable container in the
     // "Paying with" radiogroup, NOT a radio in the Amount section.
     // Text: "Split your bills into smaller payments" + "Add flexible payments to your account"
-    const modal = page.getByRole('dialog');
+    const modal = billingPage.Billing_Pay_Bill_Modal;
     await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     const flexOption = modal.getByText('Split your bills into smaller payments');
@@ -168,7 +168,7 @@ test.describe('Flex Payment — Split Bill Redirect', () => {
     await billingPage.Click_Pay_Bill_Button();
     await billingPage.Check_Pay_Outstanding_Balance_Modal();
 
-    const modal = page.getByRole('dialog');
+    const modal = billingPage.Billing_Pay_Bill_Modal;
     await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     // VERIFIED via Playwright MCP (2026-04-11): Flex option is in "Paying with" radiogroup
@@ -245,7 +245,7 @@ test.describe('Flex Payment — Non-Flex User', () => {
     await billingPage.Click_Pay_Bill_Button();
     await billingPage.Check_Pay_Outstanding_Balance_Modal();
 
-    const modal = page.getByRole('dialog');
+    const modal = billingPage.Billing_Pay_Bill_Modal;
     await expect(modal).toBeVisible({ timeout: TIMEOUTS.DEFAULT });
 
     // Verify: Flex option should NOT be visible for non-flex utility

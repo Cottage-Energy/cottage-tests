@@ -17,6 +17,12 @@ export class ProfilePage {
     readonly Profile_Auto_Payment_Checkbox: Locator
     readonly Profile_Save_Payment_Button: Locator
     readonly Profile_Success_Message: Locator
+    // Auto-pay switch on the Account > Payment tab (view mode, not edit mode).
+    // This is distinct from Profile_Auto_Payment_Checkbox which lives in the
+    // Edit-details panel. Verified 2026-04-14 via Playwright MCP: toggling this
+    // switch silently updates CottageUsers.isAutoPaymentEnabled but does NOT
+    // trigger the AutopayPaymentModal — that's the Overview "Enable" button.
+    readonly Profile_Autopay_Switch: Locator
 
 
 
@@ -39,6 +45,8 @@ export class ProfilePage {
         
         
         this.Profile_Success_Message = page.getByText('🥳 Success', { exact: true });
+
+        this.Profile_Autopay_Switch = page.getByRole('switch');
 
     }
 

@@ -650,7 +650,7 @@ test.describe('Recovery Paths', () => {
 
     // Enter partial amount via the "Other amount" option in the modal
     // The modal has an "Other amount" input — fill with a small amount
-    const modal = page.getByRole('dialog');
+    const modal = billingPage.Billing_Pay_Bill_Modal;
     const otherAmountOption = modal.getByText('Other amount');
     const isOtherAmountVisible = await otherAmountOption.isVisible().catch(() => false);
 

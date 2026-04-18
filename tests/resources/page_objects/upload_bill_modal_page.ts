@@ -34,6 +34,11 @@ export class UploadBillModalPage {
     // Error elements (shown in idle view)
     readonly errorMessage: Locator;
 
+    // File size indicator — text like "1.2 MB", "500 KB", etc. Expected NOT
+    // to be displayed per the current spec (file size is intentionally
+    // hidden). Locator exists here so specs can assert absence/presence.
+    readonly fileSizeDisplay: Locator;
+
     constructor(page: Page) {
         this.page = page;
 
@@ -61,6 +66,9 @@ export class UploadBillModalPage {
         this.errorMessage = page.locator('[role="alert"]')
             .or(page.getByText(/Something went wrong/i))
             .or(page.getByText(/too large/i));
+
+        // File size indicator (e.g. "1.2 MB", "500 KB")
+        this.fileSizeDisplay = page.getByText(/\d+\.?\d*\s*(KB|MB|GB)/i);
     }
 
     /**
