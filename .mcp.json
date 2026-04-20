@@ -46,6 +46,13 @@
     "notion": {
       "type": "http",
       "url": "https://mcp.notion.com/mcp"
+    },
+    "posthog": {
+      "type": "http",
+      "url": "https://mcp.posthog.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${POSTHOG_MCP_API_KEY}"
+      }
     }
   }
 }

@@ -270,6 +270,34 @@ DOM pattern: state is rendered via CSS classes (NO `data-invalid`/`data-valid`/`
 | `txtest` | Encourage conversion flow for Light/TX dereg. **Note**: Address search does ESI ID lookup — selecting an ESI ID routes to Light flow (`/move-in/light`), NOT `welcome-encouraged.tsx`. Use "Can't find your address?" → manual entry to reach TX-DEREG encouraged conversion page. | `useEncourageConversion = TRUE`, ElectricCompany = `TX-DEREG` |
 | `moved1903` | Encouraged conversion, NO demand response provider. Useful as negative test for DR toggle visibility. Has extra "quick questions" step (how long staying, employment, programs) between welcome and About You. | `useEncourageConversion = TRUE`, `shouldShowDemandResponse = TRUE`, `demandResponseProviderID = NULL` |
 
+### Building → Partner Inheritance (verified 2026-04-20)
+
+Building shortcodes can link to a `MoveInPartner` via `Building.moveInPartnerID`. When resolved, the partner's config (including feature flags like `abandonedCartEnabled`) inherits down to users who entered via that building shortcode. This resolution is separate from the `startsWith(referralCode)` path used by partner shortcodes like `venn73458test`.
+
+| shortCode | Linked partner | `bldg.useEncouragedConversion` | `partner.abandonedCartEnabled` | Notes |
+|---|---|---|---|---|
+| **`pgtest`** | **Moved** | ✅ true | ✅ true | **⚠️ Pollution risk**: every `pgtest` move-in with a prefilled `email=` URL param enrolls the user in the Moved abandoned-cart PostHog workflow. See [posthog-workflows.md](./posthog-workflows.md). |
+| `autotest` | Moved | ❌ false | ✅ true | Standard 6-step flow, not encouraged — abandoned-cart filter excludes |
+| `txtest` | UDR | ✅ true | ✅ true | UDR's partner-level `useEncouragedConversion=false` overrides — workflow filter (`moveInType='encouraged-conversion'`) never matches |
+| `TFB-01` | Venn | ❌ false | ✅ true | Venn has 474 buildings total, ALL with `useEncouragedConversion=false` at the building level. Building route is effectively disabled for Venn abandoned-cart testing — use partner referralCode shortcodes like `venn73458test` instead |
+| `ad012e5e` | Funnel | ❌ false | ❌ false | Funnel is partner-disabled anyway |
+
+**Resolution order** (from `apps/main/app/move-in/page.tsx`):
+1. Fetch `Building` by `shortCode` (if any)
+2. Try `shortCode.startsWith(partner.referralCode)` match (case-sensitive) against all enabled partners
+3. If no direct partner match AND the building has a linked partner → use the building's linked partner
+
+**Useful query**: find which partner a given shortCode resolves to:
+
+```sql
+SELECT b."shortCode", b."useEncouragedConversion" AS bldg_encouraged,
+       mip.name AS partner,
+       mip."abandonedCartEnabled", mip."useEncouragedConversion" AS partner_encouraged
+FROM "Building" b
+LEFT JOIN "MoveInPartner" mip ON mip.id = b."moveInPartnerID"
+WHERE b."shortCode" = '<shortCode>';
+```
+
 ## Partner Attribution
 
 Partner attribution determines which external partner gets credit for a user — used for commercial commitments (referral fees), analytics dashboards, and partner-specific reporting. It's separate from partner theming.

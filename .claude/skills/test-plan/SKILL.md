@@ -83,6 +83,35 @@ When the user provides a Linear **project** URL (e.g., `linear.app/public-grid/p
 - Use `mcp__supabase__execute_sql` to inspect table structures, column types, constraints, and existing data relevant to the feature
 - Identify: new tables/columns, changed constraints, migration impacts, data that test assertions should verify
 
+### Pre-flight DB Query (when feature has eligibility gates)
+When the feature's gating conditions live in DB columns (partner flags, building settings, feature-flag enrollments, status enums), run a pre-flight query BEFORE drafting test cases. One aggregate query produces positive / negative / dead-flag test data at once, and surfaces drift between ticket intent and live DB. See `feedback_test_data_preflight_db_query.md`.
+
+Pattern:
+1. List every gating column the feature checks (from code, not ticket)
+2. Single aggregate query that returns candidate entities + every gating column + sample related children (via JOIN or ARRAY_AGG sampling)
+3. Label each candidate: ✅ positive / ❌ negative / ⚠️ dead-flag (one condition true but another makes it unreachable)
+4. Flag any drift between ticket config and live DB as an observation — products owners need to know whether it's intentional tuning or regression
+5. Test plan must include this data matrix up front (see Test Plan Template §Test Data)
+
+### External Workflow Engines (PostHog, Inngest, Resend, Stripe webhooks)
+When the feature is driven by an engine whose config lives outside the codebase — PostHog Workflows, Inngest chained functions, Resend templates, Stripe webhook subscriptions — the ticket text alone is NOT authoritative. Three surfaces must agree:
+
+1. **Ticket** — what the spec says
+2. **App code** — what `posthog.identify/capture`, `inngest.send`, webhook emitters actually produce
+3. **Engine dashboard** — live trigger, filter, and step config
+
+Before writing test cases for the engine-driven part of a feature:
+- Grep the app code for the emit sites (specific event names, PostHog `capture` calls, Inngest `send` calls) and record what the app actually emits
+- Pull engine config via MCP where possible (cheaper and more accurate than screenshots):
+  - **PostHog**: `mcp__posthog__workflows-get` for full trigger/filter/wait/branch/email-step config; `mcp__posthog__activity-log-list scope=HogFlow item_id=<uuid>` for edit history; `mcp__posthog__query-run` (HogQL) for app-side event emission + person_properties. Capability matrix in `tests/docs/posthog-workflows.md`.
+  - **Inngest (services repo)**: read function source via `gh api repos/Cottage-Energy/services/contents/<path>`. See `tests/docs/inngest-functions.md`.
+  - **Resend**: template IDs via app code; template bodies only visible in Resend dashboard.
+- Ask the engine owner for screenshots ONLY when MCP can't reach the surface. For PostHog under a personal API key, that's the Invocations / Metrics tab (runtime telemetry: "did user X enroll / did email fire / what error?") and non-GitHub integration config. Cian owns PostHog.
+- Document a "Spec vs Implementation — Resolved via Engine Inspection" table in the test plan showing the three surfaces side-by-side, with the reconciled authoritative config
+- Only the intersection of code-emit + engine-filter actually runs. If any test case depends on the engine firing, the pre-flight config check is a non-optional prerequisite
+
+See `feedback_posthog_workflow_verification.md`. Known workflows for this repo are documented in `tests/docs/posthog-workflows.md` and `tests/docs/inngest-functions.md` — check there first before pulling MCP or requesting screenshots.
+
 ### Live App State (quick UI peek)
 When planning tests for an existing feature or flow, peek at the live app to ground your test cases in reality:
 - `mcp__playwright__browser_navigate` to the page or flow being tested

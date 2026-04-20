@@ -54,6 +54,51 @@ When testing a framework migration (e.g., Next.js → TanStack):
 - **Always query `information_schema.columns` first** to discover exact column names before writing data queries — Supabase uses PascalCase with quoted identifiers (e.g., `"cottageConnectUserType"`, `"isConnectAccount"`), and guessing column names wastes time
 - `mcp__supabase__execute_sql` to check current data state, feature flags, or preconditions mentioned in the ticket
 
+### Pre-flight DB query for gated features
+When the feature's eligibility depends on DB state (partner flags, building config, feature-flag tables, status enums), enumerate qualifying test data BEFORE generating users. One aggregate query produces positive / negative / dead-flag test data at once, and flags any drift between ticket intent and live DB. See `feedback_test_data_preflight_db_query.md`. Pattern:
+
+```sql
+-- List all entities + their gating flags in one pass
+SELECT <name_col>, <flag1>, <flag2>, <flag3>
+FROM "<table>"
+WHERE <any_flag_true_or_relevant_condition>
+ORDER BY <name_col>;
+
+-- If table has inheritance / join-based resolution (e.g. Building → Partner):
+SELECT b."shortCode", b.<flag>, mip.name AS partner, mip.<flag>
+FROM "Building" b
+LEFT JOIN "MoveInPartner" mip ON mip.id = b."moveInPartnerID"
+WHERE mip."<gating_flag>" = true;
+
+-- If aggregate would be huge, use COUNT(*) FILTER + ARRAY_AGG sampling:
+SELECT mip.name, COUNT(b.id) AS total,
+       COUNT(b.id) FILTER (WHERE b."<flag>" = true) AS eligible,
+       (ARRAY_AGG(b."shortCode" ORDER BY b."shortCode"))[1:5] AS samples
+FROM "MoveInPartner" mip
+LEFT JOIN "Building" b ON b."moveInPartnerID" = mip.id
+GROUP BY mip.name;
+```
+
+Label each candidate as positive / negative / dead-flag with a reason, document drift vs ticket spec, and treat the table as read-only unless explicitly authorized.
+
+### External workflow engines (PostHog, Inngest, Resend, etc.)
+When the feature is driven by an external workflow engine that lives outside the codebase (PostHog Workflows, Inngest functions, Resend templates, Stripe webhook config), the ticket text alone is NOT authoritative. Three surfaces must agree:
+
+1. **Ticket** — what the spec says
+2. **App code** — what `posthog.identify/capture`, `inngest.send`, etc. actually emits
+3. **Engine dashboard** — the live trigger, filter, and step config
+
+Before any retest that depends on the engine firing:
+- Grep app code for the emit sites (`posthog.identify`, `posthog.capture`, Inngest event names, `sendEmail`, etc.) to confirm what the app actually produces
+- Pull the engine config directly via MCP — screenshots are a fallback, not the default:
+  - **PostHog**: `mcp__posthog__workflows-get` returns full trigger + filter + wait durations + conditional-branch conditions + email action configs + template HTML/subject. `mcp__posthog__activity-log-list scope=HogFlow item_id=<uuid>` gives the edit history. `mcp__posthog__query-run` (HogQL) confirms the app emitted the right event with the right person_properties for your test user. Capability matrix + personal-API-key limitations: `tests/docs/posthog-workflows.md`.
+  - **Inngest (services repo)**: read function source via `gh api repos/Cottage-Energy/services/contents/<path>`. See `tests/docs/inngest-functions.md`.
+  - **Resend**: template IDs via app code; template bodies require the Resend dashboard.
+- Ask the engine owner for a screenshot ONLY when MCP can't reach the surface. For PostHog under a personal API key, the blind spot is the **Invocations / Metrics tab** (runtime telemetry: enrollment, step reached, email sent/failed) and **non-GitHub integration config** (sender health). Cian owns PostHog. For those, a targeted "Invocations tab, last 48h, filter by `<test user email>`" screenshot is the right ask.
+- Only the intersection of code-emit + engine-filter actually runs. Ticket can lie, code can lie — engine config is ground truth for whether events enter a workflow
+
+See `feedback_posthog_workflow_verification.md`, `feedback_http_mcp_header_substitution.md` (if the PostHog MCP needs reconnecting), and `feedback_posthog_readonly_approval_required.md` (every write to PostHog needs explicit approval). Known workflows for this repo are documented in `tests/docs/posthog-workflows.md` and `tests/docs/inngest-functions.md`.
+
 ---
 
 ## 2. Interactive Mode — Guided Exploratory Session

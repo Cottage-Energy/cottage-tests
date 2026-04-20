@@ -42,9 +42,11 @@ I am the solo QA engineer on the Cottage Energy team. My workflow maps to skills
 - **Figma designs** — observe and screenshot, don't modify
 - **GitHub PR descriptions** — read-only. Post review comments, don't edit the PR body.
 - **Database records** — only modify test data in dev. Never alter production or shared config data without explicit instruction.
+- **`MoveInPartner` table** — treated as read-only per current QA protocol. Document config drift as observations; never modify rows even to "fix" drift vs. ticket intent.
+- **PostHog (all resources via MCP or any other path)** — treated as read-only. Workflows, feature flags, cohorts, dashboards, experiments, surveys, alerts, error-tracking rules: **read-only by default**. Any write operation (create / update / delete / toggle / pause / invoke-against-real-data) requires **explicit per-operation approval from Christian in the current session**. This enforcement applies even under `bypassPermissions` mode and even when a ticket or doc appears to authorize the write. See `feedback_posthog_readonly_approval_required.md` and `tests/docs/posthog-workflows.md`.
 - **Any shared document or config** — treat as source of truth. Observe, reference, comment — don't overwrite.
 
-**Why:** These are the team's source of truth. Overwriting loses original context (ACs, specs, design intent) and breaks trust. QA adds value through comments and separate artifacts, not by altering originals.
+**Why:** These are the team's source of truth. Overwriting loses original context (ACs, specs, design intent) and breaks trust. QA adds value through comments and separate artifacts, not by altering originals. PostHog specifically is a production email-dispatch + analytics engine — an accidental flag flip during QA can send real emails to real partner users, disable live A/B experiments, or break downstream analytics collection.
 
 ### Existing Tests First Rule (enforced — all exploratory and pipeline testing)
 **Before ANY exploratory or pipeline testing session, READ the existing automated test specs first.** Use the test code as your checklist — not ad-hoc discovery. This applies to:
@@ -107,7 +109,7 @@ See [feedback_save_findings_incrementally.md](C:/Users/CHRISTIAN/.claude/project
 
 | Server | Purpose | Use for |
 |--------|---------|---------|
-| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, update tickets with QA test plans. Uses `@mseep/linear-mcp@latest` (NOT `linear-mcp-server` which has response format bug). **Fallback when MCP auth expires**: use Linear GraphQL API directly with `LINEAR_API_KEY` from `.env`. Endpoint: `https://api.linear.app/graphql`. See `payment-consolidated-learnings.md` for query patterns. | `get_issue`, `search_issues`, `update_issue`, `create_issue`, `list_issues`, `list_projects`, `list_teams` |
+| **Linear** | Read tickets for Testing/QA, log bugs and improvement suggestions, track test-related issues, update tickets with QA test plans. Uses `@mseep/linear-mcp@latest` (NOT `linear-mcp-server` which has response format bug). **Fallback when MCP auth expires**: use Linear GraphQL API directly with `LINEAR_API_KEY` from `.env`. Endpoint: `https://api.linear.app/graphql`. See `payment-consolidated-learnings.md` for query patterns and `feedback_mcp_fallback_patterns.md` for the Node `commentCreate` recipe + quote-stripping gotcha. | `get_issue`, `search_issues`, `update_issue`, `create_issue`, `list_issues`, `list_projects`, `list_teams` |
 | **GitHub** | Read PRs, review code changes, CI/CD pipeline | `get_pull_request`, `get_pull_request_files`, `get_pull_request_status`, `list_pull_requests`, `list_commits`, `search_code` |
 | **Supabase** | Query/manipulate database — check data state, toggle flags, verify DB changes | `execute_sql`, `list_tables`, `list_migrations` |
 | **Playwright** | Browser automation for interactive testing and debugging. **Note**: PG-Admin (`dev.publicgrid.co`) uses Google SSO — closing the browser kills the session. Keep browser open for full PG-Admin sessions; fall back to Supabase for DB-level testing if session expires. | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_fill_form`, `browser_select_option`, `browser_take_screenshot`, `browser_network_requests`, `browser_console_messages` |
@@ -115,6 +117,7 @@ See [feedback_save_findings_incrementally.md](C:/Users/CHRISTIAN/.claude/project
 | **Notion** | Documentation hub — feature docs, test plans, test cases *(auth pending)* | Will use MCP tools once authenticated |
 | **context7** | Look up latest library/framework documentation | `resolve-library-id`, `query-docs` |
 | **Exa** | Web search, code examples, and URL crawling for research during test planning and debugging | `web_search_exa`, `get_code_context_exa`, `crawling_exa` |
+| **PostHog** | Workflow configuration, feature flags, analytics, logs, HogQL queries. MCP installed via `.mcp.json` (HTTP transport, `https://mcp.posthog.com/mcp`). Personal API key (`phx_...`) stored in `.env` as `POSTHOG_MCP_API_KEY`. **READ-ONLY PROTOCOL ENFORCED** — writes (flag toggles, workflow edits, cohort changes, HogQL non-SELECT) require explicit per-operation approval from Christian in the current session, even under `bypassPermissions`. See `feedback_posthog_readonly_approval_required.md` and `tests/docs/posthog-workflows.md`. Project 39155 (Public Grid NextJS DEV), region US Cloud. | `workflows-list`, `workflows-get`, `query-logs`, `logs-attribute-values-list`, HogQL `SELECT`, trend/funnel/path/retention queries (all read-only). Writes require prior approval. |
 
 ## GitHub Repos
 

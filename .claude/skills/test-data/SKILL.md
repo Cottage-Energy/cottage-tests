@@ -14,6 +14,56 @@ Tell me what you need: "billing user with processed bills", "non-billing move-in
 
 ---
 
+## Pre-Flight: Enumerate Qualifying Data Before Creating Users
+
+Before generating any test user for a feature with eligibility gates (partner flags, building config, feature-flag tables, status enums), run a DB query that lists candidate entities with every gating column. Skip this step = risk running a test that can never pass because the gate the feature checks is already `false` for every entity you'd use. See `feedback_test_data_preflight_db_query.md`.
+
+Produce three labeled buckets:
+
+- **✅ Positive test data** — entities where all gating conditions pass. Use for happy path.
+- **❌ Negative test data** — entities where one gate fails. Use one per gate to prove the gate is enforced.
+- **⚠️ Dead-flag test data** — entities where one gate is `true` but another condition blocks them. Document these so they're not mistaken for legitimate targets.
+
+### Pattern (partner-style eligibility gate)
+
+```sql
+-- Enumerate partners + every gating flag at once
+SELECT name, "referralCode", "<flag1>", "<flag2>", "<flag3>"
+FROM "<SomeView_or_Table>"
+WHERE "<flag1>" = true  -- or whatever the feature checks
+ORDER BY name;
+
+-- If inheritance matters (e.g. Building → Partner), join to see what each shortCode actually resolves to:
+SELECT b."shortCode", b."useEncouragedConversion" AS bldg_flag,
+       mip.name AS partner, mip."<gating_flag>" AS partner_flag
+FROM "Building" b
+LEFT JOIN "MoveInPartner" mip ON mip.id = b."moveInPartnerID"
+WHERE mip."<gating_flag>" = true OR b."shortCode" IN ('autotest', 'pgtest', 'txtest', ...);
+
+-- If aggregate would be huge, COUNT(*) FILTER + ARRAY_AGG sampling avoids dumping 200k+ char results:
+SELECT mip.name, COUNT(b.id) AS total,
+       COUNT(b.id) FILTER (WHERE b."<flag>" = true) AS eligible_bldgs,
+       (ARRAY_AGG(b."shortCode" ORDER BY b."shortCode"))[1:5] AS samples
+FROM "MoveInPartner" mip
+LEFT JOIN "Building" b ON b."moveInPartnerID" = mip.id
+GROUP BY mip.name;
+```
+
+### Test-Data Pollution Flags
+
+Some shortCodes / users enroll you in workflows you didn't intend. Document these so tests don't pollute analytics.
+
+| shortCode | Side effect |
+|---|---|
+| `pgtest` | Links to Moved partner (via `Building.moveInPartnerID`). Every `pgtest` move-in with prefilled `email=` URL param enrolls the user in the **Encouraged Conversion - Abandoned Cart** PostHog workflow. See `tests/docs/posthog-workflows.md`. |
+| Any shortCode with `email=` prefill + encouraged conversion partner | Same — tags the user with PostHog `abandonedCartEnabled=true`. For tests that shouldn't pollute, omit the `email=` URL param and set it via the UI instead, or use a non-encouraged shortCode. |
+
+### Drift Reporting
+
+If the DB state differs from the ticket spec (partner flags toggled that weren't in scope, flags enabled for partners the ticket said "do NOT enable"), flag it as a test-plan observation. Do NOT "fix" drift — treat DB tables like `MoveInPartner` as read-only under the current QA protocol unless explicitly authorized.
+
+---
+
 ## Recipes
 
 ### 1. Billing User (standard move-in)

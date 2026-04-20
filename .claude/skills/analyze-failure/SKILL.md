@@ -222,6 +222,25 @@ This confirms whether the issue is the app (product bug) or the test (stale loca
 - **Evidence**: retry log shows inconsistent results
 - **Action**: `/fix-test` to stabilize, or `/exploratory-test` to investigate the root timing issue
 
+### External Workflow Engine Regression (PostHog / Inngest / Resend)
+- Test expects an email / event side-effect driven by an engine outside the app (PostHog Workflow, Inngest function chain, Resend template, Stripe webhook)
+- App emits the correct events per network capture + DB state, but the downstream effect (email sent, DB updated via async job, notification delivered) doesn't happen
+- **Evidence**: Decoded PostHog `/flags/` payload shows person_properties match the workflow's filter; Inngest dashboard shows no function run for the event; Fastmail shows no email despite eligible user
+- **Do NOT conclude the test is wrong from outside.** The engine config is ground truth for whether effects fire. Ticket text and app code alone are not sufficient.
+- **Action** (PostHog-driven — do these via MCP before asking Cian):
+  1. `mcp__posthog__workflows-get <uuid>` — confirm `status: active`, inspect trigger/filter/gates/waits/email-step configs + `updated_at` per action
+  2. `mcp__posthog__activity-log-list scope=HogFlow item_id=<uuid>` — check edit history; correlate with the silent-period date (next section)
+  3. `mcp__posthog__query-run` (HogQL) — confirm the test user emitted the trigger event with correct person_properties. Example: `SELECT event, timestamp, person.properties.email FROM events WHERE person.properties.email = '<email>' AND timestamp >= now() - INTERVAL 2 DAY ORDER BY timestamp DESC`
+  4. If steps 1–3 all PASS (workflow active, filter matches, user emitted event with right props) → the blind spot is the Invocations / Metrics tab (runtime telemetry) and integration health — these are NOT reachable via personal-API-key MCP. Ask Cian for a screenshot of the workflow's Invocations tab for the last 48h filtered to the test user's email. Classify as PostHog-side bug, NOT Product Bug.
+- **Action** (Inngest-driven): read function source via `gh api repos/Cottage-Energy/services/contents/<path>`; check Inngest dashboard's Runs tab for the event ID.
+- **Action** (Resend-driven): check template IDs in app code; Resend dashboard for send logs.
+- If the engine shows 0 invocations or a step error, file under the engine's area — not as a Product Bug in the app. See `feedback_posthog_workflow_verification.md`, `tests/docs/posthog-workflows.md` (MCP capability matrix), and `feedback_http_mcp_header_substitution.md` (if the PostHog MCP needs reconnecting).
+
+### Diagnostic signal: silent period in historical data
+- If historical email / notification / webhook records show a sudden stop at a specific date (e.g. 18 emails Feb–March, then 39 days of silence), treat that date as the likely regression point
+- Check git log / PR merges around that date for changes to the engine, template, or event emission
+- Flag to the owner and ask them to check the engine's Logs tab for that day
+
 ---
 
 ## Phase 6: Output Format
