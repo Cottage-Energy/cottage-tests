@@ -184,6 +184,29 @@ Only after the root cause is confirmed should you apply a fix. See Step 5 for fi
 - Use `TIMEOUTS` constants for any timeout values
 - If a page needs a new POM, create it: export from `index.ts` and register in `baseFixture.ts`
 
+### Fixing POM violations — extend the existing POM, don't create a new one
+When the Standards Gate (or a local grep) flags `page.getBy*()` inside a spec, the fix is almost always to add the locator to the POM that already owns that page — not make a new POM, not leave the selector in the spec.
+
+**Pattern (verified on PR #26 — 13 violations eliminated across 4 specs by extending 4 POMs with 7 locators):**
+
+1. **Find the violation.** `grep -nE "page\.(getByRole|getByText|getByLabel|getByTestId|locator)\(" tests/e2e_tests/path/to/file.spec.ts`
+2. **Identify the owning POM** by the URL the test is on at that moment. `/app` → `overview_dashboard_page.ts`, `/app/billing` → `billing_page.ts`, `/app/account?tabValue=...` → `account_profile_page.ts`, etc. Don't guess — check which POM the spec already imports and where the violating line is in the flow.
+3. **Add a `readonly` field + constructor assignment using the verbatim selector** (copy it exactly — do not "improve" it while refactoring; selectors drift):
+   ```typescript
+   readonly Overview_Enable_Autopay_Button: Locator;
+   // …in constructor:
+   this.Overview_Enable_Autopay_Button = page.getByRole('button', { name: 'Enable' });
+   ```
+4. **Swap the spec line** to use the POM field:
+   ```typescript
+   await overviewPage.Overview_Enable_Autopay_Button.click();
+   ```
+5. **Re-run the grep** on the spec file — must return empty before you claim done.
+
+**When to create a new POM instead:** only if the violation is on a page with no existing POM (check `tests/resources/page_objects/index.ts`). A new dialog, modal, tab, or control on a page that already has a POM = extend the POM.
+
+**Why this matters:** specs that inline selectors are a signal the POM has coverage gaps. Extending the POM once lets every future test reuse the locator. Inlining pushes the next person to do the same, and the debt compounds.
+
 ### Update Fixtures (when data setup is broken)
 - Fix query modules in `tests/resources/fixtures/database/`
 - Fix test utilities in `tests/resources/fixtures/`
