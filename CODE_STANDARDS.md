@@ -171,6 +171,27 @@ export class ExamplePage {
 }
 ```
 
+### Fixing a POM violation — extend the existing POM, don't inline in the spec
+
+When the gate (or a local audit) flags `page.getByRole/Text/Label/TestId/locator` inside a spec, the fix is almost always to add the locator to the POM that already owns that page — not create a new POM and not leave the selector in the spec.
+
+**Pattern:**
+1. Find the spec line, e.g. `await page.getByRole('button', { name: 'Enable' }).click()`
+2. Identify the owning POM by the URL the test is on (e.g., `/app` → `overview_dashboard_page.ts`).
+3. Add a `readonly` field + constructor assignment using the **verbatim selector**:
+   ```typescript
+   // overview_dashboard_page.ts
+   readonly Overview_Enable_Autopay_Button: Locator;
+   // …in constructor:
+   this.Overview_Enable_Autopay_Button = page.getByRole('button', { name: 'Enable' });
+   ```
+4. Swap the spec line:
+   ```typescript
+   await overviewPage.Overview_Enable_Autopay_Button.click();
+   ```
+
+**Rule of thumb:** new POM files are for new pages. A new dialog, modal, or control on a page that already has a POM = extend the POM. This is how PR #26 eliminated 13 violations across 4 specs by adding 7 locators to 4 existing POMs.
+
 ## 📊 Logger Usage
 
 ```typescript
